@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="FontManager.NET.Controls.FontFamilyControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FontManager.NET.Controls"
+             mc:Ignorable="d"
+             DataContext="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Button Name="FamilyButton" Grid.Column="0" Grid.Row="0" Content="{Binding Path=ButtonContent}" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="10, 5"/>
+        <TextBlock
+            Name="DisplayTextBlock"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Padding="10, 5"
+            Grid.Column="1"
+            Grid.Row="0"
+            Background="AliceBlue"
+            Text="{Binding Path=TextBlockContent}"
+            FontFamily="{Binding Path=TextBlockFont.Typeface.FontFamily}"
+            FontStretch="{Binding Path=TextBlockFont.Typeface.Stretch}"
+            FontStyle="{Binding Path=TextBlockFont.Typeface.Style}"
+            FontWeight="{Binding Path=TextBlockFont.Typeface.Weight}"
+            FontSize="{Binding Path=TextBlockFont.Size}"/>
+        <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Fill="Black" Height="2" />
+    </Grid>
+</UserControl>
