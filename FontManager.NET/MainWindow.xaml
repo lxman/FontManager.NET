@@ -6,25 +6,46 @@
         xmlns:local="clr-namespace:FontManager.NET"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="Font Manager" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <ComboBox Grid.Row="0" Grid.ColumnSpan="2" Name="FontList" SelectionChanged="ItemSelected" />
-        <TextBlock Grid.Column="0" Grid.Row="1" Text="Size" />
-        <xctk:ButtonSpinner Grid.Row="1" Grid.Column="1" Name="PointSize" Spin="SpinnerChange">
-            <TextBox Text="{Binding Path=TextBoxContent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, Delay=1000}" />
-        </xctk:ButtonSpinner>
-        <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
-            <StackPanel Name="DisplayArea" />
-        </ScrollViewer>
+        <TabControl Grid.Column="0" Grid.Row="0">
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="System Fonts" />
+                </TabItem.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Name="FontList" SelectionChanged="ItemSelected" />
+                    <TextBlock Grid.Column="0" Grid.Row="1" Text="Size" />
+                    <xctk:ButtonSpinner Grid.Row="1" Grid.Column="1" Name="PointSize" Spin="SpinnerChange">
+                        <TextBox Text="{Binding Path=TextBoxContent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, Delay=1000}" />
+                    </xctk:ButtonSpinner>
+                    <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                        <StackPanel Name="DisplayArea" />
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Others" />
+                </TabItem.Header>
+                <Grid>
+                    <WrapPanel>
+                        <TextBlock Padding="0, 5, 10, 5" Text="Location:" />
+                        <TextBlock Name="PathDisplay" Padding="0, 5, 10, 5" Text="C:\Windows\Fonts" />
+                        <Button Name="BrowseButton" Padding="10, 5" Content="Browse" Click="BrowseButtonClick" />
+                    </WrapPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

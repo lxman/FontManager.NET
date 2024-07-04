@@ -91,5 +91,24 @@ namespace FontManager.NET
 
             pointSize.Text = value.ToString(new CultureInfo("en-us"));
         }
+
+        private void BrowseButtonClick(object sender, RoutedEventArgs e)
+        {
+            Ookii.Dialogs.Wpf.VistaOpenFileDialog dialog = new()
+            {
+                CheckFileExists = false,
+                ValidateNames = false,
+                CheckPathExists = true,
+                FileName = "Open Folder"
+            };
+            if (dialog.ShowDialog() == true)
+            {
+                if (dialog.FileName.Split("\\").Last() == "Open Folder")
+                {
+                    PathDisplay.Text = dialog.FileName.Replace("Open Folder", "");
+                }
+                // Code to handle the selected folder
+            }
+        }
     }
 }
