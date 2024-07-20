@@ -1,10 +1,12 @@
 ﻿using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using FontManager.NET.Controls;
 using FontManager.NET.Models;
 using Xceed.Wpf.Toolkit;
+using FontFamily = System.Windows.Media.FontFamily;
 
 namespace FontManager.NET
 {
@@ -107,7 +109,29 @@ namespace FontManager.NET
                 {
                     PathDisplay.Text = dialog.FileName.Replace("Open Folder", "");
                 }
-                // Code to handle the selected folder
+
+                string path = PathDisplay.Text;
+                List<string> fonts =
+                    Directory
+                        .EnumerateFiles(path)
+                        .Where(f =>
+                            f.EndsWith(".ttf")
+                            || f.EndsWith(".otf")
+                        ).ToList();
+                fonts.ForEach(f =>
+                {
+                    FontFamily family = new(new Uri(f), f.Split("\\").Last());
+                    ListBoxItem fontItem = new()
+                    {
+                        Content = f.Split("\\").Last(),
+                        FontFamily = family,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        HorizontalContentAlignment = HorizontalAlignment.Left,
+                        VerticalContentAlignment = VerticalAlignment.Center
+                    };
+                    FamilyListControl.FamilyList.Add(fontItem);
+                });
             }
         }
     }

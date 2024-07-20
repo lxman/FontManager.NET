@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FontManager.NET"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:controls="clr-namespace:FontManager.NET.Controls"
         mc:Ignorable="d"
         Title="Font Manager" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
@@ -39,11 +40,16 @@
                     <TextBlock Text="Others" />
                 </TabItem.Header>
                 <Grid>
-                    <WrapPanel>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <WrapPanel Grid.Row="0">
                         <TextBlock Padding="0, 5, 10, 5" Text="Location:" />
                         <TextBlock Name="PathDisplay" Padding="0, 5, 10, 5" Text="C:\Windows\Fonts" />
                         <Button Name="BrowseButton" Padding="10, 5" Content="Browse" Click="BrowseButtonClick" />
                     </WrapPanel>
+                    <controls:FontFamilyListControl x:Name="FamilyListControl" Grid.Row="1" />
                 </Grid>
             </TabItem>
         </TabControl>
