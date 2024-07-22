@@ -7,6 +7,6 @@
              mc:Ignorable="d"
              DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
-        <ListBox Name="FontFamilies" ItemsSource="{Binding FamilyList}" />
+        <ListBox Name="FontFamilies" ItemsSource="{Binding Path=ObservableCollectionFamilyList}" />
     </Grid>
 </UserControl>

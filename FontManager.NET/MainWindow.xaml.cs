@@ -120,17 +120,26 @@ namespace FontManager.NET
                         ).ToList();
                 fonts.ForEach(f =>
                 {
-                    FontFamily family = new(new Uri(f), f.Split("\\").Last());
-                    ListBoxItem fontItem = new()
+                    FontFamily family = new(new Uri(f), f.Split("\\").Last()[..^4]);
+                    family.FamilyTypefaces.ToList().ForEach(t =>
                     {
-                        Content = f.Split("\\").Last(),
-                        FontFamily = family,
-                        HorizontalAlignment = HorizontalAlignment.Left,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        HorizontalContentAlignment = HorizontalAlignment.Left,
-                        VerticalContentAlignment = VerticalAlignment.Center
-                    };
-                    FamilyListControl.FamilyList.Add(fontItem);
+                        t.AdjustedFaceNames.Values.ToList().ForEach(n =>
+                        {
+                            ListBoxItem fontItem = new()
+                            {
+                                Content = $"{family.Source} {n}",
+                                FontFamily = family,
+                                FontWeight = t.Weight,
+                                FontStyle = t.Style,
+                                FontStretch = t.Stretch,
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Center,
+                                HorizontalContentAlignment = HorizontalAlignment.Left,
+                                VerticalContentAlignment = VerticalAlignment.Center
+                            };
+                            FamilyListControl.ObservableCollectionFamilyList.Add(fontItem);
+                        });
+                    });
                 });
             }
         }
