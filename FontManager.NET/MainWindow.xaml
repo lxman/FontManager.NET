@@ -52,6 +52,12 @@
                     <controls:FontFamilyListControl x:Name="FamilyListControl" Grid.Row="1" />
                 </Grid>
             </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Edit Font" />
+                </TabItem.Header>
+                <controls:FontEditControl />
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>
