@@ -14,6 +14,7 @@ namespace FontManager.NET.Controls
         private readonly SKPoint[] _points = new SKPoint[3];
         private readonly SKPoint[] _controlPoints = new SKPoint[2];
         private int _stateMachine = 0;
+
         private static readonly SKPaint CurvePaint = new()
         {
             Style = SKPaintStyle.Stroke,
@@ -55,11 +56,13 @@ namespace FontManager.NET.Controls
                         _points[0] = new SKPoint(Convert.ToSingle(e.GetPosition(FontEditView).X), Convert.ToSingle(e.GetPosition(FontEditView).Y));
                         _stateMachine++;
                         break;
+
                     case 1:
                         _points[1] = new SKPoint(Convert.ToSingle(e.GetPosition(FontEditView).X), Convert.ToSingle(e.GetPosition(FontEditView).Y));
                         _controlPoints[0] = _points[1];
                         _stateMachine++;
                         break;
+
                     case 2:
                         _points[2] = new SKPoint(Convert.ToSingle(e.GetPosition(FontEditView).X), Convert.ToSingle(e.GetPosition(FontEditView).Y));
                         _controlPoints[1] = _points[2];
@@ -86,6 +89,7 @@ namespace FontManager.NET.Controls
                     _path.LineTo(_points[1]);
                     FontEditView.InvalidateVisual();
                     break;
+
                 case 2:
                     _points[2] = new SKPoint(Convert.ToSingle(e.GetPosition(FontEditView).X), Convert.ToSingle(e.GetPosition(FontEditView).Y));
                     _path.Reset();
@@ -93,6 +97,7 @@ namespace FontManager.NET.Controls
                     _path.QuadTo(_points[1], _points[2]);
                     FontEditView.InvalidateVisual();
                     break;
+
                 case 3:
                     _points[2] = new SKPoint(Convert.ToSingle(e.GetPosition(FontEditView).X), Convert.ToSingle(e.GetPosition(FontEditView).Y));
                     _path.Reset();

@@ -5,6 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using FontManager.NET.Controls;
 using FontManager.NET.Models;
+using FontParser;
+using FontParser.TrueTypeInterpreter;
 using Xceed.Wpf.Toolkit;
 using FontFamily = System.Windows.Media.FontFamily;
 
@@ -35,7 +37,7 @@ namespace FontManager.NET
                     typeof(TextBox),
                     new PropertyMetadata("14"));
 
-        #endregion
+        #endregion Spinner TextBox DP
 
         public MainWindow()
         {
@@ -120,6 +122,13 @@ namespace FontManager.NET
                         ).ToList();
                 fonts.ForEach(f =>
                 {
+                    OpenFontReader reader = new();
+                    FontParser.Typeface.Typeface tf = reader.Read(File.OpenRead(f));
+                    var names = tf.GetGlyphNameIter().ToList();
+                    var glyph = tf.GetGlyph(41);
+                    TrueTypeInterpreter interpreter = new();
+                    interpreter.SetTypeFace(tf);
+                    var outline = interpreter.HintGlyph(41, 100);
                     FontFamily family = new(new Uri(f), f.Split("\\").Last()[..^4]);
                     family.FamilyTypefaces.ToList().ForEach(t =>
                     {

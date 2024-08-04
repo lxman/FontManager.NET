@@ -26,18 +26,18 @@ namespace FontParser
             //THIS IS MY CONVENTION for TrueType collection font name
             //you can change this to fit your need.
 
-            var stbuilder = new System.Text.StringBuilder();
-            stbuilder.Append("TTCF: " + members.Length);
+            var stringBuilder = new System.Text.StringBuilder();
+            stringBuilder.Append("TTCF: " + members.Length);
             var uniqueNames = new System.Collections.Generic.Dictionary<string, bool>();
             for (uint i = 0; i < members.Length; ++i)
             {
                 PreviewFontInfo member = members[i];
                 if (uniqueNames.TryAdd(member.Name, true))
                 {
-                    stbuilder.Append("," + member.Name);
+                    stringBuilder.Append("," + member.Name);
                 }
             }
-            return stbuilder.ToString();
+            return stringBuilder.ToString();
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace FontParser
             return null;
         }
 
-        internal bool Read(Typeface.Typeface typeface, RestoreTicket ticket, Stream stream, int streamStartOffset = 0, ReadFlags readFlags = ReadFlags.Full)
+        public bool Read(Typeface.Typeface typeface, RestoreTicket ticket, Stream stream, int streamStartOffset = 0, ReadFlags readFlags = ReadFlags.Full)
         {
             if (streamStartOffset > 0)
             {
@@ -218,7 +218,7 @@ namespace FontParser
             return ReadTableEntryCollection(typeface, ticket, tables, input);
         }
 
-        internal PreviewFontInfo ReadPreviewFontInfo(TableEntryCollection tables, BinaryReader input)
+        public PreviewFontInfo ReadPreviewFontInfo(TableEntryCollection tables, BinaryReader input)
         {
             var rd = new EntriesReaderHelper(tables, input);
 
@@ -335,7 +335,7 @@ namespace FontParser
             return true;
         }
 
-        internal bool ReadTableEntryCollection(Typeface.Typeface typeface, RestoreTicket ticket, TableEntryCollection tables, BinaryReader input)
+        public bool ReadTableEntryCollection(Typeface.Typeface typeface, RestoreTicket ticket, TableEntryCollection tables, BinaryReader input)
         {
             if (ticket != null)
             {

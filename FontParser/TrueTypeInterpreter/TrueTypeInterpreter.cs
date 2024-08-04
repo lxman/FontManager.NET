@@ -122,12 +122,12 @@ namespace FontParser.TrueTypeInterpreter
 
         public bool UseVerticalHinting { get; set; }
 
-        private static void ApplyScaleOnlyOnXAxis(GlyphPointF[] glyphPoints, float xscale)
+        private static void ApplyScaleOnlyOnXAxis(GlyphPointF[] glyphPoints, float xScale)
         {
             //TODO: review performance here
             for (int i = glyphPoints.Length - 1; i >= 0; --i)
             {
-                glyphPoints[i].ApplyScaleOnlyOnXAxis(xscale);
+                glyphPoints[i].ApplyScaleOnlyOnXAxis(xScale);
             }
         }
     }
@@ -139,11 +139,11 @@ namespace FontParser.TrueTypeInterpreter
     {
         private GraphicsState _state;
         private GraphicsState _cvtState;
-        private ExecutionStack _stack;
-        private InstructionStream[] _functions;
-        private InstructionStream[] _instructionDefs;
+        private readonly ExecutionStack _stack;
+        private readonly InstructionStream[] _functions;
+        private readonly InstructionStream[] _instructionDefs;
         private float[] _controlValueTable;
-        private int[] _storage;
+        private readonly int[] _storage;
         private ushort[] _contours;
         private float _scale;
         private int _ppem;
@@ -151,9 +151,10 @@ namespace FontParser.TrueTypeInterpreter
         private float _fdotp;
         private float _roundThreshold;
         private float _roundPhase;
-        private float roundPeriod;
+        private float _roundPeriod;
         private Zone _zp0, _zp1, _zp2;
-        private Zone _points, _twilight;
+        private Zone _points;
+        private readonly Zone _twilight;
 
         public SharpFontInterpreter(int maxStack, int maxStorage, int maxFunctions, int maxInstructionDefs, int maxTwilightPoints)
         {
@@ -253,7 +254,7 @@ namespace FontParser.TrueTypeInterpreter
         }
 
 #if DEBUG
-        private System.Collections.Generic.List<OpCode> debugList = new System.Collections.Generic.List<OpCode>();
+        private readonly System.Collections.Generic.List<OpCode> debugList = new System.Collections.Generic.List<OpCode>();
 #endif
 
         private void Execute(InstructionStream stream, bool inFunction, bool allowFunctionDefs)
@@ -1425,9 +1426,9 @@ namespace FontParser.TrueTypeInterpreter
             var mode = _stack.Pop();
             switch (mode & 0xC0)
             {
-                case 0: roundPeriod = period / 2; break;
-                case 0x40: roundPeriod = period; break;
-                case 0x80: roundPeriod = period * 2; break;
+                case 0: _roundPeriod = period / 2; break;
+                case 0x40: _roundPeriod = period; break;
+                case 0x80: _roundPeriod = period * 2; break;
                 default: throw new InvalidTrueTypeFontException("Unknown rounding period multiplier.");
             }
 
@@ -1435,16 +1436,16 @@ namespace FontParser.TrueTypeInterpreter
             switch (mode & 0x30)
             {
                 case 0: _roundPhase = 0; break;
-                case 0x10: _roundPhase = roundPeriod / 4; break;
-                case 0x20: _roundPhase = roundPeriod / 2; break;
-                case 0x30: _roundPhase = roundPeriod * 3 / 4; break;
+                case 0x10: _roundPhase = _roundPeriod / 4; break;
+                case 0x20: _roundPhase = _roundPeriod / 2; break;
+                case 0x30: _roundPhase = _roundPeriod * 3 / 4; break;
             }
 
             // bits 3-0 are the threshold
             if ((mode & 0xF) == 0)
-                _roundThreshold = roundPeriod - 1;
+                _roundThreshold = _roundPeriod - 1;
             else
-                _roundThreshold = ((mode & 0xF) - 4) * roundPeriod / 8;
+                _roundThreshold = ((mode & 0xF) - 4) * _roundPeriod / 8;
         }
 
         private void MoveIndirectRelative(int flags)
@@ -1610,7 +1611,7 @@ namespace FontParser.TrueTypeInterpreter
                     if (value >= 0)
                     {
                         result = value - _roundPhase + _roundThreshold;
-                        result = (float)Math.Truncate(result / roundPeriod) * roundPeriod;
+                        result = (float)Math.Truncate(result / _roundPeriod) * _roundPeriod;
                         result += _roundPhase;
                         if (result < 0)
                             result = _roundPhase;
@@ -1618,7 +1619,7 @@ namespace FontParser.TrueTypeInterpreter
                     else
                     {
                         result = -value - _roundPhase + _roundThreshold;
-                        result = -(float)Math.Truncate(result / roundPeriod) * roundPeriod;
+                        result = -(float)Math.Truncate(result / _roundPeriod) * _roundPeriod;
                         result -= _roundPhase;
                         if (result > 0)
                             result = -_roundPhase;
@@ -1909,7 +1910,7 @@ namespace FontParser.TrueTypeInterpreter
 
         private class ExecutionStack
         {
-            private int[] _s;
+            private readonly int[] _s;
             private int _count;
 
             public ExecutionStack(int maxStack)

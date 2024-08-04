@@ -2,7 +2,7 @@
 
 namespace FontParser.Tables
 {
-    internal class TableEntryCollection
+    public class TableEntryCollection
     {
         private readonly Dictionary<string, TableEntry> _tables = new Dictionary<string, TableEntry>();
 

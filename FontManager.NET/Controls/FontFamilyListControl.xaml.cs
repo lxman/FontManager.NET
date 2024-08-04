@@ -12,7 +12,7 @@ namespace FontManager.NET.Controls
 
         public ObservableCollection<ListBoxItem> ObservableCollectionFamilyList { get; } = [];
 
-        #endregion
+        #endregion Observable Collection Family List
 
         public FontFamilyListControl()
         {

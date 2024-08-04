@@ -1,6 +1,6 @@
 ﻿namespace FontParser.Tables
 {
-    internal class TableHeader
+    public class TableHeader
     {
         private readonly uint _tag;
 

@@ -26,7 +26,7 @@ namespace FontManager.NET.Controls
                     typeof(FontFamilyControl),
                     new PropertyMetadata("Button"));
 
-        #endregion
+        #endregion ButtonContent DP
 
         #region TextBlockContent DP
 
@@ -44,7 +44,7 @@ namespace FontManager.NET.Controls
                     typeof(FontFamilyControl),
                     new PropertyMetadata("Hello world!"));
 
-        #endregion
+        #endregion TextBlockContent DP
 
         #region TextBlockFont DP
 
@@ -71,7 +71,7 @@ namespace FontManager.NET.Controls
                             12.0
                             )));
 
-        #endregion
+        #endregion TextBlockFont DP
 
         public FontFamilyControl()
         {
