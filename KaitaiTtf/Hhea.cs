@@ -28,9 +28,9 @@ namespace KaitaiTtf
             _caretSlopeRise = m_io.ReadS2be();
             _caretSlopeRun = m_io.ReadS2be();
             _reserved = m_io.ReadBytes(10);
-            if (KaitaiStream.ByteArrayCompare(Reserved, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) != 0)
+            if (KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }) != 0)
             {
-                throw new ValidationNotEqualError([0, 0, 0, 0, 0, 0, 0, 0, 0, 0], Reserved, M_Io, "/types/hhea/seq/10");
+                throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, Reserved, M_Io, "/types/hhea/seq/10");
             }
             _metricDataFormat = m_io.ReadS2be();
             _numberOfHmetrics = m_io.ReadU2be();

@@ -1,4 +1,5 @@
-﻿using Kaitai;
+﻿using System.Collections.Generic;
+using Kaitai;
 
 namespace KaitaiTtf.Cmap.Subtable
 {

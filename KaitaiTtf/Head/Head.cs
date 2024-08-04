@@ -21,7 +21,7 @@ namespace KaitaiTtf.Head
             _fontRevision = new Fixed(m_io, this, m_root);
             _checksumAdjustment = m_io.ReadU4be();
             _magicNumber = m_io.ReadBytes(4);
-            if (KaitaiStream.ByteArrayCompare(MagicNumber, [95, 15, 60, 245]) != 0)
+            if (KaitaiStream.ByteArrayCompare(MagicNumber, new byte[] { 95, 15, 60, 245 }) != 0)
             {
                 throw new ValidationNotEqualError(new byte[] { 95, 15, 60, 245 }, MagicNumber, M_Io, "/types/head/seq/3");
             }
