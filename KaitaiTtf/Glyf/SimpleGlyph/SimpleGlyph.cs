@@ -1,4 +1,6 @@
-﻿using Kaitai;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Kaitai;
 
 namespace KaitaiTtf.Glyf.SimpleGlyph
 {
