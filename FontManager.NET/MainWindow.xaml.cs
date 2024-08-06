@@ -2,13 +2,16 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using FontManager.NET.Controls;
 using FontManager.NET.Models;
 using FontParser;
 using FontParser.TrueTypeInterpreter;
+using FontParser.Typeface;
 using Xceed.Wpf.Toolkit;
 using FontFamily = System.Windows.Media.FontFamily;
+using Typeface = System.Windows.Media.Typeface;
 
 namespace FontManager.NET
 {
@@ -122,13 +125,6 @@ namespace FontManager.NET
                         ).ToList();
                 fonts.ForEach(f =>
                 {
-                    OpenFontReader reader = new();
-                    FontParser.Typeface.Typeface tf = reader.Read(File.OpenRead(f));
-                    var names = tf.GetGlyphNameIter().ToList();
-                    var glyph = tf.GetGlyph(41);
-                    TrueTypeInterpreter interpreter = new();
-                    interpreter.SetTypeFace(tf);
-                    var outline = interpreter.HintGlyph(41, 100);
                     FontFamily family = new(new Uri(f), f.Split("\\").Last()[..^4]);
                     family.FamilyTypefaces.ToList().ForEach(t =>
                     {
@@ -144,13 +140,31 @@ namespace FontManager.NET
                                 HorizontalAlignment = HorizontalAlignment.Left,
                                 VerticalAlignment = VerticalAlignment.Center,
                                 HorizontalContentAlignment = HorizontalAlignment.Left,
-                                VerticalContentAlignment = VerticalAlignment.Center
+                                VerticalContentAlignment = VerticalAlignment.Center,
+                                Tag = f
                             };
+                            fontItem.MouseDoubleClick += ListBoxItemDoubleClick;
                             FamilyListControl.ObservableCollectionFamilyList.Add(fontItem);
                         });
                     });
                 });
             }
+        }
+
+        private void ListBoxItemDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = (ListBoxItem)sender;
+            e.Handled = true;
+            string f = item.Tag.ToString()!;
+            OpenFontReader reader = new();
+            FontParser.Typeface.Typeface tf = reader.Read(File.OpenRead(f));
+            List<GlyphNameMap> names = tf.GetGlyphNameIter().ToList();
+            Glyph glyph = tf.GetGlyph(41);
+            TrueTypeInterpreter interpreter = new();
+            interpreter.SetTypeFace(tf);
+            GlyphPointF[] outline = interpreter.HintGlyph(41, 100);
+            FontGlyphsDisplayWindow display = new(outline);
+            display.Show();
         }
     }
 }

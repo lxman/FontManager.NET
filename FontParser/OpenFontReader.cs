@@ -56,7 +56,7 @@ namespace FontParser
             {
                 //this font stream is 'The Font Collection'
                 FontCollectionHeader ttcHeader = ReadTtcHeader(input);
-                PreviewFontInfo[] members = new PreviewFontInfo[ttcHeader.numFonts];
+                var members = new PreviewFontInfo[ttcHeader.numFonts];
                 for (uint i = 0; i < ttcHeader.numFonts; ++i)
                 {
                     input.BaseStream.Seek(ttcHeader.offsetTables[i], SeekOrigin.Begin);
@@ -68,14 +68,14 @@ namespace FontParser
             else if (KnownFontFiles.IsWoff(majorVersion, minorVersion))
             {
                 //check if we enable woff or not
-                WebFont.WoffReader woffReader = new WebFont.WoffReader();
+                var woffReader = new WebFont.WoffReader();
                 input.BaseStream.Position = 0;
                 return woffReader.ReadPreview(input);
             }
             else if (KnownFontFiles.IsWoff2(majorVersion, minorVersion))
             {
                 //check if we enable woff2 or not
-                WebFont.Woff2Reader woffReader = new WebFont.Woff2Reader();
+                var woffReader = new WebFont.Woff2Reader();
                 input.BaseStream.Position = 0;
                 return woffReader.ReadPreview(input);
             }
@@ -114,7 +114,7 @@ namespace FontParser
             };
 
             uint numFonts = input.ReadUInt32();
-            int[] offsetTables = new int[numFonts];
+            var offsetTables = new int[numFonts];
             for (uint i = 0; i < numFonts; ++i)
             {
                 offsetTables[i] = input.ReadInt32();
@@ -152,7 +152,7 @@ namespace FontParser
             ushort rangeShift = input.ReadUInt16();
 
             var tables = new TableEntryCollection();
-            for (int i = 0; i < tableCount; i++)
+            for (var i = 0; i < tableCount; i++)
             {
                 tables.AddEntry(new UnreadTableEntry(ReadTableHeader(input)));
             }
@@ -161,7 +161,7 @@ namespace FontParser
 
         public Typeface.Typeface Read(Stream stream, int streamStartOffset = 0, ReadFlags readFlags = ReadFlags.Full)
         {
-            Typeface.Typeface typeface = new Typeface.Typeface();
+            var typeface = new Typeface.Typeface();
             if (Read(typeface, null, stream, streamStartOffset, readFlags))
             {
                 return typeface;
@@ -190,14 +190,14 @@ namespace FontParser
             else if (KnownFontFiles.IsWoff(majorVersion, minorVersion))
             {
                 //check if we enable woff or not
-                WebFont.WoffReader woffReader = new WebFont.WoffReader();
+                var woffReader = new WebFont.WoffReader();
                 input.BaseStream.Position = 0;
                 return woffReader.Read(typeface, input, ticket);
             }
             else if (KnownFontFiles.IsWoff2(majorVersion, minorVersion))
             {
                 //check if we enable woff2 or not
-                WebFont.Woff2Reader woffReader = new WebFont.Woff2Reader();
+                var woffReader = new WebFont.Woff2Reader();
                 input.BaseStream.Position = 0;
                 return woffReader.Read(typeface, input, ticket);
             }
@@ -209,7 +209,7 @@ namespace FontParser
             ushort rangeShift = input.ReadUInt16();
             //------------------------------------------------------------------
             var tables = new TableEntryCollection();
-            for (int i = 0; i < tableCount; i++)
+            for (var i = 0; i < tableCount; i++)
             {
                 tables.AddEntry(new UnreadTableEntry(ReadTableHeader(input)));
             }
@@ -232,7 +232,7 @@ namespace FontParser
             Cmap cmap = rd.Read(new Cmap());
             //gsub and gpos contains actual script_list that are in the typeface
 
-            Languages langs = new Languages();
+            var langs = new Languages();
             langs.Update(os2Table, metaTable, cmap, gsub, gpos);
 
             return new PreviewFontInfo(
@@ -270,8 +270,8 @@ namespace FontParser
             //2.2 Cff font
             CFFTable cff = ticket.HasCff ? rd.Read(new CFFTable()) : null;
 
-            bool isPostScriptOutline = false;
-            bool isBitmapFont = false;
+            var isPostScriptOutline = false;
+            var isBitmapFont = false;
 
             if (glyf == null)
             {
@@ -359,7 +359,7 @@ namespace FontParser
                 VerticalMetrics vmtx = rd.Read(new VerticalMetrics(vhea.NumOfLongVerMetrics));
             }
 
-            Os2FsSelection os2Select = new Os2FsSelection(os2Table.fsSelection);
+            var os2Select = new Os2FsSelection(os2Table.fsSelection);
             typeface._useTypographicMertic = os2Select.USE_TYPO_METRICS;
 
             Cmap cmaps = rd.Read(new Cmap());
@@ -380,7 +380,7 @@ namespace FontParser
             CFFTable cff = rd.Read(new CFFTable());
 
             //additional math table (if available)
-            MathTable mathtable = rd.Read(new MathTable());
+            MathTable mathTable = rd.Read(new MathTable());
             //------------------------------------
 
             //PART 3: advanced typography
@@ -405,8 +405,8 @@ namespace FontParser
                 }
             }
 
-            bool isPostScriptOutline = false;
-            bool isBitmapFont = false;
+            var isPostScriptOutline = false;
+            var isBitmapFont = false;
 
             typeface.SetBasicTypefaceTables(os2Table, nameEntry, head, horizontalMetrics);
             if (glyf == null)
@@ -422,7 +422,7 @@ namespace FontParser
                         //read cbdt
                         //bitmap font
 
-                        BitmapFontGlyphSource bmpFontGlyphSrc = new BitmapFontGlyphSource(cblcTable);
+                        var bmpFontGlyphSrc = new BitmapFontGlyphSource(cblcTable);
                         bmpFontGlyphSrc.LoadCBDT(cbdtTable);
                         Glyph[] glyphs = bmpFontGlyphSrc.BuildGlyphList();
                         typeface.SetBitmapGlyphs(glyphs, bmpFontGlyphSrc);
@@ -462,9 +462,9 @@ namespace FontParser
                 CvtTable cvtTable = rd.Read(new CvtTable());
                 PrepTable propProgramTable = rd.Read(new PrepTable());
 
-                typeface.ControlValues = cvtTable?._controlValues;
-                typeface.FpgmProgramBuffer = fpgmTable?._programBuffer;
-                typeface.PrepProgramBuffer = propProgramTable?._programBuffer;
+                typeface.ControlValues = cvtTable._controlValues;
+                typeface.FpgmProgramBuffer = fpgmTable._programBuffer;
+                typeface.PrepProgramBuffer = propProgramTable._programBuffer;
             }
 
             //-------------------------
@@ -480,9 +480,9 @@ namespace FontParser
             typeface.SetSvgTable(rd.Read(new SvgTable()));
             typeface.PostTable = postTable;
 
-            if (mathtable != null)
+            if (mathTable != null)
             {
-                GlyphLoader.LoadMathGlyph(typeface, mathtable);
+                GlyphLoader.LoadMathGlyph(typeface, mathTable);
             }
 #if DEBUG
             //test
