@@ -1,4 +1,5 @@
-﻿using System.Buffers.Binary;
+﻿using System;
+using System.Buffers.Binary;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,15 +12,15 @@ namespace NewFontParser
     {
         public FontStructure ReadFile(string file)
         {
-            ByteReader reader = new ByteReader(file);
+            FileByteReader reader = new FileByteReader(file);
             var fontStructure = new FontStructure();
-            var signature = reader.ReadBytes(4);
+            byte[] data = reader.ReadBytes(4);
 
-            if (EqualByteArrays(signature, new byte[] { 0x00, 0x01, 0x00, 0x00 }))
+            if (EqualByteArrays(data, new byte[] { 0x00, 0x01, 0x00, 0x00 }))
             {
                 fontStructure.FileType = FileType.TTF;
             }
-            else if (EqualByteArrays(signature, new byte[] { 0x4F, 0x54, 0x54, 0x4F }))
+            else if (EqualByteArrays(data, new byte[] { 0x4F, 0x54, 0x54, 0x4F }))
             {
                 fontStructure.FileType = FileType.OTF;
             }
@@ -28,18 +29,25 @@ namespace NewFontParser
                 throw new InvalidDataException("We do not know how to parse this file.");
             }
 
-            signature = reader.ReadBytes(2);
-            fontStructure.TableCount = BinaryPrimitives.ReadUInt16BigEndian(signature);
-            signature = reader.ReadBytes(2);
-            fontStructure.SearchRange = BinaryPrimitives.ReadUInt16BigEndian(signature);
-            signature = reader.ReadBytes(2);
-            fontStructure.EntrySelector = BinaryPrimitives.ReadUInt16BigEndian(signature);
-            signature = reader.ReadBytes(2);
-            fontStructure.RangeShift = BinaryPrimitives.ReadUInt16BigEndian(signature);
+            data = reader.ReadBytes(2);
+            fontStructure.TableCount = BinaryPrimitives.ReadUInt16BigEndian(data);
+            data = reader.ReadBytes(2);
+            fontStructure.SearchRange = BinaryPrimitives.ReadUInt16BigEndian(data);
+            data = reader.ReadBytes(2);
+            fontStructure.EntrySelector = BinaryPrimitives.ReadUInt16BigEndian(data);
+            data = reader.ReadBytes(2);
+            fontStructure.RangeShift = BinaryPrimitives.ReadUInt16BigEndian(data);
             for (var i = 0; i < fontStructure.TableCount; i++)
             {
                 fontStructure.TableRecords.Add(ReadTableRecord(reader));
             }
+            fontStructure.TableRecords = fontStructure.TableRecords.OrderBy(x => x.Offset).ToList();
+            fontStructure.TableRecords.ForEach(x =>
+            {
+                reader.Seek(x.Offset);
+                x.Data = reader.ReadBytes(x.Length);
+            });
+            fontStructure.Process();
             return fontStructure;
         }
 
@@ -52,16 +60,16 @@ namespace NewFontParser
             return a.Length == b.Length && a.SequenceEqual(b);
         }
 
-        private static TableRecord ReadTableRecord(ByteReader reader)
+        private static TableRecord ReadTableRecord(FileByteReader reader)
         {
             var tableRecord = new TableRecord();
-            var tag = reader.ReadBytes(4);
+            byte[] tag = reader.ReadBytes(4);
             tableRecord.Tag = ToString(tag);
-            var checkSum = reader.ReadBytes(4);
+            byte[] checkSum = reader.ReadBytes(4);
             tableRecord.CheckSum = BinaryPrimitives.ReadUInt32BigEndian(checkSum);
-            var offset = reader.ReadBytes(4);
+            byte[] offset = reader.ReadBytes(4);
             tableRecord.Offset = BinaryPrimitives.ReadUInt32BigEndian(offset);
-            var length = reader.ReadBytes(4);
+            byte[] length = reader.ReadBytes(4);
             tableRecord.Length = BinaryPrimitives.ReadUInt32BigEndian(length);
             return tableRecord;
         }
