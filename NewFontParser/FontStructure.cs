@@ -6,7 +6,8 @@ using NewFontParser.Tables.Head;
 using NewFontParser.Tables.Hhea;
 using NewFontParser.Tables.Hmtx;
 using NewFontParser.Tables.Name;
-using NewFontParser.Tables.Post;
+using NewFontParser.Tables.TtTables;
+using NewFontParser.Tables.TtTables.Glyf;
 
 namespace NewFontParser
 {
@@ -40,6 +41,9 @@ namespace NewFontParser
             ProcessName();
             ProcessOs2();
             ProcessPost();
+            ProcessCvt();
+            ProcessFpgm();
+            ProcessGlyf();
         }
 
         private void ProcessCmap()
@@ -99,6 +103,36 @@ namespace NewFontParser
         {
             byte[] postData = TableRecords.Find(x => x.Tag == "post").Data;
             Tables.Add(new PostTable(postData));
+        }
+
+        private void ProcessCvt()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "cvt "))
+            {
+                return;
+            }
+            byte[] cvtData = TableRecords.Find(x => x.Tag == "cvt ").Data;
+            Tables.Add(new CvtTable(cvtData));
+        }
+
+        private void ProcessFpgm()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "fpgm"))
+            {
+                return;
+            }
+            byte[] fpgmData = TableRecords.Find(x => x.Tag == "fpgm").Data;
+            Tables.Add(new FpgmTable(fpgmData));
+        }
+
+        private void ProcessGlyf()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "glyf"))
+            {
+                return;
+            }
+            byte[] glyfData = TableRecords.Find(x => x.Tag == "glyf").Data;
+            Tables.Add(new Table(glyfData));
         }
     }
 }

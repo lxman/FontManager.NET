@@ -2,7 +2,7 @@
 using System.Text;
 using NewFontParser.Reader;
 
-namespace NewFontParser.Tables.Post
+namespace NewFontParser.Tables
 {
     public class PostTable : IInfoTable
     {

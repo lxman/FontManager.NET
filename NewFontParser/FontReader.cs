@@ -17,11 +17,11 @@ namespace NewFontParser
 
             if (EqualByteArrays(data, new byte[] { 0x00, 0x01, 0x00, 0x00 }))
             {
-                fontStructure.FileType = FileType.TTF;
+                fontStructure.FileType = FileType.Ttf;
             }
             else if (EqualByteArrays(data, new byte[] { 0x4F, 0x54, 0x54, 0x4F }))
             {
-                fontStructure.FileType = FileType.OTF;
+                fontStructure.FileType = FileType.Otf;
             }
             else
             {

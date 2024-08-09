@@ -1,13 +1,35 @@
 ﻿using System;
+// ReSharper disable CheckNamespace
+
+#region Enums
 
 public enum FileType
 {
-    UNK,
-    TTF,
-    OTF,
-    TTC,
-    OTC
+    Unk,
+    Ttf,
+    Otf,
+    Ttc,
+    Otc
 }
+
+public enum FontDirectionHint : short
+{
+    FullyMixed = 0,
+    OnlyStrongLtr = 1,
+    StrongLtrAndNeutral = 2,
+    OnlyStrongRtl = -1,
+    StrongRtlAndNeutral = -2
+}
+
+public enum IndexToLocFormat
+{
+    Short,
+    Long
+}
+
+#endregion
+
+#region Flags
 
 [Flags]
 public enum HeadFlags : ushort
@@ -42,17 +64,41 @@ public enum MacStyle : ushort
     Extended = 1 << 6
 }
 
-public enum FontDirectionHint : short
+[Flags]
+public enum SimpleGlyphFlags : byte
 {
-    FullyMixed = 0,
-    OnlyStrongLtr = 1,
-    StrongLtrAndNeutral = 2,
-    OnlyStrongRtl = -1,
-    StrongRtlAndNeutral = -2
+    OnCurve = 1 << 0,
+    XShortVector = 1 << 1,
+    YShortVector = 1 << 2,
+    Repeat = 1 << 3,
+    XIsSameOrPositiveXShortVector = 1 << 4,
+    YIsSameOrPositiveYShortVector = 1 << 5
 }
 
-public enum IndexToLocFormat
+[Flags]
+public enum CompositeGlyphFlags : ushort
 {
-    Short,
-    Long
+    Arg1And2AreWords = 1 << 0,
+    ArgsAreXyValues = 1 << 1,
+    RoundXyToGrid = 1 << 2,
+    WeHaveAScale = 1 << 3,
+    MoreComponents = 1 << 5,
+    WeHaveAnXAndYScale = 1 << 6,
+    WeHaveATwoByTwo = 1 << 7,
+    WeHaveInstructions = 1 << 8,
+    UseMyMetrics = 1 << 9,
+    OverlapCompound = 1 << 10,
+    ScaledComponentOffset = 1 << 11,
+    UnscaledComponentOffset = 1 << 12
 }
+
+[Flags]
+public enum RangeGaspBehavior : ushort
+{
+    Gridfit = 1 << 0,
+    DoGray = 1 << 1,
+    SymmetricSmoothing = 1 << 2,
+    SymmetricGridfit = 1 << 3
+}
+
+#endregion
