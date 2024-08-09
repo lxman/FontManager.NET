@@ -44,6 +44,7 @@ namespace NewFontParser
             ProcessCvt();
             ProcessFpgm();
             ProcessGlyf();
+            ProcessLoca();
         }
 
         private void ProcessCmap()
@@ -133,6 +134,16 @@ namespace NewFontParser
             }
             byte[] glyfData = TableRecords.Find(x => x.Tag == "glyf").Data;
             Tables.Add(new Table(glyfData));
+        }
+
+        private void ProcessLoca()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "loca"))
+            {
+                return;
+            }
+            byte[] locaData = TableRecords.Find(x => x.Tag == "loca").Data;
+            Tables.Add(new Table(locaData));
         }
     }
 }
