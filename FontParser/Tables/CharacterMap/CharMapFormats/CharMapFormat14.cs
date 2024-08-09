@@ -34,7 +34,7 @@ namespace FontParser.Tables.CharacterMap.CharMapFormats
                 }
 
                 // If the sequence is a default UVS, return the default glyph
-                for (int i = 0; i < sel.DefaultStartCodes.Count; ++i)
+                for (var i = 0; i < sel.DefaultStartCodes.Count; ++i)
                 {
                     if (codepoint >= sel.DefaultStartCodes[i] && codepoint < sel.DefaultEndCodes[i])
                     {
@@ -97,17 +97,17 @@ namespace FontParser.Tables.CharacterMap.CharMapFormats
             uint numVarSelectorRecords = reader.ReadUInt32();
 
             var variationSelectors = new Dictionary<int, VariationSelector>();
-            int[] varSelectors = new int[numVarSelectorRecords];
-            uint[] defaultUVSOffsets = new uint[numVarSelectorRecords];
-            uint[] nonDefaultUVSOffsets = new uint[numVarSelectorRecords];
-            for (int i = 0; i < numVarSelectorRecords; ++i)
+            var varSelectors = new int[numVarSelectorRecords];
+            var defaultUVSOffsets = new uint[numVarSelectorRecords];
+            var nonDefaultUVSOffsets = new uint[numVarSelectorRecords];
+            for (var i = 0; i < numVarSelectorRecords; ++i)
             {
                 varSelectors[i] = reader.ReadUInt24();
                 defaultUVSOffsets[i] = reader.ReadUInt32();
                 nonDefaultUVSOffsets[i] = reader.ReadUInt32();
             }
 
-            for (int i = 0; i < numVarSelectorRecords; ++i)
+            for (var i = 0; i < numVarSelectorRecords; ++i)
             {
                 var sel = new VariationSelector();
 
@@ -142,7 +142,7 @@ namespace FontParser.Tables.CharacterMap.CharMapFormats
 
                     reader.BaseStream.Seek(beginAt + defaultUVSOffsets[i], SeekOrigin.Begin);
                     uint numUnicodeValueRanges = reader.ReadUInt32();
-                    for (int n = 0; n < numUnicodeValueRanges; ++n)
+                    for (var n = 0; n < numUnicodeValueRanges; ++n)
                     {
                         int startCode = reader.ReadUInt24();
                         sel.DefaultStartCodes.Add(startCode);
@@ -179,7 +179,7 @@ namespace FontParser.Tables.CharacterMap.CharMapFormats
 
                     reader.BaseStream.Seek(beginAt + nonDefaultUVSOffsets[i], SeekOrigin.Begin);
                     uint numUVSMappings = reader.ReadUInt32();
-                    for (int n = 0; n < numUVSMappings; ++n)
+                    for (var n = 0; n < numUVSMappings; ++n)
                     {
                         int unicodeValue = reader.ReadUInt24();
                         ushort glyphID = reader.ReadUInt16();

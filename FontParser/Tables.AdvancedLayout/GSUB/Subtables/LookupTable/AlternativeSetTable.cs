@@ -10,7 +10,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
         {
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
             //
-            AlternativeSetTable altTable = new AlternativeSetTable();
+            var altTable = new AlternativeSetTable();
             ushort glyphCount = reader.ReadUInt16();
             altTable.alternativeGlyphIds = reader.ReadUInt16Array(glyphCount);
             return altTable;

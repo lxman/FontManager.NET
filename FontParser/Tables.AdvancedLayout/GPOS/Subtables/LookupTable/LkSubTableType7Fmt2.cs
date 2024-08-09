@@ -29,8 +29,8 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
                 foreach (PosClassRule rule in PosClassSetTables[glyph1Class].PosClassRules)
                 {
                     ushort[] glyphIds = rule.InputGlyphIds;
-                    int matches = 0;
-                    for (int n = 0; n < glyphIds.Length && i + 1 + n < lim; ++n)
+                    var matches = 0;
+                    for (var n = 0; n < glyphIds.Length && i + 1 + n < lim; ++n)
                     {
                         ushort glyphIndex = inputGlyphs.GetGlyph(i + 1 + n, out unused);
                         int glyphClass = ClassDef.GetClassValue(glyphIndex);

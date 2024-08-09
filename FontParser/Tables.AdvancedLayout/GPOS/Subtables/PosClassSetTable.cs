@@ -53,7 +53,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
             ushort posClassRuleCnt = reader.ReadUInt16();
             ushort[] posClassRuleOffsets = reader.ReadUInt16Array(posClassRuleCnt);
             PosClassRules = new PosClassRule[posClassRuleCnt];
-            for (int i = 0; i < posClassRuleOffsets.Length; ++i)
+            for (var i = 0; i < posClassRuleOffsets.Length; ++i)
             {
                 //move to and read
                 PosClassRules[i] = PosClassRule.CreateFrom(reader, tableStartAt + posClassRuleOffsets[i]);

@@ -63,13 +63,13 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
         public void dbugTest()
         {
             //count base covate
-            List<ushort> expandedMarks = new List<ushort>(MarkCoverageTable.GetExpandedValueIter());
+            var expandedMarks = new List<ushort>(MarkCoverageTable.GetExpandedValueIter());
             if (expandedMarks.Count != MarkArrayTable.dbugGetAnchorCount())
             {
                 throw new OpenFontNotSupportedException();
             }
             //--------------------------
-            List<ushort> expandedBase = new List<ushort>(BaseCoverageTable.GetExpandedValueIter());
+            var expandedBase = new List<ushort>(BaseCoverageTable.GetExpandedValueIter());
             if (expandedBase.Count != BaseArrayTable.dbugGetRecordCount())
             {
                 throw new OpenFontNotSupportedException();

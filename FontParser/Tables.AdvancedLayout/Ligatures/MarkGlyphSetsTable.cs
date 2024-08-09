@@ -102,13 +102,13 @@ namespace FontParser.Tables.AdvancedLayout.Ligatures
         {
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
             //
-            MarkGlyphSetsTable markGlyphSetsTable = new MarkGlyphSetsTable
+            var markGlyphSetsTable = new MarkGlyphSetsTable
             {
                 _format = reader.ReadUInt16()
             };
             ushort markSetCount = reader.ReadUInt16();
             uint[] coverageOffset = markGlyphSetsTable._coverageOffset = new uint[markSetCount];
-            for (int i = 0; i < markSetCount; ++i)
+            for (var i = 0; i < markSetCount; ++i)
             {
                 //Note that the array of offsets for the Coverage tables uses ULONG
                 coverageOffset[i] = reader.ReadUInt32();//

@@ -55,7 +55,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
             //
             //------------
-            ChainSubRuleSubTable subRuleTable = new ChainSubRuleSubTable();
+            var subRuleTable = new ChainSubRuleSubTable();
             ushort backtrackGlyphCount = reader.ReadUInt16();
             subRuleTable.backTrackingGlyphs = reader.ReadUInt16Array(backtrackGlyphCount);
             //--------

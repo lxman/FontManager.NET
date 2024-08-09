@@ -21,7 +21,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
             //find marker
             CoverageTable.CoverageTable covTable = CoverageTable;
             int lim = inputGlyphs.Count - 1;
-            for (int i = 0; i < lim; ++i)
+            for (var i = 0; i < lim; ++i)
             {
                 int firstGlyphFound = covTable.FindPosition(inputGlyphs.GetGlyph(i, out short glyph_advW));
                 if (firstGlyphFound > -1)

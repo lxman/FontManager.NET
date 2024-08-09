@@ -66,7 +66,7 @@ namespace FontParser.Tables.TrueType
             if (IsLongVersion)
             {
                 //long version
-                for (int i = 0; i < lim; i++)
+                for (var i = 0; i < lim; i++)
                 {
                     _offsets[i] = reader.ReadUInt32();
                 }
@@ -74,7 +74,7 @@ namespace FontParser.Tables.TrueType
             else
             {
                 //short version
-                for (int i = 0; i < lim; i++)
+                for (var i = 0; i < lim; i++)
                 {
                     _offsets[i] = (uint)(reader.ReadUInt16() << 1); // =*2
                 }

@@ -81,7 +81,7 @@ namespace FontParser.AdditionalInfo
 
         private static void InitData()
         {
-            using (StringReader strReader = new StringReader(glyphListTxt))
+            using (var strReader = new StringReader(glyphListTxt))
             {
                 string line = strReader.ReadLine();
                 while (line != null)
@@ -103,7 +103,7 @@ namespace FontParser.AdditionalInfo
                         string glyphName = kp[0].Trim();
                         string[] unicodeParts = kp[1].Trim().Split(' ');
                         int partCount = unicodeParts.Length;
-                        int unicodeValue = 0;
+                        var unicodeValue = 0;
                         switch (partCount)
                         {
                             case 0:

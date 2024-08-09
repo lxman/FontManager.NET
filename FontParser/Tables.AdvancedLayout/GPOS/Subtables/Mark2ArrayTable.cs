@@ -31,7 +31,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
             ushort[] offsets = reader.ReadUInt16Array(mark2Count * classCount);
             //read mark2 anchors
             AnchorPoint[] anchors = new AnchorPoint[mark2Count * classCount];
-            for (int i = 0; i < mark2Count * classCount; ++i)
+            for (var i = 0; i < mark2Count * classCount; ++i)
             {
                 anchors[i] = AnchorPoint.CreateFrom(reader, beginAt + offsets[i]);
             }

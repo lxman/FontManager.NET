@@ -31,12 +31,12 @@ namespace FontParser.Tables.AdvancedLayout.Ligatures
         {
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
             //----
-            LigCaretList ligCaretList = new LigCaretList();
+            var ligCaretList = new LigCaretList();
             ushort coverageOffset = reader.ReadUInt16();
             ushort ligGlyphCount = reader.ReadUInt16();
             ushort[] ligGlyphOffsets = reader.ReadUInt16Array(ligGlyphCount);
             LigGlyph[] ligGlyphs = new LigGlyph[ligGlyphCount];
-            for (int i = 0; i < ligGlyphCount; ++i)
+            for (var i = 0; i < ligGlyphCount; ++i)
             {
                 ligGlyphs[i] = LigGlyph.CreateFrom(reader, beginAt + ligGlyphOffsets[i]);
             }

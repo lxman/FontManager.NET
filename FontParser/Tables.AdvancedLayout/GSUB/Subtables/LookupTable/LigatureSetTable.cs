@@ -13,14 +13,14 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
 
         public static LigatureSetTable CreateFrom(BinaryReader reader, long beginAt)
         {
-            LigatureSetTable ligSetTable = new LigatureSetTable();
+            var ligSetTable = new LigatureSetTable();
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
             //
             ushort ligCount = reader.ReadUInt16(); //Number of Ligature tables
             ushort[] ligOffsets = reader.ReadUInt16Array(ligCount);
             //
             LigatureTable[] ligTables = ligSetTable.Ligatures = new LigatureTable[ligCount];
-            for (int i = 0; i < ligCount; ++i)
+            for (var i = 0; i < ligCount; ++i)
             {
                 ligTables[i] = LigatureTable.CreateFrom(reader, beginAt + ligOffsets[i]);
             }

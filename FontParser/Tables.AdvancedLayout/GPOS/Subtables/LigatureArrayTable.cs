@@ -36,7 +36,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
 
             _ligatures = new LigatureAttachTable[ligatureCount];
 
-            for (int i = 0; i < ligatureCount; ++i)
+            for (var i = 0; i < ligatureCount; ++i)
             {
                 //each ligature table
                 reader.BaseStream.Seek(startPos + offsets[i], SeekOrigin.Begin);

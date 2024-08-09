@@ -46,7 +46,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
             long markTableBeginAt = reader.BaseStream.Position;
             ushort markCount = reader.ReadUInt16();
             _records = new MarkRecord[markCount];
-            for (int i = 0; i < markCount; ++i)
+            for (var i = 0; i < markCount; ++i)
             {
                 //1 mark : 1 anchor
                 _records[i] = new MarkRecord(
@@ -56,7 +56,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
             //---------------------------
             //read anchor
             _anchorPoints = new AnchorPoint[markCount];
-            for (int i = 0; i < markCount; ++i)
+            for (var i = 0; i < markCount; ++i)
             {
                 MarkRecord markRec = _records[i];
                 //bug?

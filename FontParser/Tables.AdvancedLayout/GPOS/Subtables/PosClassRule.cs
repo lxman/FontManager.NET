@@ -12,7 +12,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
             //--------
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
             //--------
-            PosClassRule posClassRule = new PosClassRule();
+            var posClassRule = new PosClassRule();
             ushort glyphCount = reader.ReadUInt16();
             ushort posCount = reader.ReadUInt16();
             if (glyphCount > 1)

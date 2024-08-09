@@ -31,7 +31,7 @@ namespace FontParser.Tables.AdvancedLayout
             GlyphPalettes = new ushort[numLayerRecords];
 
             reader.BaseStream.Seek(offset + baseGlyphRecordsOffset, SeekOrigin.Begin);
-            for (int i = 0; i < numBaseGlyphRecords; ++i)
+            for (var i = 0; i < numBaseGlyphRecords; ++i)
             {
                 ushort gid = reader.ReadUInt16();
                 LayerIndices[gid] = reader.ReadUInt16();
@@ -39,7 +39,7 @@ namespace FontParser.Tables.AdvancedLayout
             }
 
             reader.BaseStream.Seek(offset + layerRecordsOffset, SeekOrigin.Begin);
-            for (int i = 0; i < GlyphLayers.Length; ++i)
+            for (var i = 0; i < GlyphLayers.Length; ++i)
             {
                 GlyphLayers[i] = reader.ReadUInt16();
                 GlyphPalettes[i] = reader.ReadUInt16();

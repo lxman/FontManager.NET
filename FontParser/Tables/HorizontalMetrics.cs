@@ -67,10 +67,10 @@ namespace FontParser.Tables
             //If the font is monospaced, only one entry need be in the array,
             //but that entry is required. The last entry applies to all subsequent glyphs
 
-            int gid = 0; //gid=> glyphIndex
+            var gid = 0; //gid=> glyphIndex
 
             int numOfHMetrics = _numOfHMetrics;
-            for (int i = 0; i < numOfHMetrics; i++)
+            for (var i = 0; i < numOfHMetrics; i++)
             {
                 _advanceWidths[gid] = input.ReadUInt16();
                 _leftSideBearings[gid] = input.ReadInt16();
@@ -86,7 +86,7 @@ namespace FontParser.Tables
             int nEntries = _numGlyphs - numOfHMetrics;
             ushort advanceWidth = _advanceWidths[numOfHMetrics - 1];
 
-            for (int i = 0; i < nEntries; i++)
+            for (var i = 0; i < nEntries; i++)
             {
                 _advanceWidths[gid] = advanceWidth;
                 _leftSideBearings[gid] = input.ReadInt16();

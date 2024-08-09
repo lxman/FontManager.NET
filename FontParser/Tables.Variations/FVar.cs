@@ -77,10 +77,10 @@ namespace FontParser.Tables.Variations
 
             variableAxisRecords = new VariableAxisRecord[axisCount];
 
-            for (int i = 0; i < axisCount; ++i)
+            for (var i = 0; i < axisCount; ++i)
             {
                 long pos = reader.BaseStream.Position;
-                VariableAxisRecord varAxisRecord = new VariableAxisRecord();
+                var varAxisRecord = new VariableAxisRecord();
                 varAxisRecord.ReadContent(reader);
                 variableAxisRecords[i] = varAxisRecord;
                 if (reader.BaseStream.Position != pos + axisSize)
@@ -92,11 +92,11 @@ namespace FontParser.Tables.Variations
 
             instanceRecords = new InstanceRecord[instanceCount];
 
-            for (int i = 0; i < instanceCount; ++i)
+            for (var i = 0; i < instanceCount; ++i)
             {
                 long pos = reader.BaseStream.Position;
 
-                InstanceRecord instanecRec = new InstanceRecord();
+                var instanecRec = new InstanceRecord();
                 instanecRec.ReadContent(reader, axisCount, instanceSize);
 
                 if (reader.BaseStream.Position != pos + instanceSize)
@@ -172,8 +172,8 @@ namespace FontParser.Tables.Variations
                 long expectedEndPos = reader.BaseStream.Position + instanceRecordSize;
                 subfamilyNameID = reader.ReadUInt16();
                 flags = reader.ReadUInt16();
-                float[] coords = new float[axisCount];
-                for (int i = 0; i < axisCount; ++i)
+                var coords = new float[axisCount];
+                for (var i = 0; i < axisCount; ++i)
                 {
                     coords[i] = reader.ReadFixed();
                 }

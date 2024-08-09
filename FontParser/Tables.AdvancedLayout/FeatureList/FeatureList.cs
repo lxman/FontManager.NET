@@ -45,10 +45,10 @@ namespace FontParser.Tables.AdvancedLayout.FeatureList
             //----------------------------------------------------
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
             //
-            FeatureList featureList = new FeatureList();
+            var featureList = new FeatureList();
             ushort featureCount = reader.ReadUInt16();
             FeatureRecord[] featureRecords = new FeatureRecord[featureCount];
-            for (int i = 0; i < featureCount; ++i)
+            for (var i = 0; i < featureCount; ++i)
             {
                 //read script record
                 featureRecords[i] = new FeatureRecord(
@@ -57,7 +57,7 @@ namespace FontParser.Tables.AdvancedLayout.FeatureList
             }
             //read each feature table
             FeatureTable[] featureTables = featureList.featureTables = new FeatureTable[featureCount];
-            for (int i = 0; i < featureCount; ++i)
+            for (var i = 0; i < featureCount; ++i)
             {
                 FeatureRecord frecord = featureRecords[i];
                 (featureTables[i] = FeatureTable.CreateFrom(reader, beginAt + frecord.offset)).FeatureTag = frecord.featureTag;

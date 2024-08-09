@@ -1,5 +1,4 @@
-﻿using System;
-using System.Buffers.Binary;
+﻿using System.Buffers.Binary;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,7 +11,7 @@ namespace NewFontParser
     {
         public FontStructure ReadFile(string file)
         {
-            FileByteReader reader = new FileByteReader(file);
+            var reader = new FileByteReader(file);
             var fontStructure = new FontStructure();
             byte[] data = reader.ReadBytes(4);
 

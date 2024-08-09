@@ -38,7 +38,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts.Common.SubTables
             //In some monospaced fonts it makes sense to store extra white space around
             //some of the glyphs to keep all metrics identical, thus permitting the use of format 2 or 5.
 
-            IndexSubHeader header = new IndexSubHeader(
+            var header = new IndexSubHeader(
                 reader.ReadUInt16(),
                 reader.ReadUInt16(),
                 reader.ReadUInt32()
@@ -56,7 +56,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts.Common.SubTables
                         int nElem = bmpSizeTable.endGlyphIndex - bmpSizeTable.startGlyphIndex + 1;
                         uint[] offsetArray = reader.ReadUInt32Array(nElem);
                         //check 16 bit align padd
-                        IndexSubTable1 subTable = new IndexSubTable1
+                        var subTable = new IndexSubTable1
                         {
                             header = header,
                             offsetArray = offsetArray
@@ -70,7 +70,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts.Common.SubTables
                     //uint32               imageSize   All the glyphs are of the same size.
                     //BigGlyphMetrics      bigMetrics  All glyphs have the same metrics; glyph data may be compressed, byte-aligned, or bit-aligned.
                     {
-                        IndexSubTable2 subtable = new IndexSubTable2
+                        var subtable = new IndexSubTable2
                         {
                             header = header,
                             imageSize = reader.ReadUInt32()
@@ -88,7 +88,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts.Common.SubTables
                         int nElem = bmpSizeTable.endGlyphIndex - bmpSizeTable.startGlyphIndex + 1;
                         ushort[] offsetArray = reader.ReadUInt16Array(nElem);
                         //check 16 bit align padd
-                        IndexSubTable3 subTable = new IndexSubTable3
+                        var subTable = new IndexSubTable3
                         {
                             header = header,
                             offsetArray = offsetArray
@@ -102,14 +102,14 @@ namespace FontParser.Tables.BitmapAndSvgFonts.Common.SubTables
                     //uint32              numGlyphs Array length.
                     //GlyphIdOffsetPair   glyphArray[numGlyphs + 1]   One per glyph.
                     {
-                        IndexSubTable4 subTable = new IndexSubTable4
+                        var subTable = new IndexSubTable4
                         {
                             header = header
                         };
 
                         uint numGlyphs = reader.ReadUInt32();
                         GlyphIdOffsetPair[] glyphArray = subTable.glyphArray = new GlyphIdOffsetPair[numGlyphs + 1];
-                        for (int i = 0; i <= numGlyphs; ++i) //***
+                        for (var i = 0; i <= numGlyphs; ++i) //***
                         {
                             glyphArray[i] = new GlyphIdOffsetPair(reader.ReadUInt16(), reader.ReadUInt16());
                         }
@@ -124,7 +124,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts.Common.SubTables
                     //uint32              numGlyphs   Array length.
                     //uint16              glyphIdArray[numGlyphs]     One per glyph, sorted by glyph ID.
                     {
-                        IndexSubTable5 subTable = new IndexSubTable5
+                        var subTable = new IndexSubTable5
                         {
                             header = header,
                             imageSize = reader.ReadUInt32()

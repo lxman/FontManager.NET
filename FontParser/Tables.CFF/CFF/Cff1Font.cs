@@ -39,7 +39,7 @@ namespace FontParser.Tables.CFF.CFF
 #if DEBUG
             if (j > ushort.MaxValue) { throw new OpenFontNotSupportedException(); }
 #endif
-            for (int i = 0; i < j; ++i)
+            for (var i = 0; i < j; ++i)
             {
                 Glyph cff1Glyph = _glyphs[i];
                 yield return new GlyphNameMap((ushort)i, cff1Glyph._cff1GlyphData.Name);

@@ -17,7 +17,7 @@
             int glyphCount = typeface.GlyphCount;
             GlyphInfo[] mathGlyphInfos = new GlyphInfo[glyphCount];
 
-            int index = 0;
+            var index = 0;
             //-----------------
             //2. MathGlyphInfo
             //-----------------

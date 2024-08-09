@@ -209,7 +209,7 @@ namespace FontParser.Tables.AdvancedLayout
                         ushort startGlyph = classDef.startGlyph;
                         ushort[] classValues = classDef.classValueArray;
                         int gIndex = startGlyph;
-                        for (int i = 0; i < classValues.Length; ++i)
+                        for (var i = 0; i < classValues.Length; ++i)
                         {
 #if DEBUG
                             ushort classV = classValues[i];
@@ -227,7 +227,7 @@ namespace FontParser.Tables.AdvancedLayout
                 case 2:
                     {
                         ClassDefTable.ClassRangeRecord[] records = classDef.records;
-                        for (int n = 0; n < records.Length; ++n)
+                        for (var n = 0; n < records.Length; ++n)
                         {
                             ClassDefTable.ClassRangeRecord rec = records[n];
 
@@ -238,7 +238,7 @@ namespace FontParser.Tables.AdvancedLayout
                             }
 #endif
 
-                            GlyphClassKind glyphKind = (GlyphClassKind)rec.classNo;
+                            var glyphKind = (GlyphClassKind)rec.classNo;
                             for (int i = rec.startGlyphId; i <= rec.endGlyphId; ++i)
                             {
                                 inputGlyphs[i].GlyphClass = glyphKind;
@@ -287,7 +287,7 @@ namespace FontParser.Tables.AdvancedLayout
 
                         int len = classValues.Length;
                         int gIndex = startGlyph;
-                        for (int i = 0; i < len; ++i)
+                        for (var i = 0; i < len; ++i)
                         {
 #if DEBUG
                             Glyph dbugTestGlyph = inputGlyphs[gIndex];
@@ -302,7 +302,7 @@ namespace FontParser.Tables.AdvancedLayout
                     {
                         ClassDefTable.ClassRangeRecord[] records = markAttachmentClassDef.records;
                         int len = records.Length;
-                        for (int n = 0; n < len; ++n)
+                        for (var n = 0; n < len; ++n)
                         {
                             ClassDefTable.ClassRangeRecord rec = records[n];
                             for (int i = rec.startGlyphId; i <= rec.endGlyphId; ++i)

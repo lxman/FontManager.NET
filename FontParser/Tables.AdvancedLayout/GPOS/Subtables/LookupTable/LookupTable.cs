@@ -96,19 +96,19 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
                 default: throw new OpenFontNotSupportedException();
                 case 1:
                     {
-                        ValueRecord valueRecord = ValueRecord.CreateFrom(reader, valueFormat);
-                        CoverageTable.CoverageTable coverageTable = CoverageTable.CoverageTable.CreateFrom(reader, subTableStartAt + coverage);
+                        var valueRecord = ValueRecord.CreateFrom(reader, valueFormat);
+                        var coverageTable = CoverageTable.CoverageTable.CreateFrom(reader, subTableStartAt + coverage);
                         return new LkSubTableType1(coverageTable, valueRecord);
                     }
                 case 2:
                     {
                         ushort valueCount = reader.ReadUInt16();
                         var valueRecords = new ValueRecord[valueCount];
-                        for (int n = 0; n < valueCount; ++n)
+                        for (var n = 0; n < valueCount; ++n)
                         {
                             valueRecords[n] = ValueRecord.CreateFrom(reader, valueFormat);
                         }
-                        CoverageTable.CoverageTable coverageTable = CoverageTable.CoverageTable.CreateFrom(reader, subTableStartAt + coverage);
+                        var coverageTable = CoverageTable.CoverageTable.CreateFrom(reader, subTableStartAt + coverage);
                         return new LkSubTableType1(coverageTable, valueRecords);
                     }
             }
@@ -230,7 +230,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
                         ushort pairSetCount = reader.ReadUInt16();
                         ushort[] pairSetOffsetArray = reader.ReadUInt16Array(pairSetCount);
                         PairSetTable[] pairSetTables = new PairSetTable[pairSetCount];
-                        for (int n = 0; n < pairSetCount; ++n)
+                        for (var n = 0; n < pairSetCount; ++n)
                         {
                             reader.BaseStream.Seek(subTableStartAt + pairSetOffsetArray[n], SeekOrigin.Begin);
                             var pairSetTable = new PairSetTable();
@@ -255,12 +255,12 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
                         ushort class2Count = reader.ReadUInt16();
 
                         Lk2Class1Record[] class1Records = new Lk2Class1Record[class1Count];
-                        for (int c1 = 0; c1 < class1Count; ++c1)
+                        for (var c1 = 0; c1 < class1Count; ++c1)
                         {
                             //for each c1 record
 
                             Lk2Class2Record[] class2Records = new Lk2Class2Record[class2Count];
-                            for (int c2 = 0; c2 < class2Count; ++c2)
+                            for (var c2 = 0; c2 < class2Count; ++c2)
                             {
                                 class2Records[c2] = new Lk2Class2Record(
                                       ValueRecord.CreateFrom(reader, value1Format),
@@ -489,7 +489,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
                         ushort posRuleSetCount = reader.ReadUInt16();
                         ushort[] posRuleSetOffsets = reader.ReadUInt16Array(posRuleSetCount);
 
-                        LkSubTableType7Fmt1 subTable = new LkSubTableType7Fmt1
+                        var subTable = new LkSubTableType7Fmt1
                         {
                             PosRuleSetTables = GPOS.CreateMultiplePosRuleSetTables(subTableStartAt, posRuleSetOffsets, reader),
                             CoverageTable = CoverageTable.CoverageTable.CreateFrom(reader, subTableStartAt + coverageOffset)
@@ -518,7 +518,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
 
                         PosClassSetTable[] posClassSetTables = new PosClassSetTable[posClassSetCount];
                         subTable.PosClassSetTables = posClassSetTables;
-                        for (int n = 0; n < posClassSetCount; ++n)
+                        for (var n = 0; n < posClassSetCount; ++n)
                         {
                             ushort offset = posClassSetOffsets[n];
                             if (offset > 0)
@@ -576,7 +576,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
                         ushort chainPosRuleSetCount = reader.ReadUInt16();
                         ushort[] chainPosRuleSetOffsetList = reader.ReadUInt16Array(chainPosRuleSetCount);
 
-                        LkSubTableType8Fmt1 subTable = new LkSubTableType8Fmt1
+                        var subTable = new LkSubTableType8Fmt1
                         {
                             PosRuleSetTables = GPOS.CreateMultiplePosRuleSetTables(subTableStartAt, chainPosRuleSetOffsetList, reader),
                             CoverageTable = CoverageTable.CoverageTable.CreateFrom(reader, subTableStartAt + coverageOffset)
@@ -601,7 +601,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
                         ushort chainPosClassSetCnt = reader.ReadUInt16();
                         ushort[] chainPosClassSetOffsetArray = reader.ReadUInt16Array(chainPosClassSetCnt);
 
-                        LkSubTableType8Fmt2 subTable = new LkSubTableType8Fmt2
+                        var subTable = new LkSubTableType8Fmt2
                         {
                             BackTrackClassDef = ClassDefTable.ClassDefTable.CreateFrom(reader, subTableStartAt + backTrackClassDefOffset),
                             InputClassDef = ClassDefTable.ClassDefTable.CreateFrom(reader, subTableStartAt + inputClassDefOffset),
@@ -610,7 +610,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
 
                         //----------
                         PosClassSetTable[] posClassSetTables = new PosClassSetTable[chainPosClassSetCnt];
-                        for (int n = 0; n < chainPosClassSetCnt; ++n)
+                        for (var n = 0; n < chainPosClassSetCnt; ++n)
                         {
                             ushort offset = chainPosClassSetOffsetArray[n];
                             if (offset > 0)

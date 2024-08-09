@@ -50,7 +50,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts
 
             //----------------
             var bmpSizeTables = new SizeTable[numSizes];
-            for (int i = 0; i < numSizes; i++)
+            for (var i = 0; i < numSizes; i++)
             {
                 bmpSizeTables[i] = SizeTable.ReadBitmapSizeTable(reader);
             }
@@ -80,13 +80,13 @@ namespace FontParser.Tables.BitmapAndSvgFonts
             //the format of the EBDT image data,
             //and the offset from the beginning of the EBDT table to the beginning of the image data for this range.
 
-            for (int n = 0; n < numSizes; ++n)
+            for (var n = 0; n < numSizes; ++n)
             {
                 SizeTable bmpSizeTable = bmpSizeTables[n];
                 uint numberOfIndexSubTables = bmpSizeTable.numberOfIndexSubTables;
 
                 //
-                IndexSubTableArray[] indexSubTableArrs = new IndexSubTableArray[numberOfIndexSubTables];
+                var indexSubTableArrs = new IndexSubTableArray[numberOfIndexSubTables];
                 for (uint i = 0; i < numberOfIndexSubTables; ++i)
                 {
                     indexSubTableArrs[i] = new IndexSubTableArray(

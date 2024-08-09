@@ -23,7 +23,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
         protected void DoGlyphPositionAt(IGlyphPositions inputGlyphs, int pos)
         {
             // Check all coverages: if any of them does not match, abort substitution
-            for (int i = 0; i < InputGlyphCoverages.Length; ++i)
+            for (var i = 0; i < InputGlyphCoverages.Length; ++i)
             {
                 if (InputGlyphCoverages[i].FindPosition(inputGlyphs.GetGlyph(pos + i, out var unused)) < 0)
                 {
@@ -31,7 +31,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
                 }
             }
 
-            for (int i = 0; i < BacktrackCoverages.Length; ++i)
+            for (var i = 0; i < BacktrackCoverages.Length; ++i)
             {
                 if (BacktrackCoverages[i].FindPosition(inputGlyphs.GetGlyph(pos - 1 - i, out var unused)) < 0)
                 {
@@ -39,7 +39,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
                 }
             }
 
-            for (int i = 0; i < LookaheadCoverages.Length; ++i)
+            for (var i = 0; i < LookaheadCoverages.Length; ++i)
             {
                 if (LookaheadCoverages[i].FindPosition(inputGlyphs.GetGlyph(pos + InputGlyphCoverages.Length + i, out var unused)) < 0)
                 {

@@ -125,7 +125,7 @@ namespace FontParser.Tables.CFF.CFF
 
             int count = nameIndexElems.Length;
             string[] fontNames = new string[count];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 //read each FontName or CIDFontName
                 CffIndexOffset indexElem = nameIndexElems[i];
@@ -179,7 +179,7 @@ namespace FontParser.Tables.CFF.CFF
                 //TODO: review here again
                 throw new OpenFontNotSupportedException();
             }
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 //read DICT data
 
@@ -251,9 +251,9 @@ namespace FontParser.Tables.CFF.CFF
 
             _uniqueStringTable = new string[offsets.Length];
 
-            byte[] buff = new byte[512];//reusable
+            var buff = new byte[512];//reusable
 
-            for (int i = 0; i < offsets.Length; ++i)
+            for (var i = 0; i < offsets.Length; ++i)
             {
                 int len = offsets[i].len;
                 //TODO: review here again,
@@ -532,7 +532,7 @@ namespace FontParser.Tables.CFF.CFF
 
             Glyph[] cff1Glyphs = _currentCff1Font._glyphs;
             int nGlyphs = cff1Glyphs.Length;
-            for (int i = 1; i < nGlyphs; ++i)
+            for (var i = 1; i < nGlyphs; ++i)
             {
                 Cff1GlyphData d = cff1Glyphs[i]._cff1GlyphData;
                 d.Name = GetSid(d.SIDName = _reader.ReadUInt16());
@@ -560,7 +560,7 @@ namespace FontParser.Tables.CFF.CFF
             // throw new OpenFontNotSupportedException();
             Glyph[] cff1Glyphs = _currentCff1Font._glyphs;
             int nGlyphs = cff1Glyphs.Length;
-            for (int i = 1; i < nGlyphs;)
+            for (var i = 1; i < nGlyphs;)
             {
                 int sid = _reader.ReadUInt16();// First glyph in range
                 int count = _reader.ReadByte() + 1;//since it not include first elem
@@ -597,7 +597,7 @@ namespace FontParser.Tables.CFF.CFF
 
             Glyph[] cff1Glyphs = _currentCff1Font._glyphs;
             int nGlyphs = cff1Glyphs.Length;
-            for (int i = 1; i < nGlyphs;)
+            for (var i = 1; i < nGlyphs;)
             {
                 int sid = _reader.ReadUInt16();// First glyph in range
                 int count = _reader.ReadUInt16() + 1;//since it not include first elem
@@ -681,11 +681,11 @@ namespace FontParser.Tables.CFF.CFF
                 case 3:
                     {
                         ushort nRanges = _reader.ReadUInt16();
-                        FDRange3[] ranges = new FDRange3[nRanges + 1];
+                        var ranges = new FDRange3[nRanges + 1];
 
                         _cidFontInfo.fdSelectFormat = 3;
                         _cidFontInfo.fdRanges = ranges;
-                        for (int i = 0; i < nRanges; ++i)
+                        for (var i = 0; i < nRanges; ++i)
                         {
                             ranges[i] = new FDRange3(_reader.ReadUInt16(), _reader.ReadByte());
                         }
@@ -731,15 +731,15 @@ namespace FontParser.Tables.CFF.CFF
             List<FontDict> fontDicts = new List<FontDict>();
             _currentCff1Font._cidFontDict = fontDicts;
 
-            for (int i = 0; i < offsets.Length; ++i)
+            for (var i = 0; i < offsets.Length; ++i)
             {
                 //read DICT data
                 List<CffDataDicEntry> dic = ReadDICTData(offsets[i].len);
                 //translate
 
-                int offset = 0;
-                int size = 0;
-                int name = 0;
+                var offset = 0;
+                var size = 0;
+                var name = 0;
 
                 foreach (CffDataDicEntry entry in dic)
                 {
@@ -757,7 +757,7 @@ namespace FontParser.Tables.CFF.CFF
                     }
                 }
 
-                FontDict fontdict = new FontDict(size, offset)
+                var fontdict = new FontDict(size, offset)
                 {
                     FontName = name
                 };
@@ -780,7 +780,7 @@ namespace FontParser.Tables.CFF.CFF
                         {
                             case "Subrs":
                                 {
-                                    int localSubrsOffset = (int)dicEntry.operands[0]._realNumValue;
+                                    var localSubrsOffset = (int)dicEntry.operands[0]._realNumValue;
                                     _reader.BaseStream.Position = _cffStartAt + fdict.PrivateDicOffset + localSubrsOffset;
                                     fdict.LocalSubr = ReadSubrBuffer();
                                 }
@@ -913,7 +913,7 @@ namespace FontParser.Tables.CFF.CFF
 
             Glyph[] glyphs = new Glyph[glyphCount];
             _currentCff1Font._glyphs = glyphs;
-            Type2CharStringParser type2Parser = new Type2CharStringParser();
+            var type2Parser = new Type2CharStringParser();
             type2Parser.SetCurrentCff1Font(_currentCff1Font);
 
 #if DEBUG
@@ -925,7 +925,7 @@ namespace FontParser.Tables.CFF.CFF
             var fdRangeProvider = new FDRangeProvider(_cidFontInfo.fdRanges);
             bool isCidFont = _cidFontInfo.fdRanges != null;
 
-            for (int i = 0; i < glyphCount; ++i)
+            for (var i = 0; i < glyphCount; ++i)
             {
                 CffIndexOffset offset = offsets[i];
                 byte[] buffer = _reader.ReadBytes(offset.len);
@@ -945,7 +945,7 @@ namespace FontParser.Tables.CFF.CFF
 #endif
                 //now we can parse the raw glyph instructions
 
-                Cff1GlyphData glyphData = new Cff1GlyphData();
+                var glyphData = new Cff1GlyphData();
 #if DEBUG
                 type2Parser.dbugCurrentGlyphIndex = (ushort)i;
 #endif
@@ -1074,7 +1074,7 @@ namespace FontParser.Tables.CFF.CFF
                     {
                         case "Subrs":
                             {
-                                int localSubrsOffset = (int)dicEntry.operands[0]._realNumValue;
+                                var localSubrsOffset = (int)dicEntry.operands[0]._realNumValue;
                                 _reader.BaseStream.Position = _cffStartAt + _privateDICTOffset + localSubrsOffset;
                                 ReadLocalSubrs();
                             }
@@ -1108,7 +1108,7 @@ namespace FontParser.Tables.CFF.CFF
             int nsubrs = offsets.Length;
             List<byte[]> rawBufferList = new List<byte[]>();
 
-            for (int i = 0; i < nsubrs; ++i)
+            for (var i = 0; i < nsubrs; ++i)
             {
                 CffIndexOffset offset = offsets[i];
                 byte[] charStringBuffer = _reader.ReadBytes(offset.len);
@@ -1132,7 +1132,7 @@ namespace FontParser.Tables.CFF.CFF
             //-----------------------------
             //A DICT is simply a sequence of
             //operand(s)/operator bytes concatenated together.
-            int endBefore = (int)(_reader.BaseStream.Position + len);
+            var endBefore = (int)(_reader.BaseStream.Position + len);
             List<CffDataDicEntry> dicData = new List<CffDataDicEntry>();
             while (_reader.BaseStream.Position < endBefore)
             {
@@ -1158,8 +1158,8 @@ namespace FontParser.Tables.CFF.CFF
 
             //An operator may be preceded by up to a maximum of 48 operands
 
-            CffDataDicEntry dicEntry = new CffDataDicEntry();
-            List<CffOperand> operands = new List<CffOperand>();
+            var dicEntry = new CffDataDicEntry();
+            var operands = new List<CffOperand>();
 
             while (true)
             {
@@ -1226,8 +1226,8 @@ namespace FontParser.Tables.CFF.CFF
             StringBuilder sb = _sbForReadRealNumber;
             sb.Length = 0;//reset
 
-            bool done = false;
-            bool exponentMissing = false;
+            var done = false;
+            var exponentMissing = false;
             while (!done)
             {
                 int b = _reader.ReadByte();
@@ -1235,7 +1235,7 @@ namespace FontParser.Tables.CFF.CFF
                 int nb_0 = (b >> 4) & 0xf;
                 int nb_1 = (b) & 0xf;
 
-                for (int i = 0; !done && i < 2; ++i)
+                for (var i = 0; !done && i < 2; ++i)
                 {
                     int nibble = (i == 0) ? nb_0 : nb_1;
 
@@ -1381,13 +1381,13 @@ namespace FontParser.Tables.CFF.CFF
             }
 
             int offSize = _reader.ReadByte(); //
-            int[] offsets = new int[count + 1];
-            CffIndexOffset[] indexElems = new CffIndexOffset[count];
-            for (int i = 0; i <= count; ++i)
+            var offsets = new int[count + 1];
+            var indexElems = new CffIndexOffset[count];
+            for (var i = 0; i <= count; ++i)
             {
                 offsets[i] = _reader.ReadOffset(offSize);
             }
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 indexElems[i] = new CffIndexOffset(offsets[i], offsets[i + 1] - offsets[i]);
             }

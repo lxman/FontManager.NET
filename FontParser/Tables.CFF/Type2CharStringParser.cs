@@ -48,10 +48,10 @@ namespace FontParser.Tables.CFF
 
         public float ReadValueAsFixed1616()
         {
-            byte b0 = (byte)((0xff) & Value >> 24);
-            byte b1 = (byte)((0xff) & Value >> 16);
-            byte b2 = (byte)((0xff) & Value >> 8);
-            byte b3 = (byte)((0xff) & Value >> 0);
+            var b0 = (byte)((0xff) & Value >> 24);
+            var b1 = (byte)((0xff) & Value >> 16);
+            var b2 = (byte)((0xff) & Value >> 8);
+            var b3 = (byte)((0xff) & Value >> 0);
 
             ///This number is interpreted as a Fixed; that is, a signed number with 16 bits of fraction
             float int_part = (short)((b0 << 8) | b1);
@@ -73,7 +73,7 @@ namespace FontParser.Tables.CFF
             //so operator name is lower 6 bits
 
             int only_operator = Op & 0b111111;
-            OperatorName op_name = (OperatorName)only_operator;
+            var op_name = (OperatorName)only_operator;
 
             if (_dbug_OnlyOp)
             {
@@ -87,7 +87,7 @@ namespace FontParser.Tables.CFF
                 }
                 s_dbugSb.Length = 0;//reset
 
-                bool has_ExtenedForm = true;
+                var has_ExtenedForm = true;
 
                 //this is my extension
                 switch (merge_flags)
@@ -491,9 +491,9 @@ namespace FontParser.Tables.CFF
     {
         internal static void dbugDumpInstructionListToFile(this IEnumerable<Type2Instruction> insts, string filename)
         {
-            using FileStream fs = new FileStream(filename, FileMode.Create);
-            using StreamWriter w = new StreamWriter(fs);
-            int i = 0;
+            using var fs = new FileStream(filename, FileMode.Create);
+            using var w = new StreamWriter(fs);
+            var i = 0;
             foreach (Type2Instruction inst in insts)
             {
                 w.Write("[" + i + "] ");
@@ -634,7 +634,7 @@ namespace FontParser.Tables.CFF
         {
             byte b0 = 0;
 
-            bool cont = true;
+            var cont = true;
 
             var reader = new SimpleBinaryReader(buffer);
             while (cont && !reader.IsEnd())

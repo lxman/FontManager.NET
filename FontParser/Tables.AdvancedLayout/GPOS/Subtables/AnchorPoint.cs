@@ -33,7 +33,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
 
         public static AnchorPoint CreateFrom(BinaryReader reader, long beginAt)
         {
-            AnchorPoint anchorPoint = new AnchorPoint();
+            var anchorPoint = new AnchorPoint();
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
 
             switch (anchorPoint.format = reader.ReadUInt16())

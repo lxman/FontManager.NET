@@ -6,6 +6,7 @@ using NewFontParser.Tables.Head;
 using NewFontParser.Tables.Hhea;
 using NewFontParser.Tables.Hmtx;
 using NewFontParser.Tables.Name;
+using NewFontParser.Tables.Post;
 
 namespace NewFontParser
 {
@@ -37,6 +38,8 @@ namespace NewFontParser
             ProcessMaxp();
             ProcessHmtx();
             ProcessName();
+            ProcessOs2();
+            ProcessPost();
         }
 
         private void ProcessCmap()
@@ -84,6 +87,18 @@ namespace NewFontParser
                     Tables.Add(new NameTable1(nameData));
                     break;
             }
+        }
+
+        private void ProcessOs2()
+        {
+            byte[] os2Data = TableRecords.Find(x => x.Tag == "OS/2").Data;
+            Tables.Add(new Os2Table(os2Data));
+        }
+
+        private void ProcessPost()
+        {
+            byte[] postData = TableRecords.Find(x => x.Tag == "post").Data;
+            Tables.Add(new PostTable(postData));
         }
     }
 }

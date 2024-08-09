@@ -26,7 +26,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
             ushort[] posRuleTableOffsets = reader.ReadUInt16Array(posRuleCount);
             int j = posRuleTableOffsets.Length;
             _posRuleTables = new PosRuleTable[posRuleCount];
-            for (int i = 0; i < j; ++i)
+            for (var i = 0; i < j; ++i)
             {
                 //move to and read
                 reader.BaseStream.Seek(tableStartAt + posRuleTableOffsets[i], SeekOrigin.Begin);

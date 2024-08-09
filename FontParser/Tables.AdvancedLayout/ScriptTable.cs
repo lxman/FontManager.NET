@@ -81,11 +81,11 @@ namespace FontParser.Tables.AdvancedLayout
             //LangSysRecord langSysRecords[langSysCount]  Array of LangSysRecords-listed alphabetically by LangSysTag
 
             //---------------
-            ScriptTable scriptTable = new ScriptTable();
+            var scriptTable = new ScriptTable();
             ushort defaultLangSysOffset = reader.ReadUInt16();
             ushort langSysCount = reader.ReadUInt16();
             LangSysTable[] langSysTables = scriptTable.langSysTables = new LangSysTable[langSysCount];
-            for (int i = 0; i < langSysCount; ++i)
+            for (var i = 0; i < langSysCount; ++i)
             {
                 //-----------------------
                 //LangSysRecord
@@ -109,7 +109,7 @@ namespace FontParser.Tables.AdvancedLayout
 
             //-----------
             //read actual content of each table
-            for (int i = 0; i < langSysCount; ++i)
+            for (var i = 0; i < langSysCount; ++i)
             {
                 LangSysTable langSysTable = langSysTables[i];
                 reader.BaseStream.Seek(beginAt + langSysTable.offset, SeekOrigin.Begin);

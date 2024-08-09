@@ -68,7 +68,7 @@ namespace FontParser.Tables.Others
         protected override void ReadContentFrom(BinaryReader reader)
         {
             _advHeightAndTopSideBearings = new AdvanceHeightAndTopSideBearing[_numOfLongVerMetrics];
-            int m = 0;
+            var m = 0;
             for (int i = _numOfLongVerMetrics - 1; i >= 0; --i)
             {
                 _advHeightAndTopSideBearings[m] = new AdvanceHeightAndTopSideBearing(

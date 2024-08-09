@@ -106,8 +106,8 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
 
         public override string ToString()
         {
-            StringBuilder stbuilder = new StringBuilder();
-            bool appendComma = false;
+            var stbuilder = new StringBuilder();
+            var appendComma = false;
             if (XPlacement != 0)
             {
                 stbuilder.Append("XPlacement=" + XPlacement);

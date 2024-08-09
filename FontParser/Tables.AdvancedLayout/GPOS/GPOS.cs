@@ -30,7 +30,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS
         {
             int j = offsets.Length;
             PosRuleSetTable[] results = new PosRuleSetTable[j];
-            for (int i = 0; i < j; ++i)
+            for (var i = 0; i < j; ++i)
             {
                 results[i] = PosRuleSetTable.CreateFrom(reader, initPos + offsets[i]);
             }
@@ -39,8 +39,8 @@ namespace FontParser.Tables.AdvancedLayout.GPOS
 
         public static PosLookupRecord[] CreateMultiplePosLookupRecords(BinaryReader reader, int count)
         {
-            PosLookupRecord[] results = new PosLookupRecord[count];
-            for (int n = 0; n < count; ++n)
+            var results = new PosLookupRecord[count];
+            for (var n = 0; n < count; ++n)
             {
                 results[n] = PosLookupRecord.CreateFrom(reader);
             }
@@ -51,11 +51,11 @@ namespace FontParser.Tables.AdvancedLayout.GPOS
                                                 ushort lookupType, ushort lookupFlags,
                                                 ushort[] subTableOffsets, ushort markFilteringSet)
         {
-            LookupTable lookupTable = new LookupTable(lookupFlags, markFilteringSet);
+            var lookupTable = new LookupTable(lookupFlags, markFilteringSet);
             var subTables = new LookupSubTable[subTableOffsets.Length];
             lookupTable.SubTables = subTables;
 
-            for (int i = 0; i < subTableOffsets.Length; ++i)
+            for (var i = 0; i < subTableOffsets.Length; ++i)
             {
                 LookupSubTable subTable = LookupTable.ReadSubTable(lookupType, reader, lookupTablePos + subTableOffsets[i]);
                 subTable.OwnerGPos = this;

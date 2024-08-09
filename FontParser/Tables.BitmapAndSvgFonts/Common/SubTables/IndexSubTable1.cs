@@ -12,7 +12,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts.Common.SubTables
 
         public override void BuildGlyphList(List<Glyph> glyphList)
         {
-            int n = 0;
+            var n = 0;
             for (ushort i = firstGlyphIndex; i <= lastGlyphIndex; ++i)
             {
                 glyphList.Add(new Glyph(i, header.imageDataOffset + offsetArray[n], 0, header.imageFormat));

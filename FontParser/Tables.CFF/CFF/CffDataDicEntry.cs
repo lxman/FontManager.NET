@@ -11,9 +11,9 @@ namespace FontParser.Tables.CFF.CFF
 
         public override string ToString()
         {
-            StringBuilder stbuilder = new StringBuilder();
+            var stbuilder = new StringBuilder();
             int j = operands.Length;
-            for (int i = 0; i < j; ++i)
+            for (var i = 0; i < j; ++i)
             {
                 if (i > 0)
                 {

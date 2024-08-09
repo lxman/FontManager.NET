@@ -36,11 +36,11 @@ namespace FontParser.Tables.Others
                 Utils.WarnUnimplemented("Support for {0} kerning tables", nTables);
             }
 
-            for (int i = 0; i < nTables; ++i)
+            for (var i = 0; i < nTables; ++i)
             {
                 ushort subTableVersion = reader.ReadUInt16();
                 ushort len = reader.ReadUInt16(); //Length of the subtable, in bytes (including this header).
-                KernCoverage kerCoverage = new KernCoverage(reader.ReadUInt16());//What type of information is contained in this table.
+                var kerCoverage = new KernCoverage(reader.ReadUInt16());//What type of information is contained in this table.
 
                 //The coverage field is divided into the following sub-fields, with sizes given in bits:
                 //----------------------------------------------
@@ -179,14 +179,14 @@ namespace FontParser.Tables.Others
                 _kernPairs.Add(new KerningPair(left, right, value));
                 //may has duplicate key ?
                 //TODO: review here
-                uint key = (uint)((left << 16) | right);
+                var key = (uint)((left << 16) | right);
                 _kernDic[key] = value; //just replace?
             }
 
             public short GetKernDistance(ushort left, ushort right)
             {
                 //find if we have this left & right ?
-                uint key = (uint)((left << 16) | right);
+                var key = (uint)((left << 16) | right);
 
                 _kernDic.TryGetValue(key, out short found);
                 return found;

@@ -16,7 +16,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts.Common.SubTables
 
         public override void FillGlyphInfo(BinaryReader reader, Glyph bitmapGlyph)
         {
-            BigGlyphMetrics bigGlyphMetric = new BigGlyphMetrics();
+            var bigGlyphMetric = new BigGlyphMetrics();
             BigGlyphMetrics.ReadBigGlyphMetric(reader, ref bigGlyphMetric);
             uint dataLen = reader.ReadUInt32();
 

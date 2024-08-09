@@ -87,7 +87,7 @@ namespace FontParser.Tables.Variations
 
             valueRecords = new ValueRecord[valueRecordCount];
 
-            for (int i = 0; i < valueRecordCount; ++i)
+            for (var i = 0; i < valueRecordCount; ++i)
             {
                 long recStartAt = reader.BaseStream.Position;
                 valueRecords[i] = new ValueRecord(

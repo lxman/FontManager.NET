@@ -35,7 +35,7 @@ namespace FontParser.Tables.Variations
             ushort axisCount = reader.ReadUInt16();
             ushort regionCount = reader.ReadUInt16();
             variationRegions = new VariationRegion[regionCount];
-            for (int i = 0; i < regionCount; ++i)
+            for (var i = 0; i < regionCount; ++i)
             {
                 var variationRegion = new VariationRegion();
                 variationRegion.ReadContent(reader, axisCount);
@@ -56,7 +56,7 @@ namespace FontParser.Tables.Variations
         public void ReadContent(BinaryReader reader, int axisCount)
         {
             regionAxes = new RegionAxisCoordinate[axisCount];
-            for (int i = 0; i < axisCount; ++i)
+            for (var i = 0; i < axisCount; ++i)
             {
                 regionAxes[i] = new RegionAxisCoordinate(
                     reader.ReadF2Dot14(), //start

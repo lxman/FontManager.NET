@@ -13,11 +13,11 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
 
         public static LigatureAttachTable ReadFrom(BinaryReader reader, ushort classCount)
         {
-            LigatureAttachTable table = new LigatureAttachTable();
+            var table = new LigatureAttachTable();
             ushort componentCount = reader.ReadUInt16();
-            ComponentRecord[] componentRecs = new ComponentRecord[componentCount];
+            var componentRecs = new ComponentRecord[componentCount];
             table._records = componentRecs;
-            for (int i = 0; i < componentCount; ++i)
+            for (var i = 0; i < componentCount; ++i)
             {
                 componentRecs[i] = new ComponentRecord(
                     reader.ReadUInt16Array(classCount));

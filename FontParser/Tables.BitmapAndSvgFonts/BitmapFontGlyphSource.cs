@@ -30,7 +30,7 @@
         public Glyph[] BuildGlyphList()
         {
             Glyph[] glyphs = _cblc.BuildGlyphList();
-            for (int i = 0; i < glyphs.Length; ++i)
+            for (var i = 0; i < glyphs.Length; ++i)
             {
                 _cbdt.FillGlyphInfo(glyphs[i]);
             }

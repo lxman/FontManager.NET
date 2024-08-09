@@ -108,7 +108,7 @@ namespace FontParser.Tables.AdvancedLayout.ClassDefTable
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
 
             //---------
-            ClassDefTable classDefTable = new ClassDefTable();
+            var classDefTable = new ClassDefTable();
             switch (classDefTable.Format = reader.ReadUInt16())
             {
                 default: throw new OpenFontNotSupportedException();
@@ -124,7 +124,7 @@ namespace FontParser.Tables.AdvancedLayout.ClassDefTable
                     {
                         ushort classRangeCount = reader.ReadUInt16();
                         ClassRangeRecord[] records = new ClassRangeRecord[classRangeCount];
-                        for (int i = 0; i < classRangeCount; ++i)
+                        for (var i = 0; i < classRangeCount; ++i)
                         {
                             records[i] = new ClassRangeRecord(
                                 reader.ReadUInt16(), //start glyph id
@@ -154,7 +154,7 @@ namespace FontParser.Tables.AdvancedLayout.ClassDefTable
                     }
                 case 2:
                     {
-                        for (int i = 0; i < records.Length; ++i)
+                        for (var i = 0; i < records.Length; ++i)
                         {
                             //TODO: review a proper method here again
                             //esp. binary search

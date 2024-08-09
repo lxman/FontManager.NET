@@ -80,8 +80,8 @@ namespace FontParser.Tables.Others
             }
 #endif
 
-            DataMapRecord[] dataMaps = new DataMapRecord[dataMapsCount];
-            for (int i = 0; i < dataMaps.Length; ++i)
+            var dataMaps = new DataMapRecord[dataMapsCount];
+            for (var i = 0; i < dataMaps.Length; ++i)
             {
                 dataMaps[i] = new DataMapRecord(reader.ReadUInt32(),
                     reader.ReadUInt32(),
@@ -123,7 +123,7 @@ namespace FontParser.Tables.Others
             //Implementations must allow for ScriptLangTags that include additional subtags,
             //but they may also choose to interpret only the script subtag and ignore other subtags.
 
-            for (int i = 0; i < dataMaps.Length; ++i)
+            for (var i = 0; i < dataMaps.Length; ++i)
             {
                 DataMapRecord record = dataMaps[i];
 
@@ -197,7 +197,7 @@ namespace FontParser.Tables.Others
         private static string[] ReadCommaSepData(byte[] data)
         {
             string[] tags = System.Text.Encoding.UTF8.GetString(data).Split(',');
-            for (int i = 0; i < tags.Length; ++i)
+            for (var i = 0; i < tags.Length; ++i)
             {
                 tags[i] = tags[i].Trim();
 

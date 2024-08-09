@@ -21,7 +21,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
             }
 
             // Check all coverages: if any of them does not match, abort substitution
-            for (int i = 0; i < InputCoverages.Length; ++i)
+            for (var i = 0; i < InputCoverages.Length; ++i)
             {
                 if (InputCoverages[i].FindPosition(glyphIndices[pos + i]) < 0)
                 {
@@ -29,7 +29,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                 }
             }
 
-            for (int i = 0; i < BacktrackingCoverages.Length; ++i)
+            for (var i = 0; i < BacktrackingCoverages.Length; ++i)
             {
                 if (BacktrackingCoverages[i].FindPosition(glyphIndices[pos - 1 - i]) < 0)
                 {
@@ -37,7 +37,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                 }
             }
 
-            for (int i = 0; i < LookaheadCoverages.Length; ++i)
+            for (var i = 0; i < LookaheadCoverages.Length; ++i)
             {
                 if (LookaheadCoverages[i].FindPosition(glyphIndices[pos + inputLength + i]) < 0)
                 {
@@ -52,7 +52,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                 return true;
             }
 
-            bool hasChanged = false;
+            var hasChanged = false;
             foreach (SubstLookupRecord lookupRecord in SubstLookupRecords)
             {
                 ushort replaceAt = lookupRecord.sequenceIndex;

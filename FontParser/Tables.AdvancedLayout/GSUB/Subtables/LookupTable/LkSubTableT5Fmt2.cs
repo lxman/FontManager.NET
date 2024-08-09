@@ -20,7 +20,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
         public override void CollectAssociatedSubstitutionGlyphs(List<ushort> outputAssocGlyphs)
         {
             //collect only assoc
-            Dictionary<int, bool> collected = new Dictionary<int, bool>();
+            var collected = new Dictionary<int, bool>();
             foreach (ushort glyphIndex in coverageTable.GetExpandedValueIter())
             {
                 int class_value = classDef.GetClassValue(glyphIndex);
@@ -33,12 +33,12 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                 LkSubT5Fmt2_SubClassSet subClassSet = subClassSets[class_value];
                 LkSubT5Fmt2_SubClassRule[] subClassRules = subClassSet.subClassRules;
 
-                for (int i = 0; i < subClassRules.Length; ++i)
+                for (var i = 0; i < subClassRules.Length; ++i)
                 {
                     LkSubT5Fmt2_SubClassRule rule = subClassRules[i];
                     if (rule != null && rule.substRecords != null)
                     {
-                        for (int n = 0; n < rule.substRecords.Length; ++n)
+                        for (var n = 0; n < rule.substRecords.Length; ++n)
                         {
                             SubstLookupRecord rect = rule.substRecords[n];
                             LookupTable anotherLookup = OwnerGSub.LookupList[rect.lookupListIndex];
@@ -59,7 +59,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
             LkSubT5Fmt2_SubClassSet subClassSet = subClassSets[class_value];
             LkSubT5Fmt2_SubClassRule[] subClassRules = subClassSet.subClassRules;
 
-            for (int i = 0; i < subClassRules.Length; ++i)
+            for (var i = 0; i < subClassRules.Length; ++i)
             {
                 LkSubT5Fmt2_SubClassRule rule = subClassRules[i];
                 ushort[] inputSequence = rule.inputSequence; //clas seq
@@ -67,8 +67,8 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
 
                 if (next_pos < glyphIndices.Count)
                 {
-                    bool passAll = true;
-                    for (int a = 0; a < inputSequence.Length && next_pos < glyphIndices.Count; ++a, ++next_pos)
+                    var passAll = true;
+                    for (var a = 0; a < inputSequence.Length && next_pos < glyphIndices.Count; ++a, ++next_pos)
                     {
                         int class_next = glyphIndices[next_pos];
                         if (inputSequence[a] != class_next)

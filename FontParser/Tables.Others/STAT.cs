@@ -81,7 +81,7 @@ namespace FontParser.Tables.Others
             //uint16    axisOrdering    A value that applications can use to determine primary sorting of face names, or for ordering of descriptors when composing family or face names.
 
             AxisRecord[] axisRecords = new AxisRecord[designAxisCount];
-            for (int i = 0; i < designAxisCount; ++i)
+            for (var i = 0; i < designAxisCount; ++i)
             {
                 var axisRecord = new AxisRecord();
                 axisRecords[i] = axisRecord;
@@ -109,7 +109,7 @@ namespace FontParser.Tables.Others
             //move to axis value record
 
             AxisValueTableBase[] axisValueTables = new AxisValueTableBase[axisValueCount];
-            for (int i = 0; i < axisValueCount; ++i)
+            for (var i = 0; i < axisValueCount; ++i)
             {
                 //Axis Value Tables
                 //Axis value tables provide details regarding a specific style - attribute value on some specific axis of design variation,
@@ -367,7 +367,7 @@ namespace FontParser.Tables.Others
                 flags = reader.ReadUInt16();
                 valueNameId = reader.ReadUInt16();
                 _axisValueRecords = new AxisValueRecord[axisCount];
-                for (int i = 0; i < axisCount; ++i)
+                for (var i = 0; i < axisCount; ++i)
                 {
                     _axisValueRecords[i] = new AxisValueRecord(
                         reader.ReadUInt16(),

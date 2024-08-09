@@ -26,7 +26,7 @@ namespace FontParser.Tables.AdvancedLayout.Ligatures
         {
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
             //----------
-            LigGlyph ligGlyph = new LigGlyph();
+            var ligGlyph = new LigGlyph();
             ushort caretCount = reader.ReadUInt16();
             ligGlyph._caretValueOffsets = reader.ReadUInt16Array(caretCount);
             return ligGlyph;

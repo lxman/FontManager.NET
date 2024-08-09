@@ -29,12 +29,12 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
         {
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
             //
-            ChainSubClassSet chainSubClassSet = new ChainSubClassSet();
+            var chainSubClassSet = new ChainSubClassSet();
             ushort count = reader.ReadUInt16();
             ushort[] subClassRuleOffsets = reader.ReadUInt16Array(count);
 
             ChainSubClassRuleTable[] subClassRuleTables = chainSubClassSet.subClassRuleTables = new ChainSubClassRuleTable[count];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 subClassRuleTables[i] = ChainSubClassRuleTable.CreateFrom(reader, beginAt + subClassRuleOffsets[i]);
             }

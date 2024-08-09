@@ -51,8 +51,8 @@ namespace FontParser.Tables
 
         public static ushort[] ReadUInt16Array(this BinaryReader reader, int nRecords)
         {
-            ushort[] arr = new ushort[nRecords];
-            for (int i = 0; i < arr.Length; ++i)
+            var arr = new ushort[nRecords];
+            for (var i = 0; i < arr.Length; ++i)
             {
                 arr[i] = reader.ReadUInt16();
             }
@@ -61,8 +61,8 @@ namespace FontParser.Tables
 
         public static uint[] ReadUInt16ArrayAsUInt32Array(this BinaryReader reader, int nRecords)
         {
-            uint[] arr = new uint[nRecords];
-            for (int i = 0; i < arr.Length; ++i)
+            var arr = new uint[nRecords];
+            for (var i = 0; i < arr.Length; ++i)
             {
                 arr[i] = reader.ReadUInt16();
             }
@@ -71,8 +71,8 @@ namespace FontParser.Tables
 
         public static uint[] ReadUInt32Array(this BinaryReader reader, int nRecords)
         {
-            uint[] arr = new uint[nRecords];
-            for (int i = 0; i < arr.Length; ++i)
+            var arr = new uint[nRecords];
+            for (var i = 0; i < arr.Length; ++i)
             {
                 arr[i] = reader.ReadUInt32();
             }

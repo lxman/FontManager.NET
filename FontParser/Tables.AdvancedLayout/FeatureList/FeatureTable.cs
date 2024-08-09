@@ -42,7 +42,7 @@ namespace FontParser.Tables.AdvancedLayout.FeatureList
             ushort featureParams = reader.ReadUInt16();
             ushort lookupCount = reader.ReadUInt16();
 
-            FeatureTable featureTable = new FeatureTable
+            var featureTable = new FeatureTable
             {
                 LookupListIndices = reader.ReadUInt16Array(lookupCount)
             };

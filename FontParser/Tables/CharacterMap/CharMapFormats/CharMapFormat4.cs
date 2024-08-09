@@ -76,7 +76,7 @@ namespace FontParser.Tables.CharacterMap.CharMapFormats
 
         public override void CollectUnicodeChars(List<uint> unicodes)
         {
-            for (int i = 0; i < _startCode.Length; ++i)
+            for (var i = 0; i < _startCode.Length; ++i)
             {
                 uint start = _startCode[i];
                 uint stop = _endCode[i];

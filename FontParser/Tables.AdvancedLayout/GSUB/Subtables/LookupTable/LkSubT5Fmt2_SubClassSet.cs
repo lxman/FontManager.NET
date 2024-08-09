@@ -16,11 +16,11 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
 
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
 
-            LkSubT5Fmt2_SubClassSet fmt2 = new LkSubT5Fmt2_SubClassSet();
+            var fmt2 = new LkSubT5Fmt2_SubClassSet();
             ushort subClassRuleCount = reader.ReadUInt16();
             ushort[] subClassRuleOffsets = reader.ReadUInt16Array(subClassRuleCount);
             fmt2.subClassRules = new LkSubT5Fmt2_SubClassRule[subClassRuleCount];
-            for (int i = 0; i < subClassRuleCount; ++i)
+            for (var i = 0; i < subClassRuleCount; ++i)
             {
                 var subClassRule = new LkSubT5Fmt2_SubClassRule();
                 subClassRule.ReadFrom(reader, beginAt + subClassRuleOffsets[i]);

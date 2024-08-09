@@ -28,7 +28,7 @@ namespace NewFontParser.Tables.Name
 
             for (var i = 0; i < Count; i++)
             {
-                NameRecords.Add(new NameRecord(reader));
+                NameRecords.Add(new NameRecord(reader.ReadBytes(NameRecord.RecordSize)));
             }
 
             for (var i = 0; i < LangTagCount; i++)

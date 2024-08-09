@@ -16,7 +16,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts.Common.SubTables
         public override void BuildGlyphList(List<Glyph> glyphList)
         {
             uint incrementalOffset = 0;//TODO: review this
-            for (int i = 0; i < glyphIdArray.Length; ++i)
+            for (var i = 0; i < glyphIdArray.Length; ++i)
             {
                 glyphList.Add(new Glyph(glyphIdArray[i], header.imageDataOffset + incrementalOffset, imageSize, header.imageFormat));
                 incrementalOffset += imageSize;

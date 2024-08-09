@@ -220,7 +220,7 @@ namespace FontParser.Typeface
                 //we create a dictionary
                 //create cache data
                 _cachedGlyphDicByName = new Dictionary<string, ushort>();
-                for (int i = 1; i < _glyphs.Length; ++i)
+                for (var i = 1; i < _glyphs.Length; ++i)
                 {
                     Glyph glyph = _glyphs[i];
                     if (glyph._cff1GlyphData.Name != null)
@@ -443,7 +443,7 @@ namespace FontParser.Typeface
                     throw new OpenFontNotSupportedException();
                 }
 #endif
-                for (int i = 0; i < exisitingGlyphs.Length; ++i)
+                for (var i = 0; i < exisitingGlyphs.Length; ++i)
                 {
                     Glyph.CopyExistingGlyphInfo(exisitingGlyphs[i], _glyphs[i]);
                 }
@@ -456,7 +456,7 @@ namespace FontParser.Typeface
             if (mathGlyphInfos != null)
             {
                 //fill to original glyph?
-                for (int glyphIndex = 0; glyphIndex < _glyphs.Length; ++glyphIndex)
+                for (var glyphIndex = 0; glyphIndex < _glyphs.Length; ++glyphIndex)
                 {
                     _glyphs[glyphIndex].GlyphInfo = mathGlyphInfos[glyphIndex];
                 }
@@ -495,7 +495,7 @@ namespace FontParser.Typeface
                 case TrimMode.Restored:
                 case TrimMode.No:
                     {
-                        RestoreTicket ticket = new RestoreTicket
+                        var ticket = new RestoreTicket
                         {
                             TypefaceName = Name,
                             Headers = _tblHeaders, //a copy
@@ -513,7 +513,7 @@ namespace FontParser.Typeface
 
                         //1.Ttf and Otf => clone each glyphs in NO building
                         Glyph[] newClones = new Glyph[_glyphs.Length];
-                        for (int i = 0; i < newClones.Length; ++i)
+                        for (var i = 0; i < newClones.Length; ++i)
                         {
                             newClones[i] = Glyph.Clone_NO_BuildingInstructions(_glyphs[i]);
                         }
@@ -568,7 +568,7 @@ namespace FontParser.Typeface
             if (_tblHeaders != null && others != null &&
                 _tblHeaders.Length == others.Length)
             {
-                for (int i = 0; i < _tblHeaders.Length; ++i)
+                for (var i = 0; i < _tblHeaders.Length; ++i)
                 {
                     TableHeader a = _tblHeaders[i];
                     TableHeader b = others[i];
@@ -601,7 +601,7 @@ namespace FontParser.Typeface
             {
                 //create cache data
                 _cachedGlyphDicByName = new Dictionary<string, ushort>();
-                for (int i = 1; i < _glyphs.Length; ++i)
+                for (var i = 1; i < _glyphs.Length; ++i)
                 {
                     Glyph glyph = _glyphs[i];
 

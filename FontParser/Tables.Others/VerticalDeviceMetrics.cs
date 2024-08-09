@@ -41,7 +41,7 @@ namespace FontParser.Tables.Others
             ushort numRecs = reader.ReadUInt16();
             ushort numRatios = reader.ReadUInt16();
             _ratios = new Ratio[numRatios];
-            for (int i = 0; i < numRatios; ++i)
+            for (var i = 0; i < numRatios; ++i)
             {
                 _ratios[i] = new Ratio(
                     reader.ReadByte(),

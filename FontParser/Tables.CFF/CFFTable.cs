@@ -92,7 +92,7 @@ namespace FontParser.Tables.CFF
                 default: throw new OpenFontNotSupportedException();
                 case 1:
                     {
-                        Cff1Parser cff1 = new Cff1Parser();
+                        var cff1 = new Cff1Parser();
                         cff1.ParseAfterHeader(startAt, reader);
                         _cff1FontSet = cff1.ResultCff1FontSet;
                     }
@@ -100,7 +100,7 @@ namespace FontParser.Tables.CFF
 
                 case 2:
                     {
-                        Cff2Parser cff2 = new Cff2Parser();
+                        var cff2 = new Cff2Parser();
                         cff2.ParseAfterHeader(reader);
                     }
                     break;

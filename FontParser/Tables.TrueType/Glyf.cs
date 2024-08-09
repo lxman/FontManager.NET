@@ -39,9 +39,9 @@ namespace FontParser.Tables.TrueType
             int glyphCount = locations.GlyphCount;
             _glyphs = new Glyph[glyphCount];
 
-            List<ushort> compositeGlyphs = new List<ushort>();
+            var compositeGlyphs = new List<ushort>();
 
-            for (int i = 0; i < glyphCount; i++)
+            for (var i = 0; i < glyphCount; i++)
             {
                 reader.BaseStream.Seek(tableOffset + locations.Offsets[i], SeekOrigin.Begin);//reset
                 uint length = locations.Offsets[i + 1] - locations.Offsets[i];
@@ -102,8 +102,8 @@ namespace FontParser.Tables.TrueType
         private static SimpleGlyphFlag[] ReadFlags(BinaryReader input, int flagCount)
         {
             var result = new SimpleGlyphFlag[flagCount];
-            int i = 0;
-            int repeatCount = 0;
+            var i = 0;
+            var repeatCount = 0;
             var flag = (SimpleGlyphFlag)0;
             while (i < flagCount)
             {
@@ -157,8 +157,8 @@ namespace FontParser.Tables.TrueType
             //7     Reserved 	 	This bit is reserved. Set it to zero.
 
             var xs = new short[pointCount];
-            int x = 0;
-            for (int i = 0; i < pointCount; i++)
+            var x = 0;
+            for (var i = 0; i < pointCount; i++)
             {
                 int dx;
                 if (HasFlag(flags[i], isByte))
@@ -221,7 +221,7 @@ namespace FontParser.Tables.TrueType
             short[] ys = ReadCoordinates(reader, pointCount, flags, SimpleGlyphFlag.YByte, SimpleGlyphFlag.YSignOrSame);
 
             int n = xs.Length;
-            GlyphPointF[] glyphPoints = new GlyphPointF[n];
+            var glyphPoints = new GlyphPointF[n];
             for (int i = n - 1; i >= 0; --i)
             {
                 glyphPoints[i] = new GlyphPointF(xs[i], ys[i], HasFlag(flags[i], SimpleGlyphFlag.OnCurve));
@@ -295,7 +295,7 @@ namespace FontParser.Tables.TrueType
             CompositeGlyphFlags flags;
 
 #if DEBUG
-            int ncount = 0;
+            var ncount = 0;
 #endif
             do
             {
@@ -309,10 +309,10 @@ namespace FontParser.Tables.TrueType
                     createdGlyphs[glyphIndex] = missingGlyph;
                     reader.BaseStream.Position = storedOffset;
                 }
-                Glyph newGlyph = Glyph.TtfOutlineGlyphClone(createdGlyphs[glyphIndex], compositeGlyphIndex);
+                var newGlyph = Glyph.TtfOutlineGlyphClone(createdGlyphs[glyphIndex], compositeGlyphIndex);
 
-                int arg1 = 0;//arg1, arg2 may be int8,uint8,int16,uint 16
-                int arg2 = 0;//arg1, arg2 may be int8,uint8,int16,uint 16
+                var arg1 = 0;//arg1, arg2 may be int8,uint8,int16,uint 16
+                var arg2 = 0;//arg1, arg2 may be int8,uint8,int16,uint 16
 
                 if (HasFlag(flags, CompositeGlyphFlags.ARG_1_AND_2_ARE_WORDS))
                 {
@@ -357,9 +357,9 @@ namespace FontParser.Tables.TrueType
                 float scale10 = 0;
                 float yscale = 1;
 
-                bool useMatrix = false;
+                var useMatrix = false;
                 //-----------------------------------------
-                bool hasScale = false;
+                var hasScale = false;
                 if (HasFlag(flags, CompositeGlyphFlags.WE_HAVE_A_SCALE))
                 {
                     //If the bit WE_HAVE_A_SCALE is set,

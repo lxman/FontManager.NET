@@ -52,9 +52,9 @@ namespace FontParser.Tables.Variations
 
             //Each axis value map record provides a single axis-value mapping correspondence.
             _axisSegmentMaps = new SegmentMapRecord[axisCount];
-            for (int i = 0; i < axisCount; ++i)
+            for (var i = 0; i < axisCount; ++i)
             {
-                SegmentMapRecord segmentMap = new SegmentMapRecord();
+                var segmentMap = new SegmentMapRecord();
                 segmentMap.ReadContent(reader);
                 _axisSegmentMaps[i] = segmentMap;
             }
@@ -72,7 +72,7 @@ namespace FontParser.Tables.Variations
             {
                 ushort positionMapCount = reader.ReadUInt16();
                 axisValueMaps = new AxisValueMap[positionMapCount];
-                for (int i = 0; i < positionMapCount; ++i)
+                for (var i = 0; i < positionMapCount; ++i)
                 {
                     axisValueMaps[i] = new AxisValueMap(
                         reader.ReadF2Dot14(),

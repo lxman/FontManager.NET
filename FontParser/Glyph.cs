@@ -110,7 +110,7 @@ namespace FontParser
             float new_ymax = 0;
 
             GlyphPointF[] glyphPoints = glyph.GlyphPoints;
-            for (int i = 0; i < glyphPoints.Length; ++i)
+            for (var i = 0; i < glyphPoints.Length; ++i)
             {
                 GlyphPointF p = glyphPoints[i];
                 float x = p.P.X;
@@ -187,7 +187,7 @@ namespace FontParser
             }
             else
             {
-                ushort org_last_point = (ushort)(dest.EndPoints[org_dest_len - 1] + 1); //since start at 0
+                var org_last_point = (ushort)(dest.EndPoints[org_dest_len - 1] + 1); //since start at 0
 
                 dest.GlyphPoints = Utils.ConcatArray(dest.GlyphPoints, src.GlyphPoints);
                 dest.EndPoints = Utils.ConcatArray(dest.EndPoints, src.EndPoints);
@@ -202,10 +202,10 @@ namespace FontParser
             //calculate new bounds
             Bounds destBound = dest.Bounds;
             Bounds srcBound = src.Bounds;
-            short newXmin = (short)Math.Min(destBound.XMin, srcBound.XMin);
-            short newYMin = (short)Math.Min(destBound.YMin, srcBound.YMin);
-            short newXMax = (short)Math.Max(destBound.XMax, srcBound.XMax);
-            short newYMax = (short)Math.Max(destBound.YMax, srcBound.YMax);
+            var newXmin = (short)Math.Min(destBound.XMin, srcBound.XMin);
+            var newYMin = (short)Math.Min(destBound.YMin, srcBound.YMin);
+            var newXMax = (short)Math.Max(destBound.XMax, srcBound.XMax);
+            var newYMax = (short)Math.Max(destBound.YMax, srcBound.YMax);
 
             dest.Bounds = new Bounds(newXmin, newYMin, newXMax, newYMax);
         }
@@ -313,7 +313,7 @@ namespace FontParser
             //3. if src is svg
             //4. if src is bitmap
 
-            Glyph newclone = new Glyph(src.GlyphIndex);
+            var newclone = new Glyph(src.GlyphIndex);
             CopyExistingGlyphInfo(src, newclone);
             return newclone;
         }

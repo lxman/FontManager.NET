@@ -204,9 +204,9 @@ namespace FontParser.WebFont
 
             //---------------------------------------------
             Glyph[] glyphs = new Glyph[numGlyphs];
-            TempGlyph[] allGlyphs = new TempGlyph[numGlyphs];
-            List<ushort> compositeGlyphs = new List<ushort>();
-            int contourCount = 0;
+            var allGlyphs = new TempGlyph[numGlyphs];
+            var compositeGlyphs = new List<ushort>();
+            var contourCount = 0;
             for (ushort i = 0; i < numGlyphs; ++i)
             {
                 short numContour = reader.ReadInt16();
@@ -280,8 +280,8 @@ namespace FontParser.WebFont
             //
             //1) nPoints stream,  npoint for each contour
 
-            ushort[] pntPerContours = new ushort[contourCount];
-            for (int i = 0; i < contourCount; ++i)
+            var pntPerContours = new ushort[contourCount];
+            for (var i = 0; i < contourCount; ++i)
             {
                 // Each of these is the number of points of that contour.
                 pntPerContours[i] = Woff2Utils.Read255UInt16(reader);
@@ -307,14 +307,14 @@ namespace FontParser.WebFont
             //some composite glyphs have instructions=> so we must check all composite glyphs
             //before read the glyph stream
             //**
-            using (MemoryStream compositeMS = new MemoryStream())
+            using (var compositeMS = new MemoryStream())
             {
                 reader.BaseStream.Position = expectedCompositeStreamStartAt;
                 compositeMS.Write(reader.ReadBytes((int)compositeStreamSize), 0, (int)compositeStreamSize);
                 compositeMS.Position = 0;
 
                 int j = compositeGlyphs.Count;
-                ByteOrderSwappingBinaryReader compositeReader = new ByteOrderSwappingBinaryReader(compositeMS);
+                var compositeReader = new ByteOrderSwappingBinaryReader(compositeMS);
                 for (ushort i = 0; i < j; ++i)
                 {
                     ushort compositeGlyphIndex = compositeGlyphs[i];
@@ -323,9 +323,9 @@ namespace FontParser.WebFont
                 reader.BaseStream.Position = expectedGlyphStreamStartAt;
             }
             //--------
-            int curFlagsIndex = 0;
-            int pntContourIndex = 0;
-            for (int i = 0; i < allGlyphs.Length; ++i)
+            var curFlagsIndex = 0;
+            var pntContourIndex = 0;
+            for (var i = 0; i < allGlyphs.Length; ++i)
             {
                 glyphs[i] = BuildSimpleGlyphStructure(reader,
                     ref allGlyphs[i],
@@ -465,12 +465,12 @@ namespace FontParser.WebFont
             GlyphPointF[] glyphPoints = glyph.GlyphPoints;
 
             int j = glyphPoints.Length;
-            float xmin = float.MaxValue;
-            float ymin = float.MaxValue;
-            float xmax = float.MinValue;
-            float ymax = float.MinValue;
+            var xmin = float.MaxValue;
+            var ymin = float.MaxValue;
+            var xmax = float.MinValue;
+            var ymax = float.MinValue;
 
-            for (int i = 0; i < j; ++i)
+            for (var i = 0; i < j; ++i)
             {
                 GlyphPointF p = glyphPoints[i];
                 if (p.X < xmin) xmin = p.X;
@@ -488,10 +488,10 @@ namespace FontParser.WebFont
 
         private static byte[] ExpandBitmap(byte[] orgBBoxBitmap)
         {
-            byte[] expandArr = new byte[orgBBoxBitmap.Length * 8];
+            var expandArr = new byte[orgBBoxBitmap.Length * 8];
 
-            int index = 0;
-            for (int i = 0; i < orgBBoxBitmap.Length; ++i)
+            var index = 0;
+            for (var i = 0; i < orgBBoxBitmap.Length; ++i)
             {
                 byte b = orgBBoxBitmap[i];
                 expandArr[index++] = (byte)((b >> 7) & 0x1);
@@ -550,8 +550,8 @@ namespace FontParser.WebFont
             }
 
             //-----
-            int curX = 0;
-            int curY = 0;
+            var curX = 0;
+            var curY = 0;
 
             int numContour = tmpGlyph.numContour;
 
@@ -568,8 +568,8 @@ namespace FontParser.WebFont
 
             //collect point for our contours
             var _glyphPoints = new GlyphPointF[pointCount];
-            int n = 0;
-            for (int i = 0; i < numContour; ++i)
+            var n = 0;
+            for (var i = 0; i < numContour; ++i)
             {
                 //read point detail
                 //step 3)
@@ -603,8 +603,8 @@ namespace FontParser.WebFont
                     byte[] packedXY = glyphStreamReader.ReadBytes(enc.ByteCount - 1); //byte count include 1 byte flags, so actual read=> byteCount-1
                                                                                       //read x and y
 
-                    int x = 0;
-                    int y = 0;
+                    var x = 0;
+                    var y = 0;
 
                     switch (enc.XBits)
                     {
@@ -688,9 +688,9 @@ namespace FontParser.WebFont
                 float scale10 = 0;
                 float yscale = 1;
 
-                bool useMatrix = false;
+                var useMatrix = false;
                 //-----------------------------------------
-                bool hasScale = false;
+                var hasScale = false;
                 if (Glyf.HasFlag(flags, Glyf.CompositeGlyphFlags.WE_HAVE_A_SCALE))
                 {
                     //If the bit WE_HAVE_A_SCALE is set,
@@ -766,7 +766,7 @@ namespace FontParser.WebFont
                     reader.BaseStream.Position = storedOffset;
                 }
 
-                Glyph newGlyph = Glyph.TtfOutlineGlyphClone(createdGlyphs[glyphIndex], compositeGlyphIndex);
+                var newGlyph = Glyph.TtfOutlineGlyphClone(createdGlyphs[glyphIndex], compositeGlyphIndex);
 
                 short arg1 = 0;
                 short arg2 = 0;
@@ -787,9 +787,9 @@ namespace FontParser.WebFont
                 float scale10 = 0;
                 float yscale = 1;
 
-                bool useMatrix = false;
+                var useMatrix = false;
                 //-----------------------------------------
-                bool hasScale = false;
+                var hasScale = false;
                 if (Glyf.HasFlag(flags, Glyf.CompositeGlyphFlags.WE_HAVE_A_SCALE))
                 {
                     //If the bit WE_HAVE_A_SCALE is set,
@@ -995,7 +995,7 @@ namespace FontParser.WebFont
             private void dbugValidateTable()
             {
 #if DEBUG
-                for (int xyFormat = 0; xyFormat < 128; ++xyFormat)
+                for (var xyFormat = 0; xyFormat < 128; ++xyFormat)
                 {
                     TripleEncodingRecord tripleRec = _records[xyFormat];
                     if (xyFormat < 84)
@@ -1252,7 +1252,7 @@ namespace FontParser.WebFont
                 if (deltaXs == null)
                 {
                     //(set 1.1)
-                    for (int y = 0; y < deltaYs.Length; ++y)
+                    for (var y = 0; y < deltaYs.Length; ++y)
                     {
                         AddRecord(byteCount, xbits, ybits, 0, deltaYs[y], 0, -1);
                         AddRecord(byteCount, xbits, ybits, 0, deltaYs[y], 0, 1);
@@ -1261,7 +1261,7 @@ namespace FontParser.WebFont
                 else if (deltaYs == null)
                 {
                     //(set 1.2)
-                    for (int x = 0; x < deltaXs.Length; ++x)
+                    for (var x = 0; x < deltaXs.Length; ++x)
                     {
                         AddRecord(byteCount, xbits, ybits, deltaXs[x], 0, -1, 0);
                         AddRecord(byteCount, xbits, ybits, deltaXs[x], 0, 1, 0);
@@ -1270,11 +1270,11 @@ namespace FontParser.WebFont
                 else
                 {
                     //set 2.1, - set5
-                    for (int x = 0; x < deltaXs.Length; ++x)
+                    for (var x = 0; x < deltaXs.Length; ++x)
                     {
                         ushort deltaX = deltaXs[x];
 
-                        for (int y = 0; y < deltaYs.Length; ++y)
+                        for (var y = 0; y < deltaYs.Length; ++y)
                         {
                             ushort deltaY = deltaYs[y];
 
@@ -1301,7 +1301,7 @@ namespace FontParser.WebFont
 
         public override T CreateTableEntry<T>(BinaryReader reader, T expectedResult)
         {
-            GlyphLocations loca = expectedResult as GlyphLocations;
+            var loca = expectedResult as GlyphLocations;
             if (loca == null) throw new NotSupportedException();
 
             //nothing todo here :)
@@ -1371,7 +1371,7 @@ namespace FontParser.WebFont
                 //error!
                 return null; //can't read this, notify user too.
             }
-            using MemoryStream decompressedStream = new MemoryStream();
+            using var decompressedStream = new MemoryStream();
             if (!DecompressHandler(compressedBuffer, decompressedStream))
             {
                 //...Most notably,
@@ -1384,9 +1384,9 @@ namespace FontParser.WebFont
             //from decoded stream we read each table
             decompressedStream.Position = 0;//reset pos
 
-            using ByteOrderSwappingBinaryReader reader2 = new ByteOrderSwappingBinaryReader(decompressedStream);
+            using var reader2 = new ByteOrderSwappingBinaryReader(decompressedStream);
             TableEntryCollection tableEntryCollection = CreateTableEntryCollection(woff2TablDirs);
-            OpenFontReader openFontReader = new OpenFontReader();
+            var openFontReader = new OpenFontReader();
             return openFontReader.ReadPreviewFontInfo(tableEntryCollection, reader2);
         }
 
@@ -1417,7 +1417,7 @@ namespace FontParser.WebFont
                 return false; //can't read this, notify user too.
             }
 
-            using MemoryStream decompressedStream = new MemoryStream();
+            using var decompressedStream = new MemoryStream();
             if (!DecompressHandler(compressedBuffer, decompressedStream))
             {
                 //...Most notably,
@@ -1430,9 +1430,9 @@ namespace FontParser.WebFont
             //from decoded stream we read each table
             decompressedStream.Position = 0;//reset pos
 
-            using ByteOrderSwappingBinaryReader reader2 = new ByteOrderSwappingBinaryReader(decompressedStream);
+            using var reader2 = new ByteOrderSwappingBinaryReader(decompressedStream);
             TableEntryCollection tableEntryCollection = CreateTableEntryCollection(woff2TablDirs);
-            OpenFontReader openFontReader = new OpenFontReader();
+            var openFontReader = new OpenFontReader();
             return openFontReader.ReadTableEntryCollection(typeface, ticket, tableEntryCollection, reader2);
         }
 
@@ -1455,7 +1455,7 @@ namespace FontParser.WebFont
             //UInt32  privOffset            Offset to private data block, from beginning of WOFF file.
             //UInt32  privLength            Length of private data block.
 
-            Woff2Header header = new Woff2Header();
+            var header = new Woff2Header();
             byte b0 = reader.ReadByte();
             byte b1 = reader.ReadByte();
             byte b2 = reader.ReadByte();
@@ -1488,12 +1488,12 @@ namespace FontParser.WebFont
 
         private Woff2TableDirectory[] ReadTableDirectories(BinaryReader reader)
         {
-            uint tableCount = (uint)_header.numTables; //?
+            var tableCount = (uint)_header.numTables; //?
             var tableDirs = new Woff2TableDirectory[tableCount];
 
             long expectedTableStartAt = 0;
 
-            for (int i = 0; i < tableCount; ++i)
+            for (var i = 0; i < tableCount; ++i)
             {
                 //TableDirectoryEntry
                 //UInt8         flags           table type and flags
@@ -1501,7 +1501,7 @@ namespace FontParser.WebFont
                 //UIntBase128   origLength      length of original table
                 //UIntBase128   transformLength transformed length(if applicable)
 
-                Woff2TableDirectory table = new Woff2TableDirectory();
+                var table = new Woff2TableDirectory();
                 byte flags = reader.ReadByte();
                 //The interpretation of the flags field is as follows.
 
@@ -1593,8 +1593,8 @@ namespace FontParser.WebFont
 
         private static TableEntryCollection CreateTableEntryCollection(Woff2TableDirectory[] woffTableDirs)
         {
-            TableEntryCollection tableEntryCollection = new TableEntryCollection();
-            for (int i = 0; i < woffTableDirs.Length; ++i)
+            var tableEntryCollection = new TableEntryCollection();
+            for (var i = 0; i < woffTableDirs.Length; ++i)
             {
                 Woff2TableDirectory woffTableDir = woffTableDirs[i];
                 UnreadTableEntry unreadTableEntry = null;
@@ -1603,7 +1603,7 @@ namespace FontParser.WebFont
                 {
                     //this is transformed glyf table,
                     //we need another technique
-                    TableHeader tableHeader = new TableHeader(woffTableDir.Name, 0,
+                    var tableHeader = new TableHeader(woffTableDir.Name, 0,
                                        (uint)woffTableDir.ExpectedStartAt,
                                        woffTableDir.transformLength);
                     unreadTableEntry = new TransformedGlyf(tableHeader, woffTableDir);
@@ -1612,14 +1612,14 @@ namespace FontParser.WebFont
                 {
                     //this is transformed glyf table,
                     //we need another technique
-                    TableHeader tableHeader = new TableHeader(woffTableDir.Name, 0,
+                    var tableHeader = new TableHeader(woffTableDir.Name, 0,
                                        (uint)woffTableDir.ExpectedStartAt,
                                        woffTableDir.transformLength);
                     unreadTableEntry = new TransformedLoca(tableHeader, woffTableDir);
                 }
                 else
                 {
-                    TableHeader tableHeader = new TableHeader(woffTableDir.Name, 0,
+                    var tableHeader = new TableHeader(woffTableDir.Name, 0,
                                           (uint)woffTableDir.ExpectedStartAt,
                                           woffTableDir.origLength);
                     unreadTableEntry = new UnreadTableEntry(tableHeader);
@@ -1800,7 +1800,7 @@ namespace FontParser.WebFont
 
             uint accum = 0;
             result = 0;
-            for (int i = 0; i < 5; ++i)
+            for (var i = 0; i < 5; ++i)
             {
                 byte data_byte = reader.ReadByte();
                 // No leading 0's
@@ -1832,8 +1832,8 @@ namespace FontParser.WebFont
 
         public static short[] ReadInt16Array(BinaryReader reader, int count)
         {
-            short[] arr = new short[count];
-            for (int i = 0; i < count; ++i)
+            var arr = new short[count];
+            for (var i = 0; i < count; ++i)
             {
                 arr[i] = reader.ReadInt16();
             }

@@ -51,7 +51,7 @@ namespace FontParser.Typeface
             float eachstep = (float)1 / Nsteps;
             float t = eachstep;//start
 
-            for (int n = 1; n < Nsteps; ++n)
+            for (var n = 1; n < Nsteps; ++n)
             {
                 float c = 1.0f - t;
 
@@ -77,7 +77,7 @@ namespace FontParser.Typeface
             float eachstep = (float)1 / Nsteps;
             float t = eachstep;//start
 
-            for (int n = 1; n < Nsteps; ++n)
+            for (var n = 1; n < Nsteps; ++n)
             {
                 float c = 1.0f - t;
 

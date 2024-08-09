@@ -48,11 +48,11 @@ namespace FontParser.Tables.AdvancedLayout.GSUB
                                                 ushort lookupType, ushort lookupFlags,
                                                 ushort[] subTableOffsets, ushort markFilteringSet)
         {
-            LookupTable lookupTable = new LookupTable(lookupFlags, markFilteringSet);
+            var lookupTable = new LookupTable(lookupFlags, markFilteringSet);
             LookupSubTable[] subTables = new LookupSubTable[subTableOffsets.Length];
             lookupTable.SubTables = subTables;
 
-            for (int i = 0; i < subTableOffsets.Length; ++i)
+            for (var i = 0; i < subTableOffsets.Length; ++i)
             {
                 LookupSubTable subTable = LookupTable.ReadSubTable(lookupType, reader, lookupTablePos + subTableOffsets[i]);
                 subTable.OwnerGSub = this;

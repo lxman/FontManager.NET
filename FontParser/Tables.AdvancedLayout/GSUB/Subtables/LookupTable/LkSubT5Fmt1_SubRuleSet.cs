@@ -9,7 +9,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
         public static LkSubT5Fmt1_SubRuleSet CreateFrom(BinaryReader reader, long beginAt)
         {
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
-            LkSubT5Fmt1_SubRuleSet subRuleSet = new LkSubT5Fmt1_SubRuleSet();
+            var subRuleSet = new LkSubT5Fmt1_SubRuleSet();
 
             //SubRuleSet table: All contexts beginning with the same glyph
             //Table 15
@@ -22,9 +22,9 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
             ushort[] subRuleOffsets = reader.ReadUInt16Array(subRuleCount);
             var subRules = new LkSubT5Fmt1_SubRule[subRuleCount];
             subRuleSet.subRules = subRules;
-            for (int i = 0; i < subRuleCount; ++i)
+            for (var i = 0; i < subRuleCount; ++i)
             {
-                LkSubT5Fmt1_SubRule rule = new LkSubT5Fmt1_SubRule();
+                var rule = new LkSubT5Fmt1_SubRule();
                 rule.ReadFrom(reader, beginAt + subRuleOffsets[i]);
 
                 subRules[i] = rule;

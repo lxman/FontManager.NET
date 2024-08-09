@@ -126,9 +126,9 @@ namespace FontParser.Tables.Variations
 
             int mapDataSize = mapCount * entrySize;
 
-            DeltaSetIndexMap[] deltaSetIndexMaps = new DeltaSetIndexMap[mapCount];
+            var deltaSetIndexMaps = new DeltaSetIndexMap[mapCount];
 
-            for (int i = 0; i < mapCount; ++i)
+            for (var i = 0; i < mapCount; ++i)
             {
                 int entry;
                 switch (entrySize)

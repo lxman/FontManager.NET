@@ -18,7 +18,7 @@ namespace FontParser.Tables
         public TableHeader[] CloneTableHeaders()
         {
             TableHeader[] clones = new TableHeader[_tables.Count];
-            int i = 0;
+            var i = 0;
             foreach (TableEntry en in _tables.Values)
             {
                 clones[i] = en.Header.Clone();

@@ -18,7 +18,7 @@ namespace FontParser.Tables
             ushort uStorageOffset = reader.ReadUInt16();
 
             uint offset = Header.Offset;
-            for (int j = 0; j <= uNRCount; j++)
+            for (var j = 0; j <= uNRCount; j++)
             {
                 var ttRecord = new TT_NAME_RECORD()
                 {

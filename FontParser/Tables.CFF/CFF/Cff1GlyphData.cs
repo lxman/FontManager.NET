@@ -17,7 +17,7 @@ namespace FontParser.Tables.CFF.CFF
 
         public override string ToString()
         {
-            StringBuilder stbuilder = new StringBuilder();
+            var stbuilder = new StringBuilder();
             stbuilder.Append(dbugGlyphIndex);
             if (Name != null)
             {

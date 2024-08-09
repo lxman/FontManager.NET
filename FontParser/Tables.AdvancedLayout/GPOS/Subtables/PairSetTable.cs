@@ -10,14 +10,14 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
         {
             ushort rowCount = reader.ReadUInt16();
             _pairSets = new PairSet[rowCount];
-            for (int i = 0; i < rowCount; ++i)
+            for (var i = 0; i < rowCount; ++i)
             {
                 //GlyphID 	    SecondGlyph 	GlyphID of second glyph in the pair-first glyph is listed in the Coverage table
                 //ValueRecord 	Value1 	        Positioning data for the first glyph in the pair
                 //ValueRecord 	Value2 	        Positioning data for the second glyph in the pair
                 ushort secondGlyph = reader.ReadUInt16();
-                ValueRecord v1 = ValueRecord.CreateFrom(reader, v1format);
-                ValueRecord v2 = ValueRecord.CreateFrom(reader, v2format);
+                var v1 = ValueRecord.CreateFrom(reader, v1format);
+                var v2 = ValueRecord.CreateFrom(reader, v2format);
                 //
                 _pairSets[i] = new PairSet(secondGlyph, v1, v2);
             }
@@ -26,7 +26,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
         public bool FindPairSet(ushort secondGlyphIndex, out PairSet foundPairSet)
         {
             int j = _pairSets.Length;
-            for (int i = 0; i < j; ++i)
+            for (var i = 0; i < j; ++i)
             {
                 //TODO: binary search?
                 if (_pairSets[i].secondGlyph == secondGlyphIndex)

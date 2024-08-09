@@ -47,7 +47,7 @@ namespace FontParser.Typeface
             //9                         OBLIQUE     Font contains oblique characters.
             //10–15 < reserved > Reserved; set to 0.
             ushort fsSelection = os2Table.fsSelection;
-            TranslatedOs2FontStyle result = TranslatedOs2FontStyle.UNSET;
+            var result = TranslatedOs2FontStyle.UNSET;
 
             if ((fsSelection & 0x1) != 0)
             {
@@ -336,8 +336,8 @@ namespace FontParser.Typeface
             if (typeface.IsCffFont && !typeface._evalCffGlyphBounds)
             {
                 int j = typeface.GlyphCount;
-                CffEvaluationEngine evalEngine = new CffEvaluationEngine();
-                CffBoundFinder boundFinder = new CffBoundFinder();
+                var evalEngine = new CffEvaluationEngine();
+                var boundFinder = new CffBoundFinder();
                 for (ushort i = 0; i < j; ++i)
                 {
                     Glyph g = typeface.GetGlyph(i);

@@ -23,7 +23,7 @@ namespace FontParser.Tables.AdvancedLayout.CoverageTable
 
         public override IEnumerable<ushort> GetExpandedValueIter()
         {
-            for (int i = 0; i < RangeCount; ++i)
+            for (var i = 0; i < RangeCount; ++i)
             {
                 for (ushort n = _startIndices[i]; n <= _endIndices[i]; ++n)
                 {
@@ -47,10 +47,10 @@ namespace FontParser.Tables.AdvancedLayout.CoverageTable
             // uint16    StartCoverageIndex  Coverage Index of first glyph ID in range
 
             ushort rangeCount = reader.ReadUInt16();
-            ushort[] startIndices = new ushort[rangeCount];
-            ushort[] endIndices = new ushort[rangeCount];
-            ushort[] coverageIndices = new ushort[rangeCount];
-            for (int i = 0; i < rangeCount; ++i)
+            var startIndices = new ushort[rangeCount];
+            var endIndices = new ushort[rangeCount];
+            var coverageIndices = new ushort[rangeCount];
+            for (var i = 0; i < rangeCount; ++i)
             {
                 startIndices[i] = reader.ReadUInt16();
                 endIndices[i] = reader.ReadUInt16();
@@ -70,7 +70,7 @@ namespace FontParser.Tables.AdvancedLayout.CoverageTable
         public override string ToString()
         {
             List<string> stringList = new List<string>();
-            for (int i = 0; i < RangeCount; ++i)
+            for (var i = 0; i < RangeCount; ++i)
             {
                 stringList.Add($"{_startIndices[i]}-{_endIndices[i]}");
             }

@@ -58,7 +58,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts
             //In both cases, svgDocLength encodes the length of the encoded data, not the decoded document.
 
             _entries = new SvgDocumentEntry[numEntries];
-            for (int i = 0; i < numEntries; ++i)
+            for (var i = 0; i < numEntries; ++i)
             {
                 _entries[i] = new SvgDocumentEntry()
                 {
@@ -70,7 +70,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts
             }
 
             //TODO: review lazy load
-            for (int i = 0; i < numEntries; ++i)
+            for (var i = 0; i < numEntries; ++i)
             {
                 //read data
                 SvgDocumentEntry entry = _entries[i];
@@ -128,7 +128,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts
             {
                 //create index
                 _dicSvgEntries = new Dictionary<ushort, int>();
-                for (int i = 0; i < _entries.Length; ++i)
+                for (var i = 0; i < _entries.Length; ++i)
                 {
                     _dicSvgEntries.Add(_entries[i].startGlyphID, i);
                 }
@@ -157,7 +157,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts
             //xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"
             //test save the svg
             //save as html document for test
-            System.Text.StringBuilder stbuilder = new System.Text.StringBuilder();
+            var stbuilder = new System.Text.StringBuilder();
             stbuilder.Append("<html><body>");
 
             //TODO: add exact SVG reader here

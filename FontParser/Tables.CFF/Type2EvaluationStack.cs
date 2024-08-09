@@ -139,7 +139,7 @@ namespace FontParser.Tables.CFF
                 throw new OpenFontNotSupportedException();
             }
 #endif
-            for (int i = 0; i < _currentIndex;)
+            for (var i = 0; i < _currentIndex;)
             {
                 _glyphTranslator.LineTo((float)(_currentX += _argStack[i]), (float)(_currentY += _argStack[i + 1]));
                 i += 2;
@@ -167,7 +167,7 @@ namespace FontParser.Tables.CFF
             //number of arguments on the stack.
 
             //first elem
-            int i = 0;
+            var i = 0;
             if ((_currentIndex % 2) != 0)
             {
                 //|- dx1 {dya dxb}*  hlineto (6) |-
@@ -215,7 +215,7 @@ namespace FontParser.Tables.CFF
             //horizontal lines. The number of lines is determined from the
             //number of arguments on the stack.
             //first elem
-            int i = 0;
+            var i = 0;
             if ((_currentIndex % 2) != 0)
             {
                 //|- dy1 {dxa dyb}*  vlineto (7) |-
@@ -269,7 +269,7 @@ namespace FontParser.Tables.CFF
             //horizontal or vertical(and hence the value is zero), thus
             //reducing the number of arguments needed.
 
-            int i = 0;
+            var i = 0;
 #if DEBUG
             if ((_currentIndex % 6) != 0)
             {
@@ -306,7 +306,7 @@ namespace FontParser.Tables.CFF
             //The first curve need not start horizontal (the odd argument
             //case). Note the argument order for the odd argument case
 
-            int i = 0;
+            var i = 0;
             int count = _currentIndex;
             double curX = _currentX;
             double curY = _currentY;
@@ -360,8 +360,8 @@ namespace FontParser.Tables.CFF
 #if DEBUG
 
 #endif
-            int i = 0;
-            int remainder = 0;
+            var i = 0;
+            var remainder = 0;
 
             switch (remainder = (_currentIndex % 8))
             {
@@ -509,7 +509,7 @@ namespace FontParser.Tables.CFF
             double curX = _currentX;
             double curY = _currentY;
 
-            int i = 0;
+            var i = 0;
             int count = _currentIndex;
             while (count > 0)
             {
@@ -549,7 +549,7 @@ namespace FontParser.Tables.CFF
             double curX = _currentX;
             double curY = _currentY;
 
-            int i = 0;
+            var i = 0;
             int count = _currentIndex;
             while (count > 0)
             {
@@ -592,8 +592,8 @@ namespace FontParser.Tables.CFF
             //hvcurveto;
 
             //see the description of hvcurveto for more information.
-            int i = 0;
-            int remainder = 0;
+            var i = 0;
+            var remainder = 0;
 
             switch (remainder = (_currentIndex % 8))
             {
@@ -719,7 +719,7 @@ namespace FontParser.Tables.CFF
             //If the argument count is a multiple of four, the curve starts and ends vertical.
             //If the argument count is odd, the first curve does not begin with a vertical tangent.
 
-            int i = 0;
+            var i = 0;
             int count = _currentIndex;
 
             double curX = _currentX;

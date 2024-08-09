@@ -24,7 +24,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
         {
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
 
-            ChainSubClassRuleTable subClassRuleTable = new ChainSubClassRuleTable();
+            var subClassRuleTable = new ChainSubClassRuleTable();
             ushort backtrackingCount = reader.ReadUInt16();
             subClassRuleTable.backtrakcingClassDefs = reader.ReadUInt16Array(backtrackingCount);
             ushort inputGlyphCount = reader.ReadUInt16();

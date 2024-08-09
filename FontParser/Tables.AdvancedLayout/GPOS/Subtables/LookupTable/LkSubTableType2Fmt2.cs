@@ -31,7 +31,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
 
             CoverageTable.CoverageTable covTable = CoverageTable;
             int lim = inputGlyphs.Count - 1;
-            for (int i = 0; i < lim; ++i) //start at 0
+            for (var i = 0; i < lim; ++i) //start at 0
             {
                 ushort glyph1_index = inputGlyphs.GetGlyph(i, out short glyph_advW);
                 int record1Index = covTable.FindPosition(glyph1_index);

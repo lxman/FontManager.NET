@@ -43,7 +43,7 @@ namespace FontParser.Tables.AdvancedLayout.JustificationTable
             ushort jstfScriptCount = reader.ReadUInt16();
 
             JstfScriptRecord[] recs = new JstfScriptRecord[jstfScriptCount];
-            for (int i = 0; i < recs.Length; ++i)
+            for (var i = 0; i < recs.Length; ++i)
             {
                 recs[i] = new JstfScriptRecord(
                     Utils.TagToString(reader.ReadUInt32()),
@@ -52,7 +52,7 @@ namespace FontParser.Tables.AdvancedLayout.JustificationTable
             }
 
             _jsftScriptTables = new JstfScriptTable[recs.Length];
-            for (int i = 0; i < recs.Length; ++i)
+            for (var i = 0; i < recs.Length; ++i)
             {
                 JstfScriptRecord rec = recs[i];
                 reader.BaseStream.Position = tableStartAt + rec.jstfScriptOffset;
@@ -89,7 +89,7 @@ namespace FontParser.Tables.AdvancedLayout.JustificationTable
             //uint16            jstfLangSysCount                Number of JstfLangSysRecords in this table - may be zero(0)
             //JstfLangSysRecord jstfLangSysRecords[jstfLangSysCount]    Array of JstfLangSysRecords, in alphabetical order by JstfLangSysTag
 
-            JstfScriptTable jstfScriptTable = new JstfScriptTable();
+            var jstfScriptTable = new JstfScriptTable();
 
             long tableStartAt = reader.BaseStream.Position;
 
@@ -99,8 +99,8 @@ namespace FontParser.Tables.AdvancedLayout.JustificationTable
 
             if (jstfLangSysCount > 0)
             {
-                JstfLangSysRecord[] recs = new JstfLangSysRecord[jstfLangSysCount];
-                for (int i = 0; i < jstfLangSysCount; ++i)
+                var recs = new JstfLangSysRecord[jstfLangSysCount];
+                for (var i = 0; i < jstfLangSysCount; ++i)
                 {
                     recs[i] = ReadJstfLangSysRecord(reader);
                 }
@@ -170,7 +170,7 @@ namespace FontParser.Tables.AdvancedLayout.JustificationTable
 
             JstfPriority[] jstPriorities = new JstfPriority[jstfPriorityCount];
 
-            for (int i = 0; i < jstfPriorityOffsets.Length; ++i)
+            for (var i = 0; i < jstfPriorityOffsets.Length; ++i)
             {
                 reader.BaseStream.Position = tableStartAt + jstfPriorityOffsets[i];
                 jstPriorities[i] = ReadJstfPriority(reader);

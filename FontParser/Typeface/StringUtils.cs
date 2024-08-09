@@ -15,7 +15,7 @@ namespace FontParser.Typeface
             // we need to use "int".
             // This allows characters such as 🙌 or 𐐷 or to be treated as single codepoints even
             // though they are encoded as two "char"s in a C# string.
-            for (int i = 0; i < len; ++i)
+            for (var i = 0; i < len; ++i)
             {
                 char ch = str[startAt + i];
                 int codepoint = ch;
@@ -43,7 +43,7 @@ namespace FontParser.Typeface
             // we need to use "int".
             // This allows characters such as 🙌 or 𐐷 or to be treated as single codepoints even
             // though they are encoded as two "char"s in a C# string.
-            for (int i = 0; i < len; ++i)
+            for (var i = 0; i < len; ++i)
             {
                 char ch = str[startAt + i];
                 int codepoint = ch;

@@ -4,6 +4,8 @@ namespace NewFontParser.Tables.Name
 {
     public class NameRecord
     {
+        public static long RecordSize => 12;
+
         public ushort PlatformId { get; }
 
         public ushort EncodingId { get; }
@@ -16,10 +18,11 @@ namespace NewFontParser.Tables.Name
 
         public ushort Offset { get; }
 
-        public string Name { get; }
+        //public string Name { get; }
 
-        public NameRecord(BigEndianReader reader)
+        public NameRecord(byte[] data)
         {
+            var reader = new BigEndianReader(data);
             PlatformId = reader.ReadUshort();
             EncodingId = reader.ReadUshort();
             LanguageId = reader.ReadUshort();

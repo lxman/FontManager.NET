@@ -107,7 +107,7 @@ namespace FontParser.Tables.AdvancedLayout.Base
             ushort baseTagListOffset = reader.ReadUInt16();
             ushort baseScriptListOffset = reader.ReadUInt16();
 
-            AxisTable axisTable = new AxisTable();
+            var axisTable = new AxisTable();
             if (baseTagListOffset > 0)
             {
                 reader.BaseStream.Position = axisTableStartAt + baseTagListOffset;
@@ -191,7 +191,7 @@ namespace FontParser.Tables.AdvancedLayout.Base
 
             ushort baseTagCount = reader.ReadUInt16();
             string[] baselineTags = new string[baseTagCount];
-            for (int i = 0; i < baseTagCount; ++i)
+            for (var i = 0; i < baseTagCount; ++i)
             {
                 baselineTags[i] = ConvertToTagString(reader.ReadBytes(4));
             }
@@ -220,7 +220,7 @@ namespace FontParser.Tables.AdvancedLayout.Base
             ushort baseScriptCount = reader.ReadUInt16();
 
             BaseScriptRecord[] baseScriptRecord_offsets = new BaseScriptRecord[baseScriptCount];
-            for (int i = 0; i < baseScriptCount; ++i)
+            for (var i = 0; i < baseScriptCount; ++i)
             {
                 //BaseScriptRecord
 
@@ -235,7 +235,7 @@ namespace FontParser.Tables.AdvancedLayout.Base
                 baseScriptRecord_offsets[i] = new BaseScriptRecord(ConvertToTagString(reader.ReadBytes(4)), reader.ReadUInt16());
             }
             BaseScript[] baseScripts = new BaseScript[baseScriptCount];
-            for (int i = 0; i < baseScriptCount; ++i)
+            for (var i = 0; i < baseScriptCount; ++i)
             {
                 BaseScriptRecord baseScriptRecord = baseScriptRecord_offsets[i];
                 reader.BaseStream.Position = baseScriptListStartAt + baseScriptRecord.baseScriptOffset;
@@ -275,7 +275,7 @@ namespace FontParser.Tables.AdvancedLayout.Base
             if (baseLangSysCount > 0)
             {
                 baseLangSysRecords = new BaseLangSysRecord[baseLangSysCount];
-                for (int i = 0; i < baseLangSysCount; ++i)
+                for (var i = 0; i < baseLangSysCount; ++i)
                 {
                     //BaseLangSysRecord
                     //A BaseLangSysRecord defines min/max extents for a language system or a language-specific feature.
@@ -290,7 +290,7 @@ namespace FontParser.Tables.AdvancedLayout.Base
                 }
             }
 
-            BaseScript baseScript = new BaseScript
+            var baseScript = new BaseScript
             {
                 baseLangSysRecords = baseLangSysRecords
             };
@@ -330,7 +330,7 @@ namespace FontParser.Tables.AdvancedLayout.Base
             ushort[] baseCoords_Offset = reader.ReadUInt16Array(baseCoordCount);
 
             BaseCoord[] baseCoords = new BaseCoord[baseCoordCount];
-            for (int i = 0; i < baseCoordCount; ++i)
+            for (var i = 0; i < baseCoordCount; ++i)
             {
                 baseCoords[i] = ReadBaseCoordTable(reader, baseValueTableStartAt + baseCoords_Offset[i]);
             }
@@ -455,7 +455,7 @@ namespace FontParser.Tables.AdvancedLayout.Base
 
             long startMinMaxTableAt = reader.BaseStream.Position;
             //
-            MinMax minMax = new MinMax();
+            var minMax = new MinMax();
             ushort minCoordOffset = reader.ReadUInt16();
             ushort maxCoordOffset = reader.ReadUInt16();
             ushort featMinMaxCount = reader.ReadUInt16();
@@ -464,7 +464,7 @@ namespace FontParser.Tables.AdvancedLayout.Base
             if (featMinMaxCount > 0)
             {
                 minMaxFeatureOffsets = new FeatureMinMaxOffset[featMinMaxCount];
-                for (int i = 0; i < featMinMaxCount; ++i)
+                for (var i = 0; i < featMinMaxCount; ++i)
                 {
                     minMaxFeatureOffsets[i] = new FeatureMinMaxOffset(
                         ConvertToTagString(reader.ReadBytes(4)), //featureTableTag
@@ -487,7 +487,7 @@ namespace FontParser.Tables.AdvancedLayout.Base
             if (minMaxFeatureOffsets != null)
             {
                 var featureMinMaxRecords = new FeatureMinMax[minMaxFeatureOffsets.Length];
-                for (int i = 0; i < minMaxFeatureOffsets.Length; ++i)
+                for (var i = 0; i < minMaxFeatureOffsets.Length; ++i)
                 {
                     FeatureMinMaxOffset featureMinMaxOffset = minMaxFeatureOffsets[i];
 

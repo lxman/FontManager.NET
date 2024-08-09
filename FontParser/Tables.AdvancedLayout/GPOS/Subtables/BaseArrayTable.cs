@@ -35,13 +35,13 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
             baseArrTable._records = new BaseRecord[baseCount];
             // Read all baseAnchorOffsets in one go
             ushort[] baseAnchorOffsets = reader.ReadUInt16Array(classCount * baseCount);
-            for (int i = 0; i < baseCount; ++i)
+            for (var i = 0; i < baseCount; ++i)
             {
                 AnchorPoint[] anchors = new AnchorPoint[classCount];
-                BaseRecord baseRec = new BaseRecord(anchors);
+                var baseRec = new BaseRecord(anchors);
 
                 //each base has anchor point for mark glyph'class
-                for (int n = 0; n < classCount; ++n)
+                for (var n = 0; n < classCount; ++n)
                 {
                     ushort offset = baseAnchorOffsets[i * classCount + n];
                     if (offset <= 0)

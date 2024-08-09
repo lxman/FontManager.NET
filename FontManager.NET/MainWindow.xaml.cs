@@ -155,7 +155,7 @@ namespace FontManager.NET
         {
             var item = (ListBoxItem)sender;
             e.Handled = true;
-            string f = item.Tag.ToString()!;
+            var f = item.Tag.ToString()!;
             OpenFontReader reader = new();
             FontParser.Typeface.Typeface tf = reader.Read(File.OpenRead(f));
             List<GlyphNameMap> names = tf.GetGlyphNameIter().ToList();

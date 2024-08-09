@@ -85,7 +85,7 @@ namespace FontParser.Tables.Variations
                 //Hence, the actual offset for the location of the GlyphVariationData table within the font
                 //will be the value stored in the offsets array multiplied by 2.
 
-                for (int i = 0; i < glyphVariationDataOffsets.Length; ++i)
+                for (var i = 0; i < glyphVariationDataOffsets.Length; ++i)
                 {
                     glyphVariationDataOffsets[i] *= 2;
                 }
@@ -105,7 +105,7 @@ namespace FontParser.Tables.Variations
 
             _glyphVarDataArr = new GlyphVariableData[glyphVariationDataOffsets.Length];
 
-            for (int i = 0; i < glyphVariationDataOffsets.Length; ++i)
+            for (var i = 0; i < glyphVariationDataOffsets.Length; ++i)
             {
                 reader.BaseStream.Position = glyphVariableData_startAt + glyphVariationDataOffsets[i];
                 _glyphVarDataArr[i] = ReadGlyphVariationData(reader);
@@ -143,8 +143,8 @@ namespace FontParser.Tables.Variations
             //F2DOT14     coordinates[axisCount]  Coordinate array specifying a position within the font’s variation space.
             //                                    The number of elements must match the axisCount specified in the 'fvar' table.
 
-            TupleRecord[] tupleRecords = new TupleRecord[sharedTupleCount];
-            for (int t = 0; t < sharedTupleCount; ++t)
+            var tupleRecords = new TupleRecord[sharedTupleCount];
+            for (var t = 0; t < sharedTupleCount; ++t)
             {
                 tupleRecords[t] = TupleRecord.ReadTupleRecord(reader, axisCount);
             }
@@ -183,7 +183,7 @@ namespace FontParser.Tables.Variations
 
         private static void ReadPackedPoints(BinaryReader reader, int point_count, List<ushort> packPoints)
         {
-            int point_read = 0;
+            var point_read = 0;
             //for (int n = 0; n < point_count ; ++n)
             while (point_read < point_count)
             {
@@ -210,7 +210,7 @@ namespace FontParser.Tables.Variations
 
                 if (((controlByte & 0x80) == 0x80)) //point_are_uint16
                 {
-                    for (int i = 0; i < point_run_count; ++i)
+                    for (var i = 0; i < point_run_count; ++i)
                     {
                         point_read++;
                         packPoints.Add(reader.ReadUInt16());
@@ -218,7 +218,7 @@ namespace FontParser.Tables.Variations
                 }
                 else
                 {
-                    for (int i = 0; i < point_run_count; ++i)
+                    for (var i = 0; i < point_run_count; ++i)
                     {
                         point_read++;
                         packPoints.Add(reader.ReadByte());
@@ -244,7 +244,7 @@ namespace FontParser.Tables.Variations
             //Offset16              dataOffset              Offset from the start of the GlyphVariationData table to the serialized data
             //TupleVariationHeader  tupleVariationHeaders[tupleCount]   Array of tuple variation headers.
 
-            GlyphVariableData glyphVarData = new GlyphVariableData();
+            var glyphVarData = new GlyphVariableData();
 
             long beginAt = reader.BaseStream.Position;
             ushort tupleVariationCount = reader.ReadUInt16();
@@ -265,7 +265,7 @@ namespace FontParser.Tables.Variations
             TupleVariationHeader[] tupleHaders = new TupleVariationHeader[tupleCount];
             glyphVarData.tupleHeaders = tupleHaders;
 
-            for (int i = 0; i < tupleCount; ++i)
+            for (var i = 0; i < tupleCount; ++i)
             {
                 tupleHaders[i] = TupleVariationHeader.Read(reader, axisCount);
             }
@@ -305,7 +305,7 @@ namespace FontParser.Tables.Variations
                 ReadPackedPoints(reader, glyphVarData._sharedPoints);
             }
 
-            for (int i = 0; i < tupleCount; ++i)
+            for (var i = 0; i < tupleCount; ++i)
             {
                 TupleVariationHeader header = tupleHaders[i];
 
@@ -322,7 +322,7 @@ namespace FontParser.Tables.Variations
 
                 if ((header.flags & ((int)TupleIndexFormat.PRIVATE_POINT_NUMBERS >> 12)) == ((int)TupleIndexFormat.PRIVATE_POINT_NUMBERS) >> 12)
                 {
-                    List<ushort> privatePoints = new List<ushort>();
+                    var privatePoints = new List<ushort>();
                     ReadPackedPoints(reader, privatePoints);
                     header.PrivatePoints = privatePoints.ToArray();
                 }
@@ -340,7 +340,7 @@ namespace FontParser.Tables.Variations
                 //0x40 	DELTAS_ARE_WORDS 	Flag indicating the data type for delta values in the run. If set, the run contains 16-bit signed deltas (int16); if clear, the run contains 8-bit signed deltas (int8).
                 //0x3F 	DELTA_RUN_COUNT_MASK 	Mask for the low 6 bits to provide the number of delta values in the run, minus one.
 
-                List<short> packedDeltasXY = new List<short>();
+                var packedDeltasXY = new List<short>();
                 while (reader.BaseStream.Position < expect_endAt)
                 {
                     byte controlByte = reader.ReadByte();
@@ -350,7 +350,7 @@ namespace FontParser.Tables.Variations
 
                     if (flags01 == 0x80)
                     {
-                        for (int nn = 0; nn < number_in_run; ++nn)
+                        for (var nn = 0; nn < number_in_run; ++nn)
                         {
                             packedDeltasXY.Add(0);
                         }
@@ -361,14 +361,14 @@ namespace FontParser.Tables.Variations
                         //the run contains 16 - bit signed deltas(int16);
                         //if clear, the run contains 8 - bit signed deltas(int8).
 
-                        for (int nn = 0; nn < number_in_run; ++nn)
+                        for (var nn = 0; nn < number_in_run; ++nn)
                         {
                             packedDeltasXY.Add(reader.ReadInt16());
                         }
                     }
                     else if (flags01 == 0)
                     {
-                        for (int nn = 0; nn < number_in_run; ++nn)
+                        for (var nn = 0; nn < number_in_run; ++nn)
                         {
                             packedDeltasXY.Add(reader.ReadByte());
                         }

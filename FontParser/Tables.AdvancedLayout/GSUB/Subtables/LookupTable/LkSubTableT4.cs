@@ -23,9 +23,9 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                     {   // skip tp next component
                         continue;
                     }
-                    bool allMatched = true;
+                    var allMatched = true;
                     int tmp_i = pos + 1;
-                    for (int p = 0; p < compLen; ++p)
+                    for (var p = 0; p < compLen; ++p)
                     {
                         if (glyphIndices[tmp_i + p] != lig.ComponentGlyphs[p])
                         {

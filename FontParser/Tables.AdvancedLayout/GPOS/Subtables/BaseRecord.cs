@@ -20,10 +20,10 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
 
         public override string ToString()
         {
-            StringBuilder stbuilder = new StringBuilder();
+            var stbuilder = new StringBuilder();
             if (anchors != null)
             {
-                int i = 0;
+                var i = 0;
                 foreach (AnchorPoint a in anchors)
                 {
                     if (i > 0)

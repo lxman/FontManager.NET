@@ -32,7 +32,7 @@ namespace FontParser.Tables.AdvancedLayout
 
         public static AttachmentListTable CreateFrom(BinaryReader reader, long beginAt)
         {
-            AttachmentListTable attachmentListTable = new AttachmentListTable();
+            var attachmentListTable = new AttachmentListTable();
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
             //
             ushort coverageOffset = reader.ReadUInt16();
@@ -41,7 +41,7 @@ namespace FontParser.Tables.AdvancedLayout
             //-----------------------
             attachmentListTable.CoverageTable = AdvancedLayout.CoverageTable.CoverageTable.CreateFrom(reader, beginAt + coverageOffset);
             attachmentListTable._attachPoints = new AttachPoint[glyphCount];
-            for (int i = 0; i < glyphCount; ++i)
+            for (var i = 0; i < glyphCount; ++i)
             {
                 reader.BaseStream.Seek(beginAt + attachPointOffsets[i], SeekOrigin.Begin);
                 ushort pointCount = reader.ReadUInt16();

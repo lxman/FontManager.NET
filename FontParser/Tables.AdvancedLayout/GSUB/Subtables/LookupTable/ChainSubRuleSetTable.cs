@@ -28,11 +28,11 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
         {
             reader.BaseStream.Seek(beginAt, SeekOrigin.Begin);
             //---
-            ChainSubRuleSetTable table = new ChainSubRuleSetTable();
+            var table = new ChainSubRuleSetTable();
             ushort subRuleCount = reader.ReadUInt16();
             ushort[] subRuleOffsets = reader.ReadUInt16Array(subRuleCount);
             ChainSubRuleSubTable[] chainSubRuleSubTables = table._chainSubRuleSubTables = new ChainSubRuleSubTable[subRuleCount];
-            for (int i = 0; i < subRuleCount; ++i)
+            for (var i = 0; i < subRuleCount; ++i)
             {
                 chainSubRuleSubTables[i] = ChainSubRuleSubTable.CreateFrom(reader, beginAt + subRuleOffsets[i]);
             }

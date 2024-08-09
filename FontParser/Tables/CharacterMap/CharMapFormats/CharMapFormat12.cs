@@ -35,7 +35,7 @@ namespace FontParser.Tables.CharacterMap.CharMapFormats
 
         public override void CollectUnicodeChars(List<uint> unicodes)
         {
-            for (int i = 0; i < _startCharCodes.Length; ++i)
+            for (var i = 0; i < _startCharCodes.Length; ++i)
             {
                 uint start = _startCharCodes[i];
                 uint stop = _endCharCodes[i];

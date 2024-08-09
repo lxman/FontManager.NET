@@ -126,7 +126,7 @@ namespace FontParser.Tables.Variations
 
         public static TupleVariationHeader Read(BinaryReader reader, int axisCount)
         {
-            TupleVariationHeader header = new TupleVariationHeader
+            var header = new TupleVariationHeader
             {
                 variableDataSize = reader.ReadUInt16()
             };
@@ -252,8 +252,8 @@ namespace FontParser.Tables.Variations
 
         public static TupleRecord ReadTupleRecord(BinaryReader reader, int count)
         {
-            float[] coords = new float[count];
-            for (int n = 0; n < coords.Length; ++n)
+            var coords = new float[count];
+            for (var n = 0; n < coords.Length; ++n)
             {
                 coords[n] = reader.ReadF2Dot14();
             }

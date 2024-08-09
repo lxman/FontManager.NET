@@ -101,7 +101,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts.Common
 
             //The rest of the CBLC table structure is identical to one already defined for EBLC.
 
-            SizeTable bmpSizeTable = new SizeTable
+            var bmpSizeTable = new SizeTable
             {
                 indexSubTableArrayOffset = reader.ReadUInt32(),
                 indexTablesSize = reader.ReadUInt32(),

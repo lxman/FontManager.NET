@@ -131,13 +131,13 @@ namespace FontParser.WebFont
 
             TableEntryCollection tableEntryCollection = CreateTableEntryCollection(woffTableDirs);
             //for font preview, we may not need to extract
-            using (MemoryStream decompressStream = new MemoryStream())
+            using (var decompressStream = new MemoryStream())
             {
                 if (Extract(reader, woffTableDirs, decompressStream))
                 {
-                    using ByteOrderSwappingBinaryReader reader2 = new ByteOrderSwappingBinaryReader(decompressStream);
+                    using var reader2 = new ByteOrderSwappingBinaryReader(decompressStream);
                     decompressStream.Position = 0;
-                    OpenFontReader openFontReader = new OpenFontReader();
+                    var openFontReader = new OpenFontReader();
                     PreviewFontInfo previewFontInfo = openFontReader.ReadPreviewFontInfo(tableEntryCollection, reader2);
                     if (previewFontInfo != null)
                     {
@@ -193,12 +193,12 @@ namespace FontParser.WebFont
 
             TableEntryCollection tableEntryCollection = CreateTableEntryCollection(woffTableDirs);
 
-            using MemoryStream decompressStream = new MemoryStream();
+            using var decompressStream = new MemoryStream();
             if (Extract(reader, woffTableDirs, decompressStream))
             {
-                using ByteOrderSwappingBinaryReader reader2 = new ByteOrderSwappingBinaryReader(decompressStream);
+                using var reader2 = new ByteOrderSwappingBinaryReader(decompressStream);
                 decompressStream.Position = 0;
-                OpenFontReader openFontReader = new OpenFontReader();
+                var openFontReader = new OpenFontReader();
                 return openFontReader.ReadTableEntryCollection(typeface, ticket, tableEntryCollection, reader2);
             }
             return false;
@@ -206,8 +206,8 @@ namespace FontParser.WebFont
 
         private static TableEntryCollection CreateTableEntryCollection(WoffTableDirectory[] woffTableDirs)
         {
-            TableEntryCollection tableEntryCollection = new TableEntryCollection();
-            for (int i = 0; i < woffTableDirs.Length; ++i)
+            var tableEntryCollection = new TableEntryCollection();
+            for (var i = 0; i < woffTableDirs.Length; ++i)
             {
                 WoffTableDirectory woffTableDir = woffTableDirs[i];
                 tableEntryCollection.AddEntry(
@@ -247,7 +247,7 @@ namespace FontParser.WebFont
             {
                 return null;
             }
-            WoffHeader header = new WoffHeader
+            var header = new WoffHeader
             {
                 flavor = reader.ReadUInt32(),
                 length = reader.ReadUInt32(),
@@ -277,7 +277,7 @@ namespace FontParser.WebFont
             //Its size is calculated by multiplying the numTables value in the WOFF header times the size of a single WOFF table directory.
             //Each table directory entry specifies the size and location of a single font data table.
 
-            uint tableCount = (uint)_header.numTables; //?
+            var tableCount = (uint)_header.numTables; //?
             //tableDirs = new WoffTableDirectory[tableCount];
             long expectedStartAt = 0;
 
@@ -285,7 +285,7 @@ namespace FontParser.WebFont
             //var tableEntryCollection = new TableEntryCollection((int)tableCount);
             WoffTableDirectory[] tableDirs = new WoffTableDirectory[tableCount];
 
-            for (int i = 0; i < tableCount; ++i)
+            for (var i = 0; i < tableCount; ++i)
             {
                 //UInt32 tag	        4-byte sfnt table identifier.
                 //UInt32 offset         Offset to the data, from beginning of WOFF file.
@@ -293,7 +293,7 @@ namespace FontParser.WebFont
                 //UInt32 origLength     Length of the uncompressed table, excluding padding.
                 //UInt32 origChecksum   Checksum of the uncompressed table.
 
-                WoffTableDirectory table = new WoffTableDirectory
+                var table = new WoffTableDirectory
                 {
                     tag = reader.ReadUInt32(),
                     offset = reader.ReadUInt32(),
@@ -318,7 +318,7 @@ namespace FontParser.WebFont
 
         private bool Extract(BinaryReader reader, WoffTableDirectory[] tables, Stream newDecompressedStream)
         {
-            for (int i = 0; i < tables.Length; ++i)
+            for (var i = 0; i < tables.Length; ++i)
             {
                 //UInt32 tag	        4-byte sfnt table identifier.
                 //UInt32 offset         Offset to the data, from beginning of WOFF file.

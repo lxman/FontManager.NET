@@ -41,7 +41,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
             int j = ComponentGlyphs.Length;
             stbuilder.Append("output:" + GlyphId + ",{");
 
-            for (int i = 0; i < j; ++i)
+            for (var i = 0; i < j; ++i)
             {
                 if (i > 0)
                 {

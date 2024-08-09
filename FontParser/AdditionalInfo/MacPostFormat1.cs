@@ -11,7 +11,7 @@ namespace FontParser.AdditionalInfo
             if (s_stdMacGlyphNames == null)
             {
                 s_stdMacGlyphNames = new string[260];
-                using StringReader strReader = new StringReader(orgGlyphNames);
+                using var strReader = new StringReader(orgGlyphNames);
                 string[] seps = new string[] { " " };
 
                 string line = strReader.ReadLine();

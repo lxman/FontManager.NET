@@ -18,9 +18,9 @@ namespace FontParser.Tables.TrueType
 
         protected override void ReadContentFrom(BinaryReader reader)
         {
-            int nelems = (int)(TableLength / sizeof(short));
+            var nelems = (int)(TableLength / sizeof(short));
             var results = new int[nelems];
-            for (int i = 0; i < nelems; i++)
+            for (var i = 0; i < nelems; i++)
             {
                 results[i] = reader.ReadInt16();
             }

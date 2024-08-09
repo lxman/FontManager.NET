@@ -67,8 +67,8 @@ namespace FontParser.TrueTypeInterpreter
 
             //TODO: review here again
 
-            int verticalAdv = 0;
-            int vFrontSideBearing = 0;
+            var verticalAdv = 0;
+            var vFrontSideBearing = 0;
             var pp1 = new GlyphPointF((minX - hFrontSideBearing), 0, true);
             var pp2 = new GlyphPointF(pp1.X + horizontalAdv, 0, true);
             var pp3 = new GlyphPointF(0, maxY + vFrontSideBearing, true);
@@ -466,7 +466,7 @@ namespace FontParser.TrueTypeInterpreter
                     // ==== POINT MODIFICATION ====
                     case OpCode.FLIPPT:
                         {
-                            for (int i = 0; i < _state.Loop; i++)
+                            for (var i = 0; i < _state.Loop; i++)
                             {
                                 var index = _stack.Pop();
                                 //review here again!
@@ -544,7 +544,7 @@ namespace FontParser.TrueTypeInterpreter
                             else if (_contours.Length > 0)
                                 count = _contours[_contours.Length - 1] + 1;
 
-                            for (int i = 0; i < count; i++)
+                            for (var i = 0; i < count; i++)
                             {
                                 // don't move the reference point
                                 if (zone.Current != _zp2.Current || point != i)
@@ -632,7 +632,7 @@ namespace FontParser.TrueTypeInterpreter
                             var originalRange = DualProject(_zp1.GetOriginal(_state.Rp2) - originalBase);
                             var currentRange = Project(_zp1.GetCurrent(_state.Rp2) - currentBase);
 
-                            for (int i = 0; i < _state.Loop; i++)
+                            for (var i = 0; i < _state.Loop; i++)
                             {
                                 var pointIndex = _stack.Pop();
                                 var point = _zp2.GetCurrent(pointIndex);
@@ -657,7 +657,7 @@ namespace FontParser.TrueTypeInterpreter
 
                     case OpCode.ALIGNRP:
                         {
-                            for (int i = 0; i < _state.Loop; i++)
+                            for (var i = 0; i < _state.Loop; i++)
                             {
                                 var pointIndex = _stack.Pop();
                                 var p1 = _zp1.GetCurrent(pointIndex);
@@ -865,7 +865,7 @@ namespace FontParser.TrueTypeInterpreter
                                 }
 
                                 var point = 0;
-                                for (int i = 0; i < _contours.Length; i++)
+                                for (var i = 0; i < _contours.Length; i++)
                                 {
                                     var endPoint = _contours[i];
                                     var firstPoint = point;
@@ -973,7 +973,7 @@ namespace FontParser.TrueTypeInterpreter
                             // otherwise, we don't have to do anything; we'll keep executing this block
                             if (!_stack.PopBool())
                             {
-                                int indent = 1;
+                                var indent = 1;
                                 while (indent > 0)
                                 {
                                     opcode = SkipNext(ref stream);
@@ -995,7 +995,7 @@ namespace FontParser.TrueTypeInterpreter
                         {
                             // assume we hit the true statement of some previous if block
                             // if we had hit false, we would have jumped over this
-                            int indent = 1;
+                            var indent = 1;
                             while (indent > 0)
                             {
                                 opcode = SkipNext(ref stream);
@@ -1182,7 +1182,7 @@ namespace FontParser.TrueTypeInterpreter
 
                             var function = _functions[_stack.Pop()];
                             var count = opcode == OpCode.LOOPCALL ? _stack.Pop() : 1;
-                            for (int i = 0; i < count; i++)
+                            for (var i = 0; i < count; i++)
                                 Execute(function, true, false);
                             _callStackSize--;
                         }
@@ -1205,7 +1205,7 @@ namespace FontParser.TrueTypeInterpreter
                     case OpCode.DELTAC3:
                         {
                             var last = _stack.Pop();
-                            for (int i = 1; i <= last; i++)
+                            for (var i = 1; i <= last; i++)
                             {
                                 var cvtIndex = _stack.Pop();
                                 var arg = _stack.Pop();
@@ -1239,7 +1239,7 @@ namespace FontParser.TrueTypeInterpreter
                     case OpCode.DELTAP3:
                         {
                             var last = _stack.Pop();
-                            for (int i = 1; i <= last; i++)
+                            for (var i = 1; i <= last; i++)
                             {
                                 var pointIndex = _stack.Pop();
                                 var arg = _stack.Pop();
@@ -1579,7 +1579,7 @@ namespace FontParser.TrueTypeInterpreter
         private void ShiftPoints(Vector2 displacement)
         {
             var touch = GetTouchState();
-            for (int i = 0; i < _state.Loop; i++)
+            for (var i = 0; i < _state.Loop; i++)
             {
                 var pointIndex = _stack.Pop();
                 _zp2.Current[pointIndex].P += displacement;
@@ -1653,7 +1653,7 @@ namespace FontParser.TrueTypeInterpreter
                 case OpCode.PUSHB8:
                     {
                         var count = opcode == OpCode.NPUSHB ? stream.NextByte() : opcode - OpCode.PUSHB1 + 1;
-                        for (int i = 0; i < count; i++)
+                        for (var i = 0; i < count; i++)
                             stream.NextByte();
                     }
                     break;
@@ -1669,7 +1669,7 @@ namespace FontParser.TrueTypeInterpreter
                 case OpCode.PUSHW8:
                     {
                         var count = opcode == OpCode.NPUSHW ? stream.NextByte() : opcode - OpCode.PUSHW1 + 1;
-                        for (int i = 0; i < count; i++)
+                        for (var i = 0; i < count; i++)
                             stream.NextWord();
                     }
                     break;

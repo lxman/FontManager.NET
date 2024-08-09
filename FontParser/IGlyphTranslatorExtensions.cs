@@ -15,8 +15,8 @@ namespace FontParser
                 return;//?
             }
 
-            int startContour = 0;
-            int cpoint_index = 0;//current point index
+            var startContour = 0;
+            var cpoint_index = 0;//current point index
 
             int todoContourCount = contourEndPoints.Length;
             //-----------------------------------
@@ -37,14 +37,14 @@ namespace FontParser
 
                 //reset  ...
 
-                bool has_c_begin = false;  //see below [A]
-                Vector2 c_begin = new Vector2(); //special point if the glyph starts with 'off-curve' control point
-                Vector2 c1 = new Vector2(); //control point of quadratic curve
+                var has_c_begin = false;  //see below [A]
+                var c_begin = new Vector2(); //special point if the glyph starts with 'off-curve' control point
+                var c1 = new Vector2(); //control point of quadratic curve
                 //-------------------------------------------------------------------
-                bool offCurveMode = false;
-                bool foundFirstOnCurvePoint = false;
-                bool startWithOffCurve = false;
-                int cnt_point_count = 0;
+                var offCurveMode = false;
+                var foundFirstOnCurvePoint = false;
+                var startWithOffCurve = false;
+                var cnt_point_count = 0;
                 //-------------------------------------------------------------------
                 //[A]
                 //first point may start with 'ON CURVE" or 'OFF-CURVE'
@@ -58,7 +58,7 @@ namespace FontParser
                 //-------------------------------------------------------------------
 
 #if DEBUG
-                int dbug_cmdcount = 0;
+                var dbug_cmdcount = 0;
 #endif
                 for (; cpoint_index < nextCntBeginAtIndex; ++cpoint_index)
                 {
@@ -342,7 +342,7 @@ namespace FontParser
         //for CFF1
         public static void Read(this IGlyphTranslator tx, Cff1Font cff1Font, Cff1GlyphData glyphData, float scale = 1)
         {
-            CffEvaluationEngine evalEngine = new CffEvaluationEngine();
+            var evalEngine = new CffEvaluationEngine();
             evalEngine.Run(tx, glyphData.GlyphInstructions, scale);
         }
     }

@@ -19,9 +19,9 @@ namespace FontParser.Tables.CFF
         private void CompactStep1OnlyLoadInt(List<Type2Instruction> insts)
         {
             int j = insts.Count;
-            CompactRange _latestCompactRange = CompactRange.None;
+            var _latestCompactRange = CompactRange.None;
             int startCollectAt = -1;
-            int collecting_count = 0;
+            var collecting_count = 0;
             void FlushWaitingNumbers()
             {
                 //Nested method
@@ -98,7 +98,7 @@ namespace FontParser.Tables.CFF
                 collecting_count = 0;
             }
 
-            for (int i = 0; i < j; ++i)
+            for (var i = 0; i < j; ++i)
             {
                 Type2Instruction inst = insts[i];
                 if (inst.IsLoadInt)
@@ -219,7 +219,7 @@ namespace FontParser.Tables.CFF
             //check if we can merge some load int( LoadInt, LoadSByte4, LoadShort2) except LoadSByte3
             //to next instruction command or not
             int j = _step1List.Count;
-            for (int i = 0; i < j; ++i)
+            for (var i = 0; i < j; ++i)
             {
                 Type2Instruction i0 = _step1List[i];
 
@@ -231,7 +231,7 @@ namespace FontParser.Tables.CFF
                     {
                         Type2Instruction i1 = _step1List[i + 1];
                         //check i1 has empty space for i0 or not
-                        bool canbe_merged = false;
+                        var canbe_merged = false;
                         switch ((OperatorName)i1.Op)
                         {
                             case OperatorName.LoadInt:
@@ -319,10 +319,10 @@ namespace FontParser.Tables.CFF
 
         private void dbugReExpandAndCompare_ForStep1(List<Type2Instruction> step1, List<Type2Instruction> org)
         {
-            List<Type2Instruction> expand1 = new List<Type2Instruction>(org.Count);
+            var expand1 = new List<Type2Instruction>(org.Count);
             {
                 int j = step1.Count;
-                for (int i = 0; i < j; ++i)
+                for (var i = 0; i < j; ++i)
                 {
                     Type2Instruction inst = step1[i];
                     switch ((OperatorName)inst.Op)
@@ -356,7 +356,7 @@ namespace FontParser.Tables.CFF
             {
                 //ERR=> then find first diff
                 int min = Math.Min(expand1.Count, org.Count);
-                for (int i = 0; i < min; ++i)
+                for (var i = 0; i < min; ++i)
                 {
                     Type2Instruction inst_exp = expand1[i];
                     Type2Instruction inst_org = org[i];
@@ -371,7 +371,7 @@ namespace FontParser.Tables.CFF
             {
                 //compare command-by-command
                 int j = step1.Count;
-                for (int i = 0; i < j; ++i)
+                for (var i = 0; i < j; ++i)
                 {
                     Type2Instruction inst_exp = expand1[i];
                     Type2Instruction inst_org = org[i];
@@ -386,17 +386,17 @@ namespace FontParser.Tables.CFF
 
         private void dbugReExpandAndCompare_ForStep2(List<Type2Instruction> step2, List<Type2Instruction> org)
         {
-            List<Type2Instruction> expand2 = new List<Type2Instruction>(org.Count);
+            var expand2 = new List<Type2Instruction>(org.Count);
             {
                 int j = step2.Count;
-                for (int i = 0; i < j; ++i)
+                for (var i = 0; i < j; ++i)
                 {
                     Type2Instruction inst = step2[i];
 
                     //we use upper 2 bits to indicate that this is merged cmd or not
-                    byte merge_flags = (byte)(inst.Op >> 6);
+                    var merge_flags = (byte)(inst.Op >> 6);
                     //lower 6 bits is actual cmd
-                    OperatorName onlyOpName = (OperatorName)(inst.Op & 0b111111);
+                    var onlyOpName = (OperatorName)(inst.Op & 0b111111);
                     switch (onlyOpName)
                     {
                         case OperatorName.LoadSbyte4:
@@ -458,7 +458,7 @@ namespace FontParser.Tables.CFF
             {
                 //compare command-by-command
                 int j = step2.Count;
-                for (int i = 0; i < j; ++i)
+                for (var i = 0; i < j; ++i)
                 {
                     Type2Instruction inst_exp = expand2[i];
                     Type2Instruction inst_org = org[i];

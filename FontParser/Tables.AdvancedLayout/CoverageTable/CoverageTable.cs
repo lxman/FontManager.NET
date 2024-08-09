@@ -31,7 +31,7 @@ namespace FontParser.Tables.AdvancedLayout.CoverageTable
         public static CoverageTable[] CreateMultipleCoverageTables(long initPos, ushort[] offsets, BinaryReader reader)
         {
             CoverageTable[] results = new CoverageTable[offsets.Length];
-            for (int i = 0; i < results.Length; ++i)
+            for (var i = 0; i < results.Length; ++i)
             {
                 results[i] = CreateFrom(reader, initPos + offsets[i]);
             }

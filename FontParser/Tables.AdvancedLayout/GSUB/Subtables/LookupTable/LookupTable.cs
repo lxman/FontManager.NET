@@ -139,14 +139,14 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                 case 1:
                     {
                         ushort deltaGlyph = reader.ReadUInt16();
-                        CoverageTable.CoverageTable coverageTable = CoverageTable.CoverageTable.CreateFrom(reader, subTableStartAt + coverage);
+                        var coverageTable = CoverageTable.CoverageTable.CreateFrom(reader, subTableStartAt + coverage);
                         return new LkSubTableT1Fmt1(coverageTable, deltaGlyph);
                     }
                 case 2:
                     {
                         ushort glyphCount = reader.ReadUInt16();
                         ushort[] substituteGlyphs = reader.ReadUInt16Array(glyphCount); // 	Array of substitute GlyphIDs-ordered by Coverage Index
-                        CoverageTable.CoverageTable coverageTable = CoverageTable.CoverageTable.CreateFrom(reader, subTableStartAt + coverage);
+                        var coverageTable = CoverageTable.CoverageTable.CreateFrom(reader, subTableStartAt + coverage);
                         return new LkSubTableT1Fmt2(coverageTable, substituteGlyphs);
                     }
             }
@@ -209,7 +209,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                         {
                             SeqTables = new SequenceTable[seqCount]
                         };
-                        for (int n = 0; n < seqCount; ++n)
+                        for (var n = 0; n < seqCount; ++n)
                         {
                             reader.BaseStream.Seek(subTableStartAt + seqOffsets[n], SeekOrigin.Begin);
                             ushort glyphCount = reader.ReadUInt16();
@@ -278,10 +278,10 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                         ushort alternativeSetCount = reader.ReadUInt16();
                         ushort[] alternativeTableOffsets = reader.ReadUInt16Array(alternativeSetCount);
 
-                        LkSubTableT3 subTable = new LkSubTableT3();
+                        var subTable = new LkSubTableT3();
                         AlternativeSetTable[] alternativeSetTables = new AlternativeSetTable[alternativeSetCount];
                         subTable.AlternativeSetTables = alternativeSetTables;
-                        for (int n = 0; n < alternativeSetCount; ++n)
+                        for (var n = 0; n < alternativeSetCount; ++n)
                         {
                             alternativeSetTables[n] = AlternativeSetTable.CreateFrom(reader, subTableStartAt + alternativeTableOffsets[n]);
                         }
@@ -369,9 +369,9 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                         ushort coverageOffset = reader.ReadUInt16();
                         ushort ligSetCount = reader.ReadUInt16();
                         ushort[] ligSetOffsets = reader.ReadUInt16Array(ligSetCount);
-                        LkSubTableT4 subTable = new LkSubTableT4();
+                        var subTable = new LkSubTableT4();
                         LigatureSetTable[] ligSetTables = subTable.LigatureSetTables = new LigatureSetTable[ligSetCount];
-                        for (int n = 0; n < ligSetCount; ++n)
+                        for (var n = 0; n < ligSetCount; ++n)
                         {
                             ligSetTables[n] = LigatureSetTable.CreateFrom(reader, subTableStartAt + ligSetOffsets[n]);
                         }
@@ -415,7 +415,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                         //Offset16 	subRuleSetOffsets[subRuleSetCount] 	Array of offsets to SubRuleSet tables.
                         //                              Offsets are from beginning of substitution subtable, ordered by Coverage index
 
-                        LkSubTableT5Fmt1 fmt1 = new LkSubTableT5Fmt1();
+                        var fmt1 = new LkSubTableT5Fmt1();
                         ushort coverageOffset = reader.ReadUInt16();
                         ushort subRuleSetCount = reader.ReadUInt16();
                         ushort[] subRuleSetOffsets = reader.ReadUInt16Array(subRuleSetCount);
@@ -423,7 +423,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                         fmt1.coverageTable = CoverageTable.CoverageTable.CreateFrom(reader, subTableStartAt + coverageOffset);
                         fmt1.subRuleSets = new LkSubT5Fmt1_SubRuleSet[subRuleSetCount];
 
-                        for (int i = 0; i < subRuleSetCount; ++i)
+                        for (var i = 0; i < subRuleSetCount; ++i)
                         {
                             fmt1.subRuleSets[i] = LkSubT5Fmt1_SubRuleSet.CreateFrom(reader, subTableStartAt + subRuleSetOffsets[i]);
                         }
@@ -441,7 +441,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                         //uint16 	subClassSetCount 	Number of SubClassSet tables
                         //Offset16 	subClassSetOffsets[subClassSetCount] 	Array of offsets to SubClassSet tables. Offsets are from beginning of substitution subtable, ordered by class (may be NULL).
 
-                        LkSubTableT5Fmt2 fmt2 = new LkSubTableT5Fmt2();
+                        var fmt2 = new LkSubTableT5Fmt2();
                         ushort coverageOffset = reader.ReadUInt16();
                         ushort classDefOffset = reader.ReadUInt16();
                         ushort subClassSetCount = reader.ReadUInt16();
@@ -452,7 +452,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
 
                         var subClassSets = new LkSubT5Fmt2_SubClassSet[subClassSetCount];
                         fmt2.subClassSets = subClassSets;
-                        for (int i = 0; i < subClassSetCount; ++i)
+                        for (var i = 0; i < subClassSetCount; ++i)
                         {
                             subClassSets[i] = LkSubT5Fmt2_SubClassSet.CreateFrom(reader, subTableStartAt + subClassSetOffsets[i]);
                         }
@@ -506,7 +506,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                         ushort chainSubRulesetCount = reader.ReadUInt16();
                         ushort[] chainSubRulesetOffsets = reader.ReadUInt16Array(chainSubRulesetCount);
                         ChainSubRuleSetTable[] subRuleSets = subTable.SubRuleSets = new ChainSubRuleSetTable[chainSubRulesetCount];
-                        for (int n = 0; n < chainSubRulesetCount; ++n)
+                        for (var n = 0; n < chainSubRulesetCount; ++n)
                         {
                             subRuleSets[n] = ChainSubRuleSetTable.CreateFrom(reader, subTableStartAt + chainSubRulesetOffsets[n]);
                         }
@@ -542,7 +542,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                         if (chainSubClassSetCount != 0)
                         {
                             ChainSubClassSet[] chainSubClassSets = subTable.ChainSubClassSets = new ChainSubClassSet[chainSubClassSetCount];
-                            for (int n = 0; n < chainSubClassSetCount; ++n)
+                            for (var n = 0; n < chainSubClassSetCount; ++n)
                             {
                                 ushort offset = chainSubClassSetOffsets[n];
                                 if (offset > 0)
@@ -570,7 +570,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
                         //uint16 	substitutionCount 	                    Number of SubstLookupRecords
                         //struct 	substLookupRecords[SubstCount] 	Array of SubstLookupRecords, in design order
                         //-------------------
-                        LkSubTableT6Fmt3 subTable = new LkSubTableT6Fmt3();
+                        var subTable = new LkSubTableT6Fmt3();
                         ushort backtrackingGlyphCount = reader.ReadUInt16();
                         ushort[] backtrackingCoverageOffsets = reader.ReadUInt16Array(backtrackingGlyphCount);
                         ushort inputGlyphCount = reader.ReadUInt16();

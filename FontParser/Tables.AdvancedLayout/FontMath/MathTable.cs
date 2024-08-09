@@ -62,7 +62,7 @@ namespace FontParser.Tables.AdvancedLayout.FontMath
             //The table also contains general use constants that may affect all parts of the formula,
             //such as axis height and math leading.Note that most of the constants deal with the vertical positioning.
 
-            Constants mc = new Constants
+            var mc = new Constants
             {
                 ScriptPercentScaleDown = reader.ReadInt16(),
                 ScriptScriptPercentScaleDown = reader.ReadInt16(),
@@ -333,10 +333,10 @@ namespace FontParser.Tables.AdvancedLayout.FontMath
 
             //read each kern table
             _mathKernInfoRecords = new KernInfoRecord[mathKernCount];
-            int index = 0;
+            var index = 0;
             ushort m_kern_offset = 0;
 
-            for (int i = 0; i < mathKernCount; ++i)
+            for (var i = 0; i < mathKernCount; ++i)
             {
                 //top-right
                 m_kern_offset = allKernRecOffset[index];
@@ -491,7 +491,7 @@ namespace FontParser.Tables.AdvancedLayout.FontMath
             //(3.1)
             //vertical
             var vertGlyphConstructionTables = VariantsTable.vertConstructionTables = new GlyphConstruction[vertGlyphCount];
-            for (int i = 0; i < vertGlyphCount; ++i)
+            for (var i = 0; i < vertGlyphCount; ++i)
             {
                 reader.BaseStream.Position = beginAt + vertGlyphConstructions[i];
                 vertGlyphConstructionTables[i] = ReadMathGlyphConstructionTable(reader);
@@ -500,7 +500,7 @@ namespace FontParser.Tables.AdvancedLayout.FontMath
             //(3.2)
             //horizon
             var horizGlyphConstructionTables = VariantsTable.horizConstructionTables = new GlyphConstruction[horizGlyphCount];
-            for (int i = 0; i < horizGlyphCount; ++i)
+            for (var i = 0; i < horizGlyphCount; ++i)
             {
                 reader.BaseStream.Position = beginAt + horizonGlyphConstructions[i];
                 horizGlyphConstructionTables[i] = ReadMathGlyphConstructionTable(reader);
@@ -548,7 +548,7 @@ namespace FontParser.Tables.AdvancedLayout.FontMath
 
             var variantRecords = glyphConstructionTable.glyphVariantRecords = new GlyphVariantRecord[variantCount];
 
-            for (int i = 0; i < variantCount; ++i)
+            for (var i = 0; i < variantCount; ++i)
             {
                 variantRecords[i] = new GlyphVariantRecord(
                     reader.ReadUInt16(),
@@ -597,7 +597,7 @@ namespace FontParser.Tables.AdvancedLayout.FontMath
             glyphConstruction.GlyphAsm_ItalicCorrection = reader.ReadMathValueRecord();
             ushort partCount = reader.ReadUInt16();
             var partRecords = glyphConstruction.GlyphAsm_GlyphPartRecords = new GlyphPartRecord[partCount];
-            for (int i = 0; i < partCount; ++i)
+            for (var i = 0; i < partCount; ++i)
             {
                 partRecords[i] = new GlyphPartRecord(
                     reader.ReadUInt16(),

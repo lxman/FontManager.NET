@@ -58,7 +58,7 @@ namespace FontParser.Tables.CFF
             evalStack._currentY = currentY;
             evalStack.GlyphTranslator = tx;
 
-            for (int i = 0; i < instructionList.Length; ++i)
+            for (var i = 0; i < instructionList.Length; ++i)
             {
                 Type2Instruction inst = instructionList[i];
                 //----------

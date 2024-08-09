@@ -49,7 +49,7 @@ namespace FontParser.Tables.TrueType
             ushort version = reader.ReadUInt16();
             ushort numRanges = reader.ReadUInt16();
             _rangeRecords = new GaspRangeRecord[numRanges];
-            for (int i = 0; i < numRanges; ++i)
+            for (var i = 0; i < numRanges; ++i)
             {
                 _rangeRecords[i] = new GaspRangeRecord(
                     reader.ReadUInt16(),
