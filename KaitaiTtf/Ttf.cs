@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using KaitaiTtf;
+using Kaitai;
 
-namespace Kaitai
+namespace KaitaiTtf
 {
 
     /// <summary>

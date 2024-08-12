@@ -45,12 +45,12 @@ namespace NewFontParser.Tables.Hhea
         public HheaTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            MajorVersion = reader.ReadUshort();
-            MinorVersion = reader.ReadUshort();
+            MajorVersion = reader.ReadUShort();
+            MinorVersion = reader.ReadUShort();
             Ascender = reader.ReadShort();
             Descender = reader.ReadShort();
             LineGap = reader.ReadShort();
-            AdvanceWidthMax = reader.ReadUshort();
+            AdvanceWidthMax = reader.ReadUShort();
             MinLeftSideBearing = reader.ReadShort();
             MinRightSideBearing = reader.ReadShort();
             XMaxExtent = reader.ReadShort();
@@ -62,7 +62,7 @@ namespace NewFontParser.Tables.Hhea
             Reserved3 = reader.ReadShort();
             Reserved4 = reader.ReadShort();
             MetricDataFormat = reader.ReadShort();
-            NumberOfHMetrics = reader.ReadUshort();
+            NumberOfHMetrics = reader.ReadUShort();
         }
     }
 }

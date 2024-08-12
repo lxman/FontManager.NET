@@ -11,10 +11,6 @@ namespace FontParser.Tables.CFF
         private float _scale = 1;//default
         private readonly Stack<Type2EvaluationStack> _evalStackPool = new Stack<Type2EvaluationStack>();
 
-        public CffEvaluationEngine()
-        {
-        }
-
         public void Run(IGlyphTranslator tx, Cff1GlyphData glyphData, float scale = 1)
         {
             Run(tx, glyphData.GlyphInstructions, scale);
@@ -216,10 +212,8 @@ namespace FontParser.Tables.CFF
             {
                 return _evalStackPool.Pop();
             }
-            else
-            {
-                return new Type2EvaluationStack();
-            }
+
+            return new Type2EvaluationStack();
         }
 
         private void ReleaseEvalStack(Type2EvaluationStack evalStack)

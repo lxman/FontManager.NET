@@ -37,7 +37,7 @@ namespace NewFontParser.Reader
             return _data[_position++];
         }
 
-        public ushort ReadUshort()
+        public ushort ReadUShort()
         {
             byte[] data = ReadBytes(2);
             return (ushort)((data[0] << 8) | data[1]);
@@ -76,7 +76,7 @@ namespace NewFontParser.Reader
         public int ReadInt32()
         {
             byte[] data = ReadBytes(4);
-            return (int)((data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3]);
+            return (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
         }
 
         public float ReadFixed()

@@ -176,7 +176,7 @@ namespace FontParser.Tables.AdvancedLayout.JustificationTable
                 jstPriorities[i] = ReadJstfPriority(reader);
             }
 
-            return new JstfLangSysRecord() { jstfPriority = jstPriorities };
+            return new JstfLangSysRecord { jstfPriority = jstPriorities };
         }
 
         private static JstfPriority ReadJstfPriority(BinaryReader reader)
@@ -193,7 +193,7 @@ namespace FontParser.Tables.AdvancedLayout.JustificationTable
             //two are JstfGPOSModList tables for enabling and disabling glyph positioning lookups.
             //Offsets to JstfGSUBModList and JstfGPOSModList tables also are defined for line extension.
 
-            return new JstfPriority()
+            return new JstfPriority
             {
                 shrinkageEnableGSUB = reader.ReadUInt16(),
                 shrinkageDisableGSUB = reader.ReadUInt16(),

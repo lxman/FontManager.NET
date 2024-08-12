@@ -36,7 +36,7 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables
                     }
                     else
                     {
-                        stbuilder.Append(a.ToString());
+                        stbuilder.Append(a);
                     }
                 }
             }

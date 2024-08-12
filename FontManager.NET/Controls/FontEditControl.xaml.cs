@@ -13,7 +13,7 @@ namespace FontManager.NET.Controls
         private readonly SKPath _path = new();
         private readonly SKPoint[] _points = new SKPoint[3];
         private readonly SKPoint[] _controlPoints = new SKPoint[2];
-        private int _stateMachine = 0;
+        private int _stateMachine;
 
         private static readonly SKPaint CurvePaint = new()
         {

@@ -9,17 +9,13 @@ namespace FontParser.Tables.CFF
         internal double _currentY;
 
         private readonly double[] _argStack = new double[50];
-        private int _currentIndex = 0; //current stack index
+        private int _currentIndex; //current stack index
 
         private IGlyphTranslator _glyphTranslator;
 #if DEBUG
 
         public int dbugGlyphIndex;
 #endif
-
-        public Type2EvaluationStack()
-        {
-        }
 
         public void Reset()
         {
@@ -1131,7 +1127,7 @@ namespace FontParser.Tables.CFF
             {
             }
 #endif
-            return (double)_argStack[--_currentIndex];//*** use prefix
+            return _argStack[--_currentIndex];//*** use prefix
         }
 
         public void Ret()

@@ -4,10 +4,6 @@ namespace FontParser.Tables.AdvancedLayout.GPOS.Subtables.LookupTable
 {
     public class LkSubTableType8Fmt2 : LookupSubTable
     {
-        public LkSubTableType8Fmt2()
-        {
-        }
-
         public CoverageTable.CoverageTable CoverageTable { get; set; }
         public PosClassSetTable[] PosClassSetTables { get; set; }
 

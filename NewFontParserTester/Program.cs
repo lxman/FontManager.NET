@@ -1,4 +1,5 @@
-﻿using NewFontParser;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace NewFontParserTester
 {
@@ -6,32 +7,23 @@ namespace NewFontParserTester
     {
         static void Main(string[] args)
         {
-            List<string> errors = [];
-            const string rootDirectory = @"C:\Users\jorda\source\repos\Typography\Demo\Windows\TestFonts";
-            List<string> fonts = Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".ttf") || f.EndsWith(".otf"))
-                .ToList();
-            fonts.ForEach(f =>
-            {
-                try
-                {
-                    var fontReader = new FontReader();
-                    FontStructure fontStructure = fontReader.ReadFile(f);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    errors.Add(f);
-                }
-            });
-            if (errors.Count > 0)
-            {
-                Console.WriteLine("The following files failed to parse:");
-                errors.ForEach(Console.WriteLine);
-            }
-            else
-            {
-                Console.WriteLine("All parsed successfully!");
-            }
+            if (File.Exists(@"C:\tmp\FontParser.log")) File.Delete(@"C:\tmp\FontParser.log");
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.File(@"C:\tmp\FontParser.log")
+                .CreateLogger();
+
+            ServiceProvider services = CreateServices();
+            var tester = services.GetRequiredService<Tester>();
+            tester.Run();
+        }
+
+        private static ServiceProvider CreateServices()
+        {
+            var services = new ServiceCollection();
+            services.AddSingleton(new Tester());
+            return services.BuildServiceProvider();
         }
     }
 }

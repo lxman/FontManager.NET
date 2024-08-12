@@ -9,7 +9,7 @@ namespace KaitaiTtf.Kern.Subtable
             return new Subtable(new KaitaiStream(fileName));
         }
 
-        public Subtable(KaitaiStream p__io, KaitaiKern.Kern p__parent = null, Ttf p__root = null) : base(p__io)
+        public Subtable(KaitaiStream p__io, Kern p__parent = null, Ttf p__root = null) : base(p__io)
         {
             m_parent = p__parent;
             m_root = p__root;
@@ -41,7 +41,7 @@ namespace KaitaiTtf.Kern.Subtable
         private bool _isHorizontal;
         private Format0.Format0 _format0;
         private Ttf m_root;
-        private KaitaiKern.Kern m_parent;
+        private Kern m_parent;
         public ushort Version => _version;
         public ushort Length => _length;
         public byte Format => _format;
@@ -52,6 +52,6 @@ namespace KaitaiTtf.Kern.Subtable
         public bool IsHorizontal => _isHorizontal;
         public Format0.Format0 Format0 => _format0;
         public Ttf M_Root => m_root;
-        public KaitaiKern.Kern M_Parent => m_parent;
+        public Kern M_Parent => m_parent;
     }
 }

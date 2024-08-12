@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -98,14 +99,14 @@ namespace FontParser.Tables
         public static void WarnUnimplemented(string format, params object[] args)
         {
 #if DEBUG
-            System.Diagnostics.Debug.WriteLine("!STUB! " + string.Format(format, args));
+            Debug.WriteLine("!STUB! " + string.Format(format, args));
 #endif
         }
 
         internal static void WarnUnimplementedCollectAssocGlyphs(string msg)
         {
 #if DEBUG
-            System.Diagnostics.Debug.WriteLine("!STUB! UnimplementedCollectAssocGlyph :" + msg);
+            Debug.WriteLine("!STUB! UnimplementedCollectAssocGlyph :" + msg);
 #endif
         }
 

@@ -20,14 +20,6 @@ namespace FontParser.Tables.Variations
         internal DeltaSetIndexMap[] _lsbMapping;
         internal DeltaSetIndexMap[] _rsbMapping;
 
-        public HVar()
-        {
-            //The HVAR table is used in variable fonts to provide variations for horizontal glyph metrics values.
-            //This can be used to provide variation data for advance widths in the 'hmtx' table.
-            //In fonts with TrueType outlines, it can also be used to provide variation data for left and right side
-            //bearings obtained from the 'hmtx' table and glyph bounding box.
-        }
-
         protected override void ReadContentFrom(BinaryReader reader)
         {
             long beginAt = reader.BaseStream.Position;

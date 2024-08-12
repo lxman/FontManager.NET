@@ -7,9 +7,6 @@
         public BaseLangSysRecord[] baseLangSysRecords;
         public MinMax MinMax;
 
-        public BaseScript()
-        { }
-
 #if DEBUG
 
         public override string ToString()

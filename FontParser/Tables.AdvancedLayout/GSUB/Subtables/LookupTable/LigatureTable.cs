@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 
 namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
 {
@@ -37,7 +38,7 @@ namespace FontParser.Tables.AdvancedLayout.GSUB.Subtables.LookupTable
 
         public override string ToString()
         {
-            var stbuilder = new System.Text.StringBuilder();
+            var stbuilder = new StringBuilder();
             int j = ComponentGlyphs.Length;
             stbuilder.Append("output:" + GlyphId + ",{");
 

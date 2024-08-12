@@ -35,8 +35,8 @@ namespace NewFontParser.Tables
         public PostTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            Version1 = reader.ReadUshort();
-            Version2 = reader.ReadUshort();
+            Version1 = reader.ReadUShort();
+            Version2 = reader.ReadUShort();
             ItalicAngle = $"{data[2]}.{data[3]}";
             UnderlinePosition = $"{data[4]}.{data[5]}";
             UnderlineThickness = $"{data[6]}.{data[7]}";
@@ -47,10 +47,10 @@ namespace NewFontParser.Tables
             MinMemType1 = reader.ReadUint32();
             MaxMemType1 = reader.ReadUint32();
             if (Version1 != 2 || Version2 != 0) return;
-            NumGlyphs = reader.ReadUshort();
+            NumGlyphs = reader.ReadUShort();
             for (var i = 0; i < NumGlyphs; i++)
             {
-                GlyphNameIndex.Add(reader.ReadUshort());
+                GlyphNameIndex.Add(reader.ReadUShort());
             }
             for (var i = 0; i < NumGlyphs; i++)
             {

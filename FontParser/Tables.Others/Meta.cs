@@ -1,6 +1,8 @@
 ﻿//MIT, 2020-present, WinterDev
 
+using System.Diagnostics;
 using System.IO;
+using System.Text;
 using FontParser.Exceptions;
 
 namespace FontParser.Tables.Others
@@ -38,9 +40,6 @@ namespace FontParser.Tables.Others
 
         public const string _N = "meta";
         public override string Name => _N;
-
-        public Meta()
-        { }
 
         /// <summary>
         /// dlng tags
@@ -131,7 +130,7 @@ namespace FontParser.Tables.Others
                 {
 #if DEBUG
                     default:
-                        System.Diagnostics.Debug.WriteLine("openfont-meta: unknown tag:" + record.GetTagString());
+                        Debug.WriteLine("openfont-meta: unknown tag:" + record.GetTagString());
                         break;
 #endif
                     case "apple": //Reserved — used by Apple.
@@ -196,7 +195,7 @@ namespace FontParser.Tables.Others
 
         private static string[] ReadCommaSepData(byte[] data)
         {
-            string[] tags = System.Text.Encoding.UTF8.GetString(data).Split(',');
+            string[] tags = Encoding.UTF8.GetString(data).Split(',');
             for (var i = 0; i < tags.Length; ++i)
             {
                 tags[i] = tags[i].Trim();

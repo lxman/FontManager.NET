@@ -1,4 +1,5 @@
-﻿using Kaitai;
+﻿using System.Text;
+using Kaitai;
 
 namespace KaitaiTtf.Post
 {
@@ -20,7 +21,7 @@ namespace KaitaiTtf.Post
             _length = m_io.ReadU1();
             if (Length != 0)
             {
-                _value = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(Length));
+                _value = Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(Length));
             }
         }
         private byte _length;

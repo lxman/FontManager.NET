@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using Kaitai;
-using KaitaiTtf;
-using KaitaiTtf.Kern.Subtable;
 
-namespace KaitaiKern
+namespace KaitaiTtf.Kern
 {
     public class Kern : KaitaiStruct
     {
@@ -22,20 +20,20 @@ namespace KaitaiKern
         {
             _version = m_io.ReadU2be();
             _subtableCount = m_io.ReadU2be();
-            _subtables = new List<Subtable>();
+            _subtables = new List<Subtable.Subtable>();
             for (var i = 0; i < SubtableCount; i++)
             {
-                _subtables.Add(new Subtable(m_io, this, m_root));
+                _subtables.Add(new Subtable.Subtable(m_io, this, m_root));
             }
         }
         private ushort _version;
         private ushort _subtableCount;
-        private List<Subtable> _subtables;
+        private List<Subtable.Subtable> _subtables;
         private Ttf m_root;
         private DirTableEntry m_parent;
         public ushort Version => _version;
         public ushort SubtableCount => _subtableCount;
-        public List<Subtable> Subtables => _subtables;
+        public List<Subtable.Subtable> Subtables => _subtables;
         public Ttf M_Root => m_root;
         public DirTableEntry M_Parent => m_parent;
     }

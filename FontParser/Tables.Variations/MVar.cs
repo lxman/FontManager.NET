@@ -47,10 +47,6 @@ namespace FontParser.Tables.Variations
         public ValueRecord[] valueRecords;
         public ItemVariationStoreTable itemVariationStore;
 
-        public MVar()
-        {
-        }
-
         protected override void ReadContentFrom(BinaryReader reader)
         {
             long startAt = reader.BaseStream.Position;

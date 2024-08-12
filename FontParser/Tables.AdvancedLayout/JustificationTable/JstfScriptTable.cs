@@ -7,10 +7,6 @@
         public JstfLangSysRecord defaultLangSys;
         public JstfLangSysRecord[] other;
 
-        public JstfScriptTable()
-        {
-        }
-
         public string ScriptTag { get; set; }
 #if DEBUG
 

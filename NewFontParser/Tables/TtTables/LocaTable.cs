@@ -1,4 +1,5 @@
-﻿using NewFontParser.Reader;
+﻿using System.Text;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.TtTables
 {
@@ -14,13 +15,24 @@ namespace NewFontParser.Tables.TtTables
             {
                 if (isShort)
                 {
-                    Offsets[i] = reader.ReadUshort();
+                    Offsets[i] = reader.ReadUShort();
                 }
                 else
                 {
-                    Offsets[i] = (ushort)(reader.ReadUshort() / 2);
+                    Offsets[i] = reader.ReadUint32();
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("Loca Table");
+            for (var i = 0; i < Offsets.Length; i++)
+            {
+                sb.AppendLine($"Offset {i}: {Offsets[i]}");
+            }
+            return sb.ToString();
         }
     }
 }

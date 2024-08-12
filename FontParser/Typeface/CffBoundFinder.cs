@@ -13,12 +13,8 @@ namespace FontParser.Typeface
         /// </summary>
         private const int Nsteps = 3;
 
-        private bool _contourOpen = false;
+        private bool _contourOpen;
         private bool _first_eval = true;
-
-        public CffBoundFinder()
-        {
-        }
 
         public void Reset()
         {

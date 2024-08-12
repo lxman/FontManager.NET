@@ -6,9 +6,6 @@ namespace FontParser.Tables
     {
         private readonly Dictionary<string, TableEntry> _tables = new Dictionary<string, TableEntry>();
 
-        public TableEntryCollection()
-        { }
-
         public void AddEntry(TableEntry en) => _tables.Add(en.Name, en);
 
         public bool TryGetTable(string tableName, out TableEntry entry) => _tables.TryGetValue(tableName, out entry);

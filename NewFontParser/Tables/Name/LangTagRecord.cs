@@ -15,8 +15,8 @@ namespace NewFontParser.Tables.Name
         public LangTagRecord(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            Length = reader.ReadUshort();
-            Offset = reader.ReadUshort();
+            Length = reader.ReadUShort();
+            Offset = reader.ReadUShort();
             //Tag = tag;
         }
     }

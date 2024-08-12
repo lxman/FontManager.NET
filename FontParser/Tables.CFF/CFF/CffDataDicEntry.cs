@@ -23,7 +23,7 @@ namespace FontParser.Tables.CFF.CFF
             }
 
             stbuilder.Append(" ");
-            stbuilder.Append(_operator.ToString());
+            stbuilder.Append(_operator);
             return stbuilder.ToString();
         }
 

@@ -20,7 +20,7 @@ namespace FontParser.Tables
             uint offset = Header.Offset;
             for (var j = 0; j <= uNRCount; j++)
             {
-                var ttRecord = new TT_NAME_RECORD()
+                var ttRecord = new TT_NAME_RECORD
                 {
                     uPlatformID = reader.ReadUInt16(),
                     uEncodingID = reader.ReadUInt16(),
@@ -47,10 +47,6 @@ namespace FontParser.Tables
                 //....
                 switch ((NameIdKind)ttRecord.uNameID)
                 {
-                    default:
-                        //skip
-                        break;
-
                     case NameIdKind.VersionString:
                         VersionString = strRet;
                         break;

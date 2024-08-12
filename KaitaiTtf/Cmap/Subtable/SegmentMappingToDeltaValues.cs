@@ -62,7 +62,7 @@ namespace KaitaiTtf.Cmap.Subtable
             {
                 if (f_segCount)
                     return _segCount;
-                _segCount = (int)((SegCountX2 / 2));
+                _segCount = SegCountX2 / 2;
                 f_segCount = true;
                 return _segCount;
             }

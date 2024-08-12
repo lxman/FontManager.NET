@@ -14,7 +14,7 @@ namespace NewFontParser.Tables.Cmap.SubTables
         {
             var reader = new BigEndianReader(data);
             UnicodeValue = reader.ReadUint24();
-            GlyphId = reader.ReadUshort();
+            GlyphId = reader.ReadUShort();
         }
 
         public override string ToString()

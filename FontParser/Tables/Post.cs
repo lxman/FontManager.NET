@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using FontParser.AdditionalInfo;
 
 namespace FontParser.Tables
@@ -131,7 +133,7 @@ namespace FontParser.Tables
 
                                 //258 and 65535,
                                 int len = reader.ReadByte(); //name len
-                                _glyphNames.Add(i, System.Text.Encoding.UTF8.GetString(reader.ReadBytes(len), 0, len));
+                                _glyphNames.Add(i, Encoding.UTF8.GetString(reader.ReadBytes(len), 0, len));
                             }
                         }
                     }
@@ -140,11 +142,11 @@ namespace FontParser.Tables
                 default:
                     {
                         return;
-                        throw new System.NotSupportedException();
+                        throw new NotSupportedException();
                     }
                 case 0x00025000:
                     //deprecated ??
-                    throw new System.NotSupportedException();
+                    throw new NotSupportedException();
             }
         }
 

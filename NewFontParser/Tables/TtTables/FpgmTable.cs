@@ -6,27 +6,15 @@ namespace NewFontParser.Tables.TtTables
     {
         public long Count { get; }
 
-        private readonly byte[] _data;
+        private readonly Stack<byte> _instructionStream = new Stack<byte>();
 
         public FpgmTable(byte[] data)
         {
             Count = data.Length;
-            _data = data;
-        }
-
-        public List<byte>? GetInstructions(long origin, long count)
-        {
-            if (origin < 0 || origin >= Count || count < 0 || origin + count > Count)
+            foreach (byte b in data)
             {
-                return null;
+                _instructionStream.Push(b);
             }
-            var instructions = new List<byte>();
-            for (long i = origin; i < count; i++)
-            {
-                instructions.Add(_data[i]);
-            }
-
-            return instructions;
         }
     }
 }

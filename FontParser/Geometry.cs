@@ -1,8 +1,9 @@
 ﻿using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace FontParser
 {
-    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct GlyphPointF
     {
         //from https://docs.microsoft.com/en-us/typography/opentype/spec/glyf
@@ -76,7 +77,7 @@ namespace FontParser
         }
 
         public override string ToString()
-        { return P.ToString() + " " + onCurve.ToString(); }
+        { return P + " " + onCurve; }
 
 #endif
     }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace FontParser.Tables
 {
@@ -164,7 +165,7 @@ namespace FontParser.Tables
 
             switch (version = reader.ReadUInt16())
             {
-                default: throw new System.NotSupportedException();
+                default: throw new NotSupportedException();
                 case 0: //defined in TrueType revision 1.5
                     ReadVersion0(reader);
                     break;

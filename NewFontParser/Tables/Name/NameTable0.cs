@@ -17,9 +17,9 @@ namespace NewFontParser.Tables.Name
         {
             var reader = new BigEndianReader(data);
 
-            Format = reader.ReadUshort();
-            Count = reader.ReadUshort();
-            StringOffset = reader.ReadUshort();
+            Format = reader.ReadUShort();
+            Count = reader.ReadUShort();
+            StringOffset = reader.ReadUShort();
 
             for (var i = 0; i < Count; i++)
             {

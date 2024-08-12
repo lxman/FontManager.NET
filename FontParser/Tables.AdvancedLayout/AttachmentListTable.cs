@@ -45,7 +45,7 @@ namespace FontParser.Tables.AdvancedLayout
             {
                 reader.BaseStream.Seek(beginAt + attachPointOffsets[i], SeekOrigin.Begin);
                 ushort pointCount = reader.ReadUInt16();
-                attachmentListTable._attachPoints[i] = new AttachPoint()
+                attachmentListTable._attachPoints[i] = new AttachPoint
                 {
                     pointIndices = reader.ReadUInt16Array(pointCount)
                 };

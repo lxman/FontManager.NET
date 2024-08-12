@@ -86,11 +86,11 @@ namespace NewFontParser.Tables
         public Os2Table(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            Version = reader.ReadUshort();
+            Version = reader.ReadUShort();
             XAvgCharWidth = reader.ReadShort();
-            UsWeightClass = reader.ReadUshort();
-            UsWidthClass = reader.ReadUshort();
-            FsType = reader.ReadUshort();
+            UsWeightClass = reader.ReadUShort();
+            UsWidthClass = reader.ReadUShort();
+            FsType = reader.ReadUShort();
             YSubscriptXSize = reader.ReadShort();
             YSubscriptYSize = reader.ReadShort();
             YSubscriptXOffset = reader.ReadShort();
@@ -108,9 +108,9 @@ namespace NewFontParser.Tables
             UlUnicodeRange3 = reader.ReadUint32();
             UlUnicodeRange4 = reader.ReadUint32();
             AchVendId = Encoding.ASCII.GetString(data[58..62]);
-            FsSelection = reader.ReadUshort();
-            UsFirstCharIndex = reader.ReadUshort();
-            UsLastCharIndex = reader.ReadUshort();
+            FsSelection = reader.ReadUShort();
+            UsFirstCharIndex = reader.ReadUShort();
+            UsLastCharIndex = reader.ReadUShort();
             STypoAscender = reader.ReadShort();
             STypoDescender = reader.ReadShort();
             STypoLineGap = reader.ReadShort();
@@ -125,14 +125,14 @@ namespace NewFontParser.Tables
             {
                 SxHeight = reader.ReadShort();
                 SCapHeight = reader.ReadShort();
-                UsDefaultChar = reader.ReadUshort();
-                UsBreakChar = reader.ReadUshort();
-                UsMaxContext = reader.ReadUshort();
+                UsDefaultChar = reader.ReadUShort();
+                UsBreakChar = reader.ReadUShort();
+                UsMaxContext = reader.ReadUShort();
             }
 
             if (Version <= 2) return;
-            UsLowerOpticalPointSize = reader.ReadUshort();
-            UsUpperOpticalPointSize = reader.ReadUshort();
+            UsLowerOpticalPointSize = reader.ReadUShort();
+            UsUpperOpticalPointSize = reader.ReadUShort();
         }
     }
 }

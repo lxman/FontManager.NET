@@ -79,10 +79,8 @@ namespace FontParser.Typeface
             {
                 return Os2WidthClass.Unknown;
             }
-            else
-            {
-                return (Os2WidthClass)os2Weight;
-            }
+
+            return (Os2WidthClass)os2Weight;
         }
 
         /// <summary>

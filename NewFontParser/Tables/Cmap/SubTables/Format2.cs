@@ -25,7 +25,7 @@ namespace NewFontParser.Tables.Cmap.SubTables
             Language = reader.ReadInt16();
             for (var i = 0; i < 256; i++)
             {
-                SubHeaderKeys.Add((byte)(reader.ReadUshort() >> 8));
+                SubHeaderKeys.Add((byte)(reader.ReadUShort() >> 8));
             }
             foreach (ushort key in SubHeaderKeys)
             {
@@ -36,7 +36,7 @@ namespace NewFontParser.Tables.Cmap.SubTables
             {
                 for (var i = 0; i < subHeader.EntryCount; i++)
                 {
-                    GlyphIndexArray.Add(reader.ReadUshort());
+                    GlyphIndexArray.Add(reader.ReadUShort());
                 }
             }
         }

@@ -5,6 +5,7 @@
 //To improve text layout, the Baseline table also provides minimum (min) and maximum (max) glyph extent values for each script,
 //language system, or feature in a font.
 
+using System;
 using System.IO;
 
 // ReSharper disable InconsistentNaming
@@ -123,7 +124,7 @@ namespace FontParser.Tables.AdvancedLayout.Base
 
         private static string ConvertToTagString(byte[] iden_tag_bytes)
         {
-            return new string(new char[] {
+            return new string(new[] {
                  (char)iden_tag_bytes[0],
                  (char)iden_tag_bytes[1],
                  (char)iden_tag_bytes[2],
@@ -406,7 +407,7 @@ namespace FontParser.Tables.AdvancedLayout.Base
             ushort baseCoordFormat = reader.ReadUInt16();
             switch (baseCoordFormat)
             {
-                default: throw new System.NotSupportedException();
+                default: throw new NotSupportedException();
                 case 1:
                     return new BaseCoord(1,
                         reader.ReadInt16());//coord

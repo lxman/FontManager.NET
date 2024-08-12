@@ -403,9 +403,7 @@ namespace FontParser.Tables.TrueType
                     if (HasFlag(flags, CompositeGlyphFlags.UNSCALED_COMPONENT_OFFSET))
                     {
                     }
-                    else
-                    {
-                    }
+
                     if (HasFlag(flags, CompositeGlyphFlags.USE_MY_METRICS))
                     {
                     }
@@ -455,16 +453,12 @@ namespace FontParser.Tables.TrueType
                         }
                     }
                 }
-                else
-                {
-                    //two point numbers.
-                    //the first point number indicates the point that is to be matched to the new glyph.
-                    //The second number indicates the new glyph's “matched” point.
-                    //Once a glyph is added,its point numbers begin directly after the last glyphs (endpoint of first glyph + 1)
 
-                    //TODO: implement this...
-                }
-
+                //two point numbers.
+                //the first point number indicates the point that is to be matched to the new glyph.
+                //The second number indicates the new glyph's “matched” point.
+                //Once a glyph is added,its point numbers begin directly after the last glyphs (endpoint of first glyph + 1)
+                //TODO: implement this...
                 //
                 if (finalGlyph == null)
                 {

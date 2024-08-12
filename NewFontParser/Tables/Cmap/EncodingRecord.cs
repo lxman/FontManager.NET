@@ -15,8 +15,8 @@ namespace NewFontParser.Tables.Cmap
         public EncodingRecord(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            PlatformId = reader.ReadUshort();
-            EncodingId = reader.ReadUshort();
+            PlatformId = reader.ReadUShort();
+            EncodingId = reader.ReadUShort();
             Offset = reader.ReadUint32();
         }
     }

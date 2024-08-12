@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using NewFontParser.Extensions;
 using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Head
@@ -20,13 +19,13 @@ namespace NewFontParser.Tables.Head
 
         public uint MagicNumber { get; }
 
-        public ushort Flags { get; }
+        public HeadFlags Flags { get; }
 
         public ushort UnitsPerEm { get; }
 
-        public long Created { get; }
+        public DateTime Created { get; }
 
-        public long Modified { get; }
+        public DateTime Modified { get; }
 
         public short XMin { get; }
 
@@ -36,52 +35,38 @@ namespace NewFontParser.Tables.Head
 
         public short YMax { get; }
 
-        public ushort MacStyle { get; }
+        public MacStyle MacStyle { get; }
 
         public ushort LowestRecPpem { get; }
 
-        public short FontDirectionHint { get; }
+        public FontDirectionHint FontDirectionHint { get; }
 
-        public short IndexToLocFormat { get; }
+        public IndexToLocFormat IndexToLocFormat { get; }
 
         public short GlyphDataFormat { get; }
 
         public HeadTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            MajorVersion = reader.ReadUshort();
-            MinorVersion = reader.ReadUshort();
+            MajorVersion = reader.ReadUShort();
+            MinorVersion = reader.ReadUShort();
             FontRevision = reader.ReadFixed();
             CheckSumAdjustment = reader.ReadUint32();
             MagicNumber = reader.ReadUint32();
-            Flags = reader.ReadUshort();
-            UnitsPerEm = reader.ReadUshort();
-            Created = reader.ReadLongDateTime();
-            Modified = reader.ReadLongDateTime();
+            Flags = (HeadFlags)reader.ReadUShort();
+            UnitsPerEm = reader.ReadUShort();
+            Created = reader.ReadLongDateTime().ToDateTime();
+            Modified = reader.ReadLongDateTime().ToDateTime();
             XMin = reader.ReadShort();
             YMin = reader.ReadShort();
             XMax = reader.ReadShort();
             YMax = reader.ReadShort();
-            MacStyle = reader.ReadUshort();
-            LowestRecPpem = reader.ReadUshort();
-            FontDirectionHint = reader.ReadShort();
-            IndexToLocFormat = reader.ReadShort();
+            MacStyle = (MacStyle)reader.ReadUShort();
+            LowestRecPpem = reader.ReadUShort();
+            FontDirectionHint = (FontDirectionHint)reader.ReadShort();
+            IndexToLocFormat = (IndexToLocFormat)reader.ReadShort();
             GlyphDataFormat = reader.ReadShort();
         }
-
-        public List<HeadFlags> HeadFlags() => Enum.GetValues(typeof(HeadFlags))
-                .Cast<HeadFlags>()
-                .Where(flag => (Flags & (ushort)flag) == (ushort)flag)
-                .ToList();
-
-        public List<MacStyle> HeadMacStyles() => Enum.GetValues(typeof(MacStyle))
-                .Cast<MacStyle>()
-                .Where(style => (MacStyle & (ushort)style) == (ushort)style)
-                .ToList();
-
-        public FontDirectionHint HeadFontDirectionHint() => (FontDirectionHint)FontDirectionHint;
-
-        public IndexToLocFormat HeadIndexToLocFormat() => (IndexToLocFormat)IndexToLocFormat;
 
         public override string ToString()
         {

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using FontParser.Exceptions;
@@ -287,21 +289,16 @@ namespace FontParser.Tables.CFF.CFF
                 //TODO: review here
                 return Cff1FontSet.s_StdStrings[sid];
             }
-            else
-            {
-                if (sid - Cff1FontSet.N_STD_STRINGS - 1 < _uniqueStringTable.Length)
-                {
-                    return _uniqueStringTable[sid - Cff1FontSet.N_STD_STRINGS - 1];
-                }
-                else
-                {
-                    //skip this,
-                    //eg. found in CID font,
-                    //we should provide this info later
 
-                    return null;
-                }
+            if (sid - Cff1FontSet.N_STD_STRINGS - 1 < _uniqueStringTable.Length)
+            {
+                return _uniqueStringTable[sid - Cff1FontSet.N_STD_STRINGS - 1];
             }
+            //skip this,
+            //eg. found in CID font,
+            //we should provide this info later
+
+            return null;
         }
 
         private void ResolveTopDictInfo()
@@ -314,7 +311,7 @@ namespace FontParser.Tables.CFF.CFF
                     default:
                         {
 #if DEBUG
-                            System.Diagnostics.Debug.WriteLine("topdic:" + entry._operator.Name);
+                            Debug.WriteLine("topdic:" + entry._operator.Name);
 #endif
                         }
                         break;
@@ -353,7 +350,7 @@ namespace FontParser.Tables.CFF.CFF
                         break;
 
                     case "FontBBox":
-                        _currentCff1Font.FontBBox = new double[] {
+                        _currentCff1Font.FontBBox = new[] {
                             entry.operands[0]._realNumValue,
                             entry.operands[1]._realNumValue,
                             entry.operands[2]._realNumValue,
@@ -470,7 +467,7 @@ namespace FontParser.Tables.CFF.CFF
             {
                 default:
 #if DEBUG
-                    System.Diagnostics.Debug.WriteLine("cff_parser_read_encodings:" + format);
+                    Debug.WriteLine("cff_parser_read_encodings:" + format);
 #endif
                     break;
 
@@ -797,7 +794,7 @@ namespace FontParser.Tables.CFF.CFF
                             default:
                                 {
 #if DEBUG
-                                    System.Diagnostics.Debug.WriteLine("cff_pri_dic:" + dicEntry._operator.Name);
+                                    Debug.WriteLine("cff_pri_dic:" + dicEntry._operator.Name);
 #endif
                                 }
                                 break;
@@ -986,7 +983,7 @@ namespace FontParser.Tables.CFF.CFF
             if (_useCompactInstruction)
             {
                 double avg = total / glyphCount;
-                System.Diagnostics.Debug.WriteLine("cff instruction compact avg:" + avg + "%");
+                Debug.WriteLine("cff instruction compact avg:" + avg + "%");
             }
 #endif
         }
@@ -1091,7 +1088,7 @@ namespace FontParser.Tables.CFF.CFF
                         default:
                             {
 #if DEBUG
-                                System.Diagnostics.Debug.WriteLine("cff_pri_dic:" + dicEntry._operator.Name);
+                                Debug.WriteLine("cff_pri_dic:" + dicEntry._operator.Name);
 #endif
                             }
                             break;
@@ -1171,7 +1168,8 @@ namespace FontParser.Tables.CFF.CFF
                     dicEntry._operator = ReadOperator(b0);
                     break; //**break after found operator
                 }
-                else if (b0 == 28 || b0 == 29)
+
+                if (b0 == 28 || b0 == 29)
                 {
                     int num = ReadIntegerNumber(b0);
                     operands.Add(new CffOperand(num, OperandKind.IntNumber));
@@ -1300,8 +1298,8 @@ namespace FontParser.Tables.CFF.CFF
             //TODO: use TryParse
 
             if (!double.TryParse(sb.ToString(),
-                System.Globalization.NumberStyles.Number | System.Globalization.NumberStyles.AllowExponent,
-                System.Globalization.CultureInfo.InvariantCulture, out double value))
+                NumberStyles.Number | NumberStyles.AllowExponent,
+                CultureInfo.InvariantCulture, out double value))
             {
                 throw new OpenFontNotSupportedException();
             }
@@ -1314,28 +1312,30 @@ namespace FontParser.Tables.CFF.CFF
             {
                 return _reader.ReadInt16();
             }
-            else if (b0 == 29)
+
+            if (b0 == 29)
             {
                 return _reader.ReadInt32();
             }
-            else if (b0 >= 32 && b0 <= 246)
+
+            if (b0 >= 32 && b0 <= 246)
             {
                 return b0 - 139;
             }
-            else if (b0 >= 247 && b0 <= 250)
+
+            if (b0 >= 247 && b0 <= 250)
             {
                 int b1 = _reader.ReadByte();
                 return (b0 - 247) * 256 + b1 + 108;
             }
-            else if (b0 >= 251 && b0 <= 254)
+
+            if (b0 >= 251 && b0 <= 254)
             {
                 int b1 = _reader.ReadByte();
                 return -(b0 - 251) * 256 - b1 - 108;
             }
-            else
-            {
-                throw new Exception();
-            }
+
+            throw new Exception();
         }
 
         private CffIndexOffset[] ReadIndexDataOffsets()

@@ -11,7 +11,7 @@ namespace FontParser.Tables.CFF.CFF
         //
         internal const int N_STD_STRINGS = 390;
 
-        internal static readonly string[] s_StdStrings = new string[] {
+        internal static readonly string[] s_StdStrings = {
             //Appendix A: Standard Strings
             ".notdef",
             "space",

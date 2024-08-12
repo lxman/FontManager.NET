@@ -1,4 +1,5 @@
 ﻿using Kaitai;
+using KaitaiTtf.Enums;
 
 namespace KaitaiTtf.Os2
 {

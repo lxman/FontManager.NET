@@ -7,10 +7,6 @@ namespace FontParser.Tables
     /// </summary>
     public abstract class TableEntry
     {
-        public TableEntry()
-        {
-        }
-
         internal TableHeader Header { get; set; }
 
         protected abstract void ReadContentFrom(BinaryReader reader);

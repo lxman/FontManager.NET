@@ -57,7 +57,7 @@ namespace FontParser.Tables.AdvancedLayout.CoverageTable
                 coverageIndices[i] = reader.ReadUInt16();
             }
 
-            return new CoverageFmt2()
+            return new CoverageFmt2
             {
                 _startIndices = startIndices,
                 _endIndices = endIndices,

@@ -1,5 +1,7 @@
 ﻿//https://www.microsoft.com/typography/otspec/ibmfc.htm
 
+using System;
+
 namespace FontParser.AdditionalInfo
 {
     //This section defines the IBM Font Class
@@ -8,7 +10,7 @@ namespace FontParser.AdditionalInfo
     //
     //This information is stored in the sFamilyClass field of a font's OS/2 table.
 
-    [System.Flags]
+    [Flags]
     internal enum IBMFontClassParametersKind
     {
         No_Classification = 0 << 8,

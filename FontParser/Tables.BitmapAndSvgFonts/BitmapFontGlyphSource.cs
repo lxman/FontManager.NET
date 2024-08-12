@@ -1,4 +1,6 @@
-﻿namespace FontParser.Tables.BitmapAndSvgFonts
+﻿using System.IO;
+
+namespace FontParser.Tables.BitmapAndSvgFonts
 {
     internal class BitmapFontGlyphSource
     {
@@ -25,7 +27,7 @@
             }
         }
 
-        public void CopyBitmapContent(Glyph glyph, System.IO.Stream outputStream) => _cbdt.CopyBitmapContent(glyph, outputStream);
+        public void CopyBitmapContent(Glyph glyph, Stream outputStream) => _cbdt.CopyBitmapContent(glyph, outputStream);
 
         public Glyph[] BuildGlyphList()
         {

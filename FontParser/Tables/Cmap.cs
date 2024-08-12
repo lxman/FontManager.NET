@@ -76,7 +76,7 @@ namespace FontParser.Tables
         public const string _N = "cmap";
         public override string Name => _N;
 
-        private CharacterMap.CharacterMap[] _charMaps = null;
+        private CharacterMap.CharacterMap[] _charMaps;
         private List<CharMapFormat14> _charMap14List;
         private readonly Dictionary<int, ushort> _codepointToGlyphs = new Dictionary<int, ushort>();
 

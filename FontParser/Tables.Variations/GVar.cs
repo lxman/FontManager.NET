@@ -1,6 +1,7 @@
 ﻿//MIT, 2019-present, WinterDev
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace FontParser.Tables.Variations
@@ -22,10 +23,6 @@ namespace FontParser.Tables.Variations
         internal TupleRecord[] _sharedTuples;
 
         internal GlyphVariableData[] _glyphVarDataArr; //TODO: lazy load !
-
-        public GVar()
-        {
-        }
 
         //
         protected override void ReadContentFrom(BinaryReader reader)
@@ -373,9 +370,6 @@ namespace FontParser.Tables.Variations
                             packedDeltasXY.Add(reader.ReadByte());
                         }
                     }
-                    else
-                    {
-                    }
                 }
                 //---
                 header.PackedDeltasXY = packedDeltasXY.ToArray();
@@ -384,12 +378,12 @@ namespace FontParser.Tables.Variations
                 //ensure!
                 if ((packedDeltasXY.Count % 2) != 0)
                 {
-                    System.Diagnostics.Debugger.Break();
+                    Debugger.Break();
                 }
                 //ensure!
                 if (reader.BaseStream.Position != expect_endAt)
                 {
-                    System.Diagnostics.Debugger.Break();
+                    Debugger.Break();
                 }
 #endif
             }

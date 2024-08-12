@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Globalization;
+using System.IO;
 
 namespace FontParser.AdditionalInfo
 {
@@ -12,7 +14,7 @@ namespace FontParser.AdditionalInfo
             {
                 s_stdMacGlyphNames = new string[260];
                 using var strReader = new StringReader(orgGlyphNames);
-                string[] seps = new string[] { " " };
+                string[] seps = { " " };
 
                 string line = strReader.ReadLine();
 
@@ -21,12 +23,12 @@ namespace FontParser.AdditionalInfo
                     line = line.Trim();
                     if (line != "")
                     {
-                        string[] key_value = line.Split(seps, System.StringSplitOptions.RemoveEmptyEntries);
+                        string[] key_value = line.Split(seps, StringSplitOptions.RemoveEmptyEntries);
                         if (key_value.Length != 2)
                         {
-                            throw new System.NotSupportedException();
+                            throw new NotSupportedException();
                         }
-                        if (int.TryParse(key_value[0], System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out int index))
+                        if (int.TryParse(key_value[0], NumberStyles.None, CultureInfo.InvariantCulture, out int index))
                         {
 #if DEBUG
                             if (index < 0 || index > 258)
@@ -37,7 +39,7 @@ namespace FontParser.AdditionalInfo
                         }
                         else
                         {
-                            throw new System.NotSupportedException();
+                            throw new NotSupportedException();
                         }
                     }
                     line = strReader.ReadLine();

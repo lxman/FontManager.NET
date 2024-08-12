@@ -9,7 +9,7 @@ namespace KaitaiTtf.Cmap.SubtableHeader
             return new SubtableHeader(new KaitaiStream(fileName));
         }
 
-        public SubtableHeader(KaitaiStream p__io, KaitaiCmap.Cmap p__parent = null, Ttf p__root = null) : base(p__io)
+        public SubtableHeader(KaitaiStream p__io, Cmap p__parent = null, Ttf p__root = null) : base(p__io)
         {
             m_parent = p__parent;
             m_root = p__root;
@@ -43,11 +43,11 @@ namespace KaitaiTtf.Cmap.SubtableHeader
         private ushort _encodingId;
         private uint _subtableOffset;
         private Ttf m_root;
-        private KaitaiCmap.Cmap m_parent;
+        private Cmap m_parent;
         public ushort PlatformId => _platformId;
         public ushort EncodingId => _encodingId;
         public uint SubtableOffset => _subtableOffset;
         public Ttf M_Root => m_root;
-        public KaitaiCmap.Cmap M_Parent => m_parent;
+        public Cmap M_Parent => m_parent;
     }
 }

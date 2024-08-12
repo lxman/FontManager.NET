@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using Kaitai;
-using KaitaiTtf;
-using KaitaiTtf.Name;
 
-namespace KaitaiName
+namespace KaitaiTtf.Name
 {
     /// <summary>
     /// Name table is meant to include human-readable string metadata

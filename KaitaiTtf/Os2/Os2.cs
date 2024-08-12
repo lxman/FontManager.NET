@@ -1,4 +1,6 @@
-﻿using Kaitai;
+﻿using System.Text;
+using Kaitai;
+using KaitaiTtf.Enums;
 
 namespace KaitaiTtf.Os2
 {
@@ -38,7 +40,7 @@ namespace KaitaiTtf.Os2
             _sFamilyClass = m_io.ReadS2be();
             _panose = new Panose(m_io, this, m_root);
             _unicodeRange = new UnicodeRange(m_io, this, m_root);
-            _achVendId = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(4));
+            _achVendId = Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(4));
             _selection = ((FsSelection)m_io.ReadU2be());
             _firstCharIndex = m_io.ReadU2be();
             _lastCharIndex = m_io.ReadU2be();

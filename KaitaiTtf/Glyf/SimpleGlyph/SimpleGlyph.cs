@@ -41,7 +41,7 @@ namespace KaitaiTtf.Glyf.SimpleGlyph
             {
                 if (f_pointCount)
                     return _pointCount;
-                _pointCount = (int)((EndPtsOfContours.Max() + 1));
+                _pointCount = EndPtsOfContours.Max() + 1;
                 f_pointCount = true;
                 return _pointCount;
             }

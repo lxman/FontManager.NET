@@ -200,10 +200,8 @@ namespace FontParser
                                     //check number if existing curve control
                                     offCurveMode = true;
                                 }
-                                else
-                                {
-                                    //describe above, see [A.2]
-                                }
+
+                                //describe above, see [A.2]
                                 break;
 
                             case 1:

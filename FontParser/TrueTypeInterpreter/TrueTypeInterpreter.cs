@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using FontParser.Tables;
 
@@ -248,13 +250,13 @@ namespace FontParser.TrueTypeInterpreter
             catch (InvalidTrueTypeFontException)
             {
 #if DEBUG
-                System.Diagnostics.Debug.WriteLine("invalid_font_ex:");
+                Debug.WriteLine("invalid_font_ex:");
 #endif
             }
         }
 
 #if DEBUG
-        private readonly System.Collections.Generic.List<OpCode> debugList = new System.Collections.Generic.List<OpCode>();
+        private readonly List<OpCode> debugList = new List<OpCode>();
 #endif
 
         private void Execute(InstructionStream stream, bool inFunction, bool allowFunctionDefs)
@@ -1329,7 +1331,7 @@ namespace FontParser.TrueTypeInterpreter
 
         private void OnVectorsUpdated()
         {
-            _fdotp = (float)Vector2.Dot(_state.Freedom, _state.Projection);
+            _fdotp = Vector2.Dot(_state.Freedom, _state.Projection);
             if (Math.Abs(_fdotp) < Epsilon)
                 _fdotp = 1.0f;
         }
@@ -1631,10 +1633,10 @@ namespace FontParser.TrueTypeInterpreter
         }
 
         private float Project(Vector2 point)
-        { return (float)Vector2.Dot(point, _state.Projection); }
+        { return Vector2.Dot(point, _state.Projection); }
 
         private float DualProject(Vector2 point)
-        { return (float)Vector2.Dot(point, _state.DualProjection); }
+        { return Vector2.Dot(point, _state.DualProjection); }
 
         private static OpCode SkipNext(ref InstructionStream stream)
         {

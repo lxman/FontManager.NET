@@ -195,17 +195,17 @@ namespace FontParser
                 int newlen = dest.EndPoints.Length;
                 for (int i = org_dest_len; i < newlen; ++i)
                 {
-                    dest.EndPoints[i] += (ushort)org_last_point;
+                    dest.EndPoints[i] += org_last_point;
                 }
             }
 
             //calculate new bounds
             Bounds destBound = dest.Bounds;
             Bounds srcBound = src.Bounds;
-            var newXmin = (short)Math.Min(destBound.XMin, srcBound.XMin);
-            var newYMin = (short)Math.Min(destBound.YMin, srcBound.YMin);
-            var newXMax = (short)Math.Max(destBound.XMax, srcBound.XMax);
-            var newYMax = (short)Math.Max(destBound.YMax, srcBound.YMax);
+            var newXmin = Math.Min(destBound.XMin, srcBound.XMin);
+            var newYMin = Math.Min(destBound.YMin, srcBound.YMin);
+            var newXMax = Math.Max(destBound.XMax, srcBound.XMax);
+            var newYMax = Math.Max(destBound.YMax, srcBound.YMax);
 
             dest.Bounds = new Bounds(newXmin, newYMin, newXMax, newYMax);
         }
@@ -227,7 +227,7 @@ namespace FontParser
             {
                 stbuilder.Append("ttf");
                 stbuilder.Append(",index=" + GlyphIndex);
-                stbuilder.Append(",class=" + GlyphClass.ToString());
+                stbuilder.Append(",class=" + GlyphClass);
                 if (MarkClassDef != 0)
                 {
                     stbuilder.Append(",mark_class=" + MarkClassDef);

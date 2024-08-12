@@ -16,10 +16,6 @@ namespace FontParser.Tables
         //
         private short _indexToLocFormat;
 
-        public Head()
-        {
-        }
-
         protected override void ReadContentFrom(BinaryReader input)
         {
             //Type 	    Name 	        Description

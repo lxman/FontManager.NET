@@ -454,7 +454,7 @@ namespace FontParser.Tables.CFF
             {
                 throw new OpenFontNotSupportedException();
             }
-            else
+
             {
                 //compare command-by-command
                 int j = step2.Count;
@@ -463,7 +463,7 @@ namespace FontParser.Tables.CFF
                     Type2Instruction inst_exp = expand2[i];
                     Type2Instruction inst_org = org[i];
                     if (inst_exp.Op != inst_org.Op ||
-                       inst_exp.Value != inst_org.Value)
+                        inst_exp.Value != inst_org.Value)
                     {
                         throw new OpenFontNotSupportedException();
                     }
@@ -479,14 +479,13 @@ namespace FontParser.Tables.CFF
             {
                 return CompactRange.SByte;
             }
-            else if (value > short.MinValue && value < short.MaxValue)
+
+            if (value > short.MinValue && value < short.MaxValue)
             {
                 return CompactRange.Short;
             }
-            else
-            {
-                return CompactRange.None;
-            }
+
+            return CompactRange.None;
         }
     }
 }

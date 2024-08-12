@@ -38,9 +38,6 @@ namespace FontParser.Tables.AdvancedLayout.GSUB
 
 #if DEBUG
 
-        public GSUB()
-        { }
-
 #endif
 
         //

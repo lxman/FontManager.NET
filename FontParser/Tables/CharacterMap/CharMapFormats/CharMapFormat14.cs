@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace FontParser.Tables.CharacterMap.CharMapFormats
@@ -57,7 +58,7 @@ namespace FontParser.Tables.CharacterMap.CharMapFormats
         {
             //TODO: review here
 #if DEBUG
-            System.Diagnostics.Debug.WriteLine("not implemented");
+            Debug.WriteLine("not implemented");
 #endif
         }
 

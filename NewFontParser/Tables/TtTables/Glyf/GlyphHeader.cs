@@ -4,6 +4,8 @@ namespace NewFontParser.Tables.TtTables.Glyf
 {
     public class GlyphHeader
     {
+        public static long RecordSize => 10;
+
         public short NumberOfContours { get; }
 
         public short XMin { get; }
@@ -22,19 +24,6 @@ namespace NewFontParser.Tables.TtTables.Glyf
             YMin = reader.ReadShort();
             XMax = reader.ReadShort();
             YMax = reader.ReadShort();
-            if (NumberOfContours < 0)
-            {
-                var compositeGlyphHeader = new CompositeGlyphHeader(data);
-            }
-            else
-            if (NumberOfContours == 0)
-            {
-                var compositeGlyphHeader = new CompositeGlyphHeader(data);
-            }
-            else
-            {
-                var simpleGlyphHeader = new SimpleGlyphHeader(data);
-            }
         }
     }
 }

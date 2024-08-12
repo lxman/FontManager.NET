@@ -24,10 +24,8 @@
             {
                 return Value.ToString();
             }
-            else
-            {
-                return Value + "," + DeviceTable;
-            }
+
+            return Value + "," + DeviceTable;
         }
 
 #endif

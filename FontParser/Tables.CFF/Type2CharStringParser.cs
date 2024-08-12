@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using FontParser.Exceptions;
 using FontParser.Tables.CFF.CFF;
 
@@ -65,7 +66,7 @@ namespace FontParser.Tables.CFF
         private readonly bool _dbug_OnlyOp;
 
         [ThreadStatic]
-        private static System.Text.StringBuilder s_dbugSb;
+        private static StringBuilder s_dbugSb;
 
         public override string ToString()
         {
@@ -79,88 +80,86 @@ namespace FontParser.Tables.CFF
             {
                 return op_name.ToString();
             }
-            else
+
+            if (s_dbugSb == null)
             {
-                if (s_dbugSb == null)
-                {
-                    s_dbugSb = new System.Text.StringBuilder();
-                }
-                s_dbugSb.Length = 0;//reset
-
-                var has_ExtenedForm = true;
-
-                //this is my extension
-                switch (merge_flags)
-                {
-#if DEBUG
-                    default: throw new OpenFontNotSupportedException();
-#endif
-                    case 0:
-                        //nothing
-                        has_ExtenedForm = false;
-                        break;
-
-                    case 1:
-                        //contains merge data for LoadInt
-                        s_dbugSb.Append(Value.ToString() + " ");
-                        break;
-
-                    case 2:
-                        //contains merge data for LoadShort2
-                        s_dbugSb.Append((short)(Value >> 16) + " " + (short)(Value >> 0) + " ");
-                        break;
-
-                    case 3:
-                        //contains merge data for LoadSbyte4
-                        s_dbugSb.Append((sbyte)(Value >> 24) + " " + (sbyte)(Value >> 16) + " " + (sbyte)(Value >> 8) + " " + (sbyte)(Value) + " ");
-                        break;
-                }
-
-                switch (op_name)
-                {
-                    case OperatorName.LoadInt:
-                        s_dbugSb.Append(Value);
-                        break;
-
-                    case OperatorName.LoadFloat:
-                        s_dbugSb.Append(ReadValueAsFixed1616().ToString());
-                        break;
-                    //-----------
-                    case OperatorName.LoadShort2:
-                        s_dbugSb.Append((short)(Value >> 16) + " " + (short)(Value >> 0));
-                        break;
-
-                    case OperatorName.LoadSbyte4:
-                        s_dbugSb.Append((sbyte)(Value >> 24) + " " + (sbyte)(Value >> 16) + " " + (sbyte)(Value >> 8) + " " + (sbyte)(Value));
-                        break;
-
-                    case OperatorName.LoadSbyte3:
-                        s_dbugSb.Append((sbyte)(Value >> 24) + " " + (sbyte)(Value >> 16) + " " + (sbyte)(Value >> 8));
-                        break;
-                    //-----------
-                    case OperatorName.hintmask1:
-                    case OperatorName.hintmask2:
-                    case OperatorName.hintmask3:
-                    case OperatorName.hintmask4:
-                    case OperatorName.hintmask_bits:
-                        s_dbugSb.Append((op_name).ToString() + " " + Convert.ToString(Value, 2));
-                        break;
-
-                    default:
-                        if (has_ExtenedForm)
-                        {
-                            s_dbugSb.Append((op_name).ToString());
-                        }
-                        else
-                        {
-                            s_dbugSb.Append((op_name).ToString() + " " + Value.ToString());
-                        }
-
-                        break;
-                }
-
-                return s_dbugSb.ToString();
+                s_dbugSb = new StringBuilder();
             }
+            s_dbugSb.Length = 0;//reset
+
+            var has_ExtenedForm = true;
+
+            //this is my extension
+            switch (merge_flags)
+            {
+#if DEBUG
+                default: throw new OpenFontNotSupportedException();
+#endif
+                case 0:
+                    //nothing
+                    has_ExtenedForm = false;
+                    break;
+
+                case 1:
+                    //contains merge data for LoadInt
+                    s_dbugSb.Append(Value + " ");
+                    break;
+
+                case 2:
+                    //contains merge data for LoadShort2
+                    s_dbugSb.Append((short)(Value >> 16) + " " + (short)(Value >> 0) + " ");
+                    break;
+
+                case 3:
+                    //contains merge data for LoadSbyte4
+                    s_dbugSb.Append((sbyte)(Value >> 24) + " " + (sbyte)(Value >> 16) + " " + (sbyte)(Value >> 8) + " " + (sbyte)(Value) + " ");
+                    break;
+            }
+
+            switch (op_name)
+            {
+                case OperatorName.LoadInt:
+                    s_dbugSb.Append(Value);
+                    break;
+
+                case OperatorName.LoadFloat:
+                    s_dbugSb.Append(ReadValueAsFixed1616().ToString());
+                    break;
+                //-----------
+                case OperatorName.LoadShort2:
+                    s_dbugSb.Append((short)(Value >> 16) + " " + (short)(Value >> 0));
+                    break;
+
+                case OperatorName.LoadSbyte4:
+                    s_dbugSb.Append((sbyte)(Value >> 24) + " " + (sbyte)(Value >> 16) + " " + (sbyte)(Value >> 8) + " " + (sbyte)(Value));
+                    break;
+
+                case OperatorName.LoadSbyte3:
+                    s_dbugSb.Append((sbyte)(Value >> 24) + " " + (sbyte)(Value >> 16) + " " + (sbyte)(Value >> 8));
+                    break;
+                //-----------
+                case OperatorName.hintmask1:
+                case OperatorName.hintmask2:
+                case OperatorName.hintmask3:
+                case OperatorName.hintmask4:
+                case OperatorName.hintmask_bits:
+                    s_dbugSb.Append((op_name) + " " + Convert.ToString(Value, 2));
+                    break;
+
+                default:
+                    if (has_ExtenedForm)
+                    {
+                        s_dbugSb.Append((op_name).ToString());
+                    }
+                    else
+                    {
+                        s_dbugSb.Append((op_name) + " " + Value);
+                    }
+
+                    break;
+            }
+
+            return s_dbugSb.ToString();
         }
 
 #endif
@@ -542,20 +541,16 @@ namespace FontParser.Tables.CFF
         // it must be specified as the first number in the charstring,
         //and encoded as the difference from nominalWidthX
 
-        public Type2CharStringParser()
-        {
-        }
-
 #if DEBUG
-        private int _dbugCount = 0;
-        private int _dbugInstructionListMark = 0;
+        private int _dbugCount;
+        private int _dbugInstructionListMark;
 #endif
-        private int _hintStemCount = 0;
-        private bool _foundSomeStem = false;
-        private bool _enterPathConstructionSeq = false;
+        private int _hintStemCount;
+        private bool _foundSomeStem;
+        private bool _enterPathConstructionSeq;
 
         private Type2GlyphInstructionList _insts;
-        private int _current_integer_count = 0;
+        private int _current_integer_count;
         private bool _doStemCount = true;
         private Cff1Font _currentCff1Font;
         private int _globalSubrBias;
@@ -1032,12 +1027,10 @@ namespace FontParser.Tables.CFF
 #endif
                     throw new OpenFontNotSupportedException();
                 }
-                else
-                {
-                    //the first one is 'width'
-                    _insts.ChangeFirstInstToGlyphWidthValue();
-                    _current_integer_count--;
-                }
+
+                //the first one is 'width'
+                _insts.ChangeFirstInstToGlyphWidthValue();
+                _current_integer_count--;
             }
             _hintStemCount += (_current_integer_count / 2); //save a snapshot of stem count
             _insts.AddOp(stemName);
@@ -1065,9 +1058,6 @@ namespace FontParser.Tables.CFF
                 if ((_current_integer_count % 2) != 0)
                 {
                     throw new OpenFontNotSupportedException();
-                }
-                else
-                {
                 }
 #endif
                 if (_doStemCount)
@@ -1104,9 +1094,6 @@ namespace FontParser.Tables.CFF
                         default:
                             throw new OpenFontNotSupportedException();
                     }
-                }
-                else
-                {
                 }
             }
 
@@ -1334,20 +1321,20 @@ namespace FontParser.Tables.CFF
             {
                 return b0 - 139;
             }
-            else if (b0 <= 250)  // && b0 >= 247 , *** if-else sequence is important! ***
+
+            if (b0 <= 250)  // && b0 >= 247 , *** if-else sequence is important! ***
             {
                 byte b1 = _reader.ReadByte();
                 return (b0 - 247) * 256 + b1 + 108;
             }
-            else if (b0 <= 254)  //&&  b0 >= 251 ,*** if-else sequence is important! ***
+
+            if (b0 <= 254)  //&&  b0 >= 251 ,*** if-else sequence is important! ***
             {
                 byte b1 = _reader.ReadByte();
                 return -(b0 - 251) * 256 - b1 - 108;
             }
-            else
-            {
-                throw new OpenFontNotSupportedException();
-            }
+
+            throw new OpenFontNotSupportedException();
         }
     }
 }

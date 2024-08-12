@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using FontParser.AdditionalInfo;
 using FontParser.Exceptions;
 using FontParser.Tables;
@@ -15,6 +17,7 @@ using FontParser.Tables.TrueType;
 using FontParser.Tables.Variations;
 using FontParser.Typeface;
 using FontParser.Typeface.Os2;
+using FontParser.WebFont;
 using Kern = FontParser.Tables.Others.Kern;
 
 namespace FontParser
@@ -26,9 +29,9 @@ namespace FontParser
             //THIS IS MY CONVENTION for TrueType collection font name
             //you can change this to fit your need.
 
-            var stringBuilder = new System.Text.StringBuilder();
+            var stringBuilder = new StringBuilder();
             stringBuilder.Append("TTCF: " + members.Length);
-            var uniqueNames = new System.Collections.Generic.Dictionary<string, bool>();
+            var uniqueNames = new Dictionary<string, bool>();
             for (uint i = 0; i < members.Length; ++i)
             {
                 PreviewFontInfo member = members[i];
@@ -65,24 +68,24 @@ namespace FontParser
                 }
                 return new PreviewFontInfo(BuildTtcfName(members), members);
             }
-            else if (KnownFontFiles.IsWoff(majorVersion, minorVersion))
+
+            if (KnownFontFiles.IsWoff(majorVersion, minorVersion))
             {
                 //check if we enable woff or not
-                var woffReader = new WebFont.WoffReader();
+                var woffReader = new WoffReader();
                 input.BaseStream.Position = 0;
                 return woffReader.ReadPreview(input);
             }
-            else if (KnownFontFiles.IsWoff2(majorVersion, minorVersion))
+
+            if (KnownFontFiles.IsWoff2(majorVersion, minorVersion))
             {
                 //check if we enable woff2 or not
-                var woffReader = new WebFont.Woff2Reader();
+                var woffReader = new Woff2Reader();
                 input.BaseStream.Position = 0;
                 return woffReader.ReadPreview(input);
             }
-            else
-            {
-                return ReadActualFontPreview(input, true);//skip version data (majorVersion, minorVersion)
-            }
+
+            return ReadActualFontPreview(input, true);//skip version data (majorVersion, minorVersion)
         }
 
         private FontCollectionHeader ReadTtcHeader(ByteOrderSwappingBinaryReader input)
@@ -187,17 +190,19 @@ namespace FontParser
                 //so use read preview first=> you will know that what are inside the ttc.
                 return false;
             }
-            else if (KnownFontFiles.IsWoff(majorVersion, minorVersion))
+
+            if (KnownFontFiles.IsWoff(majorVersion, minorVersion))
             {
                 //check if we enable woff or not
-                var woffReader = new WebFont.WoffReader();
+                var woffReader = new WoffReader();
                 input.BaseStream.Position = 0;
                 return woffReader.Read(typeface, input, ticket);
             }
-            else if (KnownFontFiles.IsWoff2(majorVersion, minorVersion))
+
+            if (KnownFontFiles.IsWoff2(majorVersion, minorVersion))
             {
                 //check if we enable woff2 or not
-                var woffReader = new WebFont.Woff2Reader();
+                var woffReader = new Woff2Reader();
                 input.BaseStream.Position = 0;
                 return woffReader.Read(typeface, input, ticket);
             }
@@ -227,8 +232,8 @@ namespace FontParser
             //for preview, read ONLY  script list from gsub and gpos (set OnlyScriptList).
             Meta metaTable = rd.Read(new Meta());
 
-            GSUB gsub = rd.Read(new GSUB() { OnlyScriptList = true });
-            GPOS gpos = rd.Read(new GPOS() { OnlyScriptList = true });
+            GSUB gsub = rd.Read(new GSUB { OnlyScriptList = true });
+            GPOS gpos = rd.Read(new GPOS { OnlyScriptList = true });
             Cmap cmap = rd.Read(new Cmap());
             //gsub and gpos contains actual script_list that are in the typeface
 

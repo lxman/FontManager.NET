@@ -33,7 +33,7 @@ namespace KaitaiTtf
             {
                 if (f_isVersion10)
                     return _isVersion10;
-                _isVersion10 = (bool)(((TableVersionNumber.Major == 1) && (TableVersionNumber.Minor == 0)));
+                _isVersion10 = (TableVersionNumber.Major == 1) && (TableVersionNumber.Minor == 0);
                 f_isVersion10 = true;
                 return _isVersion10;
             }

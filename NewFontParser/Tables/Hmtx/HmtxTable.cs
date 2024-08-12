@@ -6,6 +6,7 @@ namespace NewFontParser.Tables.Hmtx
     public class HmtxTable : IInfoTable
     {
         public List<LongHMetricRecord> LongHMetricRecords { get; } = new List<LongHMetricRecord>();
+        public List<short> LeftSideBearings { get; } = new List<short>();
 
         // numberOfHMetricRecords: From the 'hhea' table.
         // numOfGlyphs: From the 'maxp' table.
@@ -21,8 +22,7 @@ namespace NewFontParser.Tables.Hmtx
             {
                 for (int i = LongHMetricRecords.Count; i < numOfGlyphs; i++)
                 {
-                    // Not quite sure whether this is the right way to handle this case.
-                    LongHMetricRecords.Add(new LongHMetricRecord(reader.ReadBytes(LongHMetricRecord.RecordSize)));
+                    LeftSideBearings.Add(reader.ReadShort());
                 }
             }
         }

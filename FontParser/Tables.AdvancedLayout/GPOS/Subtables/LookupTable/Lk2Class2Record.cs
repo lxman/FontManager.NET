@@ -27,7 +27,7 @@
 
         public override string ToString()
         {
-            return "value1:" + (value1?.ToString()) + ",value2:" + value2?.ToString();
+            return "value1:" + (value1) + ",value2:" + value2;
         }
 
 #endif

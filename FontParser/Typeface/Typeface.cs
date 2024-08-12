@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
 using FontParser.AdditionalInfo;
 using FontParser.Exceptions;
 using FontParser.Tables;
@@ -230,31 +233,29 @@ namespace FontParser.Typeface
                     else
                     {
 #if DEBUG
-                        System.Diagnostics.Debug.WriteLine("Cff unknown glyphname");
+                        Debug.WriteLine("Cff unknown glyphname");
 #endif
                     }
                 }
                 return _cachedGlyphDicByName.TryGetValue(glyphName, out ushort glyphIndex) ? glyphIndex : (ushort)0;
             }
-            else if (PostTable != null)
+
+            if (PostTable != null)
             {
                 if (PostTable.Version == 2)
                 {
                     return PostTable.GetGlyphIndex(glyphName);
                 }
-                else
-                {
-                    //check data from adobe glyph list
-                    //from the unicode value
-                    //select glyph index
+                //check data from adobe glyph list
+                //from the unicode value
+                //select glyph index
 
-                    //we use AdobeGlyphList
-                    //from https://github.com/adobe-type-tools/agl-aglfn/blob/master/glyphlist.txt
+                //we use AdobeGlyphList
+                //from https://github.com/adobe-type-tools/agl-aglfn/blob/master/glyphlist.txt
 
-                    //but user can provide their own map here...
+                //but user can provide their own map here...
 
-                    return GetGlyphIndex(AdobeGlyphList.GetUnicodeValueByGlyphName(glyphName));
-                }
+                return GetGlyphIndex(AdobeGlyphList.GetUnicodeValueByGlyphName(glyphName));
             }
             return 0;
         }
@@ -289,13 +290,10 @@ namespace FontParser.Typeface
             {
                 return _glyphs[glyphIndex];
             }
-            else
-            {
 #if DEBUG
-                System.Diagnostics.Debug.WriteLine("found unknown glyph:" + glyphIndex);
+            Debug.WriteLine("found unknown glyph:" + glyphIndex);
 #endif
-                return _glyphs[0]; //return empty glyph?;
-            }
+            return _glyphs[0]; //return empty glyph?;
         }
 
         public ushort GetAdvanceWidthFromGlyphIndex(ushort glyphIndex) => _hMetrics.GetAdvanceWidth(glyphIndex);
@@ -363,9 +361,9 @@ namespace FontParser.Typeface
 
         public GlyphInfo GetMathGlyphInfo(ushort glyphIndex) => _mathGlyphInfos[glyphIndex];
 
-        public void ReadSvgContent(ushort glyphIndex, System.Text.StringBuilder output) => _svgTable?.ReadSvgContent(glyphIndex, output);
+        public void ReadSvgContent(ushort glyphIndex, StringBuilder output) => _svgTable?.ReadSvgContent(glyphIndex, output);
 
-        public void ReadBitmapContent(Glyph glyph, System.IO.Stream output)
+        public void ReadBitmapContent(Glyph glyph, Stream output)
         {
             _bitmapFontGlyphSource.CopyBitmapContent(glyph, output);
         }
@@ -579,7 +577,7 @@ namespace FontParser.Typeface
                         a.CheckSum != b.CheckSum)
                     {
 #if DEBUG
-                        System.Diagnostics.Debugger.Break();
+                        Debugger.Break();
 #endif
 
                         return false;
@@ -612,7 +610,7 @@ namespace FontParser.Typeface
                     else
                     {
 #if DEBUG
-                        System.Diagnostics.Debug.WriteLine("Cff unknown glyphname");
+                        Debug.WriteLine("Cff unknown glyphname");
 #endif
                     }
                 }

@@ -21,9 +21,6 @@ namespace FontParser.Tables.AdvancedLayout.GPOS
 
 #if DEBUG
 
-        public GPOS()
-        { }
-
 #endif
 
         public static PosRuleSetTable[] CreateMultiplePosRuleSetTables(long initPos, ushort[] offsets, BinaryReader reader)

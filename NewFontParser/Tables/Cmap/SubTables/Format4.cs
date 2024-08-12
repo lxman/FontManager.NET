@@ -43,14 +43,14 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
             for (var i = 0; i < SegCountX2 / 2; i++)
             {
-                EndCodes.Add(reader.ReadUshort());
+                EndCodes.Add(reader.ReadUShort());
             }
 
-            ReservedPad = reader.ReadUshort();
+            ReservedPad = reader.ReadUShort();
 
             for (var i = 0; i < SegCountX2 / 2; i++)
             {
-                StartCodes.Add(reader.ReadUshort());
+                StartCodes.Add(reader.ReadUShort());
             }
 
             for (var i = 0; i < SegCountX2 / 2; i++)
@@ -60,13 +60,13 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
             for (var i = 0; i < SegCountX2 / 2; i++)
             {
-                IdRangeOffsets.Add(reader.ReadUshort());
+                IdRangeOffsets.Add(reader.ReadUShort());
             }
 
             uint remainingBytes = Length - 16 - (SegCountX2 * 4);
             for (var i = 0; i < remainingBytes / 2; i++)
             {
-                GlyphIdArray.Add(reader.ReadUshort());
+                GlyphIdArray.Add(reader.ReadUShort());
             }
         }
     }

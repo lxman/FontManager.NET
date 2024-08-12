@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using FontParser.Exceptions;
 
 namespace FontParser.Tables.BitmapAndSvgFonts
@@ -60,7 +62,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts
             _entries = new SvgDocumentEntry[numEntries];
             for (var i = 0; i < numEntries; ++i)
             {
-                _entries[i] = new SvgDocumentEntry()
+                _entries[i] = new SvgDocumentEntry
                 {
                     startGlyphID = reader.ReadUInt16(),
                     endGlyphID = reader.ReadUInt16(),
@@ -78,14 +80,14 @@ namespace FontParser.Tables.BitmapAndSvgFonts
                 if (entry.endGlyphID - entry.startGlyphID > 0)
                 {
                     //TODO review here again
-                    throw new System.NotSupportedException();
+                    throw new NotSupportedException();
                 }
 
                 reader.BaseStream.Seek(svgDocIndexStartAt + entry.svgDocOffset, SeekOrigin.Begin);
 
                 if (entry.svgDocLength == 0)
                 {
-                    throw new System.NotSupportedException();
+                    throw new NotSupportedException();
                 }
 
                 //
@@ -122,7 +124,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts
             _entries = null;
         }
 
-        public bool ReadSvgContent(ushort glyphIndex, System.Text.StringBuilder outputStBuilder)
+        public bool ReadSvgContent(ushort glyphIndex, StringBuilder outputStBuilder)
         {
             if (_dicSvgEntries == null)
             {
@@ -144,7 +146,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts
                     //TODO: decompress this
                 }
 
-                outputStBuilder.Append(System.Text.Encoding.UTF8.GetString(docEntry.svgBuffer));
+                outputStBuilder.Append(Encoding.UTF8.GetString(docEntry.svgBuffer));
                 return true;
             }
             return false;
@@ -157,7 +159,7 @@ namespace FontParser.Tables.BitmapAndSvgFonts
             //xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"
             //test save the svg
             //save as html document for test
-            var stbuilder = new System.Text.StringBuilder();
+            var stbuilder = new StringBuilder();
             stbuilder.Append("<html><body>");
 
             //TODO: add exact SVG reader here

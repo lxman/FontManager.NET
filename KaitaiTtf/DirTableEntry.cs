@@ -1,4 +1,5 @@
-﻿using Kaitai;
+﻿using System.Text;
+using Kaitai;
 
 namespace KaitaiTtf
 {
@@ -18,7 +19,7 @@ namespace KaitaiTtf
         }
         private void _read()
         {
-            _tag = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(4));
+            _tag = Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(4));
             _checksum = m_io.ReadU4be();
             _offset = m_io.ReadU4be();
             _length = m_io.ReadU4be();
@@ -61,7 +62,7 @@ namespace KaitaiTtf
                         {
                             __raw_value = io.ReadBytes(Length);
                             var io___raw_value = new KaitaiStream(__raw_value);
-                            _value = new KaitaiKern.Kern(io___raw_value, this, m_root);
+                            _value = new Kern.Kern(io___raw_value, this, m_root);
                             break;
                         }
                     case "hhea":
@@ -89,7 +90,7 @@ namespace KaitaiTtf
                         {
                             __raw_value = io.ReadBytes(Length);
                             var io___raw_value = new KaitaiStream(__raw_value);
-                            _value = new KaitaiName.Name(io___raw_value, this, m_root);
+                            _value = new Name.Name(io___raw_value, this, m_root);
                             break;
                         }
                     case "maxp":
@@ -117,7 +118,7 @@ namespace KaitaiTtf
                         {
                             __raw_value = io.ReadBytes(Length);
                             var io___raw_value = new KaitaiStream(__raw_value);
-                            _value = new KaitaiCmap.Cmap(io___raw_value, this, m_root);
+                            _value = new Cmap.Cmap(io___raw_value, this, m_root);
                             break;
                         }
                     default:

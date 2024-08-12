@@ -34,10 +34,6 @@ namespace FontParser.Tables
         //int16 metricDataFormat 	        0 for current format.
         //uint16  numberOfHMetrics          Number of hMetric entries in 'hmtx' table
 
-        public HorizontalHeader()
-        {
-        }
-
         protected override void ReadContentFrom(BinaryReader input)
         {
             Version = input.ReadUInt32(); //major + minor

@@ -27,10 +27,6 @@ namespace FontParser.Tables.CFF.CFF
         public double[] FontBBox { get; set; }
 #if DEBUG
 
-        public Cff1Font()
-        {
-        }
-
 #endif
 
         internal IEnumerable<GlyphNameMap> GetGlyphNameIter()

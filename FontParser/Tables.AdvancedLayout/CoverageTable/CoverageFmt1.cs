@@ -16,7 +16,7 @@ namespace FontParser.Tables.AdvancedLayout.CoverageTable
 
             ushort glyphCount = reader.ReadUInt16();
             ushort[] glyphs = reader.ReadUInt16Array(glyphCount);
-            return new CoverageFmt1() { _orderedGlyphIdList = glyphs };
+            return new CoverageFmt1 { _orderedGlyphIdList = glyphs };
         }
 
         public override int FindPosition(ushort glyphIndex)

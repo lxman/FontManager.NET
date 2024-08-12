@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using FontParser.Tables.AdvancedLayout.ClassDefTable;
 using FontParser.Tables.AdvancedLayout.Ligatures;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -226,10 +227,10 @@ namespace FontParser.Tables.AdvancedLayout
 
                 case 2:
                     {
-                        ClassDefTable.ClassRangeRecord[] records = classDef.records;
+                        ClassRangeRecord[] records = classDef.records;
                         for (var n = 0; n < records.Length; ++n)
                         {
-                            ClassDefTable.ClassRangeRecord rec = records[n];
+                            ClassRangeRecord rec = records[n];
 
 #if DEBUG
 
@@ -300,11 +301,11 @@ namespace FontParser.Tables.AdvancedLayout
 
                 case 2:
                     {
-                        ClassDefTable.ClassRangeRecord[] records = markAttachmentClassDef.records;
+                        ClassRangeRecord[] records = markAttachmentClassDef.records;
                         int len = records.Length;
                         for (var n = 0; n < len; ++n)
                         {
-                            ClassDefTable.ClassRangeRecord rec = records[n];
+                            ClassRangeRecord rec = records[n];
                             for (int i = rec.startGlyphId; i <= rec.endGlyphId; ++i)
                             {
 #if DEBUG

@@ -9,6 +9,7 @@ using FontManager.NET.Models;
 using FontParser;
 using FontParser.TrueTypeInterpreter;
 using FontParser.Typeface;
+using Ookii.Dialogs.Wpf;
 using Xceed.Wpf.Toolkit;
 using FontFamily = System.Windows.Media.FontFamily;
 using Typeface = System.Windows.Media.Typeface;
@@ -101,7 +102,7 @@ namespace FontManager.NET
 
         private void BrowseButtonClick(object sender, RoutedEventArgs e)
         {
-            Ookii.Dialogs.Wpf.VistaOpenFileDialog dialog = new()
+            VistaOpenFileDialog dialog = new()
             {
                 CheckFileExists = false,
                 ValidateNames = false,

@@ -1,4 +1,6 @@
-﻿using Kaitai;
+﻿using System.Text;
+using Kaitai;
+using KaitaiTtf.Enums;
 
 namespace KaitaiTtf.Name
 {
@@ -9,7 +11,7 @@ namespace KaitaiTtf.Name
             return new NameRecord(new KaitaiStream(fileName));
         }
 
-        public NameRecord(KaitaiStream p__io, KaitaiName.Name p__parent = null, Ttf p__root = null) : base(p__io)
+        public NameRecord(KaitaiStream p__io, Name p__parent = null, Ttf p__root = null) : base(p__io)
         {
             m_parent = p__parent;
             m_root = p__root;
@@ -37,7 +39,7 @@ namespace KaitaiTtf.Name
                 KaitaiStream io = M_Parent.M_Io;
                 long _pos = io.Pos;
                 io.Seek((M_Parent.OfsStrings + OfsStr));
-                _asciiValue = System.Text.Encoding.GetEncoding("ascii").GetString(io.ReadBytes(LenStr));
+                _asciiValue = Encoding.GetEncoding("ascii").GetString(io.ReadBytes(LenStr));
                 io.Seek(_pos);
                 f_asciiValue = true;
                 return _asciiValue;
@@ -54,7 +56,7 @@ namespace KaitaiTtf.Name
                 KaitaiStream io = M_Parent.M_Io;
                 long _pos = io.Pos;
                 io.Seek((M_Parent.OfsStrings + OfsStr));
-                _unicodeValue = System.Text.Encoding.GetEncoding("utf-16be").GetString(io.ReadBytes(LenStr));
+                _unicodeValue = Encoding.GetEncoding("utf-16be").GetString(io.ReadBytes(LenStr));
                 io.Seek(_pos);
                 f_unicodeValue = true;
                 return _unicodeValue;
@@ -67,7 +69,7 @@ namespace KaitaiTtf.Name
         private ushort _lenStr;
         private ushort _ofsStr;
         private Ttf m_root;
-        private KaitaiName.Name m_parent;
+        private Name m_parent;
         public Platforms PlatformId => _platformId;
         public ushort EncodingId => _encodingId;
         public ushort LanguageId => _languageId;
@@ -75,6 +77,6 @@ namespace KaitaiTtf.Name
         public ushort LenStr => _lenStr;
         public ushort OfsStr => _ofsStr;
         public Ttf M_Root => m_root;
-        public KaitaiName.Name M_Parent => m_parent;
+        public Name M_Parent => m_parent;
     }
 }

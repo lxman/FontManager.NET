@@ -1,4 +1,5 @@
 ﻿using System;
+
 // ReSharper disable CheckNamespace
 
 #region Enums
@@ -23,8 +24,57 @@ public enum FontDirectionHint : short
 
 public enum IndexToLocFormat
 {
-    Short,
-    Long
+    Offset16,
+    Offset32
+}
+
+public enum InstructionSet
+{
+    TrueType,
+    Cff
+}
+
+public enum InstructionType
+{
+    ByteCode,
+    Function
+}
+
+public enum MacintoshEncodingId : ushort
+{
+    Roman = 0,
+    Japanese = 1,
+    ChineseTraditional = 2,
+    Korean = 3,
+    Arabic = 4,
+    Hebrew = 5,
+    Greek = 6,
+    Russian = 7,
+    RSymbol = 8,
+    Devanagari = 9,
+    Gurmukhi = 10,
+    Gujarati = 11,
+    Oriya = 12,
+    Bengali = 13,
+    Tamil = 14,
+    Telugu = 15,
+    Kannada = 16,
+    Malayalam = 17,
+    Sinhalese = 18,
+    Burmese = 19,
+    Khmer = 20,
+    Thai = 21,
+    Laotian = 22,
+    Georgian = 23,
+    Armenian = 24,
+    ChineseSimplified = 25,
+    Tibetan = 26,
+    Mongolian = 27,
+    Geez = 28,
+    Slavic = 29,
+    Vietnamese = 30,
+    Sindhi = 31,
+    Uninterpreted = 32
 }
 
 #endregion
@@ -72,7 +122,8 @@ public enum SimpleGlyphFlags : byte
     YShortVector = 1 << 2,
     Repeat = 1 << 3,
     XIsSameOrPositiveXShortVector = 1 << 4,
-    YIsSameOrPositiveYShortVector = 1 << 5
+    YIsSameOrPositiveYShortVector = 1 << 5,
+    OverlapSimple = 1 << 6
 }
 
 [Flags]

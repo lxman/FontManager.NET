@@ -13,7 +13,7 @@ namespace NewFontParser.Tables.Hmtx
         public LongHMetricRecord(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            AdvanceWidth = reader.ReadUshort();
+            AdvanceWidth = reader.ReadUShort();
             LeftSideBearing = reader.ReadShort();
         }
     }

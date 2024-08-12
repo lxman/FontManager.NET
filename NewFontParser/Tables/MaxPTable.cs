@@ -4,54 +4,58 @@ namespace NewFontParser.Tables
 {
     public class MaxPTable : IInfoTable
     {
-        public ushort Version { get; private set; }
+        public uint Version { get; }
 
-        public ushort NumGlyphs { get; private set; }
+        public ushort NumGlyphs { get; }
 
-        public ushort MaxPoints { get; private set; }
+        public ushort MaxPoints { get; }
 
-        public ushort MaxContours { get; private set; }
+        public ushort MaxContours { get; }
 
-        public ushort MaxCompositePoints { get; private set; }
+        public ushort MaxCompositePoints { get; }
 
-        public ushort MaxCompositeContours { get; private set; }
+        public ushort MaxCompositeContours { get; }
 
-        public ushort MaxZones { get; private set; }
+        public ushort MaxZones { get; }
 
-        public ushort MaxTwilightPoints { get; private set; }
+        public ushort MaxTwilightPoints { get; }
 
-        public ushort MaxStorage { get; private set; }
+        public ushort MaxStorage { get; }
 
-        public ushort MaxFunctionDefs { get; private set; }
+        public ushort MaxFunctionDefs { get; }
 
-        public ushort MaxInstructionDefs { get; private set; }
+        public ushort MaxInstructionDefs { get; }
 
-        public ushort MaxStackElements { get; private set; }
+        public ushort MaxStackElements { get; }
 
-        public ushort MaxSizeOfInstructions { get; private set; }
+        public ushort MaxSizeOfInstructions { get; }
 
-        public ushort MaxComponentElements { get; private set; }
+        public ushort MaxComponentElements { get; }
 
-        public ushort MaxComponentDepth { get; private set; }
+        public ushort MaxComponentDepth { get; }
 
         public MaxPTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            Version = reader.ReadUshort();
-            NumGlyphs = reader.ReadUshort();
-            MaxPoints = reader.ReadUshort();
-            MaxContours = reader.ReadUshort();
-            MaxCompositePoints = reader.ReadUshort();
-            MaxCompositeContours = reader.ReadUshort();
-            MaxZones = reader.ReadUshort();
-            MaxTwilightPoints = reader.ReadUshort();
-            MaxStorage = reader.ReadUshort();
-            MaxFunctionDefs = reader.ReadUshort();
-            MaxInstructionDefs = reader.ReadUshort();
-            MaxStackElements = reader.ReadUshort();
-            MaxSizeOfInstructions = reader.ReadUshort();
-            MaxComponentElements = reader.ReadUshort();
-            MaxComponentDepth = reader.ReadUshort();
+            Version = reader.ReadUint32();
+            NumGlyphs = reader.ReadUShort();
+            if (Version == 0x00005000)
+            {
+                return;
+            }
+            MaxPoints = reader.ReadUShort();
+            MaxContours = reader.ReadUShort();
+            MaxCompositePoints = reader.ReadUShort();
+            MaxCompositeContours = reader.ReadUShort();
+            MaxZones = reader.ReadUShort();
+            MaxTwilightPoints = reader.ReadUShort();
+            MaxStorage = reader.ReadUShort();
+            MaxFunctionDefs = reader.ReadUShort();
+            MaxInstructionDefs = reader.ReadUShort();
+            MaxStackElements = reader.ReadUShort();
+            MaxSizeOfInstructions = reader.ReadUShort();
+            MaxComponentElements = reader.ReadUShort();
+            MaxComponentDepth = reader.ReadUShort();
         }
     }
 }

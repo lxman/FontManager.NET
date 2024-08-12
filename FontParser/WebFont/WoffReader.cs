@@ -1,5 +1,6 @@
 ﻿//see https://www.w3.org/TR/2012/REC-WOFF-20121213/
 
+using System.Diagnostics;
 using System.IO;
 using FontParser.Tables;
 using FontParser.Typeface;
@@ -63,9 +64,6 @@ namespace FontParser.WebFont
         public long ExpectedStartAt { get; set; }
 #if DEBUG
 
-        public WoffTableDirectory()
-        { }
-
         public override string ToString()
         {
             return Name;
@@ -102,7 +100,7 @@ namespace FontParser.WebFont
             if (_header == null)
             {
 #if DEBUG
-                System.Diagnostics.Debug.WriteLine("can't read ");
+                Debug.WriteLine("can't read ");
 #endif
                 return null; //notify user too
             }
@@ -123,7 +121,7 @@ namespace FontParser.WebFont
                 else
                 {
 #if DEBUG
-                    System.Diagnostics.Debug.WriteLine("no Zlib DecompressHandler ");
+                    Debug.WriteLine("no Zlib DecompressHandler ");
 #endif
                     return null; //notify user too
                 }
@@ -163,7 +161,7 @@ namespace FontParser.WebFont
             if (_header == null)
             {
 #if DEBUG
-                System.Diagnostics.Debug.WriteLine("can't read ");
+                Debug.WriteLine("can't read ");
 #endif
                 return false;
             }
@@ -185,7 +183,7 @@ namespace FontParser.WebFont
                 else
                 {
 #if DEBUG
-                    System.Diagnostics.Debug.WriteLine("no Zlib DecompressHandler ");
+                    Debug.WriteLine("no Zlib DecompressHandler ");
 #endif
                     return false;
                 }
@@ -277,7 +275,7 @@ namespace FontParser.WebFont
             //Its size is calculated by multiplying the numTables value in the WOFF header times the size of a single WOFF table directory.
             //Each table directory entry specifies the size and location of a single font data table.
 
-            var tableCount = (uint)_header.numTables; //?
+            var tableCount = _header.numTables; //?
             //tableDirs = new WoffTableDirectory[tableCount];
             long expectedStartAt = 0;
 

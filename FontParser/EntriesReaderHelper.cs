@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using FontParser.Exceptions;
 using FontParser.Tables;
 
@@ -48,17 +49,14 @@ namespace FontParser
                     _tables.ReplaceTable(resultTable);
                     return resultTable;
                 }
-                else
-                {
 #if DEBUG
-                    System.Diagnostics.Debug.WriteLine("this table is already loaded");
-                    if (!(found is T entry))
-                    {
-                        throw new OpenFontNotSupportedException();
-                    }
-#endif
-                    return entry;
+                Debug.WriteLine("this table is already loaded");
+                if (!(found is T entry))
+                {
+                    throw new OpenFontNotSupportedException();
                 }
+#endif
+                return entry;
             }
             //not found
             return null;

@@ -46,7 +46,9 @@
 //#   (2) Unicode scalar value--four uppercase hexadecimal digits
 //#
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace FontParser.AdditionalInfo
@@ -55,7 +57,7 @@ namespace FontParser.AdditionalInfo
     {
         private static Dictionary<string, int> s_glyphNameToUnicodeScalarValueDic = new Dictionary<string, int>();
         private static Dictionary<int, string> s_unicodeScalarValueToGlyphNameDic = new Dictionary<int, string>();
-        private static bool s_init = false;
+        private static bool s_init;
 
         public static string GetGlyphNameByUnicodeValue(int unicodeValue)
         {
@@ -107,31 +109,31 @@ namespace FontParser.AdditionalInfo
                         switch (partCount)
                         {
                             case 0:
-                            default: throw new System.Exception("??");
+                            default: throw new Exception("??");
                             case 1:
                                 unicodeValue =
-                                    int.Parse(unicodeParts[0], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture);
+                                    int.Parse(unicodeParts[0], NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                                 break;
 
                             case 2:
                                 unicodeValue =
-                                    int.Parse(unicodeParts[0], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture) << 8 |
-                                    int.Parse(unicodeParts[1], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture);
+                                    int.Parse(unicodeParts[0], NumberStyles.HexNumber, CultureInfo.InvariantCulture) << 8 |
+                                    int.Parse(unicodeParts[1], NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                                 break;
 
                             case 3:
                                 unicodeValue =
-                                  int.Parse(unicodeParts[0], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture) << 16 |
-                                  int.Parse(unicodeParts[1], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture) << 8 |
-                                  int.Parse(unicodeParts[2], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture);
+                                  int.Parse(unicodeParts[0], NumberStyles.HexNumber, CultureInfo.InvariantCulture) << 16 |
+                                  int.Parse(unicodeParts[1], NumberStyles.HexNumber, CultureInfo.InvariantCulture) << 8 |
+                                  int.Parse(unicodeParts[2], NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                                 break;
 
                             case 4:
                                 unicodeValue =
-                                  int.Parse(unicodeParts[0], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture) << 24 |
-                                  int.Parse(unicodeParts[1], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture) << 16 |
-                                  int.Parse(unicodeParts[2], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture) << 8 |
-                                  int.Parse(unicodeParts[3], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture);
+                                  int.Parse(unicodeParts[0], NumberStyles.HexNumber, CultureInfo.InvariantCulture) << 24 |
+                                  int.Parse(unicodeParts[1], NumberStyles.HexNumber, CultureInfo.InvariantCulture) << 16 |
+                                  int.Parse(unicodeParts[2], NumberStyles.HexNumber, CultureInfo.InvariantCulture) << 8 |
+                                  int.Parse(unicodeParts[3], NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                                 break;
                         }
 
@@ -147,7 +149,7 @@ namespace FontParser.AdditionalInfo
                         if (!s_glyphNameToUnicodeScalarValueDic.TryAdd(glyphName, unicodeValue))
                         {
                             //TODO: review here
-                            throw new System.Exception("duplicate?");
+                            throw new Exception("duplicate?");
                         }
                     }
                     //---------------------------

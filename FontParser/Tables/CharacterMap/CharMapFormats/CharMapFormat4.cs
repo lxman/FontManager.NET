@@ -53,25 +53,22 @@ namespace FontParser.Tables.CharacterMap.CharMapFormats
                 //TODO: review 65536 => use bitflags
                 return (ushort)((codepoint + _idDelta[i]) % 65536);
             }
-            else
-            {
-                //If the idRangeOffset value for the segment is not 0,
-                //the mapping of character codes relies on glyphIdArray.
-                //The character code offset from startCode is added to the idRangeOffset value.
-                //This sum is used as an offset from the current location within idRangeOffset itself to index out the correct glyphIdArray value.
-                //This obscure indexing trick works because glyphIdArray immediately follows idRangeOffset in the font file.
-                //The C expression that yields the glyph index is:
+            //If the idRangeOffset value for the segment is not 0,
+            //the mapping of character codes relies on glyphIdArray.
+            //The character code offset from startCode is added to the idRangeOffset value.
+            //This sum is used as an offset from the current location within idRangeOffset itself to index out the correct glyphIdArray value.
+            //This obscure indexing trick works because glyphIdArray immediately follows idRangeOffset in the font file.
+            //The C expression that yields the glyph index is:
 
-                //*(idRangeOffset[i]/2
-                //+ (c - startCount[i])
-                //+ &idRangeOffset[i])
+            //*(idRangeOffset[i]/2
+            //+ (c - startCount[i])
+            //+ &idRangeOffset[i])
 
-                int offset = _idRangeOffset[i] / 2 + (codepoint - _startCode[i]);
-                // I want to thank Microsoft for this clever pointer trick
-                // TODO: What if the value fetched is inside the _idRangeOffset table?
-                // TODO: e.g. (offset - _idRangeOffset.Length + i < 0)
-                return _glyphIdArray[offset - _idRangeOffset.Length + i];
-            }
+            int offset = _idRangeOffset[i] / 2 + (codepoint - _startCode[i]);
+            // I want to thank Microsoft for this clever pointer trick
+            // TODO: What if the value fetched is inside the _idRangeOffset table?
+            // TODO: e.g. (offset - _idRangeOffset.Length + i < 0)
+            return _glyphIdArray[offset - _idRangeOffset.Length + i];
         }
 
         public override void CollectUnicodeChars(List<uint> unicodes)

@@ -23,12 +23,12 @@ namespace NewFontParser.Tables.Name
         public NameRecord(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            PlatformId = reader.ReadUshort();
-            EncodingId = reader.ReadUshort();
-            LanguageId = reader.ReadUshort();
-            NameId = reader.ReadUshort();
-            Length = reader.ReadUshort();
-            Offset = reader.ReadUshort();
+            PlatformId = reader.ReadUShort();
+            EncodingId = reader.ReadUShort();
+            LanguageId = reader.ReadUShort();
+            NameId = reader.ReadUShort();
+            Length = reader.ReadUShort();
+            Offset = reader.ReadUShort();
             //Name = name;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using FontParser.Tables;
 using FontParser.Tables.AdvancedLayout;
@@ -223,9 +224,6 @@ namespace FontParser.WebFont
                     //composite glyph, resolve later
                     compositeGlyphs.Add(i);
                 }
-                else
-                {
-                }
             }
 
             //--------------------------------------------------------------------------------------------
@@ -274,7 +272,7 @@ namespace FontParser.WebFont
 #if DEBUG
             if (reader.BaseStream.Position != expectedNPointStartAt)
             {
-                System.Diagnostics.Debug.WriteLine("ERR!!");
+                Debug.WriteLine("ERR!!");
             }
 #endif
             //
@@ -289,7 +287,7 @@ namespace FontParser.WebFont
 #if DEBUG
             if (reader.BaseStream.Position != expectedFlagStreamStartAt)
             {
-                System.Diagnostics.Debug.WriteLine("ERR!!");
+                Debug.WriteLine("ERR!!");
             }
 #endif
             //2) flagStream, flags value for each point
@@ -299,7 +297,7 @@ namespace FontParser.WebFont
 #if DEBUG
             if (reader.BaseStream.Position != expectedGlyphStreamStartAt)
             {
-                System.Diagnostics.Debug.WriteLine("ERR!!");
+                Debug.WriteLine("ERR!!");
             }
 #endif
 
@@ -415,7 +413,8 @@ namespace FontParser.WebFont
                         //if not=> err
                         throw new NotSupportedException();
                     }
-                    else if (tempGlyph.numContour > 0)
+
+                    if (tempGlyph.numContour > 0)
                     {
                         //simple glyph
                         //use simple calculation
@@ -432,9 +431,6 @@ namespace FontParser.WebFont
             {
             }
             else if (expectedInstructionStreamStartAt == reader.BaseStream.Position)
-            {
-            }
-            else
             {
             }
 #endif
@@ -829,9 +825,7 @@ namespace FontParser.WebFont
                     if (Glyf.HasFlag(flags, Glyf.CompositeGlyphFlags.UNSCALED_COMPONENT_OFFSET))
                     {
                     }
-                    else
-                    {
-                    }
+
                     if (Glyf.HasFlag(flags, Glyf.CompositeGlyphFlags.USE_MY_METRICS))
                     {
                     }
@@ -877,14 +871,11 @@ namespace FontParser.WebFont
                         }
                     }
                 }
-                else
-                {
-                    //two point numbers.
-                    //the first point number indicates the point that is to be matched to the new glyph.
-                    //The second number indicates the new glyph's “matched” point.
-                    //Once a glyph is added,its point numbers begin directly after the last glyphs (endpoint of first glyph + 1)
-                }
 
+                //two point numbers.
+                //the first point number indicates the point that is to be matched to the new glyph.
+                //The second number indicates the new glyph's “matched” point.
+                //Once a glyph is added,its point numbers begin directly after the last glyphs (endpoint of first glyph + 1)
                 //
                 if (finalGlyph == null)
                 {
@@ -1488,7 +1479,7 @@ namespace FontParser.WebFont
 
         private Woff2TableDirectory[] ReadTableDirectories(BinaryReader reader)
         {
-            var tableCount = (uint)_header.numTables; //?
+            var tableCount = _header.numTables; //?
             var tableDirs = new Woff2TableDirectory[tableCount];
 
             long expectedTableStartAt = 0;
@@ -1538,9 +1529,6 @@ namespace FontParser.WebFont
 
                 switch (table.PreprocessingTransformation)
                 {
-                    default:
-                        break;
-
                     case 0:
                         {
                             if (table.Name == Glyf._N)
@@ -1630,8 +1618,7 @@ namespace FontParser.WebFont
             return tableEntryCollection;
         }
 
-        private static readonly string[] s_knownTableTags = new string[]
-        {
+        private static readonly string[] s_knownTableTags = {
              //Known Table Tags
             //Flag  Tag         Flag  Tag       Flag  Tag        Flag    Tag
             //0	 => cmap,	    16 =>EBLC,	    32 =>CBDT,	     48 =>gvar,
@@ -1809,7 +1796,7 @@ namespace FontParser.WebFont
                 // If any of top 7 bits are set then << 7 would overflow
                 if ((accum & 0xFE000000) != 0) return false;
                 //
-                accum = (uint)(accum << 7) | (uint)(data_byte & 0x7F);
+                accum = accum << 7 | (uint)(data_byte & 0x7F);
                 // Spin until most significant bit of data byte is false
                 if ((data_byte & 0x80) == 0)
                 {
@@ -1907,18 +1894,18 @@ namespace FontParser.WebFont
 
                 return (ushort)value;
             }
-            else if (code == ONE_MORE_BYTE_CODE1)
+
+            if (code == ONE_MORE_BYTE_CODE1)
             {
                 return (ushort)(reader.ReadByte() + LOWEST_UCODE);
             }
-            else if (code == ONE_MORE_BYTE_CODE2)
+
+            if (code == ONE_MORE_BYTE_CODE2)
             {
                 return (ushort)(reader.ReadByte() + (LOWEST_UCODE * 2));
             }
-            else
-            {
-                return code;
-            }
+
+            return code;
         }
     }
 }
