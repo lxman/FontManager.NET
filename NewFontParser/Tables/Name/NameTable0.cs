@@ -31,10 +31,17 @@ namespace NewFontParser.Tables.Name
             foreach (NameRecord? nameRecord in NameRecords)
             {
                 reader.Seek(Convert.ToUInt32(StringStorageOffset + nameRecord.Offset));
-                switch (nameRecord.EncodingId)
-                {
-
-                }
+                //switch (nameRecord.EncodingId)
+                //{
+                //    case Platform0EncodingId.Unicode1:
+                //        break;
+                //    case Platform1EncodingId.Roman:
+                //        break;
+                //    case Platform2EncodingId.Ascii7Bit:
+                //        break;
+                //    default:
+                //        break;
+                //}
 
                 nameRecord.Name = Encoding.GetEncoding("UTF-16BE").GetString(reader.ReadBytes(nameRecord.Length));
             }
