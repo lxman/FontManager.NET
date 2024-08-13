@@ -1,21 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.TtTables.Glyf
 {
     public class SimpleGlyph : IGlyphSpec
     {
+        public List<SimpleGlyphCoordinate> Coordinates { get; } = new List<SimpleGlyphCoordinate>();
+
         public ushort[] EndPtsOfContours { get; }
 
         public ushort InstructionLength { get; }
 
         public byte[] Instructions { get; }
-
-        public SimpleGlyphFlags[] Flags { get; }
-
-        public short[] XCoordinates { get; }
-
-        public short[] YCoordinates { get; }
 
         public SimpleGlyph(BigEndianReader reader, GlyphHeader glyphHeader)
         {
@@ -29,11 +27,11 @@ namespace NewFontParser.Tables.TtTables.Glyf
             Instructions = reader.ReadBytes(InstructionLength);
 
             int numberOfPoints = EndPtsOfContours[glyphHeader.NumberOfContours - 1] + 1;
-            Flags = new SimpleGlyphFlags[numberOfPoints];
+            var flags = new SimpleGlyphFlags[numberOfPoints];
             for (var i = 0; i < numberOfPoints; i++)
             {
-                Flags[i] = (SimpleGlyphFlags)reader.ReadByte();
-                if (!Flags[i].HasFlag(SimpleGlyphFlags.Repeat)) continue;
+                flags[i] = (SimpleGlyphFlags)reader.ReadByte();
+                if (!flags[i].HasFlag(SimpleGlyphFlags.Repeat)) continue;
                 byte repeat = reader.ReadByte();
                 for (var j = 0; j < repeat; j++)
                 {
@@ -42,56 +40,61 @@ namespace NewFontParser.Tables.TtTables.Glyf
                     {
                         break;
                     }
-                    Flags[i] = Flags[i - 1];
+                    flags[i] = flags[i - 1];
                 }
             }
 
-            XCoordinates = new short[numberOfPoints];
+            var xCoordinates = new short[numberOfPoints];
             for (var i = 0; i < numberOfPoints; i++)
             {
-                if (Flags[i].HasFlag(SimpleGlyphFlags.XShortVector))
+                if (flags[i].HasFlag(SimpleGlyphFlags.XShortVector))
                 {
-                    if (Flags[i].HasFlag(SimpleGlyphFlags.XIsSameOrPositiveXShortVector))
+                    if (flags[i].HasFlag(SimpleGlyphFlags.XIsSameOrPositiveXShortVector))
                     {
-                        XCoordinates[i] = reader.ReadByte();
+                        xCoordinates[i] = Convert.ToInt16(reader.ReadByte() + (i > 0 ? xCoordinates[i - 1] : 0));
                     }
                     else
                     {
-                        XCoordinates[i] = Convert.ToInt16(-reader.ReadByte());
+                        xCoordinates[i] = Convert.ToInt16(-reader.ReadByte() + (i > 0 ? xCoordinates[i - 1] : 0));
                     }
                 }
-                else if (Flags[i].HasFlag(SimpleGlyphFlags.XIsSameOrPositiveXShortVector))
+                else if (flags[i].HasFlag(SimpleGlyphFlags.XIsSameOrPositiveXShortVector))
                 {
-                    XCoordinates[i] = XCoordinates[i - 1];
+                    xCoordinates[i] = Convert.ToInt16(i > 0 ? xCoordinates[i - 1] : 0);
                 }
                 else
                 {
-                    XCoordinates[i] = reader.ReadShort();
+                    xCoordinates[i] = Convert.ToInt16(reader.ReadShort() + (i > 0 ? xCoordinates[i - 1] : 0));
                 }
             }
 
-            YCoordinates = new short[numberOfPoints];
+            var yCoordinates = new short[numberOfPoints];
             for (var i = 0; i < numberOfPoints; i++)
             {
-                if (Flags[i].HasFlag(SimpleGlyphFlags.YShortVector))
+                if (flags[i].HasFlag(SimpleGlyphFlags.YShortVector))
                 {
-                    if (Flags[i].HasFlag(SimpleGlyphFlags.YIsSameOrPositiveYShortVector))
+                    if (flags[i].HasFlag(SimpleGlyphFlags.YIsSameOrPositiveYShortVector))
                     {
-                        YCoordinates[i] = reader.ReadByte();
+                        yCoordinates[i] = Convert.ToInt16(reader.ReadByte() + (i > 0 ? yCoordinates[i - 1] : 0));
                     }
                     else
                     {
-                        YCoordinates[i] = Convert.ToInt16(-reader.ReadByte());
+                        yCoordinates[i] = Convert.ToInt16(-reader.ReadByte() + (i > 0 ? yCoordinates[i - 1] : 0));
                     }
                 }
-                else if (Flags[i].HasFlag(SimpleGlyphFlags.YIsSameOrPositiveYShortVector))
+                else if (flags[i].HasFlag(SimpleGlyphFlags.YIsSameOrPositiveYShortVector))
                 {
-                    YCoordinates[i] = YCoordinates[i - 1];
+                    yCoordinates[i] = Convert.ToInt16(i > 0 ? xCoordinates[i - 1] : 0);
                 }
                 else
                 {
-                    YCoordinates[i] = reader.ReadShort();
+                    yCoordinates[i] = Convert.ToInt16(reader.ReadShort() + (i > 0 ? yCoordinates[i - 1] : 0));
                 }
+            }
+
+            for (var i = 0; i < numberOfPoints; i++)
+            {
+                Coordinates.Add(new SimpleGlyphCoordinate(new Point(xCoordinates[i], yCoordinates[i]), flags[i].HasFlag(SimpleGlyphFlags.OnCurve)));
             }
         }
     }

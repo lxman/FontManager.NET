@@ -8,7 +8,7 @@ namespace NewFontParser.Tables.Name
 
         ushort Count { get; }
 
-        ushort StringOffset { get; }
+        ushort StringStorageOffset { get; }
 
         List<NameRecord> NameRecords { get; }
     }

@@ -9,4 +9,11 @@
     <PackageReference Include="Serilog" Version="4.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Tables\Cff\Type2\" />
+    <Folder Include="Tables\Cff\Type1\" />
+    <Folder Include="Tables\Bitmap\" />
+    <Folder Include="Tables\Svg\" />
+  </ItemGroup>
+
 </Project>

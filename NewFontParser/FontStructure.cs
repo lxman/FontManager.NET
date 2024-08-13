@@ -6,6 +6,9 @@ using NewFontParser.Tables.Head;
 using NewFontParser.Tables.Hhea;
 using NewFontParser.Tables.Hmtx;
 using NewFontParser.Tables.Name;
+using NewFontParser.Tables.Optional;
+using NewFontParser.Tables.Optional.Dsig;
+using NewFontParser.Tables.Optional.Hdmx;
 using NewFontParser.Tables.TtTables;
 using NewFontParser.Tables.TtTables.Glyf;
 using Serilog;
@@ -36,6 +39,8 @@ namespace NewFontParser
 
         private HeadTable? _headTable;
 
+        private VheaTable? _vheaTable;
+
         private readonly string _path;
 
         public FontStructure(string path)
@@ -57,6 +62,13 @@ namespace NewFontParser
             ProcessFpgm();
             ProcessLoca();
             ProcessGlyf();
+            ProcessPrep();
+            ProcessGasp();
+            ProcessDsig();
+            ProcessHdmx();
+            ProcessLtsh();
+            ProcessVhea();
+            ProcessVmtx();
         }
 
         private void ProcessCmap()
@@ -184,6 +196,91 @@ namespace NewFontParser
             byte[] glyfData = TableRecords.Find(x => x.Tag == "glyf").Data;
             Tables.Add(new Table(glyfData, _maxPTable!.NumGlyphs, _locaTable!));
             Log.Debug("glyf success");
+        }
+
+        private void ProcessPrep()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "prep"))
+            {
+                return;
+            }
+            Log.Debug("Processing prep");
+            byte[] prepData = TableRecords.Find(x => x.Tag == "prep").Data;
+            Tables.Add(new PrepTable(prepData));
+            Log.Debug("prep success");
+        }
+
+        private void ProcessGasp()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "gasp"))
+            {
+                return;
+            }
+            Log.Debug("Processing gasp");
+            byte[] gaspData = TableRecords.Find(x => x.Tag == "gasp").Data;
+            Tables.Add(new GaspTable(gaspData));
+            Log.Debug("gasp success");
+        }
+
+        private void ProcessDsig()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "DSIG"))
+            {
+                return;
+            }
+            Log.Debug("Processing DSIG");
+            byte[] dsigData = TableRecords.Find(x => x.Tag == "DSIG").Data;
+            Tables.Add(new DsigTable(dsigData));
+            Log.Debug("DSIG success");
+        }
+
+        private void ProcessHdmx()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "hdmx"))
+            {
+                return;
+            }
+            Log.Debug("Processing hdmx");
+            byte[] hdmxData = TableRecords.Find(x => x.Tag == "hdmx").Data;
+            Tables.Add(new HdmxTable(hdmxData, _maxPTable!.NumGlyphs));
+            Log.Debug("hdmx success");
+        }
+
+        private void ProcessLtsh()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "LTSH"))
+            {
+                return;
+            }
+            Log.Debug("Processing LTSH");
+            byte[] ltshData = TableRecords.Find(x => x.Tag == "LTSH").Data;
+            Tables.Add(new LtshTable(ltshData, _maxPTable!.NumGlyphs));
+            Log.Debug("LTSH success");
+        }
+
+        private void ProcessVhea()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "vhea"))
+            {
+                return;
+            }
+            Log.Debug("Processing vhea");
+            byte[] vheaData = TableRecords.Find(x => x.Tag == "vhea").Data;
+            _vheaTable = new VheaTable(vheaData);
+            Tables.Add(_vheaTable);
+            Log.Debug("vhea success");
+        }
+
+        private void ProcessVmtx()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "vmtx"))
+            {
+                return;
+            }
+            Log.Debug("Processing vmtx");
+            byte[] vmtxData = TableRecords.Find(x => x.Tag == "vmtx").Data;
+            Tables.Add(new VmtxTable(vmtxData, _vheaTable!.NumberOfLongVerMetrics));
+            Log.Debug("vmtx success");
         }
     }
 }

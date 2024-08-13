@@ -22,12 +22,12 @@ namespace NewFontParser.Tables.Cmap.SubTables
             NonDefaultUvsOffset = reader.ReadUint32();
             if (DefaultUvsOffset > 0)
             {
-                reader.Seek(Convert.ToInt32(DefaultUvsOffset));
+                reader.Seek(Convert.ToUInt32(DefaultUvsOffset));
                 DefaultUvsTableHeader = new DefaultUvsTableHeader(reader);
             }
 
             if (NonDefaultUvsOffset <= 0) return;
-            reader.Seek(Convert.ToInt32(NonDefaultUvsOffset));
+            reader.Seek(Convert.ToUInt32(NonDefaultUvsOffset));
             NonDefaultUvsTableHeader = new NonDefaultUvsTableHeader(reader);
         }
     }

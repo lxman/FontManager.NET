@@ -1,4 +1,5 @@
-﻿using NewFontParser.Reader;
+﻿using System;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Name
 {
@@ -6,30 +7,48 @@ namespace NewFontParser.Tables.Name
     {
         public static long RecordSize => 12;
 
-        public ushort PlatformId { get; }
+        public PlatformId PlatformId { get; }
 
-        public ushort EncodingId { get; }
+        public Enum EncodingId { get; }
 
         public ushort LanguageId { get; }
 
-        public ushort NameId { get; }
+        public string NameId { get; }
 
         public ushort Length { get; }
 
         public ushort Offset { get; }
 
-        //public string Name { get; }
+        public string? Name { get; set; }
 
         public NameRecord(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            PlatformId = reader.ReadUShort();
-            EncodingId = reader.ReadUShort();
+            PlatformId = (PlatformId)reader.ReadUShort();
+            switch (PlatformId)
+            {
+                case PlatformId.Unicode:
+                    EncodingId = (Platform0EncodingId)reader.ReadUShort();
+                    break;
+                case PlatformId.Macintosh:
+                    EncodingId = (MacintoshEncodingId)reader.ReadUShort();
+                    break;
+                case PlatformId.Iso:
+                    EncodingId = (Platform2EncodingId)reader.ReadUShort();
+                    break;
+                case PlatformId.Windows:
+                    EncodingId = (Platform3EncodingId)reader.ReadUShort();
+                    break;
+                case PlatformId.Custom:
+                    _ = reader.ReadUShort();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             LanguageId = reader.ReadUShort();
-            NameId = reader.ReadUShort();
+            NameId = NameIdTranslator.Translate(reader.ReadUShort());
             Length = reader.ReadUShort();
             Offset = reader.ReadUShort();
-            //Name = name;
         }
     }
 }

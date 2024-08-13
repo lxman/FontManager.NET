@@ -31,7 +31,7 @@ namespace NewFontParser.Tables.Cmap
             EncodingRecords = EncodingRecords.OrderBy(x => x.Offset).ToList();
             foreach (EncodingRecord? encodingRecord in EncodingRecords)
             {
-                reader.Seek(Convert.ToInt32(encodingRecord.Offset));
+                reader.Seek(Convert.ToUInt32(encodingRecord.Offset));
                 data = reader.PeekBytes(2);
                 ushort format = BinaryPrimitives.ReadUInt16BigEndian(data);
                 switch (format)

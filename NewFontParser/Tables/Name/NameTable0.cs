@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Name
@@ -9,7 +11,7 @@ namespace NewFontParser.Tables.Name
 
         public ushort Count { get; }
 
-        public ushort StringOffset { get; }
+        public ushort StringStorageOffset { get; }
 
         public List<NameRecord> NameRecords { get; } = new List<NameRecord>();
 
@@ -19,11 +21,22 @@ namespace NewFontParser.Tables.Name
 
             Format = reader.ReadUShort();
             Count = reader.ReadUShort();
-            StringOffset = reader.ReadUShort();
+            StringStorageOffset = reader.ReadUShort();
 
             for (var i = 0; i < Count; i++)
             {
                 NameRecords.Add(new NameRecord(reader.ReadBytes(NameRecord.RecordSize)));
+            }
+
+            foreach (NameRecord? nameRecord in NameRecords)
+            {
+                reader.Seek(Convert.ToUInt32(StringStorageOffset + nameRecord.Offset));
+                switch (nameRecord.EncodingId)
+                {
+
+                }
+
+                nameRecord.Name = Encoding.GetEncoding("UTF-16BE").GetString(reader.ReadBytes(nameRecord.Length));
             }
         }
     }

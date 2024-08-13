@@ -14,7 +14,7 @@ namespace NewFontParser
         public FontStructure ReadFile(string file)
         {
             string? fileName = file.Split('\\', StringSplitOptions.RemoveEmptyEntries).Last();
-            Log.Debug($"Creating a FontStructure for {fileName}.");
+            Log.Debug($"Creating a FontStructure for {fileName}.********************************");
             var reader = new FileByteReader(file);
             var fontStructure = new FontStructure(file);
             byte[] data = reader.ReadBytes(4);

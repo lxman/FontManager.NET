@@ -12,10 +12,14 @@ namespace NewFontParser.Reader
             _data = data;
         }
 
-        public void Seek(int position)
+        public void Seek(uint position)
         {
             _position = position;
         }
+
+        public long BytesRemaining => _data.Length - _position;
+
+        public long WordsRemaining => (_data.Length / 2) - (_position / 2);
 
         public byte[] ReadBytes(long count)
         {

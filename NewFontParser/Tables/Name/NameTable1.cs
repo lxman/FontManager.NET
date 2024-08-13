@@ -9,7 +9,7 @@ namespace NewFontParser.Tables.Name
 
         public ushort Count { get; }
 
-        public ushort StringOffset { get; }
+        public ushort StringStorageOffset { get; }
 
         public List<NameRecord> NameRecords { get; } = new List<NameRecord>();
 
@@ -23,7 +23,7 @@ namespace NewFontParser.Tables.Name
 
             Format = reader.ReadUShort();
             Count = reader.ReadUShort();
-            StringOffset = reader.ReadUShort();
+            StringStorageOffset = reader.ReadUShort();
             LangTagCount = reader.ReadUShort();
 
             for (var i = 0; i < Count; i++)

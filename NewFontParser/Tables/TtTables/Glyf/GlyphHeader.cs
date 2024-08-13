@@ -25,5 +25,10 @@ namespace NewFontParser.Tables.TtTables.Glyf
             XMax = reader.ReadShort();
             YMax = reader.ReadShort();
         }
+
+        public override string ToString()
+        {
+            return $"Number of Contours: {NumberOfContours}, XMin: {XMin}, YMin: {YMin}, XMax: {XMax}, YMax: {YMax}";
+        }
     }
 }
