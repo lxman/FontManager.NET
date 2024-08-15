@@ -26,6 +26,13 @@ namespace NewFontParser.RenderFont.Interpreter
             return bytes;
         }
 
+        public byte[] PeekBytes(int count)
+        {
+            var bytes = new byte[count];
+            Array.Copy(_pgm, _position, bytes, 0, count);
+            return bytes;
+        }
+
         public short ReadWord()
         {
             var value = (short)(_pgm[_position] << 8 | _pgm[_position + 1]);
@@ -38,13 +45,6 @@ namespace NewFontParser.RenderFont.Interpreter
             var value = (ushort)(_pgm[_position] << 8 | _pgm[_position + 1]);
             _position += 2;
             return value;
-        }
-
-        public byte[] PeekBytes(int count)
-        {
-            var bytes = new byte[count];
-            Array.Copy(_pgm, _position, bytes, 0, count);
-            return bytes;
         }
 
         public void Seek(int position)

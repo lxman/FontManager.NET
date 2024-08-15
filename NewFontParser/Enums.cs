@@ -153,6 +153,52 @@ public enum Platform3EncodingId : ushort
     UnicodeUCS4 = 10
 }
 
+public enum UsWeightClass : ushort
+{
+    Thin = 100,
+    ExtraLight = 200,
+    Light = 300,
+    Normal = 400,
+    Medium = 500,
+    DemiBold = 600,
+    Bold = 700,
+    UltraBold = 800,
+    Black = 900
+}
+
+public enum UsWidthClass : ushort
+{
+    UltraCondensed = 1,
+    ExtraCondensed = 2,
+    Condensed = 3,
+    SemiCondensed = 4,
+    Medium = 5,
+    SemiExpanded = 6,
+    Expanded = 7,
+    ExtraExpanded = 8,
+    UltraExpanded = 9
+}
+
+public enum GlyphClass : byte
+{
+    Base = 1,
+    Ligature = 2,
+    Mark = 3,
+    Component = 4
+}
+
+public enum GposLookupType : ushort
+{
+    SingleAdjustment = 1,
+    PairAdjustment = 2,
+    CursiveAttachment = 3,
+    MarkToBaseAttachment = 4,
+    MarkToLigatureAttachment = 5,
+    MarkToMarkAttachment = 6,
+    ContextPositioning = 7,
+    ChainedContextPositioning = 8
+}
+
 #endregion
 
 #region Flags
@@ -229,6 +275,18 @@ public enum RangeGaspBehavior : ushort
 }
 
 [Flags]
+public enum FsType : ushort
+{
+    Unlimited = 0,
+    Reserved = 1 << 0,
+    Restricted = 1 << 1,
+    PreviewAndPrint = 1 << 4,
+    Editable = 1 << 5,
+    NoSubsetting = 1 << 6,
+    BitmapEmbedding = 1 << 7
+}
+
+[Flags]
 public enum MergeEntryFlags : byte
 {
     Merge = 1 << 0,
@@ -236,6 +294,19 @@ public enum MergeEntryFlags : byte
     OverlapCompound = 1 << 2,
     ScaledComponentOffset = 1 << 3,
     UnscaledComponentOffset = 1 << 4
+}
+
+[Flags]
+public enum ValueFormat : ushort
+{
+    XPlacement = 1 << 0,
+    YPlacement = 1 << 1,
+    XAdvance = 1 << 2,
+    YAdvance = 1 << 3,
+    XPlacementDevice = 1 << 4,
+    YPlacementDevice = 1 << 5,
+    XAdvanceDevice = 1 << 6,
+    YAdvanceDevice = 1 << 7
 }
 
 #endregion

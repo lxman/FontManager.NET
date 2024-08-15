@@ -13,6 +13,7 @@
     <Folder Include="Tables\Cff\Type2\" />
     <Folder Include="Tables\Cff\Type1\" />
     <Folder Include="Tables\Bitmap\" />
+    <Folder Include="Tables\Gsub\" />
     <Folder Include="Tables\Svg\" />
   </ItemGroup>
 

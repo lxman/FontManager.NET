@@ -9,11 +9,11 @@ namespace NewFontParser.Tables
 
         public short XAvgCharWidth { get; }
 
-        public ushort UsWeightClass { get; }
+        public UsWeightClass UsWeightClass { get; }
 
-        public ushort UsWidthClass { get; }
+        public UsWidthClass UsWidthClass { get; }
 
-        public ushort FsType { get; }
+        public FsType FsType { get; }
 
         public short YSubscriptXSize { get; }
 
@@ -37,7 +37,7 @@ namespace NewFontParser.Tables
 
         public short SFamilyClass { get; }
 
-        public byte[] Panose { get; }
+        public PanoseValues Panose { get; }
 
         public uint UlUnicodeRange1 { get; }
 
@@ -88,9 +88,9 @@ namespace NewFontParser.Tables
             var reader = new BigEndianReader(data);
             Version = reader.ReadUShort();
             XAvgCharWidth = reader.ReadShort();
-            UsWeightClass = reader.ReadUShort();
-            UsWidthClass = reader.ReadUShort();
-            FsType = reader.ReadUShort();
+            UsWeightClass = (UsWeightClass)reader.ReadUShort();
+            UsWidthClass = (UsWidthClass)reader.ReadUShort();
+            FsType = (FsType)reader.ReadUShort();
             YSubscriptXSize = reader.ReadShort();
             YSubscriptYSize = reader.ReadShort();
             YSubscriptXOffset = reader.ReadShort();
@@ -102,7 +102,7 @@ namespace NewFontParser.Tables
             YStrikeoutSize = reader.ReadShort();
             YStrikeoutPosition = reader.ReadShort();
             SFamilyClass = reader.ReadShort();
-            Panose = data[32..42];
+            Panose = new PanoseValues(reader.ReadBytes(10));
             UlUnicodeRange1 = reader.ReadUint32();
             UlUnicodeRange2 = reader.ReadUint32();
             UlUnicodeRange3 = reader.ReadUint32();

@@ -43,26 +43,22 @@ namespace NewFontParser.Reader
 
         public ushort ReadUShort()
         {
-            byte[] data = ReadBytes(2);
-            return (ushort)((data[0] << 8) | data[1]);
+            return ReadUShort16();
         }
 
         public uint ReadUint16()
         {
-            byte[] data = ReadBytes(2);
-            return (uint)((data[0] << 8) | data[1]);
+            return (uint)ReadUShort16();
         }
 
         public short ReadShort()
         {
-            byte[] data = ReadBytes(2);
-            return (short)((data[0] << 8) | data[1]);
+            return (short)ReadUShort16();
         }
 
         public int ReadInt16()
         {
-            byte[] data = ReadBytes(2);
-            return (short)((data[0] << 8) | data[1]);
+            return ReadShort();
         }
 
         public uint ReadUint24()
@@ -93,6 +89,12 @@ namespace NewFontParser.Reader
         {
             byte[] data = ReadBytes(8);
             return (data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3]) * 0x100000000L + (data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7]);
+        }
+
+        private ushort ReadUShort16()
+        {
+            byte[] data = ReadBytes(2);
+            return (ushort)((data[0] << 8) | data[1]);
         }
     }
 }
