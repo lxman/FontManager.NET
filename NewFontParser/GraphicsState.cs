@@ -19,9 +19,9 @@ namespace NewFontParser
 
         public PointF FreedomVector { get; set; }
 
-        public BitArray ZonePointers { get; set; } = new BitArray(3, false);
+        public BitArray ZonePointers { get; set; } = new BitArray(3, true);
 
-        public bool InstructControl { get; set; }
+        public int InstructControl { get; set; }
 
         public int Loop { get; set; } = 1;
 
@@ -31,7 +31,7 @@ namespace NewFontParser
 
         public int RoundState { get; set; }
 
-        public bool ScanControl { get; set; }
+        public int ScanControl { get; set; }
 
         public uint SingleWidthCutIn { get; set; }
 

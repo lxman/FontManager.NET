@@ -199,6 +199,16 @@ public enum GposLookupType : ushort
     ChainedContextPositioning = 8
 }
 
+public enum RoundState : byte
+{
+    HalfGrid = 0,
+    Grid = 1,
+    DoubleGrid = 2,
+    DownToGrid = 3,
+    UpToGrid = 4,
+    Off = 5
+}
+
 #endregion
 
 #region Flags

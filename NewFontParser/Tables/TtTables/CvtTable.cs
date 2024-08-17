@@ -33,5 +33,14 @@ namespace NewFontParser.Tables.TtTables
 
             return cvtValues;
         }
+
+        public void WriteCvtValue(int location, float value)
+        {
+            if (location < 0 || location >= FWordCount)
+            {
+                return;
+            }
+            _data[location] = (ushort)value.FromF26Dot6();
+        }
     }
 }
