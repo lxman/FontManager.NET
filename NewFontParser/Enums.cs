@@ -209,6 +209,14 @@ public enum RoundState : byte
     Off = 5
 }
 
+public enum GlyphClassType : byte
+{
+    Base = 1,
+    Ligature = 2,
+    Mark = 3,
+    Component = 4
+}
+
 #endregion
 
 #region Flags

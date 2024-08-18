@@ -4,6 +4,8 @@ namespace NewFontParser.Tables.Gdef
 {
     public class GdefHeader : IInfoTable
     {
+        public int Length { get; }
+
         public ushort MajorVersion { get; }
 
         public ushort MinorVersion { get; }
@@ -29,14 +31,16 @@ namespace NewFontParser.Tables.Gdef
             AttachListOffset = reader.ReadUShort();
             LigCaretListOffset = reader.ReadUShort();
             MarkAttachClassDefOffset = reader.ReadUShort();
-            if (MinorVersion > 1)
+            Length = 12;
+            if (MinorVersion >= 1)
             {
                 MarkGlyphSetsDefOffset = reader.ReadUShort();
+                Length += 2;
             }
-            if (MinorVersion > 2)
-            {
-                ItemVarStoreOffset = reader.ReadUShort();
-            }
+
+            if (MinorVersion < 2) return;
+            ItemVarStoreOffset = reader.ReadUShort();
+            Length += 2;
         }
     }
 }

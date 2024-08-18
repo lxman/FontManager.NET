@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NewFontParser.Models;
 using NewFontParser.Tables;
 using NewFontParser.Tables.Cmap;
+using NewFontParser.Tables.Gdef;
 using NewFontParser.Tables.Head;
 using NewFontParser.Tables.Hhea;
 using NewFontParser.Tables.Hmtx;
@@ -11,6 +14,7 @@ using NewFontParser.Tables.Optional.Dsig;
 using NewFontParser.Tables.Optional.Hdmx;
 using NewFontParser.Tables.TtTables;
 using NewFontParser.Tables.TtTables.Glyf;
+using NewFontParser.Tables.Vdmx;
 using Serilog;
 
 namespace NewFontParser
@@ -31,6 +35,8 @@ namespace NewFontParser
 
         public List<IInfoTable> Tables { get; set; } = new List<IInfoTable>();
 
+        private readonly List<string> _tables = new List<string>();
+
         private HheaTable? _hheaTable;
 
         private MaxPTable? _maxPTable;
@@ -46,6 +52,11 @@ namespace NewFontParser
         public FontStructure(string path)
         {
             _path = path;
+        }
+
+        public void CollectTableNames()
+        {
+            _tables.AddRange(TableRecords.Select(r => r.Tag));
         }
 
         internal void Process()
@@ -69,6 +80,12 @@ namespace NewFontParser
             ProcessLtsh();
             ProcessVhea();
             ProcessVmtx();
+            ProcessGdef();
+            ProcessVdmx();
+            if (!_tables.Any()) return;
+            Console.WriteLine($"Remaining {_path.Split('\\').Last()} tables to parse:");
+            _tables.ForEach(t => Console.WriteLine($"\t{t}"));
+            Console.WriteLine();
         }
 
         private void ProcessCmap()
@@ -76,6 +93,7 @@ namespace NewFontParser
             Log.Debug("Processing cmap");
             byte[] cmapData = TableRecords.Find(x => x.Tag == "cmap").Data;
             Tables.Add(new CmapTable(cmapData));
+            _tables.Remove("cmap");
             Log.Debug("cmap success");
         }
 
@@ -85,6 +103,7 @@ namespace NewFontParser
             byte[] headData = TableRecords.Find(x => x.Tag == "head").Data;
             _headTable = new HeadTable(headData);
             Tables.Add(_headTable);
+            _tables.Remove("head");
             Log.Debug("head success");
         }
 
@@ -94,6 +113,7 @@ namespace NewFontParser
             byte[] hheaData = TableRecords.Find(x => x.Tag == "hhea").Data;
             _hheaTable = new HheaTable(hheaData);
             Tables.Add(_hheaTable);
+            _tables.Remove("hhea");
             Log.Debug("hhea success");
         }
 
@@ -103,6 +123,7 @@ namespace NewFontParser
             byte[] maxpData = TableRecords.Find(x => x.Tag == "maxp").Data;
             _maxPTable = new MaxPTable(maxpData);
             Tables.Add(_maxPTable);
+            _tables.Remove("maxp");
             Log.Debug("maxp success");
         }
 
@@ -111,6 +132,7 @@ namespace NewFontParser
             Log.Debug("Processing hmtx");
             byte[] hmtxData = TableRecords.Find(x => x.Tag == "hmtx").Data;
             Tables.Add(new HmtxTable(hmtxData, _hheaTable!.NumberOfHMetrics, _maxPTable!.NumGlyphs));
+            _tables.Remove("hmtx");
             Log.Debug("hmtx success");
         }
 
@@ -130,6 +152,7 @@ namespace NewFontParser
                     Log.Debug("Added name table 1");
                     break;
             }
+            _tables.Remove("name");
             Log.Debug("name success");
         }
 
@@ -138,6 +161,7 @@ namespace NewFontParser
             Log.Debug("Processing OS/2");
             byte[] os2Data = TableRecords.Find(x => x.Tag == "OS/2").Data;
             Tables.Add(new Os2Table(os2Data));
+            _tables.Remove("OS/2");
             Log.Debug("OS/2 success");
         }
 
@@ -146,6 +170,7 @@ namespace NewFontParser
             Log.Debug("Processing post");
             byte[] postData = TableRecords.Find(x => x.Tag == "post").Data;
             Tables.Add(new PostTable(postData));
+            _tables.Remove("post");
             Log.Debug("post success");
         }
 
@@ -158,6 +183,7 @@ namespace NewFontParser
             Log.Debug("Processing cvt");
             byte[] cvtData = TableRecords.Find(x => x.Tag == "cvt ").Data;
             Tables.Add(new CvtTable(cvtData));
+            _tables.Remove("cvt ");
             Log.Debug("cvt success");
         }
 
@@ -170,6 +196,7 @@ namespace NewFontParser
             Log.Debug("Processing fpgm");
             byte[] fpgmData = TableRecords.Find(x => x.Tag == "fpgm").Data;
             Tables.Add(new FpgmTable(fpgmData));
+            _tables.Remove("fpgm");
             Log.Debug("fpgm success");
         }
 
@@ -183,6 +210,7 @@ namespace NewFontParser
             byte[] locaData = TableRecords.Find(x => x.Tag == "loca").Data;
             _locaTable = new LocaTable(locaData, _maxPTable!.NumGlyphs, _headTable!.IndexToLocFormat == IndexToLocFormat.Offset16);
             Tables.Add(_locaTable);
+            _tables.Remove("loca");
             Log.Debug("loca success");
         }
 
@@ -195,6 +223,7 @@ namespace NewFontParser
             Log.Debug("Processing glyf");
             byte[] glyfData = TableRecords.Find(x => x.Tag == "glyf").Data;
             Tables.Add(new Table(glyfData, _maxPTable!.NumGlyphs, _locaTable!));
+            _tables.Remove("glyf");
             Log.Debug("glyf success");
         }
 
@@ -207,6 +236,7 @@ namespace NewFontParser
             Log.Debug("Processing prep");
             byte[] prepData = TableRecords.Find(x => x.Tag == "prep").Data;
             Tables.Add(new PrepTable(prepData));
+            _tables.Remove("prep");
             Log.Debug("prep success");
         }
 
@@ -219,6 +249,7 @@ namespace NewFontParser
             Log.Debug("Processing gasp");
             byte[] gaspData = TableRecords.Find(x => x.Tag == "gasp").Data;
             Tables.Add(new GaspTable(gaspData));
+            _tables.Remove("gasp");
             Log.Debug("gasp success");
         }
 
@@ -231,6 +262,7 @@ namespace NewFontParser
             Log.Debug("Processing DSIG");
             byte[] dsigData = TableRecords.Find(x => x.Tag == "DSIG").Data;
             Tables.Add(new DsigTable(dsigData));
+            _tables.Remove("DSIG");
             Log.Debug("DSIG success");
         }
 
@@ -243,6 +275,7 @@ namespace NewFontParser
             Log.Debug("Processing hdmx");
             byte[] hdmxData = TableRecords.Find(x => x.Tag == "hdmx").Data;
             Tables.Add(new HdmxTable(hdmxData, _maxPTable!.NumGlyphs));
+            _tables.Remove("hdmx");
             Log.Debug("hdmx success");
         }
 
@@ -255,6 +288,7 @@ namespace NewFontParser
             Log.Debug("Processing LTSH");
             byte[] ltshData = TableRecords.Find(x => x.Tag == "LTSH").Data;
             Tables.Add(new LtshTable(ltshData, _maxPTable!.NumGlyphs));
+            _tables.Remove("LTSH");
             Log.Debug("LTSH success");
         }
 
@@ -268,6 +302,7 @@ namespace NewFontParser
             byte[] vheaData = TableRecords.Find(x => x.Tag == "vhea").Data;
             _vheaTable = new VheaTable(vheaData);
             Tables.Add(_vheaTable);
+            _tables.Remove("vhea");
             Log.Debug("vhea success");
         }
 
@@ -280,7 +315,34 @@ namespace NewFontParser
             Log.Debug("Processing vmtx");
             byte[] vmtxData = TableRecords.Find(x => x.Tag == "vmtx").Data;
             Tables.Add(new VmtxTable(vmtxData, _vheaTable!.NumberOfLongVerMetrics));
+            _tables.Remove("vmtx");
             Log.Debug("vmtx success");
+        }
+
+        private void ProcessGdef()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "GDEF"))
+            {
+                return;
+            }
+            Log.Debug("Processing GDEF");
+            byte[] gdefData = TableRecords.Find(x => x.Tag == "GDEF").Data;
+            Tables.Add(new GdefTable(gdefData));
+            _tables.Remove("GDEF");
+            Log.Debug("GDEF success");
+        }
+
+        private void ProcessVdmx()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "VDMX"))
+            {
+                return;
+            }
+            Log.Debug("Processing VDMX");
+            byte[] vdmxData = TableRecords.Find(x => x.Tag == "VDMX").Data;
+            Tables.Add(new VdmxTable(vdmxData));
+            _tables.Remove("VDMX");
+            Log.Debug("VDMX success");
         }
     }
 }

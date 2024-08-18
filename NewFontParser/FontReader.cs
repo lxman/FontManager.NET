@@ -45,6 +45,7 @@ namespace NewFontParser
                 fontStructure.TableRecords.Add(ReadTableRecord(reader));
             }
             fontStructure.TableRecords = fontStructure.TableRecords.OrderBy(x => x.Offset).ToList();
+            fontStructure.CollectTableNames();
             fontStructure.TableRecords.ForEach(x =>
             {
                 reader.Seek(x.Offset);
