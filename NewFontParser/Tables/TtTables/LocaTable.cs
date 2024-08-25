@@ -19,7 +19,7 @@ namespace NewFontParser.Tables.TtTables
                 }
                 else
                 {
-                    Offsets[i] = reader.ReadUint32();
+                    Offsets[i] = reader.ReadUInt32();
                 }
             }
         }

@@ -10,10 +10,8 @@ namespace NewFontParser.Tables.CoverageFormat
 
         public RangeRecord[] RangeRecords { get; }
 
-        public Format2(byte[] data)
+        public Format2(BigEndianReader reader)
         {
-            var reader = new BigEndianReader(data);
-
             _ = reader.ReadUShort(); // Skip format
             RangeCount = reader.ReadUShort();
             RangeRecords = new RangeRecord[RangeCount];

@@ -4,41 +4,42 @@ namespace NewFontParser.Reader
 {
     public class BigEndianReader
     {
+        public long BytesRemaining => _data.Length - Position;
+
+        public long WordsRemaining => (_data.Length / 2) - (Position / 2);
+
+        public long Position { get; private set; }
+
         private readonly byte[] _data;
-        private long _position;
 
         public BigEndianReader(byte[] data)
         {
             _data = data;
         }
 
-        public void Seek(uint position)
+        public void Seek(long position)
         {
-            _position = position;
+            Position = position;
         }
-
-        public long BytesRemaining => _data.Length - _position;
-
-        public long WordsRemaining => (_data.Length / 2) - (_position / 2);
 
         public byte[] ReadBytes(long count)
         {
             var result = new byte[count];
-            Array.Copy(_data, _position, result, 0, count);
-            _position += count;
+            Array.Copy(_data, Position, result, 0, count);
+            Position += count;
             return result;
         }
 
         public byte[] PeekBytes(int count)
         {
             var result = new byte[count];
-            Array.Copy(_data, _position, result, 0, count);
+            Array.Copy(_data, Position, result, 0, count);
             return result;
         }
 
         public byte ReadByte()
         {
-            return _data[_position++];
+            return _data[Position++];
         }
 
         public ushort ReadUShort()
@@ -67,7 +68,7 @@ namespace NewFontParser.Reader
             return (uint)((data[0] << 16) | (data[1] << 8) | data[2]);
         }
 
-        public uint ReadUint32()
+        public uint ReadUInt32()
         {
             byte[] data = ReadBytes(4);
             return (uint)((data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3]);
@@ -85,6 +86,12 @@ namespace NewFontParser.Reader
             return (data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3]) / 65536.0f;
         }
 
+        public float ReadF2Dot14()
+        {
+            byte[] data = ReadBytes(2);
+            return (data[0] << 8 | data[1]) / 16384.0f;
+        }
+
         public long ReadLongDateTime()
         {
             byte[] data = ReadBytes(8);
@@ -95,6 +102,26 @@ namespace NewFontParser.Reader
         {
             byte[] data = ReadBytes(2);
             return (ushort)((data[0] << 8) | data[1]);
+        }
+
+        public ushort[] ReadUShortArray(int count)
+        {
+            var result = new ushort[count];
+            for (var i = 0; i < count; i++)
+            {
+                result[i] = ReadUShort();
+            }
+            return result;
+        }
+
+        public uint[] ReadUint32Array(int count)
+        {
+            var result = new uint[count];
+            for (var i = 0; i < count; i++)
+            {
+                result[i] = ReadUInt32();
+            }
+            return result;
         }
     }
 }

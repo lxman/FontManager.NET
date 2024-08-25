@@ -11,7 +11,7 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public NonDefaultUvsTableHeader(BigEndianReader reader)
         {
-            NumUvsMappings = reader.ReadUint32();
+            NumUvsMappings = reader.ReadUInt32();
             for (var i = 0; i < NumUvsMappings; i++)
             {
                 UvsMappings.Add(new UvsMappingRecord(reader.ReadBytes(SequentialMapGroup.RecordSize)));

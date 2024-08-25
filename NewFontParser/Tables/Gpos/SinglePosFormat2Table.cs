@@ -1,5 +1,6 @@
 ﻿using NewFontParser.Extensions;
 using NewFontParser.Reader;
+using NewFontParser.Tables.Common;
 
 namespace NewFontParser.Tables.Gpos
 {

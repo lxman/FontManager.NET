@@ -19,7 +19,7 @@ namespace NewFontParser.Tables.Cmap.SubTables
         {
             Format = reader.ReadUint16();
             _ = reader.ReadUint16();
-            Length = reader.ReadUint32();
+            Length = reader.ReadUInt32();
             Language = reader.ReadInt32();
             NumGroups = reader.ReadInt32();
             for (var i = 0; i < NumGroups; i++)

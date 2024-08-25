@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using NewFontParser.Reader;
 
@@ -30,7 +29,7 @@ namespace NewFontParser.Tables.Name
 
             foreach (NameRecord? nameRecord in NameRecords)
             {
-                reader.Seek(Convert.ToUInt32(StringStorageOffset + nameRecord.Offset));
+                reader.Seek(StringStorageOffset + nameRecord.Offset);
                 //switch (nameRecord.EncodingId)
                 //{
                 //    case Platform0EncodingId.Unicode1:

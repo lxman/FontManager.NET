@@ -25,7 +25,7 @@ namespace NewFontParser.Tables.Gpos
             LookupListOffset = reader.ReadUShort();
             if (MinorVersion == 1)
             {
-                FeatureVariationsOffset = reader.ReadUint32();
+                FeatureVariationsOffset = reader.ReadUInt32();
             }
         }
     }

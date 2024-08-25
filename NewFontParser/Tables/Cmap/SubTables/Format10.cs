@@ -21,10 +21,10 @@ namespace NewFontParser.Tables.Cmap.SubTables
         {
             Format = reader.ReadUint16();
             _ = reader.ReadUint16();
-            Length = reader.ReadUint32();
+            Length = reader.ReadUInt32();
             Language = reader.ReadInt32();
-            StartChar = reader.ReadUint32();
-            NumChars = reader.ReadUint32();
+            StartChar = reader.ReadUInt32();
+            NumChars = reader.ReadUInt32();
             for (var i = 0; i < NumChars; i++)
             {
                 GlyphIndexArray.Add(reader.ReadUint16());

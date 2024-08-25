@@ -44,8 +44,8 @@ namespace NewFontParser.Tables
             MinMemType42 = $"{data[10]}.{data[11]}";
             MaxMemType42 = $"{data[12]}.{data[13]}";
             reader.Seek(16);
-            MinMemType1 = reader.ReadUint32();
-            MaxMemType1 = reader.ReadUint32();
+            MinMemType1 = reader.ReadUInt32();
+            MaxMemType1 = reader.ReadUInt32();
             if (Version1 != 2 || Version2 != 0) return;
             NumGlyphs = reader.ReadUShort();
             for (var i = 0; i < NumGlyphs; i++)

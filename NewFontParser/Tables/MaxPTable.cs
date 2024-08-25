@@ -37,7 +37,7 @@ namespace NewFontParser.Tables
         public MaxPTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            Version = reader.ReadUint32();
+            Version = reader.ReadUInt32();
             NumGlyphs = reader.ReadUShort();
             if (Version == 0x00005000)
             {

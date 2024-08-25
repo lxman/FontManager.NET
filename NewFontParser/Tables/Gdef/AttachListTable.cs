@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Buffers.Binary;
 using System.Collections.Generic;
 using NewFontParser.Reader;
 using NewFontParser.Tables.CoverageFormat;
@@ -14,17 +13,16 @@ namespace NewFontParser.Tables.Gdef
 
         public List<ushort> AttachPointOffsets { get; } = new List<ushort>();
 
-        public AttachListTable(byte[] data)
+        public AttachListTable(BigEndianReader reader)
         {
-            var reader = new BigEndianReader(data);
-
+            long position = reader.Position;
             ushort coverageOffset = reader.ReadUShort();
-            byte[] coverageData = data[coverageOffset..];
-            ushort coverageVersion = BinaryPrimitives.ReadUInt16BigEndian(coverageData);
+            reader.Seek(position + coverageOffset);
+            byte coverageVersion = reader.PeekBytes(2)[1];
             CoverageTable = coverageVersion switch
             {
-                1 => new Format1(coverageData),
-                2 => new Format2(coverageData),
+                1 => new Format1(reader),
+                2 => new Format2(reader),
                 _ => throw new NotSupportedException($"Unsupported coverage format: {coverageVersion}")
             };
             GlyphCount = reader.ReadUShort();

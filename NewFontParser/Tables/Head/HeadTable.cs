@@ -51,8 +51,8 @@ namespace NewFontParser.Tables.Head
             MajorVersion = reader.ReadUShort();
             MinorVersion = reader.ReadUShort();
             FontRevision = reader.ReadFixed();
-            CheckSumAdjustment = reader.ReadUint32();
-            MagicNumber = reader.ReadUint32();
+            CheckSumAdjustment = reader.ReadUInt32();
+            MagicNumber = reader.ReadUInt32();
             Flags = (HeadFlags)reader.ReadUShort();
             UnitsPerEm = reader.ReadUShort();
             Created = reader.ReadLongDateTime().ToDateTime();

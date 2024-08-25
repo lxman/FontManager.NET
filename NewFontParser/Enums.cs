@@ -199,6 +199,17 @@ public enum GposLookupType : ushort
     ChainedContextPositioning = 8
 }
 
+public enum GsubLookupType : ushort
+{
+    SingleSubstitution = 1,
+    MultipleSubstitution = 2,
+    AlternateSubstitution = 3,
+    LigatureSubstitution = 4,
+    ContextSubstitution = 5,
+    ChainedContextSubstitution = 6,
+    ExtensionSubstitution = 7
+}
+
 public enum RoundState : byte
 {
     HalfGrid = 0,
@@ -215,6 +226,15 @@ public enum GlyphClassType : byte
     Ligature = 2,
     Mark = 3,
     Component = 4
+}
+
+public enum DeltaFormat : ushort
+{
+    Local2BitDeltas = 1,
+    Local4BitDeltas = 2,
+    Local8BitDeltas = 3,
+    VariationIndex = 0x8000,
+    Reserved = 0x7FFC
 }
 
 #endregion
@@ -325,6 +345,19 @@ public enum ValueFormat : ushort
     YPlacementDevice = 1 << 5,
     XAdvanceDevice = 1 << 6,
     YAdvanceDevice = 1 << 7
+}
+
+[Flags]
+public enum LookupFlag : ushort
+{
+    RightToLeft = 1 << 0,
+    IgnoreBaseGlyphs = 1 << 1,
+    IgnoreLigatures = 1 << 2,
+    IgnoreMarks = 1 << 3,
+    UseMarkFilteringSet = 1 << 4,
+    Reserved = 1 << 5,
+    MarkAttachmentType = 1 << 6,
+    UseMarkFilteringSetAndMarkAttachmentType = 1 << 7
 }
 
 #endregion

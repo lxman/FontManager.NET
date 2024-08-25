@@ -10,10 +10,8 @@ namespace NewFontParser.Tables.CoverageFormat
 
         public ushort[] GlyphArray { get; }
 
-        public Format1(byte[] data)
+        public Format1(BigEndianReader reader)
         {
-            var reader = new BigEndianReader(data);
-
             _ = reader.ReadUShort(); // Skip format
             GlyphCount = reader.ReadUShort();
             GlyphArray = new ushort[GlyphCount];

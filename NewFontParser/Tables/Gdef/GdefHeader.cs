@@ -22,9 +22,8 @@ namespace NewFontParser.Tables.Gdef
 
         public ushort? ItemVarStoreOffset { get; }
 
-        public GdefHeader(byte[] data)
+        public GdefHeader(BigEndianReader reader)
         {
-            var reader = new BigEndianReader(data);
             MajorVersion = reader.ReadUShort();
             MinorVersion = reader.ReadUShort();
             GlyphClassDefOffset = reader.ReadUShort();
@@ -38,9 +37,11 @@ namespace NewFontParser.Tables.Gdef
                 Length += 2;
             }
 
-            if (MinorVersion < 2) return;
-            ItemVarStoreOffset = reader.ReadUShort();
-            Length += 2;
+            if (MinorVersion >= 2)
+            {
+                ItemVarStoreOffset = reader.ReadUShort();
+                Length += 2;
+            }
         }
     }
 }

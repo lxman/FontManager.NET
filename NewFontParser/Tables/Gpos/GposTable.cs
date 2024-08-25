@@ -1,4 +1,5 @@
 ﻿using NewFontParser.Reader;
+using NewFontParser.Tables.Common;
 
 namespace NewFontParser.Tables.Gpos
 {
@@ -6,11 +7,26 @@ namespace NewFontParser.Tables.Gpos
     {
         public GposHeader Header { get; }
 
+        public GposLookupList GposLookupList { get; }
+
+        public ScriptList ScriptList { get; }
+
+        public FeatureList FeatureList { get; }
+
         public GposTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
 
             Header = new GposHeader(reader);
+
+            reader.Seek(0);
+            GposLookupList = new GposLookupList(reader, Header.LookupListOffset);
+
+            reader.Seek(0);
+            ScriptList = new ScriptList(reader, Header.ScriptListOffset);
+
+            reader.Seek(0);
+            FeatureList = new FeatureList(reader, Header.FeatureListOffset);
         }
     }
 }

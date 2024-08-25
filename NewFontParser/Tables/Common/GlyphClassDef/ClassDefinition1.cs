@@ -1,12 +1,13 @@
 ﻿using NewFontParser.Reader;
+using NewFontParser.Tables.Gdef;
 
-namespace NewFontParser.Tables.Gdef
+namespace NewFontParser.Tables.Common.GlyphClassDef
 {
     public class ClassDefinition1 : IClassDefinition
     {
         public long Length { get; }
 
-        public ushort Format { get; } = 1;
+        public ushort Format => 1;
 
         public ushort StartGlyph { get; }
 
@@ -14,9 +15,8 @@ namespace NewFontParser.Tables.Gdef
 
         public ushort[] Classes { get; }
 
-        public ClassDefinition1(byte[] data)
+        public ClassDefinition1(BigEndianReader reader)
         {
-            var reader = new BigEndianReader(data);
             _ = reader.ReadBytes(2);
             StartGlyph = reader.ReadUShort();
             GlyphCount = reader.ReadUShort();

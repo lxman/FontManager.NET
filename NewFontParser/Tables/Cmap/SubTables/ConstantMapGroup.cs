@@ -15,9 +15,9 @@ namespace NewFontParser.Tables.Cmap.SubTables
         public ConstantMapGroup(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            StartCharCode = reader.ReadUint32();
-            EndCharCode = reader.ReadUint32();
-            GlyphId = reader.ReadUint32();
+            StartCharCode = reader.ReadUInt32();
+            EndCharCode = reader.ReadUInt32();
+            GlyphId = reader.ReadUInt32();
         }
     }
 }

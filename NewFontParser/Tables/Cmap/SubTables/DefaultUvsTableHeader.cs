@@ -11,7 +11,7 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public DefaultUvsTableHeader(BigEndianReader reader)
         {
-            NumUnicodeRangeRecords = reader.ReadUint32();
+            NumUnicodeRangeRecords = reader.ReadUInt32();
             for (var i = 0; i < NumUnicodeRangeRecords; i++)
             {
                 UnicodeRangeRecords.Add(new UnicodeRangeRecord(reader.ReadBytes(UnicodeRangeRecord.RecordSize)));

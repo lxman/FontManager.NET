@@ -5,6 +5,8 @@ using NewFontParser.Models;
 using NewFontParser.Tables;
 using NewFontParser.Tables.Cmap;
 using NewFontParser.Tables.Gdef;
+using NewFontParser.Tables.Gpos;
+using NewFontParser.Tables.Gsub;
 using NewFontParser.Tables.Head;
 using NewFontParser.Tables.Hhea;
 using NewFontParser.Tables.Hmtx;
@@ -82,6 +84,8 @@ namespace NewFontParser
             ProcessVmtx();
             ProcessGdef();
             ProcessVdmx();
+            ProcessGpos();
+            ProcessGSub();
             if (!_tables.Any()) return;
             Console.WriteLine($"Remaining {_path.Split('\\').Last()} tables to parse:");
             _tables.ForEach(t => Console.WriteLine($"\t{t}"));
@@ -343,6 +347,33 @@ namespace NewFontParser
             Tables.Add(new VdmxTable(vdmxData));
             _tables.Remove("VDMX");
             Log.Debug("VDMX success");
+        }
+
+        private void ProcessGpos()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "GPOS"))
+            {
+                return;
+            }
+            Log.Debug("Processing GPOS");
+            byte[] gposData = TableRecords.Find(x => x.Tag == "GPOS").Data;
+            Tables.Add(new GposTable(gposData));
+            _tables.Remove("GPOS");
+            Log.Debug("GPOS success");
+        }
+
+        private void ProcessGSub()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "GSUB"))
+            {
+                return;
+            }
+
+            Log.Debug("Processing GSUB");
+            byte[] gsubData = TableRecords.Find(x => x.Tag == "GSUB").Data;
+            Tables.Add(new GsubTable(gsubData));
+            _tables.Remove("GSUB");
+            Log.Debug("GSUB success");
         }
     }
 }

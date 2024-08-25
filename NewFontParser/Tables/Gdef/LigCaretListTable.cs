@@ -11,10 +11,8 @@ namespace NewFontParser.Tables.Gdef
 
         public List<LigGlyphTable> LigGlyphOffsets { get; } = new List<LigGlyphTable>();
 
-        public LigCaretListTable(byte[] data)
+        public LigCaretListTable(BigEndianReader reader)
         {
-            var reader = new BigEndianReader(data);
-
             CoverageOffset = reader.ReadUShort();
             LigGlyphCount = reader.ReadUShort();
             for (var i = 0; i < LigGlyphCount; i++)

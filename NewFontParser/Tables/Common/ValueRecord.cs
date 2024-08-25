@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using NewFontParser.Reader;
 
-namespace NewFontParser.Tables.Gpos
+namespace NewFontParser.Tables.Common
 {
     public class ValueRecord
     {
-        public short XPlacement { get; internal set; }
+        public short? XPlacement { get; internal set; }
 
-        public short YPlacement { get; internal set; }
+        public short? YPlacement { get; internal set; }
 
-        public short XAdvance { get; internal set; }
+        public short? XAdvance { get; internal set; }
 
-        public short YAdvance { get; internal set; }
+        public short? YAdvance { get; internal set; }
 
-        public ushort XPlaDeviceOffset { get; internal set; }
+        public ushort? XPlaDeviceOffset { get; internal set; }
 
-        public ushort YPlaDeviceLength { get; internal set; }
+        public ushort? YPlaDeviceLength { get; internal set; }
 
-        public ushort XAdvDeviceOffset { get; internal set; }
+        public ushort? XAdvDeviceOffset { get; internal set; }
 
-        public ushort YAdvDeviceLength { get; internal set; }
+        public ushort? YAdvDeviceLength { get; internal set; }
 
         public ValueRecord(IEnumerable<ValueFormat> flags, BigEndianReader reader)
         {

@@ -103,10 +103,10 @@ namespace NewFontParser.Tables
             YStrikeoutPosition = reader.ReadShort();
             SFamilyClass = reader.ReadShort();
             Panose = new PanoseValues(reader.ReadBytes(10));
-            UlUnicodeRange1 = reader.ReadUint32();
-            UlUnicodeRange2 = reader.ReadUint32();
-            UlUnicodeRange3 = reader.ReadUint32();
-            UlUnicodeRange4 = reader.ReadUint32();
+            UlUnicodeRange1 = reader.ReadUInt32();
+            UlUnicodeRange2 = reader.ReadUInt32();
+            UlUnicodeRange3 = reader.ReadUInt32();
+            UlUnicodeRange4 = reader.ReadUInt32();
             AchVendId = Encoding.ASCII.GetString(data[58..62]);
             FsSelection = reader.ReadUShort();
             UsFirstCharIndex = reader.ReadUShort();
@@ -118,8 +118,8 @@ namespace NewFontParser.Tables
             SWinDescent = reader.ReadShort();
             if (Version > 0)
             {
-                UlCodePageRange1 = reader.ReadUint32();
-                UlCodePageRange2 = reader.ReadUint32();
+                UlCodePageRange1 = reader.ReadUInt32();
+                UlCodePageRange2 = reader.ReadUInt32();
             }
             if (Version > 1)
             {

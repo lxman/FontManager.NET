@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NewFontParser.Reader;
+using NewFontParser.Tables.Common.GlyphClassDef;
 
 namespace NewFontParser.Tables.Gdef
 {
@@ -10,25 +11,27 @@ namespace NewFontParser.Tables.Gdef
 
         public readonly ushort MarkSetCount;
 
+        public uint[] MarkSetOffsets;
+
         public readonly List<IClassDefinition> MarkSetTables = new List<IClassDefinition>();
 
-        public MarkGlyphSetsTable(byte[] data)
+        public MarkGlyphSetsTable(BigEndianReader reader)
         {
-            var reader = new BigEndianReader(data);
-
             Format = reader.ReadUShort();
             MarkSetCount = reader.ReadUShort();
+            MarkSetOffsets = new uint[MarkSetCount];
             for (var i = 0; i < MarkSetCount; i++)
             {
-                ushort offset = reader.ReadUShort();
-                byte[] markSetTableData = data[offset..];
-                byte[] formatBytes = reader.PeekBytes(2);
-                var format = (ushort)(formatBytes[0] << 8 | formatBytes[1]);
-                MarkSetTables.Add(format switch
+                MarkSetOffsets[i] = reader.ReadUInt32();
+            }
+            for (var i = 0; i < MarkSetCount; i++)
+            {
+                reader.Seek(MarkSetOffsets[i]);
+                MarkSetTables.Add(Format switch
                 {
-                    1 => new ClassDefinition1(markSetTableData),
-                    2 => new ClassDefinition2(markSetTableData),
-                    _ => throw new NotSupportedException($"MarkSetTable format {format} is not supported.")
+                    1 => new ClassDefinition1(reader),
+                    2 => new ClassDefinition2(reader),
+                    _ => throw new NotSupportedException($"MarkGlyphSetsTable format {Format} is not supported.")
                 });
             }
         }

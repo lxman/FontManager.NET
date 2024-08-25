@@ -1,4 +1,6 @@
-﻿using System.Buffers.Binary;
+﻿using NewFontParser.Reader;
+using NewFontParser.Tables.Common;
+using NewFontParser.Tables.Common.GlyphClassDef;
 
 namespace NewFontParser.Tables.Gdef
 {
@@ -8,57 +10,70 @@ namespace NewFontParser.Tables.Gdef
 
         public readonly IClassDefinition? GlyphClassDef;
 
-        public readonly AttachListTable? AttachList;
+        public readonly AttachListTable? AttachListTable;
 
-        public readonly LigCaretListTable? LigCaretList;
+        public readonly LigCaretListTable? LigCaretListTable;
 
         public readonly IClassDefinition? MarkAttachClassDef;
 
-        public readonly MarkGlyphSetsTable? MarkGlyphSets;
+        public readonly MarkGlyphSetsTable? MarkGlyphSetsTable;
+
+        public readonly VariationIndexTable? ItemVarStore;
 
         public GdefTable(byte[] data)
         {
-            Header = new GdefHeader(data);
+            var reader = new BigEndianReader(data);
+            Header = new GdefHeader(reader);
             if (Header.GlyphClassDefOffset.HasValue && Header.GlyphClassDefOffset > 0)
             {
-                byte[] gcod = data[(Header.GlyphClassDefOffset ?? 0)..];
-                ushort format = BinaryPrimitives.ReadUInt16BigEndian(gcod);
-                GlyphClassDef = (format switch
+                reader.Seek(Header.GlyphClassDefOffset ?? 0);
+                var format = reader.PeekBytes(2);
+                if (format[1] == 1)
                 {
-                    1 => new ClassDefinition1(gcod),
-                    2 => new ClassDefinition2(gcod),
-                    _ => GlyphClassDef
-                })!;
+                    GlyphClassDef = new ClassDefinition1(reader);
+                }
+                else
+                {
+                    GlyphClassDef = new ClassDefinition2(reader);
+                }
             }
 
             if (Header.AttachListOffset.HasValue && Header.AttachListOffset > 0)
             {
-                byte[] alod = data[(Header.AttachListOffset ?? 0)..];
-                AttachList = new AttachListTable(alod);
+                reader.Seek(Header.AttachListOffset ?? 0);
+                AttachListTable = new AttachListTable(reader);
             }
 
             if (Header.LigCaretListOffset.HasValue && Header.LigCaretListOffset > 0)
             {
-                byte[] lclod = data[(Header.LigCaretListOffset ?? 0)..];
-                LigCaretList = new LigCaretListTable(lclod);
+                reader.Seek(Header.LigCaretListOffset ?? 0);
+                LigCaretListTable = new LigCaretListTable(reader);
             }
 
             if (Header.MarkAttachClassDefOffset.HasValue && Header.MarkAttachClassDefOffset > 0)
             {
-                byte[] macd = data[(Header.MarkAttachClassDefOffset ?? 0)..];
-                ushort format = BinaryPrimitives.ReadUInt16BigEndian(macd);
-                MarkAttachClassDef = (format switch
+                reader.Seek(Header.MarkAttachClassDefOffset ?? 0);
+                var format = reader.PeekBytes(2);
+                if (format[1] == 1)
                 {
-                    1 => new ClassDefinition1(macd),
-                    2 => new ClassDefinition2(macd),
-                    _ => MarkAttachClassDef
-                })!;
+                    MarkAttachClassDef = new ClassDefinition1(reader);
+                }
+                else
+                {
+                    MarkAttachClassDef = new ClassDefinition2(reader);
+                }
             }
 
             if (Header.MarkGlyphSetsDefOffset.HasValue && Header.MarkGlyphSetsDefOffset > 0)
             {
-                byte[] mgso = data[(Header.MarkGlyphSetsDefOffset ?? 0)..];
-                MarkGlyphSets = new MarkGlyphSetsTable(mgso);
+                reader.Seek(Header.MarkGlyphSetsDefOffset ?? 0);
+                MarkGlyphSetsTable = new MarkGlyphSetsTable(reader);
+            }
+
+            if (Header.ItemVarStoreOffset.HasValue && Header.ItemVarStoreOffset > 0)
+            {
+                reader.Seek(Header.ItemVarStoreOffset ?? 0);
+                ItemVarStore = new VariationIndexTable(reader);
             }
         }
     }

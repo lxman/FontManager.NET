@@ -1,6 +1,6 @@
 ﻿using NewFontParser.Reader;
 
-namespace NewFontParser.Tables.Gdef
+namespace NewFontParser.Tables.Common.GlyphClassDef
 {
     public class ClassRangeRecord
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Buffers.Binary;
+﻿using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using NewFontParser.Reader;
@@ -31,7 +30,7 @@ namespace NewFontParser.Tables.Cmap
             EncodingRecords = EncodingRecords.OrderBy(x => x.Offset).ToList();
             foreach (EncodingRecord? encodingRecord in EncodingRecords)
             {
-                reader.Seek(Convert.ToUInt32(encodingRecord.Offset));
+                reader.Seek(encodingRecord.Offset);
                 data = reader.PeekBytes(2);
                 ushort format = BinaryPrimitives.ReadUInt16BigEndian(data);
                 switch (format)
