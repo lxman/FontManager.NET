@@ -47,7 +47,7 @@ namespace NewFontParser.Reader
             return ReadUShort16();
         }
 
-        public uint ReadUint16()
+        public uint ReadUInt16()
         {
             return (uint)ReadUShort16();
         }
@@ -62,7 +62,7 @@ namespace NewFontParser.Reader
             return ReadShort();
         }
 
-        public uint ReadUint24()
+        public uint ReadUInt24()
         {
             byte[] data = ReadBytes(3);
             return (uint)((data[0] << 16) | (data[1] << 8) | data[2]);
@@ -74,13 +74,28 @@ namespace NewFontParser.Reader
             return (uint)((data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3]);
         }
 
+        public long ReadLong()
+        {
+            byte[] data = ReadBytes(8);
+            long result = 0;
+            result |= (long)data[0] << 56;
+            result |= (long)data[1] << 48;
+            result |= (long)data[2] << 40;
+            result |= (long)data[3] << 32;
+            result |= (long)data[4] << 24;
+            result |= (long)data[5] << 16;
+            result |= (long)data[6] << 8;
+            result |= data[7];
+            return result;
+        }
+
         public int ReadInt32()
         {
             byte[] data = ReadBytes(4);
             return (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
         }
 
-        public float ReadFixed()
+        public float ReadF16Dot16()
         {
             byte[] data = ReadBytes(4);
             return (data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3]) / 65536.0f;
@@ -114,7 +129,7 @@ namespace NewFontParser.Reader
             return result;
         }
 
-        public uint[] ReadUint32Array(int count)
+        public uint[] ReadUInt32Array(int count)
         {
             var result = new uint[count];
             for (var i = 0; i < count; i++)
@@ -122,6 +137,18 @@ namespace NewFontParser.Reader
                 result[i] = ReadUInt32();
             }
             return result;
+        }
+
+        public uint ReadOffset(int offSize)
+        {
+            return offSize switch
+            {
+                1 => ReadByte(),
+                2 => ReadUShort(),
+                3 => ReadUInt24(),
+                4 => ReadUInt32(),
+                _ => 0
+            };
         }
     }
 }

@@ -50,7 +50,7 @@ namespace NewFontParser.Tables.Head
             var reader = new BigEndianReader(data);
             MajorVersion = reader.ReadUShort();
             MinorVersion = reader.ReadUShort();
-            FontRevision = reader.ReadFixed();
+            FontRevision = reader.ReadF16Dot16();
             CheckSumAdjustment = reader.ReadUInt32();
             MagicNumber = reader.ReadUInt32();
             Flags = (HeadFlags)reader.ReadUShort();

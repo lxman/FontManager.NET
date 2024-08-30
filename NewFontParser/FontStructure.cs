@@ -86,6 +86,10 @@ namespace NewFontParser
             ProcessVdmx();
             ProcessGpos();
             ProcessGSub();
+            ProcessCff();
+            ProcessMath();
+            ProcessFftm();
+            ProcessColr();
             if (!_tables.Any()) return;
             Console.WriteLine($"Remaining {_path.Split('\\').Last()} tables to parse:");
             _tables.ForEach(t => Console.WriteLine($"\t{t}"));
@@ -374,6 +378,66 @@ namespace NewFontParser
             Tables.Add(new GsubTable(gsubData));
             _tables.Remove("GSUB");
             Log.Debug("GSUB success");
+        }
+
+        private void ProcessCff()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "CFF "))
+            {
+                Log.Debug("CFF table not found");
+                return;
+            }
+
+            Log.Debug("Processing CFF");
+            byte[] cffData = TableRecords.Find(x => x.Tag == "CFF ").Data;
+            Tables.Add(new Tables.Cff.Type1.Table(cffData));
+            _tables.Remove("CFF ");
+            Log.Debug("CFF success");
+        }
+
+        private void ProcessMath()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "MATH"))
+            {
+                Log.Debug("MATH table not found");
+                return;
+            }
+
+            Log.Debug("Processing MATH");
+            byte[] mathData = TableRecords.Find(x => x.Tag == "MATH").Data;
+            Tables.Add(new Tables.Math.Table(mathData));
+            _tables.Remove("MATH");
+            Log.Debug("MATH success");
+        }
+
+        private void ProcessFftm()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "FFTM"))
+            {
+                Log.Debug("FFTM table not found");
+                return;
+            }
+
+            Log.Debug("Processing FFTM");
+            byte[] fftmData = TableRecords.Find(x => x.Tag == "FFTM").Data;
+            Tables.Add(new Tables.Fftm.Table(fftmData));
+            _tables.Remove("FFTM");
+            Log.Debug("FFTM success");
+        }
+
+        private void ProcessColr()
+        {
+            if (!TableRecords.Exists(x => x.Tag == "COLR"))
+            {
+                Log.Debug("COLR table not found");
+                return;
+            }
+
+            Log.Debug("Processing COLR");
+            byte[] colrData = TableRecords.Find(x => x.Tag == "COLR").Data;
+            Tables.Add(new Tables.Colr.Table(colrData));
+            _tables.Remove("COLR");
+            Log.Debug("COLR success");
         }
     }
 }

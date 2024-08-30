@@ -9,11 +9,12 @@ namespace NewFontParserTester
         {
             List<string> errors = [];
             const string rootDirectory = @"C:\Users\jorda\source\repos\Typography\Demo\Windows\TestFonts";
-            List<string> fonts = Directory.GetFiles(rootDirectory).Where(f => (f.EndsWith(".ttf") || f.EndsWith(".otf")) && f.Split('\\').Last().StartsWith("Arimo-"))
+            List<string> fonts = Directory.GetFiles(rootDirectory).Where(f => (f.EndsWith(".ttf") || f.EndsWith(".otf"))) // && f.Split('\\').Last().StartsWith("A"))
                 .ToList();
             Log.Debug($"Found {fonts.Count} fonts to load.");
             fonts.ForEach(f =>
             {
+                Console.WriteLine($"Processing {f.Split("\\").Last()}");
                 try
                 {
                     var fontReader = new FontReader();

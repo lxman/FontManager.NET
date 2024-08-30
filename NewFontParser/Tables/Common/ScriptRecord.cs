@@ -13,14 +13,16 @@ namespace NewFontParser.Tables.Common
 
         public ScriptTable ScriptTable { get; }
 
-        public ScriptRecord(BigEndianReader reader)
-        {
-            long position = reader.Position;
+        private readonly ushort _scriptListOffset;
 
+        public ScriptRecord(BigEndianReader reader, ushort offset)
+        {
+            _scriptListOffset = offset;
             ScriptTag = Encoding.UTF8.GetString(reader.ReadBytes(4));
             ScriptOffset = reader.ReadUShort();
+            long position = reader.Position;
+            ScriptTable = new ScriptTable(reader, Convert.ToUInt16(ScriptOffset + _scriptListOffset));
             reader.Seek(position);
-            ScriptTable = new ScriptTable(reader, Convert.ToUInt16(ScriptOffset + position));
         }
     }
 }

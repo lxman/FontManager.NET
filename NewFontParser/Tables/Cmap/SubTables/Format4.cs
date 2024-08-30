@@ -33,13 +33,13 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public Format4(BigEndianReader reader)
         {
-            Format = reader.ReadUint16();
-            Length = reader.ReadUint16();
+            Format = reader.ReadUInt16();
+            Length = reader.ReadUInt16();
             Language = reader.ReadInt16();
-            SegCountX2 = reader.ReadUint16();
-            SearchRange = reader.ReadUint16();
-            EntrySelector = reader.ReadUint16();
-            RangeShift = reader.ReadUint16();
+            SegCountX2 = reader.ReadUInt16();
+            SearchRange = reader.ReadUInt16();
+            EntrySelector = reader.ReadUInt16();
+            RangeShift = reader.ReadUInt16();
 
             for (var i = 0; i < SegCountX2 / 2; i++)
             {

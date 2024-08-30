@@ -15,7 +15,7 @@ namespace NewFontParser.Tables.Common
         {
             ConditionCount = reader.ReadUShort();
 
-            ConditionOffsets = reader.ReadUint32Array(ConditionCount);
+            ConditionOffsets = reader.ReadUInt32Array(ConditionCount);
 
             var offsets = new ReadSubTablesFromOffset32Array<ConditionTableFormat1>(reader, ConditionOffsets);
             Conditions = new ConditionTableFormat1[ConditionCount];

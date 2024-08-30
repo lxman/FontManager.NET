@@ -196,7 +196,8 @@ public enum GposLookupType : ushort
     MarkToLigatureAttachment = 5,
     MarkToMarkAttachment = 6,
     ContextPositioning = 7,
-    ChainedContextPositioning = 8
+    ChainedContextPositioning = 8,
+    PositioningExtension = 9
 }
 
 public enum GsubLookupType : ushort
@@ -235,6 +236,56 @@ public enum DeltaFormat : ushort
     Local8BitDeltas = 3,
     VariationIndex = 0x8000,
     Reserved = 0x7FFC
+}
+
+public enum OperandKind : byte
+{
+    StringId = 0,
+    Boolean = 1,
+    Number = 2,
+    Array = 3,
+    Delta = 4,
+    SidSidNumber = 5,
+    NumberNumber = 6
+}
+
+public enum CompositeMode : byte
+{
+    Clear,
+    Source,
+    Destination,
+    SourceOver,
+    DestinationOver,
+    SourceIn,
+    DestinationIn,
+    SourceOut,
+    DestinationOut,
+    SourceAtop,
+    DestinationAtop,
+    Xor,
+    Plus,
+    Screen,
+    Overlay,
+    Darken,
+    Lighten,
+    ColorDodge,
+    ColorBurn,
+    HardLight,
+    SoftLight,
+    Difference,
+    Exclusion,
+    MulMultiply,
+    Hue,
+    Saturation,
+    Color,
+    Luminosity
+}
+
+public enum ExtendMode : byte
+{
+    Pad,
+    Reflect,
+    Repeat
 }
 
 #endregion
@@ -358,6 +409,13 @@ public enum LookupFlag : ushort
     Reserved = 1 << 5,
     MarkAttachmentType = 1 << 6,
     UseMarkFilteringSetAndMarkAttachmentType = 1 << 7
+}
+
+[Flags]
+public enum PartFlags : ushort
+{
+    ExtenderFlag = 1 << 0,
+    Reserved = 0xFFFE
 }
 
 #endregion

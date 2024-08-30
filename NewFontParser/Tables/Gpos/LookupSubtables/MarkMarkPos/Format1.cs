@@ -1,5 +1,6 @@
 ﻿using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
+using NewFontParser.Tables.CoverageFormat;
 using NewFontParser.Tables.Gpos.LookupSubtables.Common;
 
 namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos
@@ -18,9 +19,9 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos
 
         public ushort Mark2ArrayOffset { get; }
 
-        public ushort[] MarkCoverage { get; }
+        public ICoverageFormat MarkCoverage { get; }
 
-        public ushort[] Mark2Coverage { get; }
+        public ICoverageFormat Mark2Coverage { get; }
 
         public MarkArray MarkArray { get; }
 
@@ -28,6 +29,8 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos
 
         public Format1(BigEndianReader reader)
         {
+            long tableBase = reader.Position;
+
             Format = reader.ReadUShort();
             Mark1CoverageOffset = reader.ReadUShort();
             Mark2CoverageOffset = reader.ReadUShort();
@@ -35,12 +38,33 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos
             MarkArrayOffset = reader.ReadUShort();
             Mark2ArrayOffset = reader.ReadUShort();
 
-            //MarkCoverage = new CoverageTable(data, Mark1CoverageOffset).GlyphArray;
-            //Mark2Coverage = new CoverageTable(data, Mark2CoverageOffset).GlyphArray;
-            reader.Seek(MarkArrayOffset);
-            MarkArray = new MarkArray(reader, MarkArrayOffset);
-            reader.Seek(MarkClassCount);
-            Mark2Array = new Mark2Array(reader, MarkClassCount);
+            reader.Seek(tableBase + Mark1CoverageOffset);
+            byte mark1CoverageFormat = reader.PeekBytes(2)[1];
+            switch (mark1CoverageFormat)
+            {
+                case 1:
+                    MarkCoverage = new CoverageFormat.Format1(reader);
+                    break;
+                case 2:
+                    MarkCoverage = new Format2(reader);
+                    break;
+            }
+
+            reader.Seek(tableBase + Mark2CoverageOffset);
+            byte mark2CoverageFormat = reader.PeekBytes(2)[1];
+            switch (mark2CoverageFormat)
+            {
+                case 1:
+                    Mark2Coverage = new CoverageFormat.Format1(reader);
+                    break;
+                case 2:
+                    Mark2Coverage = new Format2(reader);
+                    break;
+            }
+            reader.Seek(tableBase + MarkArrayOffset);
+            MarkArray = new MarkArray(reader);
+            //reader.Seek(Mark2ArrayOffset);
+            //Mark2Array = new Mark2Array(reader, MarkClassCount);
         }
     }
 }

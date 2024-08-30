@@ -1,5 +1,4 @@
 ﻿using NewFontParser.Reader;
-using NewFontParser.Tables.Common;
 
 namespace NewFontParser.Tables.Gpos
 {
@@ -9,7 +8,7 @@ namespace NewFontParser.Tables.Gpos
 
         public ushort ScriptCount { get; }
 
-        public ScriptRecord[] ScriptRecords { get; }
+        public LangSysRecord[] ScriptRecords { get; }
 
         public ScriptTable(BigEndianReader reader, ushort offset)
         {
@@ -18,10 +17,10 @@ namespace NewFontParser.Tables.Gpos
             DefaultLangSysOffset = reader.ReadUShort();
             ScriptCount = reader.ReadUShort();
 
-            ScriptRecords = new ScriptRecord[ScriptCount];
+            ScriptRecords = new LangSysRecord[ScriptCount];
             for (var i = 0; i < ScriptCount; i++)
             {
-                ScriptRecords[i] = new ScriptRecord(reader);
+                ScriptRecords[i] = new LangSysRecord(reader);
             }
         }
     }

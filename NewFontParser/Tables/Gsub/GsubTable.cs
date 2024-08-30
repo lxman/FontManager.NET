@@ -1,6 +1,5 @@
 ﻿using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
-using NewFontParser.Tables.Gpos;
 
 namespace NewFontParser.Tables.Gsub
 {
@@ -23,12 +22,12 @@ namespace NewFontParser.Tables.Gsub
             reader.Seek(0);
             ScriptList = new ScriptList(reader, Header.ScriptListOffset);
             FeatureList = new FeatureList(reader, Header.FeatureListOffset);
-            GposLookupList = new GposLookupList(reader, Header.LookupListOffset);
-            if (Header.FeatureVariationsOffset.HasValue)
-            {
-                reader.Seek(Header.FeatureVariationsOffset ?? 0);
-                FeatureVariationsTable = new FeatureVariationsTable(reader);
-            }
+            //GposLookupList = new GposLookupList(reader, Header.LookupListOffset);
+            //if (Header.FeatureVariationsOffset.HasValue)
+            //{
+            //    reader.Seek(Header.FeatureVariationsOffset ?? 0);
+            //    FeatureVariationsTable = new FeatureVariationsTable(reader);
+            //}
         }
     }
 }

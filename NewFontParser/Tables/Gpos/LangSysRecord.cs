@@ -11,7 +11,7 @@ namespace NewFontParser.Tables.Gpos
 
         public LangSysRecord(BigEndianReader reader)
         {
-            var tag = reader.ReadBytes(4);
+            byte[] tag = reader.ReadBytes(4);
             LangSysTag = Encoding.ASCII.GetString(tag);
 
             LangSysOffset = reader.ReadUShort();

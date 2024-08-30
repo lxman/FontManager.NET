@@ -13,7 +13,7 @@ namespace NewFontParser.Tables.Cmap.SubTables
         public UnicodeRangeRecord(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            StartUnicodeValue = reader.ReadUint24();
+            StartUnicodeValue = reader.ReadUInt24();
             AdditionalCount = reader.ReadByte();
         }
     }

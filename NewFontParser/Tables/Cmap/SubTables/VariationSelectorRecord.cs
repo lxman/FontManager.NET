@@ -16,7 +16,7 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public VariationSelectorRecord(BigEndianReader reader)
         {
-            VarSelector = reader.ReadUint24();
+            VarSelector = reader.ReadUInt24();
             DefaultUvsOffset = reader.ReadUInt32();
             NonDefaultUvsOffset = reader.ReadUInt32();
             if (DefaultUvsOffset > 0)

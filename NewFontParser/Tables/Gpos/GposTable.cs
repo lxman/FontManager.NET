@@ -20,13 +20,13 @@ namespace NewFontParser.Tables.Gpos
             Header = new GposHeader(reader);
 
             reader.Seek(0);
-            GposLookupList = new GposLookupList(reader, Header.LookupListOffset);
-
-            reader.Seek(0);
             ScriptList = new ScriptList(reader, Header.ScriptListOffset);
 
             reader.Seek(0);
             FeatureList = new FeatureList(reader, Header.FeatureListOffset);
+
+            reader.Seek(0);
+            GposLookupList = new GposLookupList(reader, Header.LookupListOffset);
         }
     }
 }

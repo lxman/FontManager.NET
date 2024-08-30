@@ -19,15 +19,15 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public Format6(BigEndianReader reader)
         {
-            Format = reader.ReadUint16();
-            Length = reader.ReadUint16();
+            Format = reader.ReadUInt16();
+            Length = reader.ReadUInt16();
             Language = reader.ReadInt16();
-            FirstCode = reader.ReadUint16();
-            EntryCount = reader.ReadUint16();
+            FirstCode = reader.ReadUInt16();
+            EntryCount = reader.ReadUInt16();
             GlyphIndexArray = new List<uint>();
             for (var i = 0; i < EntryCount; i++)
             {
-                GlyphIndexArray.Add(reader.ReadUint16());
+                GlyphIndexArray.Add(reader.ReadUInt16());
             }
         }
     }

@@ -11,8 +11,8 @@
 
   <ItemGroup>
     <Folder Include="Tables\Cff\Type2\" />
-    <Folder Include="Tables\Cff\Type1\" />
     <Folder Include="Tables\Bitmap\" />
+    <Folder Include="Tables\Cpal\" />
     <Folder Include="Tables\Svg\" />
   </ItemGroup>
 

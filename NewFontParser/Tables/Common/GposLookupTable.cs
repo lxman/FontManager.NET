@@ -103,6 +103,9 @@ namespace NewFontParser.Tables.Common
                                 break;
                         }
                         break;
+                    case GposLookupType.PositioningExtension:
+                        SubTables.Add(new PosExtensionFormat1(reader));
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
