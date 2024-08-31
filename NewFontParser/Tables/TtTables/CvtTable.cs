@@ -5,6 +5,8 @@ namespace NewFontParser.Tables.TtTables
 {
     public class CvtTable : IInfoTable
     {
+        public static string Tag => "cvt ";
+
         public int FWordCount { get; }
 
         private readonly ushort[] _data;

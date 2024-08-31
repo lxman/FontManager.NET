@@ -5,24 +5,33 @@ namespace NewFontParser.Tables.Hmtx
 {
     public class HmtxTable : IInfoTable
     {
+        public static string Tag => "hmtx";
+
         public List<LongHMetricRecord> LongHMetricRecords { get; } = new List<LongHMetricRecord>();
+
         public List<short> LeftSideBearings { get; } = new List<short>();
+
+        private readonly BigEndianReader _reader;
+
+        public HmtxTable(byte[] data)
+        {
+            _reader = new BigEndianReader(data);
+        }
 
         // numberOfHMetricRecords: From the 'hhea' table.
         // numOfGlyphs: From the 'maxp' table.
-        public HmtxTable(byte[] data, ushort numberOfHMetricRecords, ushort numOfGlyphs)
+        public void Process(ushort numberOfHMetricRecords, ushort numOfGlyphs)
         {
-            var reader = new BigEndianReader(data);
             for (var i = 0; i < numberOfHMetricRecords; i++)
             {
-                LongHMetricRecords.Add(new LongHMetricRecord(reader.ReadBytes(LongHMetricRecord.RecordSize)));
+                LongHMetricRecords.Add(new LongHMetricRecord(_reader.ReadBytes(LongHMetricRecord.RecordSize)));
             }
 
             if (LongHMetricRecords.Count >= numOfGlyphs) return;
             {
                 for (int i = LongHMetricRecords.Count; i < numOfGlyphs; i++)
                 {
-                    LeftSideBearings.Add(reader.ReadShort());
+                    LeftSideBearings.Add(_reader.ReadShort());
                 }
             }
         }

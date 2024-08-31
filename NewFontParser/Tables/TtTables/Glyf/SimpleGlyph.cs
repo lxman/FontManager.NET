@@ -92,7 +92,7 @@ namespace NewFontParser.Tables.TtTables.Glyf
                 }
             }
 
-            for (var i = 0; i < numberOfPoints; i++)
+            for (var i = 0; i < numberOfPoints - 1; i++)
             {
                 Coordinates.Add(new SimpleGlyphCoordinate(new Point(xCoordinates[i], yCoordinates[i]), flags[i].HasFlag(SimpleGlyphFlags.OnCurve)));
             }

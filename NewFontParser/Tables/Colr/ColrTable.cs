@@ -3,8 +3,10 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Colr
 {
-    public class Table : IInfoTable
+    public class ColrTable : IInfoTable
     {
+        public static string Tag => "COLR";
+
         public ushort Version { get; }
 
         public List<BaseGlyphRecord> BaseGlyphRecords { get; } = new List<BaseGlyphRecord>();
@@ -21,7 +23,7 @@ namespace NewFontParser.Tables.Colr
 
         public ItemVariationStore? ItemVariationStore { get; }
 
-        public Table(byte[] data)
+        public ColrTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
             Version = reader.ReadUShort();

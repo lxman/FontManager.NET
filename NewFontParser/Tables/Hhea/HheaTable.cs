@@ -4,6 +4,8 @@ namespace NewFontParser.Tables.Hhea
 {
     public class HheaTable : IInfoTable
     {
+        public static string Tag => "hhea";
+
         public ushort MajorVersion { get; set; }
 
         public ushort MinorVersion { get; set; }

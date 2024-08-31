@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable InconsistentNaming
 
 // ReSharper disable CheckNamespace
 
@@ -288,6 +289,36 @@ public enum ExtendMode : byte
     Repeat
 }
 
+public enum MetaSubtableType : byte
+{
+    Rearrangement,
+    Contextual,
+    Ligature,
+    Reserved,
+    NonContextual,
+    Insertion
+}
+
+public enum ApplyDirection
+{
+    Horizontal,
+    Vertical,
+    BothHorizontalAndVertical
+}
+
+public enum ProcessDirection
+{
+    Ascending,
+    Descending
+}
+
+public enum ProcessLogicalOrder
+{
+    Forward,
+    Reverse,
+    NA
+}
+
 #endregion
 
 #region Flags
@@ -416,6 +447,43 @@ public enum PartFlags : ushort
 {
     ExtenderFlag = 1 << 0,
     Reserved = 0xFFFE
+}
+
+[Flags]
+public enum PaletteType
+{
+    Light = 1,
+    Dark = 2,
+    Reserved = 0xFFFC
+}
+
+[Flags]
+public enum PermissionFlags : ushort
+{
+    CannotResign = 1 << 0,
+    Reserved = 0xFFFE
+}
+
+[Flags]
+public enum ActionFlags : ushort
+{
+    SetMark = 0x8000,
+    DontAdvance = 0x4000,
+    CurrentIsKashidaLike = 0x2000,
+    MarkedIsKashidaLike = 0x1000,
+    CurrentInsertBefore = 0x0800,
+    MarkedInsertBefore = 0x0400,
+    CurrentInsertCount = 0x03E0,
+    MarkedInsertCount = 0x001F
+}
+
+[Flags]
+public enum EntryFlags : ushort
+{
+    PerformAction = 0x2000,
+    DontAdvance = 0x4000,
+    SetComponent = 0x8000,
+    Reserved = 0x3FFF
 }
 
 #endregion

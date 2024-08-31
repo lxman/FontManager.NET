@@ -4,6 +4,8 @@ namespace NewFontParser.Tables
 {
     public class MaxPTable : IInfoTable
     {
+        public static string Tag => "maxp";
+
         public uint Version { get; }
 
         public ushort NumGlyphs { get; }

@@ -5,6 +5,8 @@ namespace NewFontParser.Tables.Gsub
 {
     public class GsubTable : IInfoTable
     {
+        public static string Tag => "GSUB";
+
         public GsubHeader Header { get; }
 
         public ScriptList ScriptList { get; }

@@ -2,8 +2,10 @@
 
 namespace NewFontParser.Tables.Math
 {
-    public class Table : IInfoTable
+    public class MathTable : IInfoTable
     {
+        public static string Tag => "MATH";
+
         public MathHeader Header { get; }
 
         public MathConstantsTable Constants { get; }
@@ -12,7 +14,7 @@ namespace NewFontParser.Tables.Math
 
         public MathVariantsTable Variants { get; }
 
-        public Table(byte[] data)
+        public MathTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
 

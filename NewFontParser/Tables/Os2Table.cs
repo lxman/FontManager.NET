@@ -5,6 +5,8 @@ namespace NewFontParser.Tables
 {
     public class Os2Table : IInfoTable
     {
+        public static string Tag => "OS/2";
+
         public ushort Version { get; }
 
         public short XAvgCharWidth { get; }

@@ -5,6 +5,8 @@ namespace NewFontParser.Tables.TtTables
 {
     public class GaspTable : IInfoTable
     {
+        public static string Tag => "gasp";
+
         public ushort Version { get; set; }
 
         public ushort NumRanges { get; set; }

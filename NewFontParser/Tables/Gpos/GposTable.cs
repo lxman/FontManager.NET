@@ -5,6 +5,8 @@ namespace NewFontParser.Tables.Gpos
 {
     public class GposTable : IInfoTable
     {
+        public static string Tag => "GPOS";
+
         public GposHeader Header { get; }
 
         public GposLookupList GposLookupList { get; }

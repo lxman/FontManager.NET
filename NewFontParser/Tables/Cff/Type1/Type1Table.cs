@@ -6,8 +6,10 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Cff.Type1
 {
-    public class Table : IInfoTable
+    public class Type1Table : IInfoTable
     {
+        public static string Tag => "CFF ";
+
         public Header Header { get; }
 
         public Index NameIndex { get; }
@@ -70,7 +72,7 @@ namespace NewFontParser.Tables.Cff.Type1
             { 0x0C26, new CffDictEntry("FontName", OperandKind.StringId, 0) }
         });
 
-        public Table(byte[] data)
+        public Type1Table(byte[] data)
         {
             var reader = new BigEndianReader(data);
 

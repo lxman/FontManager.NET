@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Gdef
 {
-    public class GdefHeader : IInfoTable
+    public class GdefHeader
     {
         public ushort MajorVersion { get; }
 

@@ -5,6 +5,8 @@ namespace NewFontParser.Tables.Vdmx
 {
     public class VdmxTable : IInfoTable
     {
+        public static string Tag => "VDMX";
+
         public ushort Version { get; }
 
         public ushort NumRecs { get; }

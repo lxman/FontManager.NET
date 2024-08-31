@@ -1,25 +1,36 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.TtTables
 {
     public class LocaTable : IInfoTable
     {
-        public uint[] Offsets { get; }
+        public static string Tag => "loca";
 
-        public LocaTable(byte[] data, int numGlyphs, bool isShort)
+        public uint[] Offsets { get; private set; } = null!;
+
+        private readonly BigEndianReader _reader;
+
+        public LocaTable(byte[] data)
+        {
+            _reader = new BigEndianReader(data);
+        }
+
+        // numGlyphs from maxp table
+        // isShort from head table
+        public void Process(int numGlyphs, bool isShort)
         {
             Offsets = new uint[numGlyphs + 1];
-            var reader = new BigEndianReader(data);
             for (var i = 0; i < numGlyphs + 1; i++)
             {
                 if (isShort)
                 {
-                    Offsets[i] = reader.ReadUShort();
+                    Offsets[i] = Convert.ToUInt32(_reader.ReadUShort() * 2);
                 }
                 else
                 {
-                    Offsets[i] = reader.ReadUInt32();
+                    Offsets[i] = _reader.ReadUInt32();
                 }
             }
         }

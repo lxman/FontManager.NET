@@ -12,7 +12,7 @@ namespace NewFontParser.RenderFont.Interpreter
         private readonly InstructionStream _reader;
         private readonly StorageArea _storageArea;
         private readonly CvtTable _cvtTable;
-        private readonly Table _glyphTable;
+        private readonly GlyphTable _glyphGlyphTable;
         private readonly GraphicsState _graphicsState;
         private readonly Stack<int> _stack;
 
@@ -20,7 +20,7 @@ namespace NewFontParser.RenderFont.Interpreter
             InstructionStream reader,
             StorageArea storageArea,
             CvtTable cvtTable,
-            Table glyphTable,
+            GlyphTable glyphGlyphTable,
             GraphicsState graphicsState,
             Stack<int> stack
         )
@@ -28,7 +28,7 @@ namespace NewFontParser.RenderFont.Interpreter
             _reader = reader;
             _storageArea = storageArea;
             _cvtTable = cvtTable;
-            _glyphTable = glyphTable;
+            _glyphGlyphTable = glyphGlyphTable;
             _graphicsState = graphicsState;
             _stack = stack;
         }

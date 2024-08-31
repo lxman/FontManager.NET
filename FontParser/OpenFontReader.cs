@@ -467,9 +467,9 @@ namespace FontParser
                 CvtTable cvtTable = rd.Read(new CvtTable());
                 PrepTable propProgramTable = rd.Read(new PrepTable());
 
-                typeface.ControlValues = cvtTable._controlValues;
-                typeface.FpgmProgramBuffer = fpgmTable._programBuffer;
-                typeface.PrepProgramBuffer = propProgramTable._programBuffer;
+                typeface.ControlValues = cvtTable?._controlValues;
+                typeface.FpgmProgramBuffer = fpgmTable?._programBuffer;
+                typeface.PrepProgramBuffer = propProgramTable?._programBuffer;
             }
 
             //-------------------------

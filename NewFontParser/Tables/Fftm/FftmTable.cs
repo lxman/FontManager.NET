@@ -2,8 +2,10 @@
 
 namespace NewFontParser.Tables.Fftm
 {
-    public class Table : IInfoTable
+    public class FftmTable : IInfoTable
     {
+        public static string Tag => "FFTM";
+
         public uint Version { get; }
 
         public long FFTimestamp { get; }
@@ -12,7 +14,7 @@ namespace NewFontParser.Tables.Fftm
 
         public long ModifiedFFTimestamp { get; }
 
-        public Table(byte[] data)
+        public FftmTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
 

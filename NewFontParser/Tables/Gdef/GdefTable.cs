@@ -6,6 +6,8 @@ namespace NewFontParser.Tables.Gdef
 {
     public class GdefTable : IInfoTable
     {
+        public static string Tag => "GDEF";
+
         public readonly GdefHeader Header;
 
         public readonly IClassDefinition? GlyphClassDef;

@@ -7,6 +7,8 @@ namespace NewFontParser.Tables.Head
 {
     public class HeadTable : IInfoTable
     {
+        public static string Tag => "head";
+
         public ushort MajorVersion { get; }
 
         public ushort MinorVersion { get; }

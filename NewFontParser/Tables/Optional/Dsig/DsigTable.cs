@@ -5,29 +5,30 @@ namespace NewFontParser.Tables.Optional.Dsig
 {
     public class DsigTable : IInfoTable
     {
-        public ushort Version { get; set; }
+        public static string Tag => "DSIG";
 
-        public ushort NumSigs { get; set; }
+        public uint Version { get; }
 
-        public List<SigRecord> SigRecords { get; set; } = new List<SigRecord>();
+        public ushort NumSigs { get; }
+
+        public PermissionFlags PermissionFlags { get; }
+
+        public List<SigRecord> SigRecords { get; } = new List<SigRecord>();
 
         public DsigTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            Version = reader.ReadUShort();
+            Version = reader.ReadUInt32();
             NumSigs = reader.ReadUShort();
+            if (NumSigs == 0) return;
+            PermissionFlags = (PermissionFlags)reader.ReadUShort();
 
             for (var i = 0; i < NumSigs; i++)
             {
-                var record = new SigRecord
-                {
-                    Format = reader.ReadUShort(),
-                    Length = reader.ReadUShort(),
-                    Offset = reader.ReadUShort()
-                };
-
-                SigRecords.Add(record);
+                SigRecords.Add(new SigRecord(reader));
             }
+
+            SigRecords.ForEach(r => r.ReadSignature(reader));
         }
     }
 }

@@ -4,16 +4,24 @@ namespace NewFontParser.Tables.Optional
 {
     public class LtshTable : IInfoTable
     {
-        public ushort Version { get; }
+        public static string Tag => "LTSH";
 
-        public byte[] YPels { get; }
+        public ushort Version { get; private set; }
 
-        public LtshTable(byte[] data, ushort numGlyphs)
+        public byte[] YPels { get; private set; } = null!;
+
+        private readonly BigEndianReader _reader;
+
+        public LtshTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            _reader = new BigEndianReader(data);
+        }
 
-            Version = reader.ReadUShort();
-            YPels = reader.ReadBytes(numGlyphs);
+        // numGlyphs: From the 'maxp' table.
+        public void Process(ushort numGlyphs)
+        {
+            Version = _reader.ReadUShort();
+            YPels = _reader.ReadBytes(numGlyphs);
         }
     }
 }

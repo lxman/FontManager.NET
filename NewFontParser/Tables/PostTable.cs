@@ -6,6 +6,8 @@ namespace NewFontParser.Tables
 {
     public class PostTable : IInfoTable
     {
+        public static string Tag => "post";
+
         public ushort Version1 { get; }
 
         public ushort Version2 { get; }

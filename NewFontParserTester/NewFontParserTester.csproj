@@ -20,4 +20,10 @@
     <ProjectReference Include="..\NewFontParser\NewFontParser.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Test Files\CimeroPro.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

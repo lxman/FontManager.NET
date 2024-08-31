@@ -8,6 +8,8 @@ namespace NewFontParser.Tables.Cmap
 {
     public class CmapTable : IInfoTable
     {
+        public static string Tag => "cmap";
+
         public ushort Version { get; }
 
         public ushort NumTables { get; }

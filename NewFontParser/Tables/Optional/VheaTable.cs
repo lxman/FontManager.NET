@@ -4,6 +4,8 @@ namespace NewFontParser.Tables.Optional
 {
     public class VheaTable : IInfoTable
     {
+        public static string Tag => "vhea";
+
         public ushort MajorVersion { get; set; }
 
         public ushort MinorVersion { get; set; }

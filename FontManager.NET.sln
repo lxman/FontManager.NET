@@ -14,9 +14,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KaitaiTtf", "KaitaiTtf\Kait
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontParser", "FontParser\FontParser.csproj", "{2638DAFD-7714-4549-92FF-548B438C175A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewFontParser", "NewFontParser\NewFontParser.csproj", "{EB5E263A-EE44-4E74-B27E-4737B8069105}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewFontParser", "NewFontParser\NewFontParser.csproj", "{EB5E263A-EE44-4E74-B27E-4737B8069105}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewFontParserTester", "NewFontParserTester\NewFontParserTester.csproj", "{FD14003C-CD20-4AF1-9878-4EB46611C8E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewFontParserTester", "NewFontParserTester\NewFontParserTester.csproj", "{FD14003C-CD20-4AF1-9878-4EB46611C8E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontParserTester", "FontParserTester\FontParserTester.csproj", "{3A37456A-3BF0-43D9-A77B-367B2E9F9BB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +46,10 @@ Global
 		{FD14003C-CD20-4AF1-9878-4EB46611C8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD14003C-CD20-4AF1-9878-4EB46611C8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD14003C-CD20-4AF1-9878-4EB46611C8E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A37456A-3BF0-43D9-A77B-367B2E9F9BB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A37456A-3BF0-43D9-A77B-367B2E9F9BB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A37456A-3BF0-43D9-A77B-367B2E9F9BB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A37456A-3BF0-43D9-A77B-367B2E9F9BB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
