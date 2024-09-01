@@ -486,4 +486,20 @@ public enum EntryFlags : ushort
     Reserved = 0x3FFF
 }
 
+[Flags]
+public enum AxisValueFlags : ushort
+{
+    OlderSibling = 1 << 0,
+    ElidableAxisValueName = 1 << 1,
+    Reserved = 0xFFFC
+}
+
+[Flags]
+public enum AxisFlags : ushort
+{
+    Hidden = 1 << 0,
+    Advanced = 1 << 1,
+    Reserved = 0xFFFC
+}
+
 #endregion

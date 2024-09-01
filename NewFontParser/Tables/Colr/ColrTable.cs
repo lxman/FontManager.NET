@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NewFontParser.Reader;
+using NewFontParser.Tables.Common.ItemVariationStore;
 
 namespace NewFontParser.Tables.Colr
 {

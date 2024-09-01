@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NewFontParser.Reader;
 
-namespace NewFontParser.Tables.Colr
+namespace NewFontParser.Tables.Common.ItemVariationStore
 {
     public class ItemVariationStore
     {

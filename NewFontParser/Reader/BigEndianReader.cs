@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace NewFontParser.Reader
 {
@@ -149,6 +151,30 @@ namespace NewFontParser.Reader
                 4 => ReadUInt32(),
                 _ => 0
             };
+        }
+
+        public string ReadNullTerminatedString(bool isUnicode)
+        {
+            var data = new List<byte>();
+            if (isUnicode)
+            {
+                while (PeekBytes(2) != new byte[] { 0, 0 })
+                {
+                    data.Add(ReadByte());
+                    data.Add(ReadByte());
+                }
+                _ = ReadBytes(2);
+
+                return Encoding.Unicode.GetString(data.ToArray());
+            }
+            while (PeekBytes(1)[0] != 0)
+            {
+                data.Add(ReadByte());
+            }
+
+            _ = ReadByte();
+
+            return Encoding.ASCII.GetString(data.ToArray());
         }
     }
 }

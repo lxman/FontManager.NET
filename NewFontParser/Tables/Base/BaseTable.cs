@@ -1,5 +1,5 @@
 ﻿using NewFontParser.Reader;
-using NewFontParser.Tables.Colr;
+using NewFontParser.Tables.Common.ItemVariationStore;
 
 namespace NewFontParser.Tables.Base
 {
