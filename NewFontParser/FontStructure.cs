@@ -64,16 +64,6 @@ namespace NewFontParser
 
         private readonly List<TableStatusRecord> _tables = new List<TableStatusRecord>();
 
-        private HheaTable? _hheaTable;
-
-        private MaxPTable? _maxPTable;
-
-        private LocaTable? _locaTable;
-
-        private HeadTable? _headTable;
-
-        private VheaTable? _vheaTable;
-
         private readonly string _currentFile;
 
         public FontStructure(string path)
@@ -90,11 +80,8 @@ namespace NewFontParser
         {
             ProcessTable<CmapTable>();
             ProcessTable<HeadTable>();
-            _headTable = Tables.Find(x => x is HeadTable) as HeadTable;
             ProcessTable<HheaTable>();
-            _hheaTable = Tables.Find(x => x is HheaTable) as HheaTable;
             ProcessTable<MaxPTable>();
-            _maxPTable = Tables.Find(x => x is MaxPTable) as MaxPTable;
             ProcessTable<HmtxTable>();
             ProcessTable<NameTable>();
             ProcessTable<Os2Table>();
@@ -102,7 +89,6 @@ namespace NewFontParser
             ProcessTable<CvtTable>();
             ProcessTable<FpgmTable>();
             ProcessTable<LocaTable>();
-            _locaTable = Tables.Find(x => x is LocaTable) as LocaTable;
             ProcessTable<GlyphTable>();
             ProcessTable<PrepTable>();
             ProcessTable<GaspTable>();
@@ -110,7 +96,6 @@ namespace NewFontParser
             ProcessTable<HdmxTable>();
             ProcessTable<LtshTable>();
             ProcessTable<VheaTable>();
-            _vheaTable = Tables.Find(x => x is VheaTable) as VheaTable;
             ProcessTable<VmtxTable>();
             ProcessTable<GdefTable>();
             ProcessTable<VdmxTable>();
@@ -140,12 +125,12 @@ namespace NewFontParser
             ProcessTable<CblcTable>();
             ProcessTable<EblcTable>();
             ProcessTable<EbscTable>();
-            (Tables.Find(x => x is VmtxTable) as VmtxTable)?.Process(_vheaTable!.NumberOfLongVerMetrics);
-            (Tables.Find(x => x is HdmxTable) as HdmxTable)?.Process(_maxPTable!.NumGlyphs);
-            (Tables.Find(x => x is LocaTable) as LocaTable)?.Process(_maxPTable!.NumGlyphs, _headTable!.IndexToLocFormat == IndexToLocFormat.Offset16);
-            (Tables.Find(x => x is GlyphTable) as GlyphTable)?.Process(_maxPTable!.NumGlyphs, _locaTable!);
-            (Tables.Find(x => x is HmtxTable) as HmtxTable)?.Process(_hheaTable!.NumberOfHMetrics, _maxPTable!.NumGlyphs);
-            (Tables.Find(x => x is LtshTable) as LtshTable)?.Process(_maxPTable!.NumGlyphs);
+            (Tables.Find(x => x is VmtxTable) as VmtxTable)?.Process(GetTable<VheaTable>().NumberOfLongVerMetrics);
+            (Tables.Find(x => x is HdmxTable) as HdmxTable)?.Process(GetTable<MaxPTable>().NumGlyphs);
+            (Tables.Find(x => x is LocaTable) as LocaTable)?.Process(GetTable<MaxPTable>().NumGlyphs, GetTable<HeadTable>().IndexToLocFormat == IndexToLocFormat.Offset16);
+            (Tables.Find(x => x is GlyphTable) as GlyphTable)?.Process(GetTable<MaxPTable>().NumGlyphs, GetTable<LocaTable>());
+            (Tables.Find(x => x is HmtxTable) as HmtxTable)?.Process(GetTable<HheaTable>().NumberOfHMetrics, GetTable<MaxPTable>().NumGlyphs);
+            (Tables.Find(x => x is LtshTable) as LtshTable)?.Process(GetTable<MaxPTable>().NumGlyphs);
             if (!_tables.Any()) return;
             if (_tables.Any(t => !t.Attempted))
             {
@@ -190,6 +175,12 @@ namespace NewFontParser
             {
                 Log.Error(e, $"{typeof(T).Name} blew up");
             }
+        }
+
+        private T GetTable<T>() where T : IInfoTable
+        {
+            IInfoTable table = Tables.Find(x => x is T);
+            return (T)table;
         }
     }
 }
