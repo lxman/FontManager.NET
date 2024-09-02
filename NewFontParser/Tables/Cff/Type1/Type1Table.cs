@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NewFontParser.Reader;
+using NewFontParser.Tables.Cff.Type1.Charsets;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS8601 // Possible null reference assignment.
 
 namespace NewFontParser.Tables.Cff.Type1
 {
@@ -20,9 +22,9 @@ namespace NewFontParser.Tables.Cff.Type1
 
         public Index GlobalSubrIndex { get; }
 
-        public Index Encodings { get; }
+        public IEncoding Encoding { get; }
 
-        public Index CharSets { get; }
+        public ICharset CharSet { get; }
 
         public Index CharStrings { get; }
 
@@ -82,7 +84,7 @@ namespace NewFontParser.Tables.Cff.Type1
 
             foreach (byte[] bytes in NameIndex.Data)
             {
-                Names.Add(Encoding.ASCII.GetString(bytes));
+                Names.Add(System.Text.Encoding.ASCII.GetString(bytes));
             }
 
             TopDictIndex = new Index(reader);
@@ -128,6 +130,14 @@ namespace NewFontParser.Tables.Cff.Type1
                                 entry.Operand = new List<double>(operands);
                                 break;
                             case OperandKind.Delta:
+                                if (operands.Count > 1)
+                                {
+                                    entry.Operand = new List<double>(operands);
+                                }
+                                else
+                                {
+                                    entry.Operand = operands[0];
+                                }
                                 break;
                             case OperandKind.SidSidNumber:
                                 break;
@@ -147,25 +157,36 @@ namespace NewFontParser.Tables.Cff.Type1
 
             foreach (byte[] bytes in StringIndex.Data)
             {
-                Strings.Add(Encoding.ASCII.GetString(bytes));
+                Strings.Add(System.Text.Encoding.ASCII.GetString(bytes));
             }
 
             GlobalSubrIndex = new Index(reader);
 
-            Encodings = new Index(reader);
-
-            reader.Seek(Convert.ToInt64(TopDictOperatorEntries.First(e => e.Name == "charset").Operand));
-
-            CharSets = new Index(reader);
+            byte encodingFormat = reader.ReadByte();
+            Encoding = encodingFormat switch
+            {
+                0 => new Encoding0(reader),
+                1 => new Encoding1(reader),
+                _ => Encoding
+            };
 
             reader.Seek(Convert.ToInt64(TopDictOperatorEntries.First(e => e.Name == "CharStrings").Operand));
 
             CharStrings = new Index(reader);
 
-            foreach (byte[] bytes in CharStrings.Data)
+            reader.Seek(Convert.ToInt64(TopDictOperatorEntries.First(e => e.Name == "charset").Operand));
+
+            byte charsetFormat = reader.ReadByte();
+            CharSet = charsetFormat switch
             {
-                CharStringList.Add(Encoding.UTF32.GetString(bytes));
-            }
+                0 => new Format0(reader,
+                    Convert.ToUInt16(CharStrings.Data.Length)),
+                1 => new Format1(reader,
+                    Convert.ToUInt16(CharStrings.Data.Length)),
+                2 => new Format2(reader,
+                    Convert.ToUInt16(CharStrings.Data.Length)),
+                _ => CharSet
+            };
         }
     }
 }

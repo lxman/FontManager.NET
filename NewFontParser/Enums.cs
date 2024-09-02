@@ -319,6 +319,17 @@ public enum ProcessLogicalOrder
     NA
 }
 
+public enum BitmapDepth : byte
+{
+    OneBit = 1,
+    TwoBits = 2,
+    FourBits = 4,
+    EightBits = 8,
+    FifteenBits = 15,
+    SixteenBits = 16,
+    ThirtyTwoBits = 32
+}
+
 #endregion
 
 #region Flags
@@ -500,6 +511,14 @@ public enum AxisFlags : ushort
     Hidden = 1 << 0,
     Advanced = 1 << 1,
     Reserved = 0xFFFC
+}
+
+[Flags]
+public enum BitmapFlags : sbyte
+{
+    Horizontal = 1 << 0,
+    Vertical = 1 << 1,
+    Reserved1 = -4
 }
 
 #endregion

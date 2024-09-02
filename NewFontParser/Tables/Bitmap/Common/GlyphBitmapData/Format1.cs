@@ -1,0 +1,18 @@
+﻿using NewFontParser.Reader;
+
+namespace NewFontParser.Tables.Bitmap.Common.GlyphBitmapData
+{
+    public class Format1 : IGlyphBitmapDataFormat
+    {
+        public SmallGlyphMetricsRecord SmallGlyphMetrics { get; }
+
+        public byte[] BitmapData { get; }
+
+        public Format1(BigEndianReader reader)
+        {
+            SmallGlyphMetrics = new SmallGlyphMetricsRecord(reader);
+            // TODO: Figure out how to read the bitmap data
+            BitmapData = reader.ReadBytes(0);
+        }
+    }
+}

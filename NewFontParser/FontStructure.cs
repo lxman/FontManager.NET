@@ -5,8 +5,14 @@ using System.Reflection;
 using NewFontParser.Models;
 using NewFontParser.Tables;
 using NewFontParser.Tables.Aat.Feat;
+using NewFontParser.Tables.Aat.Prop;
 using NewFontParser.Tables.Avar;
 using NewFontParser.Tables.Base;
+using NewFontParser.Tables.Bitmap.Cbdt;
+using NewFontParser.Tables.Bitmap.Cblc;
+using NewFontParser.Tables.Bitmap.Ebdt;
+using NewFontParser.Tables.Bitmap.Eblc;
+using NewFontParser.Tables.Bitmap.Ebsc;
 using NewFontParser.Tables.Cff.Type1;
 using NewFontParser.Tables.Cmap;
 using NewFontParser.Tables.Colr;
@@ -68,11 +74,11 @@ namespace NewFontParser
 
         private VheaTable? _vheaTable;
 
-        private readonly string _path;
+        private readonly string _currentFile;
 
         public FontStructure(string path)
         {
-            _path = path;
+            _currentFile = path.Split("\\", StringSplitOptions.RemoveEmptyEntries)[^1];
         }
 
         public void CollectTableNames()
@@ -128,6 +134,12 @@ namespace NewFontParser
             ProcessTable<CvarTable>();
             ProcessTable<PfedTable>();
             ProcessTable<TtfaTable>();
+            ProcessTable<PropTable>();
+            ProcessTable<EbdtTable>();
+            ProcessTable<CbdtTable>();
+            ProcessTable<CblcTable>();
+            ProcessTable<EblcTable>();
+            ProcessTable<EbscTable>();
             (Tables.Find(x => x is VmtxTable) as VmtxTable)?.Process(_vheaTable!.NumberOfLongVerMetrics);
             (Tables.Find(x => x is HdmxTable) as HdmxTable)?.Process(_maxPTable!.NumGlyphs);
             (Tables.Find(x => x is LocaTable) as LocaTable)?.Process(_maxPTable!.NumGlyphs, _headTable!.IndexToLocFormat == IndexToLocFormat.Offset16);

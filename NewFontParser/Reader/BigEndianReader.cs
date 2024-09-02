@@ -44,6 +44,11 @@ namespace NewFontParser.Reader
             return _data[Position++];
         }
 
+        public sbyte ReadSByte()
+        {
+            return (sbyte)ReadByte();
+        }
+
         public ushort ReadUShort()
         {
             return ReadUShort16();
