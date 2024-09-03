@@ -2,6 +2,5 @@
 {
     public interface IClassDefinition
     {
-        long Length { get; }
     }
 }

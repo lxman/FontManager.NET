@@ -5,8 +5,6 @@ namespace NewFontParser.Tables.Common.GlyphClassDef
 {
     public class ClassDefinition1 : IClassDefinition
     {
-        public long Length { get; }
-
         public ushort Format => 1;
 
         public ushort StartGlyph { get; }
@@ -20,13 +18,7 @@ namespace NewFontParser.Tables.Common.GlyphClassDef
             _ = reader.ReadBytes(2);
             StartGlyph = reader.ReadUShort();
             GlyphCount = reader.ReadUShort();
-            Length = 6;
-            Classes = new ushort[GlyphCount];
-            for (var i = 0; i < GlyphCount; i++)
-            {
-                Classes[i] = reader.ReadUShort();
-                Length += 2;
-            }
+            Classes = reader.ReadUShortArray(GlyphCount);
         }
     }
 }

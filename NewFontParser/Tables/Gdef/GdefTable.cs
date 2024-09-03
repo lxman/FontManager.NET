@@ -72,11 +72,9 @@ namespace NewFontParser.Tables.Gdef
                 MarkGlyphSetsTable = new MarkGlyphSetsTable(reader);
             }
 
-            if (Header.ItemVarStoreOffset.HasValue && Header.ItemVarStoreOffset > 0)
-            {
-                reader.Seek(Header.ItemVarStoreOffset ?? 0);
-                ItemVarStore = new VariationIndexTable(reader);
-            }
+            if (!Header.ItemVarStoreOffset.HasValue || !(Header.ItemVarStoreOffset > 0)) return;
+            reader.Seek(Header.ItemVarStoreOffset ?? 0);
+            ItemVarStore = new VariationIndexTable(reader);
         }
     }
 }
