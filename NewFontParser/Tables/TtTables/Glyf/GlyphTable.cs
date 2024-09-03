@@ -22,6 +22,8 @@ namespace NewFontParser.Tables.TtTables.Glyf
         {
             for (var i = 0; i < numGlyphs; i++)
             {
+                uint length = offsets.Offsets[i + 1] - offsets.Offsets[i];
+                if (length == 0) continue;
                 _reader.Seek(offsets.Offsets[i]);
 
                 var glyphHeader = new GlyphHeader(_reader.ReadBytes(GlyphHeader.RecordSize));

@@ -84,7 +84,7 @@ namespace NewFontParser.Tables.TtTables.Glyf
                 }
                 else if (flags[i].HasFlag(SimpleGlyphFlags.YIsSameOrPositiveYShortVector))
                 {
-                    yCoordinates[i] = Convert.ToInt16(i > 0 ? xCoordinates[i - 1] : 0);
+                    yCoordinates[i] = Convert.ToInt16(i > 0 ? yCoordinates[i - 1] : 0);
                 }
                 else
                 {
@@ -92,7 +92,7 @@ namespace NewFontParser.Tables.TtTables.Glyf
                 }
             }
 
-            for (var i = 0; i < numberOfPoints - 1; i++)
+            for (var i = 0; i < numberOfPoints; i++)
             {
                 Coordinates.Add(new SimpleGlyphCoordinate(new Point(xCoordinates[i], yCoordinates[i]), flags[i].HasFlag(SimpleGlyphFlags.OnCurve)));
             }
