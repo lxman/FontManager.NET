@@ -17,8 +17,9 @@ namespace NewFontParser.Tables.Math
             {
                 return;
             }
-            reader.Seek(parentTableOrigin + deviceOffset);
-            DeviceTable = new DeviceTable(reader);
+            // TODO: Come back and fix this
+            //reader.Seek(parentTableOrigin + deviceOffset);
+            //DeviceTable = new DeviceTable(reader);
         }
     }
 }

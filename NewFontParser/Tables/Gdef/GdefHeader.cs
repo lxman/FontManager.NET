@@ -28,12 +28,12 @@ namespace NewFontParser.Tables.Gdef
             AttachListOffset = reader.ReadUShort();
             LigCaretListOffset = reader.ReadUShort();
             MarkAttachClassDefOffset = reader.ReadUShort();
-            if (MinorVersion >= 1)
+            if (MinorVersion >= 2)
             {
                 MarkGlyphSetsDefOffset = reader.ReadUShort();
             }
 
-            if (MinorVersion >= 2)
+            if (MinorVersion > 2)
             {
                 ItemVarStoreOffset = reader.ReadUShort();
             }

@@ -13,13 +13,16 @@ namespace NewFontParser.Tables.Gdef
 
         public LigCaretListTable(BigEndianReader reader)
         {
+            long position = reader.Position;
+
             CoverageOffset = reader.ReadUShort();
             LigGlyphCount = reader.ReadUShort();
+            ushort[] ligGlyphOffsets = reader.ReadUShortArray(LigGlyphCount);
             for (var i = 0; i < LigGlyphCount; i++)
             {
-                byte[] ligGlyphTableLengthData = reader.PeekBytes(2);
-                var ligGlyphTableLength = (ushort)(ligGlyphTableLengthData[0] << 8 | ligGlyphTableLengthData[1]);
-                LigGlyphOffsets.Add(new LigGlyphTable(reader.ReadBytes(ligGlyphTableLength)));
+                if (ligGlyphOffsets[i] == 0) continue;
+                reader.Seek(position + ligGlyphOffsets[i]);
+                LigGlyphOffsets.Add(new LigGlyphTable(reader));
             }
         }
     }

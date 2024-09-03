@@ -12,35 +12,32 @@ namespace NewFontParser.Tables.Math
 
         public MathKernTable? BottomLeftMathKern { get; }
 
-        public MathKernInfoRecord(BigEndianReader reader)
+        public MathKernInfoRecord(BigEndianReader reader, long mathKernInfoTableStart, ushort[] offsets)
         {
-            long position = reader.Position;
-
-            ushort topRightMathKernOffset = reader.ReadUShort();
-            ushort topLeftMathKernOffset = reader.ReadUShort();
-            ushort bottomRightMathKernOffset = reader.ReadUShort();
-            ushort bottomLeftMathKernOffset = reader.ReadUShort();
+            ushort topRightMathKernOffset = offsets[0];
+            ushort topLeftMathKernOffset = offsets[1];
+            ushort bottomRightMathKernOffset = offsets[2];
+            ushort bottomLeftMathKernOffset = offsets[3];
 
             if (topRightMathKernOffset > 0)
             {
-                reader.Seek(position + topRightMathKernOffset);
+                reader.Seek(mathKernInfoTableStart + topRightMathKernOffset);
                 TopRightMathKern = new MathKernTable(reader);
             }
             if (topLeftMathKernOffset > 0)
             {
-                reader.Seek(position + topLeftMathKernOffset);
+                reader.Seek(mathKernInfoTableStart + topLeftMathKernOffset);
                 TopLeftMathKern = new MathKernTable(reader);
             }
             if (bottomRightMathKernOffset > 0)
             {
-                reader.Seek(position + bottomRightMathKernOffset);
+                reader.Seek(mathKernInfoTableStart + bottomRightMathKernOffset);
                 BottomRightMathKern = new MathKernTable(reader);
             }
-            if (bottomLeftMathKernOffset > 0)
-            {
-                reader.Seek(position + bottomLeftMathKernOffset);
-                BottomLeftMathKern = new MathKernTable(reader);
-            }
+
+            if (bottomLeftMathKernOffset == 0) return;
+            reader.Seek(mathKernInfoTableStart + bottomLeftMathKernOffset);
+            BottomLeftMathKern = new MathKernTable(reader);
         }
     }
 }

@@ -19,8 +19,8 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public Format8(BigEndianReader reader)
         {
-            Format = reader.ReadUInt16();
-            _ = reader.ReadUInt16();
+            Format = reader.ReadUShort();
+            _ = reader.ReadUShort();
             Length = reader.ReadUInt32();
             Language = reader.ReadInt32();
             Is32 = reader.ReadByte();

@@ -23,7 +23,7 @@ namespace NewFontParser.Tables.Fvar
             MinValue = reader.ReadF16Dot16();
             DefaultValue = reader.ReadF16Dot16();
             MaxValue = reader.ReadF16Dot16();
-            Flags = (AxisFlags)reader.ReadUInt16();
+            Flags = (AxisFlags)reader.ReadUShort();
             AxisNameId = reader.ReadUShort();
         }
     }

@@ -29,7 +29,7 @@ namespace NewFontParser.Tables.Gdef
             if (Header.GlyphClassDefOffset.HasValue && Header.GlyphClassDefOffset > 0)
             {
                 reader.Seek(Header.GlyphClassDefOffset ?? 0);
-                var format = reader.PeekBytes(2);
+                byte[] format = reader.PeekBytes(2);
                 if (format[1] == 1)
                 {
                     GlyphClassDef = new ClassDefinition1(reader);
@@ -55,7 +55,7 @@ namespace NewFontParser.Tables.Gdef
             if (Header.MarkAttachClassDefOffset.HasValue && Header.MarkAttachClassDefOffset > 0)
             {
                 reader.Seek(Header.MarkAttachClassDefOffset ?? 0);
-                var format = reader.PeekBytes(2);
+                byte[] format = reader.PeekBytes(2);
                 if (format[1] == 1)
                 {
                     MarkAttachClassDef = new ClassDefinition1(reader);

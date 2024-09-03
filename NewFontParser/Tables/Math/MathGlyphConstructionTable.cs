@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NewFontParser.Reader;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace NewFontParser.Tables.Math
 {
@@ -11,7 +12,7 @@ namespace NewFontParser.Tables.Math
 
         public MathGlyphConstructionTable(BigEndianReader reader)
         {
-            var position = reader.Position;
+            long position = reader.Position;
 
             ushort glyphAssemblyOffset = reader.ReadUShort();
 
@@ -22,9 +23,11 @@ namespace NewFontParser.Tables.Math
                 GlyphVariantRecords.Add(new MathGlyphVariantRecord(reader));
             }
 
+            if (glyphAssemblyOffset == 0) return;
             reader.Seek(position + glyphAssemblyOffset);
 
             GlyphAssembly = new GlyphAssemblyTable(reader);
+            reader.LogChanges = false;
         }
     }
 }

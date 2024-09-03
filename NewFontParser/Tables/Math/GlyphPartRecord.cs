@@ -20,7 +20,7 @@ namespace NewFontParser.Tables.Math
             StartConnectorLength = reader.ReadUShort();
             EndConnectorLength = reader.ReadUShort();
             FullAdvance = reader.ReadUShort();
-            PartFlags = (PartFlags)reader.ReadByte();
+            PartFlags = (PartFlags)reader.ReadUShort();
         }
     }
 }

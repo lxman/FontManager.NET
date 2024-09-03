@@ -8,9 +8,9 @@ namespace NewFontParser.Tables.Math
     {
         public ushort MinConnectorOverlap { get; }
 
-        public ICoverageFormat VertGlyphCoverage { get; }
+        public ICoverageFormat? VertGlyphCoverage { get; }
 
-        public ICoverageFormat HorizGlyphCoverage { get; }
+        public ICoverageFormat? HorizGlyphCoverage { get; }
 
         public List<MathGlyphConstructionTable> VertGlyphConstruction { get; } = new List<MathGlyphConstructionTable>();
 
@@ -28,16 +28,19 @@ namespace NewFontParser.Tables.Math
             ushort vertGlyphCount = reader.ReadUShort();
             ushort horizGlyphCount = reader.ReadUShort();
 
-            var vertGlyphConstructionOffsets = new ushort[vertGlyphCount];
-            for (var i = 0; i < vertGlyphCount; i++)
+            ushort[] vertGlyphConstructionOffsets = reader.ReadUShortArray(vertGlyphCount);
+            ushort[] horizGlyphConstructionOffsets = reader.ReadUShortArray(horizGlyphCount);
+
+            if (vertGlyphCoverageOffset > 0)
             {
-                vertGlyphConstructionOffsets[i] = reader.ReadUShort();
+                reader.Seek(position + vertGlyphCoverageOffset);
+                VertGlyphCoverage = new Format1(reader);
             }
 
-            var horizGlyphConstructionOffsets = new ushort[horizGlyphCount];
-            for (var i = 0; i < horizGlyphCount; i++)
+            if (horizGlyphCoverageOffset > 0)
             {
-                horizGlyphConstructionOffsets[i] = reader.ReadUShort();
+                reader.Seek(position + horizGlyphCoverageOffset);
+                HorizGlyphCoverage = new Format1(reader);
             }
 
             for (var i = 0; i < vertGlyphCount; i++)
@@ -51,12 +54,6 @@ namespace NewFontParser.Tables.Math
                 reader.Seek(position + horizGlyphConstructionOffsets[i]);
                 HorizGlyphConstruction.Add(new MathGlyphConstructionTable(reader));
             }
-
-            reader.Seek(position + vertGlyphCoverageOffset);
-            VertGlyphCoverage = new Format1(reader);
-
-            reader.Seek(position + horizGlyphCoverageOffset);
-            HorizGlyphCoverage = new Format1(reader);
         }
     }
 }

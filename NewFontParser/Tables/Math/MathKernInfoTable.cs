@@ -2,6 +2,9 @@
 using NewFontParser.Reader;
 using NewFontParser.Tables.CoverageFormat;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS8601 // Possible null reference assignment.
+
 namespace NewFontParser.Tables.Math
 {
     public class MathKernInfoTable
@@ -12,15 +15,19 @@ namespace NewFontParser.Tables.Math
 
         public MathKernInfoTable(BigEndianReader reader)
         {
-            var position = reader.Position;
+            long position = reader.Position;
 
             ushort mathKernCoverageOffset = reader.ReadUShort();
 
             ushort mathKernCount = reader.ReadUShort();
 
+            ushort[] mathKernValues = reader.ReadUShortArray(4 * mathKernCount);
+            ushort mathKernIndex = 0;
+
             for (var i = 0; i < mathKernCount; i++)
             {
-                MathKernInfoRecords.Add(new MathKernInfoRecord(reader));
+                MathKernInfoRecords.Add(new MathKernInfoRecord(reader, position, mathKernValues[mathKernIndex..(mathKernIndex + 4)]));
+                mathKernIndex += 4;
             }
 
             reader.Seek(position + mathKernCoverageOffset);

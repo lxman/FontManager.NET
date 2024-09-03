@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
+using Serilog;
 
 namespace NewFontParser.Reader
 {
@@ -12,6 +15,8 @@ namespace NewFontParser.Reader
 
         public long Position { get; private set; }
 
+        public bool LogChanges { get; set; }
+
         private readonly byte[] _data;
 
         public BigEndianReader(byte[] data)
@@ -21,14 +26,29 @@ namespace NewFontParser.Reader
 
         public void Seek(long position)
         {
+            if (LogChanges) Log.Debug($"Position moved - now {position}");
             Position = position;
         }
 
-        public byte[] ReadBytes(long count)
+        public byte[] ReadBytes(
+            long count,
+            [CallerMemberName] string member = "",
+            [CallerFilePath] string path = "",
+            [CallerLineNumber] int line = -1)
         {
+            if (Position + count > _data.Length)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine($"Source array was not long enough by {Position + count - _data.Length} bytes.");
+                sb.AppendLine($"Called from {path}");
+                sb.AppendLine(member);
+                sb.AppendLine($"Line #{line}");
+                throw new ArgumentException(sb.ToString(), nameof(_data));
+            }
             var result = new byte[count];
             Array.Copy(_data, Position, result, 0, count);
             Position += count;
+            if (LogChanges) Log.Debug($"Bytes read - position is now {Position}");
             return result;
         }
 
@@ -41,6 +61,7 @@ namespace NewFontParser.Reader
 
         public byte ReadByte()
         {
+            if (LogChanges) Log.Debug($"Byte read - position is now {Position + 1}");
             return _data[Position++];
         }
 
@@ -54,14 +75,9 @@ namespace NewFontParser.Reader
             return ReadUShort16();
         }
 
-        public uint ReadUInt16()
-        {
-            return (uint)ReadUShort16();
-        }
-
         public short ReadShort()
         {
-            return (short)ReadUShort16();
+            return BinaryPrimitives.ReadInt16BigEndian(ReadBytes(2));
         }
 
         public int ReadInt16()
@@ -77,53 +93,40 @@ namespace NewFontParser.Reader
 
         public uint ReadUInt32()
         {
-            byte[] data = ReadBytes(4);
-            return (uint)((data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3]);
+            return BinaryPrimitives.ReadUInt32BigEndian(ReadBytes(4));
         }
 
         public long ReadLong()
         {
-            byte[] data = ReadBytes(8);
-            long result = 0;
-            result |= (long)data[0] << 56;
-            result |= (long)data[1] << 48;
-            result |= (long)data[2] << 40;
-            result |= (long)data[3] << 32;
-            result |= (long)data[4] << 24;
-            result |= (long)data[5] << 16;
-            result |= (long)data[6] << 8;
-            result |= data[7];
-            return result;
+            return BinaryPrimitives.ReadInt64BigEndian(ReadBytes(8));
         }
 
         public int ReadInt32()
         {
             byte[] data = ReadBytes(4);
-            return (data[0] << 24) | (data[1] << 16) | (data[2] << 8) | data[3];
+            return BinaryPrimitives.ReadInt32BigEndian(data);
         }
 
         public float ReadF16Dot16()
         {
             byte[] data = ReadBytes(4);
-            return (data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3]) / 65536.0f;
+            return BinaryPrimitives.ReadInt32BigEndian(data) / 65536.0f;
         }
 
         public float ReadF2Dot14()
         {
             byte[] data = ReadBytes(2);
-            return (data[0] << 8 | data[1]) / 16384.0f;
+            return BinaryPrimitives.ReadInt16BigEndian(data) / 16384.0f;
         }
 
         public long ReadLongDateTime()
         {
-            byte[] data = ReadBytes(8);
-            return (data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3]) * 0x100000000L + (data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7]);
+            return ReadLong();
         }
 
         private ushort ReadUShort16()
         {
-            byte[] data = ReadBytes(2);
-            return (ushort)((data[0] << 8) | data[1]);
+            return BinaryPrimitives.ReadUInt16BigEndian(ReadBytes(2));
         }
 
         public ushort[] ReadUShortArray(int count)

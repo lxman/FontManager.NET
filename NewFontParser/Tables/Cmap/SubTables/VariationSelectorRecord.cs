@@ -14,19 +14,19 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public NonDefaultUvsTableHeader? NonDefaultUvsTableHeader { get; }
 
-        public VariationSelectorRecord(BigEndianReader reader)
+        public VariationSelectorRecord(BigEndianReader reader, long tableStart)
         {
             VarSelector = reader.ReadUInt24();
             DefaultUvsOffset = reader.ReadUInt32();
             NonDefaultUvsOffset = reader.ReadUInt32();
             if (DefaultUvsOffset > 0)
             {
-                reader.Seek(DefaultUvsOffset);
+                reader.Seek(tableStart + DefaultUvsOffset);
                 DefaultUvsTableHeader = new DefaultUvsTableHeader(reader);
             }
 
             if (NonDefaultUvsOffset <= 0) return;
-            reader.Seek(NonDefaultUvsOffset);
+            reader.Seek(tableStart + NonDefaultUvsOffset);
             NonDefaultUvsTableHeader = new NonDefaultUvsTableHeader(reader);
         }
     }

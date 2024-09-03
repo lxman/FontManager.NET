@@ -21,6 +21,8 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkLigPos
 
         public Format1(BigEndianReader reader)
         {
+            long position = reader.Position;
+
             Format = reader.ReadUShort();
             MarkCoverageOffset = reader.ReadUShort();
             LigatureCoverageOffset = reader.ReadUShort();
@@ -28,7 +30,9 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkLigPos
             MarkArrayOffset = reader.ReadUShort();
             LigatureArrayOffset = reader.ReadUShort();
 
-            LigatureArrayTable = new LigatureArrayTable(reader.ReadBytes(LigatureArrayOffset), MarkClassCount);
+            if (LigatureArrayOffset == 0) return;
+            reader.Seek(position + LigatureArrayOffset);
+            LigatureArrayTable = new LigatureArrayTable(reader, MarkClassCount);
         }
     }
 }

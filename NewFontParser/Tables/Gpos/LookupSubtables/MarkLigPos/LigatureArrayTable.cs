@@ -9,14 +9,16 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkLigPos
 
         public List<LigatureAttachTable> LigatureAttachTables { get; } = new List<LigatureAttachTable>();
 
-        public LigatureArrayTable(byte[] data, ushort markClassCount)
+        public LigatureArrayTable(BigEndianReader reader, ushort markClassCount)
         {
-            var reader = new BigEndianReader(data);
+            long position = reader.Position;
 
             LigatureCount = reader.ReadUShort();
-            for (var i = 0; i < LigatureCount; i++)
+            ushort[] ligatureAttachOffsets = reader.ReadUShortArray(LigatureCount);
+            for (var i = 0; i < ligatureAttachOffsets.Length; i++)
             {
-                LigatureAttachTables.Add(new LigatureAttachTable(reader.ReadBytes(2 + (2 * markClassCount)), markClassCount));
+                reader.Seek(position + ligatureAttachOffsets[i]);
+                LigatureAttachTables.Add(new LigatureAttachTable(reader, markClassCount));
             }
         }
     }

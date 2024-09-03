@@ -17,12 +17,14 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public Format14(BigEndianReader reader)
         {
-            Format = reader.ReadUInt16();
+            long position = reader.Position;
+
+            Format = reader.ReadUShort();
             Length = reader.ReadUInt32();
             NumVarSelectorRecords = reader.ReadUInt32();
             for (var i = 0; i < NumVarSelectorRecords; i++)
             {
-                VarSelectorRecords.Add(new VariationSelectorRecord(reader));
+                VarSelectorRecords.Add(new VariationSelectorRecord(reader, position));
             }
         }
     }

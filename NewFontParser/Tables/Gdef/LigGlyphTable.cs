@@ -5,16 +5,12 @@ namespace NewFontParser.Tables.Gdef
 {
     public class LigGlyphTable
     {
-        public ushort CaretCount { get; }
-
         public List<ushort> CaretValueOffsets { get; } = new List<ushort>();
 
-        public LigGlyphTable(byte[] data)
+        public LigGlyphTable(BigEndianReader reader)
         {
-            var reader = new BigEndianReader(data);
-
-            CaretCount = reader.ReadUShort();
-            for (var i = 0; i < CaretCount; i++)
+            ushort caretCount = reader.ReadUShort();
+            for (var i = 0; i < caretCount; i++)
             {
                 CaretValueOffsets.Add(reader.ReadUShort());
             }
