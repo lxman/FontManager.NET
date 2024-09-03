@@ -8,7 +8,8 @@ namespace NewFontParserTester
         public void Run()
         {
             List<string> errors = [];
-            const string rootDirectory = @"C:\Users\jorda\source\repos\Typography\Demo\Windows\TestFonts";
+            //const string rootDirectory = @"C:\Users\jorda\source\repos\Typography\Demo\Windows\TestFonts";
+            const string rootDirectory = "TestFonts";
             List<string> fonts = Directory.GetFiles(rootDirectory).Where(f => (f.EndsWith(".ttf") || f.EndsWith(".otf"))) // && f.Split('\\').Last().StartsWith("A"))
                 .ToList();
             Log.Debug($"Found {fonts.Count} fonts to load.");
