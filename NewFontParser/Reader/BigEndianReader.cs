@@ -70,6 +70,14 @@ namespace NewFontParser.Reader
             return (sbyte)ReadByte();
         }
 
+        public sbyte[] ReadSbytes(int count)
+        {
+            var result = new sbyte[count];
+            Array.Copy(_data, Position, result, 0, count);
+            Position += count;
+            return result;
+        }
+
         public ushort ReadUShort()
         {
             return ReadUShort16();

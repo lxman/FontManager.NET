@@ -4,18 +4,16 @@ namespace NewFontParser.Tables.Common.GlyphClassDef
 {
     public class ClassRangeRecord
     {
-        public ushort StartGlyphID { get; }
+        public ushort StartGlyphId { get; }
 
-        public ushort EndGlyphID { get; }
+        public ushort EndGlyphId { get; }
 
         public GlyphClassType GlyphClass { get; }
 
-        public ClassRangeRecord(byte[] data)
+        public ClassRangeRecord(BigEndianReader reader)
         {
-            var reader = new BigEndianReader(data);
-
-            StartGlyphID = reader.ReadUShort();
-            EndGlyphID = reader.ReadUShort();
+            StartGlyphId = reader.ReadUShort();
+            EndGlyphId = reader.ReadUShort();
             GlyphClass = (GlyphClassType)reader.ReadUShort();
         }
     }

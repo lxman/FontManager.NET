@@ -1,7 +1,7 @@
 ﻿using NewFontParser.Reader;
 using NewFontParser.Tables.Common.GlyphClassDef;
+using NewFontParser.Tables.CoverageFormat;
 using NewFontParser.Tables.Gdef;
-using Serilog;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 #pragma warning disable CS8601 // Possible null reference assignment.
 
@@ -29,9 +29,10 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
 
         public ChainedClassSequenceRuleSet[] ChainedClassSequenceRuleSets { get; }
 
+        public ICoverageFormat Coverage { get; }
+
         public ChainedSequenceContextFormat2(BigEndianReader reader)
         {
-            Log.Debug("Entered ChainedSequenceContextFormat2");
             long position = reader.Position;
 
             Format = reader.ReadUShort();
@@ -75,14 +76,24 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
                     _ => LookaheadClassDef
                 };
             }
+
             ChainedClassSequenceRuleSets = new ChainedClassSequenceRuleSet[ChainedClassSequenceRuleSetCount];
             for (var i = 0; i < ChainedClassSequenceRuleSetCount; i++)
             {
                 if (chainedClassSequenceRuleSetOffsets[i] == 0) continue;
-                reader.Seek(chainedClassSequenceRuleSetOffsets[i]);
+                reader.Seek(position + chainedClassSequenceRuleSetOffsets[i]);
                 ChainedClassSequenceRuleSets[i] = new ChainedClassSequenceRuleSet(reader);
             }
-            Log.Debug("ChainedSequenceContextFormat2 success!");
+
+            if (CoverageOffset == 0) return;
+            reader.Seek(position + CoverageOffset);
+            byte coverageFormat = reader.PeekBytes(2)[1];
+            Coverage = coverageFormat switch
+            {
+                1 => new CoverageFormat.Format1(reader),
+                2 => new CoverageFormat.Format2(reader),
+                _ => Coverage
+            };
         }
     }
 }

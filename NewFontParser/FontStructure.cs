@@ -36,6 +36,8 @@ using NewFontParser.Tables.Optional;
 using NewFontParser.Tables.Optional.Dsig;
 using NewFontParser.Tables.Optional.Hdmx;
 using NewFontParser.Tables.Pfed;
+using NewFontParser.Tables.Proprietary.Bdf;
+using NewFontParser.Tables.Proprietary.Pclt;
 using NewFontParser.Tables.Proprietary.Tex;
 using NewFontParser.Tables.Stat;
 using NewFontParser.Tables.Svg;
@@ -127,6 +129,8 @@ namespace NewFontParser
             ProcessTable<EblcTable>();
             ProcessTable<EbscTable>();
             ProcessTable<TexTable>();
+            ProcessTable<PcltTable>();
+            ProcessTable<BdfTable>();
             (Tables.Find(x => x is VmtxTable) as VmtxTable)?.Process(GetTable<VheaTable>().NumberOfLongVerMetrics);
             (Tables.Find(x => x is HdmxTable) as HdmxTable)?.Process(GetTable<MaxPTable>().NumGlyphs);
             (Tables.Find(x => x is LocaTable) as LocaTable)?.Process(GetTable<MaxPTable>().NumGlyphs, GetTable<HeadTable>().IndexToLocFormat == IndexToLocFormat.Offset16);

@@ -5,6 +5,8 @@ namespace NewFontParser.Tables.Bitmap.Ebsc
 {
     public class EbscTable : IInfoTable
     {
+        public static string Tag => "EBSC";
+
         public ushort MajorVersion { get; }
 
         public ushort MinorVersion { get; }

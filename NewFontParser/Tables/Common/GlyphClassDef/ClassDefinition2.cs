@@ -19,7 +19,7 @@ namespace NewFontParser.Tables.Common.GlyphClassDef
             ClassRangeRecords = new List<ClassRangeRecord>();
             for (var i = 0; i < ClassRangeCount; i++)
             {
-                ClassRangeRecords.Add(new ClassRangeRecord(reader.ReadBytes(6)));
+                ClassRangeRecords.Add(new ClassRangeRecord(reader));
             }
         }
     }
