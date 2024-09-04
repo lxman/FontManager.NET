@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KaitaiTtf\KaitaiTtf.csproj" />
     <ProjectReference Include="..\NewFontParser\NewFontParser.csproj" />
   </ItemGroup>
 
