@@ -164,18 +164,16 @@ namespace NewFontParser
 
             if (!TableRecords.Exists(x => x.Tag == tag))
             {
-                Log.Debug($"{tag} table entry not found");
+                //Log.Debug($"{tag} table entry not found");
                 return;
             }
 
             try
             {
-                Log.Debug($"Processing {tag}");
                 _tables.FirstOrDefault(t => t.Name == tag)!.Attempted = true;
                 byte[] data = TableRecords.Find(x => x.Tag == tag).Data;
                 Tables.Add((T)Activator.CreateInstance(typeof(T), data));
                 _tables.Remove(_tables.FirstOrDefault(x => x.Name == tag));
-                Log.Debug($"{tag} success");
             }
             catch (Exception e)
             {

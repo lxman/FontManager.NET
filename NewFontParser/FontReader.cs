@@ -1,11 +1,9 @@
-﻿using System;
-using System.Buffers.Binary;
+﻿using System.Buffers.Binary;
 using System.IO;
 using System.Linq;
 using System.Text;
 using NewFontParser.Models;
 using NewFontParser.Reader;
-using Serilog;
 
 namespace NewFontParser
 {
@@ -13,8 +11,6 @@ namespace NewFontParser
     {
         public FontStructure ReadFile(string file)
         {
-            string? fileName = file.Split('\\', StringSplitOptions.RemoveEmptyEntries).Last();
-            Log.Debug($"Creating a FontStructure for {fileName}.********************************");
             var reader = new FileByteReader(file);
             var fontStructure = new FontStructure(file);
             byte[] data = reader.ReadBytes(4);

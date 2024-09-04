@@ -1,5 +1,4 @@
 ﻿using NewFontParser.Reader;
-using Serilog;
 
 namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
 {
@@ -19,9 +18,7 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
             for (var i = 0; i < ChainedClassSequenceRuleCount; i++)
             {
                 reader.Seek(position + chainedClassSequenceRuleOffsets[i]);
-                Log.Debug("Creating ChainedClassSequenceRule");
                 ChainedClassSequenceRules[i] = new ChainedClassSequenceRule(reader);
-                Log.Debug("Creating ChainedClassSequenceRule success!");
             }
         }
     }
