@@ -10,8 +10,11 @@ namespace NewFontParserTester
             List<string> errors = [];
             List<string> fonts = [];
             const string rootDirectory = @"C:\Users\jorda\source\TestFonts";
-            fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".ttf") || f.EndsWith(".otf")).ToList());
+            const string rootDirectory2 = @"C:\Users\jorda\source\TestFonts2";
+            fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".ttf") || f.EndsWith(".otf")));
             fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".ttc")).ToList());
+            fonts.AddRange(Directory.GetFiles(rootDirectory2).Where(f => f.EndsWith(".ttf") || f.EndsWith(".otf")));
+            fonts.AddRange(Directory.GetFiles(rootDirectory2).Where(f => f.EndsWith(".ttc")).ToList());
             Log.Debug($"Found {fonts.Count} fonts to load.");
             fonts.ForEach(f =>
             {
