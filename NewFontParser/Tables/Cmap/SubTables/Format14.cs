@@ -26,6 +26,11 @@ namespace NewFontParser.Tables.Cmap.SubTables
             {
                 VarSelectorRecords.Add(new VariationSelectorRecord(reader, position));
             }
+            reader.Seek(position);
+            for (var i = 0; i < NumVarSelectorRecords; i++)
+            {
+                VarSelectorRecords[i].Process(reader);
+            }
         }
     }
 }

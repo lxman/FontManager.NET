@@ -6,27 +6,34 @@ namespace NewFontParser.Tables.Cmap.SubTables
     {
         public uint VarSelector { get; }
 
-        public uint DefaultUvsOffset { get; }
+        private readonly uint _defaultUvsOffset;
 
-        public uint NonDefaultUvsOffset { get; }
+        private readonly uint _nonDefaultUvsOffset;
 
-        public DefaultUvsTableHeader? DefaultUvsTableHeader { get; }
+        public DefaultUvsTableHeader? DefaultUvsTableHeader { get; private set; }
 
-        public NonDefaultUvsTableHeader? NonDefaultUvsTableHeader { get; }
+        public NonDefaultUvsTableHeader? NonDefaultUvsTableHeader { get; private set; }
+
+        private readonly long _tableStart;
 
         public VariationSelectorRecord(BigEndianReader reader, long tableStart)
         {
+            _tableStart = tableStart;
             VarSelector = reader.ReadUInt24();
-            DefaultUvsOffset = reader.ReadUInt32();
-            NonDefaultUvsOffset = reader.ReadUInt32();
-            if (DefaultUvsOffset > 0)
+            _defaultUvsOffset = reader.ReadUInt32();
+            _nonDefaultUvsOffset = reader.ReadUInt32();
+        }
+
+        public void Process(BigEndianReader reader)
+        {
+            if (_defaultUvsOffset > 0)
             {
-                reader.Seek(tableStart + DefaultUvsOffset);
+                reader.Seek(_tableStart + _defaultUvsOffset);
                 DefaultUvsTableHeader = new DefaultUvsTableHeader(reader);
             }
 
-            if (NonDefaultUvsOffset <= 0) return;
-            reader.Seek(tableStart + NonDefaultUvsOffset);
+            if (_nonDefaultUvsOffset == 0) return;
+            reader.Seek(_tableStart + _nonDefaultUvsOffset);
             NonDefaultUvsTableHeader = new NonDefaultUvsTableHeader(reader);
         }
     }

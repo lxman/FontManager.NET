@@ -6,17 +6,38 @@ namespace NewFontParser.Tables.Cmap
     {
         public static long RecordSize => 8;
 
-        public ushort PlatformId { get; private set; }
+        public PlatformId PlatformId { get; }
 
-        public ushort EncodingId { get; private set; }
+        public Platform0EncodingId? EncodingId0 { get; }
 
-        public uint Offset { get; private set; }
+        public Platform1EncodingId? EncodingId1 { get; }
+
+        public Platform2EncodingId? EncodingId2 { get; }
+
+        public Platform3EncodingId? EncodingId3 { get; }
+
+        public uint Offset { get; }
 
         public EncodingRecord(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            PlatformId = reader.ReadUShort();
-            EncodingId = reader.ReadUShort();
+            PlatformId = (PlatformId)reader.ReadUShort();
+            ushort platformEncodingId = reader.ReadUShort();
+            switch (PlatformId)
+            {
+                case PlatformId.Unicode:
+                    EncodingId0 = (Platform0EncodingId)platformEncodingId;
+                    break;
+                case PlatformId.Macintosh:
+                    EncodingId1 = (Platform1EncodingId)platformEncodingId;
+                    break;
+                case PlatformId.Iso:
+                    EncodingId2 = (Platform2EncodingId)platformEncodingId;
+                    break;
+                case PlatformId.Windows:
+                    EncodingId3 = (Platform3EncodingId)platformEncodingId;
+                    break;
+            }
             Offset = reader.ReadUInt32();
         }
     }

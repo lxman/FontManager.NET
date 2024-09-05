@@ -45,6 +45,7 @@ using NewFontParser.Tables.Ttfa;
 using NewFontParser.Tables.TtTables;
 using NewFontParser.Tables.TtTables.Glyf;
 using NewFontParser.Tables.Vdmx;
+using NewFontParser.Tables.Vorg;
 using Serilog;
 
 namespace NewFontParser
@@ -131,6 +132,7 @@ namespace NewFontParser
             ProcessTable<TexTable>();
             ProcessTable<PcltTable>();
             ProcessTable<BdfTable>();
+            ProcessTable<VorgTable>();
             (Tables.Find(x => x is VmtxTable) as VmtxTable)?.Process(GetTable<VheaTable>().NumberOfLongVerMetrics);
             (Tables.Find(x => x is HdmxTable) as HdmxTable)?.Process(GetTable<MaxPTable>().NumGlyphs);
             (Tables.Find(x => x is LocaTable) as LocaTable)?.Process(GetTable<MaxPTable>().NumGlyphs, GetTable<HeadTable>().IndexToLocFormat == IndexToLocFormat.Offset16);

@@ -82,6 +82,7 @@ namespace NewFontParser
                 reader.Seek(offsets[i]);
                 var fontStructure = new FontStructure(file) { FileType = FileType.Ttc };
                 data = reader.ReadBytes(4);
+                Console.WriteLine($"\tParsing subfont {i + 1}");
                 fontStructures.Add(ParseSingle(reader, fontStructure));
             }
             return fontStructures;

@@ -70,7 +70,10 @@ namespace NewFontParser.Tables.Cmap
                         break;
 
                     case 14:
-                        SubTables.Add(new Format14(reader));
+                        if (encodingRecord is { PlatformId: 0, EncodingId0: { } } && (int)encodingRecord.EncodingId0.Value == 5)
+                        {
+                            SubTables.Add(new Format14(reader));
+                        }
                         break;
                 }
             }
