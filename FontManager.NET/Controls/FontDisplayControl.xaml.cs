@@ -1,6 +1,5 @@
-﻿using System.Windows.Controls;
-using FontManager.NET.Extensions;
-using FontParser;
+﻿using System.Drawing;
+using System.Windows.Controls;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
@@ -11,9 +10,9 @@ namespace FontManager.NET.Controls
     /// </summary>
     public partial class FontDisplayControl : UserControl
     {
-        private readonly GlyphPointF[] _outline;
+        private readonly PointF[] _outline;
 
-        public FontDisplayControl(GlyphPointF[] outline)
+        public FontDisplayControl(PointF[] outline)
         {
             InitializeComponent();
             _outline = outline;

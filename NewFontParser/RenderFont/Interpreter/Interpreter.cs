@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NewFontParser.Extensions;
 using NewFontParser.Tables.TtTables;
 using NewFontParser.Tables.TtTables.Glyf;
+
 // ReSharper disable EqualExpressionComparison
 
 namespace NewFontParser.RenderFont.Interpreter

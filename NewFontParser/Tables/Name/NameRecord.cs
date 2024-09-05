@@ -30,18 +30,23 @@ namespace NewFontParser.Tables.Name
                 case PlatformId.Unicode:
                     EncodingId = (Platform0EncodingId)reader.ReadUShort();
                     break;
+
                 case PlatformId.Macintosh:
                     EncodingId = (MacintoshEncodingId)reader.ReadUShort();
                     break;
+
                 case PlatformId.Iso:
                     EncodingId = (Platform2EncodingId)reader.ReadUShort();
                     break;
+
                 case PlatformId.Windows:
                     EncodingId = (Platform3EncodingId)reader.ReadUShort();
                     break;
+
                 case PlatformId.Custom:
                     _ = reader.ReadUShort();
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }

@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using System.Drawing;
+using System.Windows;
 using FontManager.NET.Controls;
-using FontParser;
 
 namespace FontManager.NET
 {
@@ -9,7 +9,7 @@ namespace FontManager.NET
     /// </summary>
     public partial class FontGlyphsDisplayWindow : Window
     {
-        public FontGlyphsDisplayWindow(GlyphPointF[] outline)
+        public FontGlyphsDisplayWindow(PointF[] outline)
         {
             InitializeComponent();
             FontDisplayControl fontDisplayControl = new(outline);

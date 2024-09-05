@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using NewFontParser.Reader;
+
 #pragma warning disable CS8601 // Possible null reference assignment.
 
 namespace NewFontParser.Tables.Pfed.SubTables

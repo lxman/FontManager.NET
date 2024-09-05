@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace NewFontParser.Tables.Cff.Type1
 {
     public static class Calc
@@ -43,6 +44,7 @@ namespace NewFontParser.Tables.Cff.Type1
                     {
                         case 0xF:
                             return isNegative ? -result : result;
+
                         case 0xE:
                             isNegative = true;
                             continue;

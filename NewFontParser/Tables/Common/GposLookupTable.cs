@@ -49,6 +49,7 @@ namespace NewFontParser.Tables.Common
                     case GposLookupType.SingleAdjustment:
                         SubTables.Add(new SinglePos(reader));
                         break;
+
                     case GposLookupType.PairAdjustment:
                         byte version = reader.PeekBytes(2)[1];
                         switch (version)
@@ -56,23 +57,29 @@ namespace NewFontParser.Tables.Common
                             case 1:
                                 SubTables.Add(new Format1(reader));
                                 break;
+
                             case 2:
                                 SubTables.Add(new Format2(reader));
                                 break;
                         }
                         break;
+
                     case GposLookupType.CursiveAttachment:
                         SubTables.Add(new Gpos.LookupSubtables.CursivePos.Format1(reader));
                         break;
+
                     case GposLookupType.MarkToBaseAttachment:
                         SubTables.Add(new Gpos.LookupSubtables.MarkBasePos.Format1(reader));
                         break;
+
                     case GposLookupType.MarkToLigatureAttachment:
                         SubTables.Add(new Gpos.LookupSubtables.MarkLigPos.Format1(reader));
                         break;
+
                     case GposLookupType.MarkToMarkAttachment:
                         SubTables.Add(new Gpos.LookupSubtables.MarkMarkPos.Format1(reader));
                         break;
+
                     case GposLookupType.ContextPositioning:
                         byte format = reader.PeekBytes(2)[1];
                         switch (format)
@@ -80,14 +87,17 @@ namespace NewFontParser.Tables.Common
                             case 1:
                                 SubTables.Add(new SequenceContextFormat1(reader));
                                 break;
+
                             case 2:
                                 SubTables.Add(new SequenceContextFormat2(reader));
                                 break;
+
                             case 3:
                                 SubTables.Add(new SequenceContextFormat3(reader));
                                 break;
                         }
                         break;
+
                     case GposLookupType.ChainedContextPositioning:
                         format = reader.PeekBytes(2)[1];
                         switch (format)
@@ -95,17 +105,21 @@ namespace NewFontParser.Tables.Common
                             case 1:
                                 SubTables.Add(new ChainedSequenceContextFormat1(reader));
                                 break;
+
                             case 2:
                                 SubTables.Add(new ChainedSequenceContextFormat2(reader));
                                 break;
+
                             case 3:
                                 SubTables.Add(new ChainedSequenceContextFormat3(reader));
                                 break;
                         }
                         break;
+
                     case GposLookupType.PositioningExtension:
                         SubTables.Add(new PosExtensionFormat1(reader));
                         break;
+
                     default:
                         throw new ArgumentOutOfRangeException();
                 }

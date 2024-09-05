@@ -34,6 +34,7 @@ namespace NewFontParser.Tables.Pfed.SubTables
                     case 0:
                         Comments.Add(System.Text.Encoding.BigEndianUnicode.GetString(comment));
                         break;
+
                     case 1:
                         Comments.Add(System.Text.Encoding.UTF8.GetString(comment));
                         break;

@@ -5,7 +5,7 @@ namespace NewFontParserTester
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (File.Exists(@"C:\tmp\FontParser.log")) File.Delete(@"C:\tmp\FontParser.log");
 

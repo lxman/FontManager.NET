@@ -19,6 +19,7 @@ namespace NewFontParser.Tables.Gdef
                 case 1:
                     Coordinate = reader.ReadShort();
                     break;
+
                 case 2:
                     CaretValuePointIndex = reader.ReadUShort();
                     break;

@@ -8,7 +8,7 @@ namespace NewFontParser.Tables.Math
     {
         public ICoverageFormat TopAccentCoverage { get; }
 
-        List<MathValueRecord> TopAccentAttachments { get; } = new List<MathValueRecord>();
+        private List<MathValueRecord> TopAccentAttachments { get; } = new List<MathValueRecord>();
 
         public MathTopAccentAttachment(BigEndianReader reader)
         {

@@ -22,14 +22,17 @@ namespace NewFontParser.Tables.Gdef
                 case 1:
                     Coordinate = reader.ReadShort();
                     break;
+
                 case 2:
                     Coordinate = reader.ReadShort();
                     CaretValuePointIndex = reader.ReadUShort();
                     break;
+
                 case 3:
                     Coordinate = reader.ReadShort();
                     DeviceTableOffset = reader.ReadUShort();
                     break;
+
                 default:
                     throw new System.Exception($"Unknown format: {Format}");
             }

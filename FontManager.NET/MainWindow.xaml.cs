@@ -6,9 +6,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using FontManager.NET.Controls;
 using FontManager.NET.Models;
-using FontParser;
-using FontParser.TrueTypeInterpreter;
-using FontParser.Typeface;
 using Ookii.Dialogs.Wpf;
 using Xceed.Wpf.Toolkit;
 using FontFamily = System.Windows.Media.FontFamily;
@@ -157,15 +154,6 @@ namespace FontManager.NET
             var item = (ListBoxItem)sender;
             e.Handled = true;
             var f = item.Tag.ToString()!;
-            OpenFontReader reader = new();
-            FontParser.Typeface.Typeface tf = reader.Read(File.OpenRead(f));
-            List<GlyphNameMap> names = tf.GetGlyphNameIter().ToList();
-            Glyph glyph = tf.GetGlyph(41);
-            TrueTypeInterpreter interpreter = new();
-            interpreter.SetTypeFace(tf);
-            GlyphPointF[] outline = interpreter.HintGlyph(41, 100);
-            FontGlyphsDisplayWindow display = new(outline);
-            display.Show();
         }
     }
 }

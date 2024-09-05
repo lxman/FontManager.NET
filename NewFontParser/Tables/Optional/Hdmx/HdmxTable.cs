@@ -17,7 +17,6 @@ namespace NewFontParser.Tables.Optional.Hdmx
 
         private readonly BigEndianReader _reader;
 
-
         public HdmxTable(byte[] data)
         {
             _reader = new BigEndianReader(data);

@@ -6,7 +6,6 @@ namespace NewFontParser.Tables.Common.ItemVariationStore
     {
         public DeltaSetRecord(BigEndianReader reader)
         {
-
         }
     }
 }

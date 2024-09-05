@@ -32,27 +32,35 @@ namespace NewFontParser.Tables.Common
                     case ValueFormat.XPlacement:
                         XPlacement = reader.ReadShort();
                         break;
+
                     case ValueFormat.YPlacement:
                         YPlacement = reader.ReadShort();
                         break;
+
                     case ValueFormat.XAdvance:
                         XAdvance = reader.ReadShort();
                         break;
+
                     case ValueFormat.YAdvance:
                         YAdvance = reader.ReadShort();
                         break;
+
                     case ValueFormat.XPlacementDevice:
                         XPlaDeviceOffset = reader.ReadUShort();
                         break;
+
                     case ValueFormat.YPlacementDevice:
                         YPlaDeviceLength = reader.ReadUShort();
                         break;
+
                     case ValueFormat.XAdvanceDevice:
                         XAdvDeviceOffset = reader.ReadUShort();
                         break;
+
                     case ValueFormat.YAdvanceDevice:
                         YAdvDeviceLength = reader.ReadUShort();
                         break;
+
                     default:
                         throw new ArgumentOutOfRangeException(nameof(f), f, null);
                 }

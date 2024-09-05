@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Cff.Type1.Charsets;
+
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 #pragma warning disable CS8601 // Possible null reference assignment.
 
@@ -120,15 +121,19 @@ namespace NewFontParser.Tables.Cff.Type1
                             case OperandKind.StringId:
                                 entry.Operand = Convert.ToInt32(operands[0]);
                                 break;
+
                             case OperandKind.Boolean:
                                 entry.Operand = Convert.ToInt32(operands[0]) == 1;
                                 break;
+
                             case OperandKind.Number:
                                 entry.Operand = Convert.ToInt32(operands[0]);
                                 break;
+
                             case OperandKind.Array:
                                 entry.Operand = new List<double>(operands);
                                 break;
+
                             case OperandKind.Delta:
                                 if (operands.Count > 1)
                                 {
@@ -139,11 +144,14 @@ namespace NewFontParser.Tables.Cff.Type1
                                     entry.Operand = operands[0];
                                 }
                                 break;
+
                             case OperandKind.SidSidNumber:
                                 break;
+
                             case OperandKind.NumberNumber:
                                 entry.Operand = new List<double>(operands);
                                 break;
+
                             default:
                                 throw new ArgumentOutOfRangeException();
                         }

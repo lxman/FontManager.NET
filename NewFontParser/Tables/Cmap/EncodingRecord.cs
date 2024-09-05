@@ -28,12 +28,15 @@ namespace NewFontParser.Tables.Cmap
                 case PlatformId.Unicode:
                     EncodingId0 = (Platform0EncodingId)platformEncodingId;
                     break;
+
                 case PlatformId.Macintosh:
                     EncodingId1 = (Platform1EncodingId)platformEncodingId;
                     break;
+
                 case PlatformId.Iso:
                     EncodingId2 = (Platform2EncodingId)platformEncodingId;
                     break;
+
                 case PlatformId.Windows:
                     EncodingId3 = (Platform3EncodingId)platformEncodingId;
                     break;

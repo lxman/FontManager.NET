@@ -45,6 +45,7 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos
                 case 1:
                     MarkCoverage = new CoverageFormat.Format1(reader);
                     break;
+
                 case 2:
                     MarkCoverage = new Format2(reader);
                     break;
@@ -57,6 +58,7 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos
                 case 1:
                     Mark2Coverage = new CoverageFormat.Format1(reader);
                     break;
+
                 case 2:
                     Mark2Coverage = new Format2(reader);
                     break;

@@ -39,14 +39,18 @@ namespace NewFontParser
                 case FileType.Unk:
                     Console.WriteLine("This is an unknown file type.");
                     return new List<FontStructure>();
+
                 case FileType.Ttf:
                 case FileType.Otf:
                     return new List<FontStructure> { ParseSingle(reader, fontStructure) };
+
                 case FileType.Ttc:
                     return ParseTtc(reader, file);
+
                 case FileType.Otc:
                     Console.WriteLine("I am not aware how to parse otc files yet.");
                     return new List<FontStructure>();
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }

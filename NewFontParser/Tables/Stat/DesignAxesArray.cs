@@ -41,12 +41,15 @@ namespace NewFontParser.Tables.Stat
                     case 1:
                         AxisValueTables.Add(new Format1(reader));
                         break;
+
                     case 2:
                         AxisValueTables.Add(new Format2(reader));
                         break;
+
                     case 3:
                         AxisValueTables.Add(new Format3(reader));
                         break;
+
                     case 4:
                         AxisValueTables.Add(new Format4(reader));
                         break;
