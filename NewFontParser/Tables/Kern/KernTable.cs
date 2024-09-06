@@ -24,6 +24,7 @@ namespace NewFontParser.Tables.Kern
                     case 0:
                         Subtables.Add(new KernSubtableFormat0(reader));
                         break;
+
                     case 2:
                         Subtables.Add(new KernSubtableFormat2(reader));
                         break;

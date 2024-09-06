@@ -9,10 +9,11 @@ namespace NewFontParser.Tables.Colr
 
         public BaseGlyphList(BigEndianReader reader)
         {
+            long start = reader.Position;
             ushort baseGlyphCount = reader.ReadUShort();
             for (var i = 0; i < baseGlyphCount; i++)
             {
-                BaseGlyphPaintRecords.Add(new BaseGlyphPaintRecord(reader));
+                BaseGlyphPaintRecords.Add(new BaseGlyphPaintRecord(reader, start));
             }
         }
     }

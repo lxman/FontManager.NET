@@ -12,11 +12,14 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintTransform(BigEndianReader reader)
         {
+            long start = reader.Position;
             uint paintOffset = reader.ReadUInt24();
             uint transformOffset = reader.ReadUInt24();
-            SubTable = PaintTableFactory.CreatePaintTable(reader, paintOffset);
-            reader.Seek(transformOffset);
+            long beforeBuilding = reader.Position;
+            SubTable = PaintTableFactory.CreatePaintTable(reader, start + paintOffset);
+            reader.Seek(start + transformOffset);
             Transform = new Affine2X3(reader);
+            reader.Seek(beforeBuilding);
         }
     }
 }

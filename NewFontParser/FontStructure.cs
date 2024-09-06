@@ -4,8 +4,6 @@ using System.Linq;
 using System.Reflection;
 using NewFontParser.Models;
 using NewFontParser.Tables;
-using NewFontParser.Tables.Aat.Feat;
-using NewFontParser.Tables.Aat.Prop;
 using NewFontParser.Tables.Avar;
 using NewFontParser.Tables.Base;
 using NewFontParser.Tables.Bitmap.Cbdt;
@@ -28,8 +26,10 @@ using NewFontParser.Tables.Head;
 using NewFontParser.Tables.Hhea;
 using NewFontParser.Tables.Hmtx;
 using NewFontParser.Tables.Hvar;
+using NewFontParser.Tables.Jstf;
 using NewFontParser.Tables.Kern;
 using NewFontParser.Tables.Math;
+using NewFontParser.Tables.Merg;
 using NewFontParser.Tables.Meta;
 using NewFontParser.Tables.Morx;
 using NewFontParser.Tables.Mvar;
@@ -37,9 +37,17 @@ using NewFontParser.Tables.Name;
 using NewFontParser.Tables.Optional;
 using NewFontParser.Tables.Optional.Dsig;
 using NewFontParser.Tables.Optional.Hdmx;
-using NewFontParser.Tables.Pfed;
+using NewFontParser.Tables.Proprietary.Aat.Bdat;
+using NewFontParser.Tables.Proprietary.Aat.Bloc;
+using NewFontParser.Tables.Proprietary.Aat.Feat;
+using NewFontParser.Tables.Proprietary.Aat.Prop;
 using NewFontParser.Tables.Proprietary.Bdf;
+using NewFontParser.Tables.Proprietary.Graphite.Glat;
+using NewFontParser.Tables.Proprietary.Graphite.Gloc;
+using NewFontParser.Tables.Proprietary.Graphite.Silf;
+using NewFontParser.Tables.Proprietary.Graphite.Sill;
 using NewFontParser.Tables.Proprietary.Pclt;
+using NewFontParser.Tables.Proprietary.Pfed;
 using NewFontParser.Tables.Proprietary.Tex;
 using NewFontParser.Tables.Proprietary.Webf;
 using NewFontParser.Tables.Stat;
@@ -111,8 +119,8 @@ namespace NewFontParser
             ProcessTable<Type1Table>();
             ProcessTable<MathTable>();
             ProcessTable<FftmTable>();
-            ProcessTable<ColrTable>();
-            ProcessTable<CpalTable>();
+            // If the Cpal table is missing don't try to process the Colr table
+            if (ProcessTable<CpalTable>()) ProcessTable<ColrTable>();
             ProcessTable<SvgTable>();
             ProcessTable<BaseTable>();
             ProcessTable<MorxTable>();
@@ -139,6 +147,15 @@ namespace NewFontParser
             ProcessTable<WebfTable>();
             ProcessTable<KernTable>();
             ProcessTable<MetaTable>();
+            ProcessTable<JstfTable>();
+            ProcessTable<MergTable>();
+            ProcessTable<GlatTable>();
+            ProcessTable<GlocTable>();
+            ProcessTable<SilfTable>();
+            ProcessTable<SillTable>();
+            ProcessTable<BlocTable>();
+            ProcessTable<BdatTable>();
+            ProcessTable<Tables.Proprietary.Graphite.Feat.FeatTable>();
             (Tables.Find(x => x is VmtxTable) as VmtxTable)?.Process(GetTable<VheaTable>().NumberOfLongVerMetrics);
             (Tables.Find(x => x is HdmxTable) as HdmxTable)?.Process(GetTable<MaxPTable>().NumGlyphs);
             (Tables.Find(x => x is LocaTable) as LocaTable)?.Process(GetTable<MaxPTable>().NumGlyphs, GetTable<HeadTable>().IndexToLocFormat == IndexToLocFormat.Offset16);
@@ -157,7 +174,7 @@ namespace NewFontParser
             _tables.Where(t => t.Attempted).ToList().ForEach(t => Console.WriteLine($"\t{t.Name}"));
         }
 
-        private void ProcessTable<T>() where T : IInfoTable
+        private bool ProcessTable<T>() where T : IInfoTable
         {
             string tag;
             try
@@ -167,13 +184,13 @@ namespace NewFontParser
             catch (Exception e)
             {
                 Log.Debug($"Tag name not found for table {typeof(T).FullName}");
-                return;
+                return false;
             }
 
             if (!TableRecords.Exists(x => x.Tag == tag))
             {
                 //Log.Debug($"{tag} table entry not found");
-                return;
+                return false;
             }
 
             try
@@ -186,7 +203,9 @@ namespace NewFontParser
             catch (Exception e)
             {
                 Log.Error(e, $"{typeof(T).Name} blew up");
+                return false;
             }
+            return true;
         }
 
         private T GetTable<T>() where T : IInfoTable

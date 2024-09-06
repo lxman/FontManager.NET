@@ -1,7 +1,10 @@
 ﻿using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
-using NewFontParser.Tables.CoverageFormat;
+using NewFontParser.Tables.Common.CoverageFormat;
 using NewFontParser.Tables.Gpos.LookupSubtables.Common;
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS8601 // Possible null reference assignment.
 
 namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos
 {
@@ -40,29 +43,21 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos
 
             reader.Seek(tableBase + Mark1CoverageOffset);
             byte mark1CoverageFormat = reader.PeekBytes(2)[1];
-            switch (mark1CoverageFormat)
+            MarkCoverage = mark1CoverageFormat switch
             {
-                case 1:
-                    MarkCoverage = new CoverageFormat.Format1(reader);
-                    break;
-
-                case 2:
-                    MarkCoverage = new Format2(reader);
-                    break;
-            }
+                1 => new Tables.Common.CoverageFormat.Format1(reader),
+                2 => new Tables.Common.CoverageFormat.Format2(reader),
+                _ => MarkCoverage
+            };
 
             reader.Seek(tableBase + Mark2CoverageOffset);
             byte mark2CoverageFormat = reader.PeekBytes(2)[1];
-            switch (mark2CoverageFormat)
+            Mark2Coverage = mark2CoverageFormat switch
             {
-                case 1:
-                    Mark2Coverage = new CoverageFormat.Format1(reader);
-                    break;
-
-                case 2:
-                    Mark2Coverage = new Format2(reader);
-                    break;
-            }
+                1 => new Tables.Common.CoverageFormat.Format1(reader),
+                2 => new Tables.Common.CoverageFormat.Format2(reader),
+                _ => Mark2Coverage
+            };
             reader.Seek(tableBase + MarkArrayOffset);
             MarkArray = new MarkArray(reader);
             //reader.Seek(Mark2ArrayOffset);

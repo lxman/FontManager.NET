@@ -8,11 +8,11 @@ namespace NewFontParser.Tables.Colr
 
         public IPaintTable SubTable { get; }
 
-        public BaseGlyphPaintRecord(BigEndianReader reader)
+        public BaseGlyphPaintRecord(BigEndianReader reader, long start)
         {
             GlyphId = reader.ReadUShort();
             uint offset = reader.ReadUInt32();
-            SubTable = PaintTableFactory.CreatePaintTable(reader, offset);
+            SubTable = PaintTableFactory.CreatePaintTable(reader, start + offset);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using NewFontParser.Reader;
-using NewFontParser.Tables.CoverageFormat;
+using NewFontParser.Tables.Common.CoverageFormat;
 
 namespace NewFontParser.Tables.Math
 {

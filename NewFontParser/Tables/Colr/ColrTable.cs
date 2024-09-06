@@ -32,6 +32,19 @@ namespace NewFontParser.Tables.Colr
             uint baseGlyphRecordOffset = reader.ReadUInt32();
             uint layerRecordOffset = reader.ReadUInt32();
             ushort layerRecordCount = reader.ReadUShort();
+            uint? baseGlyphListOffset = null;
+            uint? layerListOffset = null;
+            uint? clipListOffset = null;
+            uint? deltaSetIndexMapOffset = null;
+            uint? itemVariationStoreOffset = null;
+            if (Version == 1)
+            {
+                baseGlyphListOffset = reader.ReadUInt32();
+                layerListOffset = reader.ReadUInt32();
+                clipListOffset = reader.ReadUInt32();
+                deltaSetIndexMapOffset = reader.ReadUInt32();
+                itemVariationStoreOffset = reader.ReadUInt32();
+            }
             reader.Seek(baseGlyphRecordOffset);
             for (var i = 0; i < baseGlyphRecordCount; i++)
             {
@@ -43,20 +56,36 @@ namespace NewFontParser.Tables.Colr
                 LayerRecords.Add(new LayerRecord(reader));
             }
             if (Version == 0) return;
-            uint baseGlyphListOffset = reader.ReadUInt32();
-            reader.Seek(baseGlyphListOffset);
-            BaseGlyphList = new BaseGlyphList(reader);
-            uint layerListOffset = reader.ReadUInt32();
-            reader.Seek(layerListOffset);
-            LayerList = new LayerList(reader);
-            uint clipListOffset = reader.ReadUInt32();
-            reader.Seek(clipListOffset);
-            ClipList = new ClipList(reader);
-            uint deltaSetIndexMapOffset = reader.ReadUInt32();
-            reader.Seek(deltaSetIndexMapOffset);
-            DeltaSetIndexMap = new DeltaSetIndexMap(reader);
-            uint itemVariationStoreOffset = reader.ReadUInt32();
-            reader.Seek(itemVariationStoreOffset);
+            if (baseGlyphListOffset > 0)
+            {
+                reader.Seek(baseGlyphListOffset.Value);
+                BaseGlyphList = new BaseGlyphList(reader);
+            }
+            if (layerListOffset > 0)
+            {
+                reader.Seek(layerListOffset.Value);
+                LayerList = new LayerList(reader);
+                LayerList.Process(reader);
+            }
+            if (clipListOffset > 0)
+            {
+                reader.Seek(clipListOffset.Value);
+                ClipList = new ClipList(reader);
+            }
+            switch (deltaSetIndexMapOffset)
+            {
+                case null:
+                case 0:
+                    return;
+
+                default:
+                    reader.Seek(deltaSetIndexMapOffset.Value);
+                    DeltaSetIndexMap = new DeltaSetIndexMap(reader);
+                    break;
+            }
+
+            if (!itemVariationStoreOffset.HasValue || itemVariationStoreOffset == 0) return;
+            reader.Seek(itemVariationStoreOffset.Value);
             ItemVariationStore = new ItemVariationStore(reader);
         }
     }

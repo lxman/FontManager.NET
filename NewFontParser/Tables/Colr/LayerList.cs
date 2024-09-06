@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NewFontParser.Reader;
+using Serilog;
 
 namespace NewFontParser.Tables.Colr
 {
@@ -7,18 +8,31 @@ namespace NewFontParser.Tables.Colr
     {
         public List<IPaintTable> Layers { get; } = new List<IPaintTable>();
 
+        private readonly uint _layerCount;
+        private readonly uint[] _layerOffsets;
+        private readonly long _start;
+
         public LayerList(BigEndianReader reader)
         {
-            uint layerCount = reader.ReadUInt32();
-            var layerOffsets = new uint[layerCount];
-            for (var i = 0; i < layerCount; i++)
+            _start = reader.Position;
+            _layerCount = reader.ReadUInt32();
+            _layerOffsets = new uint[_layerCount];
+            for (var i = 0; i < _layerCount; i++)
             {
-                layerOffsets[i] = reader.ReadUInt32();
+                _layerOffsets[i] = reader.ReadUInt32();
             }
-            for (var i = 0; i < layerCount; i++)
+        }
+
+        public void Process(BigEndianReader reader)
+        {
+            Log.Debug("Entered the LayerList class processor.");
+            //reader.LogChanges = true;
+            for (var i = 0; i < _layerCount; i++)
             {
-                Layers.Add(PaintTableFactory.CreatePaintTable(reader, layerOffsets[i]));
+                Layers.Add(PaintTableFactory.CreatePaintTable(reader, _start + _layerOffsets[i]));
             }
+            //reader.LogChanges = false;
+            Log.Debug("Processed the LayerList class.");
         }
     }
 }

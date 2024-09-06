@@ -330,6 +330,30 @@ public enum BitmapDepth : byte
     ThirtyTwoBits = 32
 }
 
+public enum ImageFormat : ushort
+{
+    ProportionalFormat1 = 1,
+    ProportionalFormat2 = 2,
+    Unused = 3,
+    MonoCompressedFormat4 = 4,
+    MonoFormat5 = 5,
+    ProportionalByteFormat6 = 6,
+    ProportionalBitFormat7 = 7
+}
+
+public enum IndexFormat : ushort
+{
+    ProportionalW4ByteOffset = 1,
+    Monospaced = 2,
+    ProportionalW2ByteOffset = 3
+}
+
+public enum BitmapSizeFlag : byte
+{
+    Horizontal = 1,
+    Vertical = 2
+}
+
 #endregion
 
 #region Flags
@@ -420,11 +444,14 @@ public enum FsType : ushort
 [Flags]
 public enum MergeEntryFlags : byte
 {
-    Merge = 1 << 0,
-    UseMyMetrics = 1 << 1,
-    OverlapCompound = 1 << 2,
-    ScaledComponentOffset = 1 << 3,
-    UnscaledComponentOffset = 1 << 4
+    MergeLtr = 1 << 0,
+    GroupLtr = 1 << 1,
+    SecondIsSubordinate = 1 << 2,
+    Reserved = 0x08,
+    MergeRtl = 1 << 4,
+    GroupRtl = 1 << 5,
+    SecondIsSubordinateRtl = 1 << 6,
+    Reserved2 = 0x80
 }
 
 [Flags]
