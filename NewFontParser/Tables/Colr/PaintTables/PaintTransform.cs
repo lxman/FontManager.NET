@@ -12,7 +12,7 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintTransform(BigEndianReader reader)
         {
-            long start = reader.Position;
+            long start = reader.Position - 1;
             uint paintOffset = reader.ReadUInt24();
             uint transformOffset = reader.ReadUInt24();
             long beforeBuilding = reader.Position;

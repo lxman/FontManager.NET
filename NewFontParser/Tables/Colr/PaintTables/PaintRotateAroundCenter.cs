@@ -16,12 +16,13 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintRotateAroundCenter(BigEndianReader reader)
         {
+            long start = reader.Position - 1;
             uint subTableOffset = reader.ReadUInt24();
 
             Angle = reader.ReadF2Dot14();
             CenterX = reader.ReadShort();
             CenterY = reader.ReadShort();
-            SubTable = PaintTableFactory.CreatePaintTable(reader, subTableOffset);
+            SubTable = PaintTableFactory.CreatePaintTable(reader, start + subTableOffset);
         }
     }
 }

@@ -14,12 +14,13 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintSkew(BigEndianReader reader)
         {
+            long start = reader.Position - 1;
             uint subTableOffset = reader.ReadUInt24();
 
             XSkewAngle = reader.ReadF2Dot14();
             YSkewAngle = reader.ReadF2Dot14();
 
-            SubTable = PaintTableFactory.CreatePaintTable(reader, subTableOffset);
+            SubTable = PaintTableFactory.CreatePaintTable(reader, start + subTableOffset);
         }
     }
 }

@@ -12,9 +12,10 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintScaleUniform(BigEndianReader reader)
         {
+            long start = reader.Position - 1;
             uint paintOffset = reader.ReadUInt24();
             Scale = reader.ReadF2Dot14();
-            SubTable = PaintTableFactory.CreatePaintTable(reader, paintOffset);
+            SubTable = PaintTableFactory.CreatePaintTable(reader, start + paintOffset);
         }
     }
 }

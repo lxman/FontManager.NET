@@ -22,7 +22,7 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintLinearGradient(BigEndianReader reader)
         {
-            long position = reader.Position;
+            long start = reader.Position - 1;
 
             uint colorLineOffset = reader.ReadUInt24();
             X0 = reader.ReadShort();
@@ -31,7 +31,7 @@ namespace NewFontParser.Tables.Colr.PaintTables
             Y1 = reader.ReadShort();
             X2 = reader.ReadShort();
             Y2 = reader.ReadShort();
-            reader.Seek(position + colorLineOffset);
+            reader.Seek(start + colorLineOffset);
             ColorLine = new ColorLine(reader);
         }
     }

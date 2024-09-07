@@ -14,10 +14,11 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintVarRotate(BigEndianReader reader)
         {
+            long start = reader.Position - 1;
             uint subTableOffset = reader.ReadUInt24();
             Angle = reader.ReadF2Dot14();
             VarIndexBase = reader.ReadUInt32();
-            SubTable = PaintTableFactory.CreatePaintTable(reader, subTableOffset);
+            SubTable = PaintTableFactory.CreatePaintTable(reader, start + subTableOffset);
         }
     }
 }

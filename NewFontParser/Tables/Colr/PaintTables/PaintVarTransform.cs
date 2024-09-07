@@ -4,7 +4,7 @@ namespace NewFontParser.Tables.Colr.PaintTables
 {
     public class PaintVarTransform : IPaintTable
     {
-        public byte Format => 12;
+        public byte Format => 13;
 
         public IPaintTable SubTable { get; }
 
@@ -12,10 +12,11 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintVarTransform(BigEndianReader reader)
         {
+            long start = reader.Position - 1;
             uint paintOffset = reader.ReadUInt24();
             uint transformOffset = reader.ReadUInt24();
-            SubTable = PaintTableFactory.CreatePaintTable(reader, paintOffset);
-            reader.Seek(transformOffset);
+            SubTable = PaintTableFactory.CreatePaintTable(reader, start + paintOffset);
+            reader.Seek(start + transformOffset);
             Transform = new VarAffine2X3(reader);
         }
     }

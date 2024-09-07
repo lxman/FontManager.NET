@@ -285,8 +285,8 @@ public enum CompositeMode : byte
 public enum ExtendMode : byte
 {
     Pad,
-    Reflect,
-    Repeat
+    Repeat,
+    Reflect
 }
 
 public enum MetaSubtableType : byte

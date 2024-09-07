@@ -10,10 +10,14 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public ushort GlyphId { get; }
 
+        public IPaintTable PaintTable { get; }
+
         public PaintGlyph(BigEndianReader reader)
         {
+            long start = reader.Position - 1;
             PaintOffset = reader.ReadUInt24();
             GlyphId = reader.ReadUShort();
+            PaintTable = PaintTableFactory.CreatePaintTable(reader, start + PaintOffset);
         }
     }
 }

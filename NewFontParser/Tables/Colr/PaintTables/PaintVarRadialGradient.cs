@@ -6,7 +6,7 @@ namespace NewFontParser.Tables.Colr.PaintTables
     {
         public byte Format => 7;
 
-        public ColorLine ColorLine { get; }
+        public VarColorLine ColorLine { get; }
 
         public short X0 { get; }
 
@@ -24,6 +24,7 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintVarRadialGradient(BigEndianReader reader)
         {
+            long start = reader.Position - 1;
             uint colorLineOffset = reader.ReadUInt24();
             X0 = reader.ReadShort();
             Y0 = reader.ReadShort();
@@ -32,8 +33,8 @@ namespace NewFontParser.Tables.Colr.PaintTables
             Y1 = reader.ReadShort();
             Radius1 = reader.ReadUShort();
             VarIndexBase = reader.ReadUInt24();
-            reader.Seek(colorLineOffset);
-            ColorLine = new ColorLine(reader);
+            reader.Seek(start + colorLineOffset);
+            ColorLine = new VarColorLine(reader);
         }
     }
 }

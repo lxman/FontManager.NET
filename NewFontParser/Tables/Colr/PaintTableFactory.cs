@@ -1,19 +1,17 @@
-﻿using NewFontParser.Reader;
+﻿using System;
+using NewFontParser.Reader;
 using NewFontParser.Tables.Colr.PaintTables;
-using Serilog;
 
 namespace NewFontParser.Tables.Colr
 {
     public static class PaintTableFactory
     {
-        public static IPaintTable? CreatePaintTable(BigEndianReader reader, long offset)
+        public static IPaintTable CreatePaintTable(BigEndianReader reader, long offset)
         {
             reader.Seek(offset);
             byte format = reader.ReadByte();
-            Log.Debug($"Read a format of {format}.");
             return format switch
             {
-                0 => null,
                 1 => new PaintColrLayers(reader),
                 2 => new PaintSolid(reader),
                 3 => new PaintVarSolid(reader),
@@ -46,8 +44,7 @@ namespace NewFontParser.Tables.Colr
                 30 => new PaintSkewAroundCenter(reader),
                 31 => new PaintVarSkewAroundCenter(reader),
                 32 => new PaintComposite(reader),
-                //_ => throw new ArgumentOutOfRangeException($"No paint table for #{format}")
-                _ => null
+                _ => throw new ArgumentOutOfRangeException($"No paint table for #{format}")
             };
         }
     }

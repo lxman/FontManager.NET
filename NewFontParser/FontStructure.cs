@@ -119,8 +119,6 @@ namespace NewFontParser
             ProcessTable<Type1Table>();
             ProcessTable<MathTable>();
             ProcessTable<FftmTable>();
-            // If the Cpal table is missing don't try to process the Colr table
-            if (ProcessTable<CpalTable>()) ProcessTable<ColrTable>();
             ProcessTable<SvgTable>();
             ProcessTable<BaseTable>();
             ProcessTable<MorxTable>();
@@ -156,6 +154,8 @@ namespace NewFontParser
             ProcessTable<BlocTable>();
             ProcessTable<BdatTable>();
             ProcessTable<Tables.Proprietary.Graphite.Feat.FeatTable>();
+            // If the Cpal table is missing don't try to process the Colr table
+            if (ProcessTable<CpalTable>()) ProcessTable<ColrTable>();
             (Tables.Find(x => x is VmtxTable) as VmtxTable)?.Process(GetTable<VheaTable>().NumberOfLongVerMetrics);
             (Tables.Find(x => x is HdmxTable) as HdmxTable)?.Process(GetTable<MaxPTable>().NumGlyphs);
             (Tables.Find(x => x is LocaTable) as LocaTable)?.Process(GetTable<MaxPTable>().NumGlyphs, GetTable<HeadTable>().IndexToLocFormat == IndexToLocFormat.Offset16);

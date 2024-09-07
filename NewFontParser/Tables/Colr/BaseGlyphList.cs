@@ -10,7 +10,7 @@ namespace NewFontParser.Tables.Colr
         public BaseGlyphList(BigEndianReader reader)
         {
             long start = reader.Position;
-            ushort baseGlyphCount = reader.ReadUShort();
+            uint baseGlyphCount = reader.ReadUInt32();
             for (var i = 0; i < baseGlyphCount; i++)
             {
                 BaseGlyphPaintRecords.Add(new BaseGlyphPaintRecord(reader, start));

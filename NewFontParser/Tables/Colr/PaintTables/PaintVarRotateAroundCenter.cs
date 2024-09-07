@@ -18,6 +18,7 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintVarRotateAroundCenter(BigEndianReader reader)
         {
+            long start = reader.Position - 1;
             uint subTableOffset = reader.ReadUInt24();
 
             Angle = reader.ReadF2Dot14();
@@ -25,7 +26,7 @@ namespace NewFontParser.Tables.Colr.PaintTables
             CenterY = reader.ReadShort();
             VarIndexBase = reader.ReadUInt32();
 
-            SubTable = PaintTableFactory.CreatePaintTable(reader, subTableOffset);
+            SubTable = PaintTableFactory.CreatePaintTable(reader, start + subTableOffset);
         }
     }
 }

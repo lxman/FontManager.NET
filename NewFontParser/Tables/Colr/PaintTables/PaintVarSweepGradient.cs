@@ -6,7 +6,7 @@ namespace NewFontParser.Tables.Colr.PaintTables
     {
         public byte Format => 9;
 
-        public ColorLine ColorLine { get; }
+        public VarColorLine ColorLine { get; }
 
         public short CenterX { get; }
 
@@ -20,14 +20,15 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintVarSweepGradient(BigEndianReader reader)
         {
+            long start = reader.Position - 1;
             uint colorLineOffset = reader.ReadUInt24();
             CenterX = reader.ReadShort();
             CenterY = reader.ReadShort();
             StartAngle = reader.ReadF2Dot14();
             EndAngle = reader.ReadF2Dot14();
             VarIndexBase = reader.ReadUInt32();
-            reader.Seek(colorLineOffset);
-            ColorLine = new ColorLine(reader);
+            reader.Seek(start + colorLineOffset);
+            ColorLine = new VarColorLine(reader);
         }
     }
 }

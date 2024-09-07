@@ -12,7 +12,9 @@ namespace NewFontParser.Tables.Colr
         {
             GlyphId = reader.ReadUShort();
             uint offset = reader.ReadUInt32();
+            long position = reader.Position;
             SubTable = PaintTableFactory.CreatePaintTable(reader, start + offset);
+            reader.Seek(position);
         }
     }
 }

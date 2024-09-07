@@ -18,12 +18,13 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintScaleAroundCenter(BigEndianReader reader)
         {
+            long start = reader.Position - 1;
             uint paintOffset = reader.ReadUInt24();
             ScaleX = reader.ReadF16Dot16();
             ScaleY = reader.ReadF16Dot16();
             CenterX = reader.ReadShort();
             CenterY = reader.ReadShort();
-            SubTable = PaintTableFactory.CreatePaintTable(reader, paintOffset);
+            SubTable = PaintTableFactory.CreatePaintTable(reader, start + paintOffset);
         }
     }
 }

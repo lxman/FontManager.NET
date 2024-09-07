@@ -18,12 +18,13 @@ namespace NewFontParser.Tables.Colr.PaintTables
 
         public PaintSweepGradient(BigEndianReader reader)
         {
+            long start = reader.Position - 1;
             uint colorLineOffset = reader.ReadUInt24();
             CenterX = reader.ReadShort();
             CenterY = reader.ReadShort();
             StartAngle = reader.ReadF2Dot14();
             EndAngle = reader.ReadF2Dot14();
-            reader.Seek(colorLineOffset);
+            reader.Seek(start + colorLineOffset);
             ColorLine = new ColorLine(reader);
         }
     }
