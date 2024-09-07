@@ -22,8 +22,6 @@ namespace NewFontParser.Tables.Gvar
 
         public Header(BigEndianReader reader)
         {
-            long start = reader.Position;
-
             MajorVersion = reader.ReadUShort();
             MinorVersion = reader.ReadUShort();
             AxisCount = reader.ReadUShort();

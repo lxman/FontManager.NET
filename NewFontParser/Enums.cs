@@ -548,4 +548,14 @@ public enum BitmapFlags : sbyte
     Reserved1 = -4
 }
 
+[Flags]
+public enum TupleIndexFormat : ushort
+{
+    EmbeddedPeakTuple = 1 << 15,
+    IntermediateRegion = 1 << 14,
+    PrivatePointNumbers = 1 << 13,
+    Reserved = 1 << 12
+}
+
+
 #endregion

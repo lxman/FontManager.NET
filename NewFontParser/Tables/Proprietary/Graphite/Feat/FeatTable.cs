@@ -26,7 +26,7 @@ namespace NewFontParser.Tables.Proprietary.Graphite.Feat
             {
                 FeatureSpecs.Add(new FeatureSpec(reader));
             }
-            for (var i = 0; i < FeatureCount * 2; i++)
+            for (var i = 0; i < FeatureCount; i++)
             {
                 Settings.Add(new Settings(reader));
             }

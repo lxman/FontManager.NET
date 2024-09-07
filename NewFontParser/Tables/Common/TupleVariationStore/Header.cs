@@ -10,24 +10,25 @@ namespace NewFontParser.Tables.Common.TupleVariationStore
 
         public ushort? MinorVersion { get; }
 
-        public ushort DataOffset { get; }
+        public bool HasSharedPointNumbers { get; }
 
         public List<TupleVariationHeader> TupleVariationHeaders { get; } = new List<TupleVariationHeader>();
 
         public Header(BigEndianReader reader, ushort axisCount, bool isCvar)
         {
+            long start = reader.Position;
             if (isCvar)
             {
                 MajorVersion = reader.ReadUShort();
                 MinorVersion = reader.ReadUShort();
             }
             ushort tupleVariationCount = reader.ReadUShort();
-            var hasSharedPointNumbers = Convert.ToBoolean(tupleVariationCount & 0x8000);
+            HasSharedPointNumbers = Convert.ToBoolean(tupleVariationCount & 0x8000);
             int actualTupleVariationCount = tupleVariationCount & 0x0FFF;
-            DataOffset = reader.ReadUShort();
+            ushort dataOffset = reader.ReadUShort();
             for (var i = 0; i < actualTupleVariationCount; i++)
             {
-                TupleVariationHeaders.Add(new TupleVariationHeader(reader, axisCount));
+                TupleVariationHeaders.Add(new TupleVariationHeader(reader, axisCount, start + dataOffset));
             }
         }
     }
