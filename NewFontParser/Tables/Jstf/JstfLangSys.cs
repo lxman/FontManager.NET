@@ -9,9 +9,12 @@ namespace NewFontParser.Tables.Jstf
 
         public JstfLangSys(BigEndianReader reader)
         {
-            var jstfPriorityCount = reader.ReadUShort();
+            long start = reader.Position;
+            ushort jstfPriorityCount = reader.ReadUShort();
+            ushort[] jstfPriorityOffsets = reader.ReadUShortArray(jstfPriorityCount);
             for (var i = 0; i < jstfPriorityCount; i++)
             {
+                reader.Seek(start + jstfPriorityOffsets[i]);
                 JstfPriorities.Add(new JstfPriority(reader));
             }
         }

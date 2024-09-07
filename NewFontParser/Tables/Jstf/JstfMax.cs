@@ -10,10 +10,7 @@ namespace NewFontParser.Tables.Jstf
         public JstfMax(BigEndianReader reader)
         {
             ushort lookupCount = reader.ReadUShort();
-            for (var i = 0; i < lookupCount; i++)
-            {
-                LookupOffsets.Add(reader.ReadUShort());
-            }
+            LookupOffsets.AddRange(reader.ReadUShortArray(lookupCount));
         }
     }
 }

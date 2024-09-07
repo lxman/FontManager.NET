@@ -26,7 +26,7 @@ namespace NewFontParser.Tables.Jstf
 
         public JstfPriority(BigEndianReader reader)
         {
-            long position = reader.Position;
+            long start = reader.Position;
 
             ushort gsubShrinkageEnableOffset = reader.ReadUShort();
             ushort gsubShrinkageDisableOffset = reader.ReadUShort();
@@ -40,51 +40,51 @@ namespace NewFontParser.Tables.Jstf
             ushort extensionJstfMaxOffset = reader.ReadUShort();
             if (gsubShrinkageEnableOffset != 0)
             {
-                reader.Seek(position + gsubShrinkageEnableOffset);
+                reader.Seek(start + gsubShrinkageEnableOffset);
                 GsubShrinkageEnable = new JstfModList(reader);
             }
             if (gsubShrinkageDisableOffset != 0)
             {
-                reader.Seek(position + gsubShrinkageDisableOffset);
+                reader.Seek(start + gsubShrinkageDisableOffset);
                 GsubShrinkageDisable = new JstfModList(reader);
             }
             if (gposShrinkageEnableOffset != 0)
             {
-                reader.Seek(position + gposShrinkageEnableOffset);
+                reader.Seek(start + gposShrinkageEnableOffset);
                 GposShrinkageEnable = new JstfModList(reader);
             }
             if (gposShrinkageDisableOffset != 0)
             {
-                reader.Seek(position + gposShrinkageDisableOffset);
+                reader.Seek(start + gposShrinkageDisableOffset);
                 GposShrinkageDisable = new JstfModList(reader);
             }
             if (shrinkageJstfMaxOffset != 0)
             {
-                reader.Seek(position + shrinkageJstfMaxOffset);
+                reader.Seek(start + shrinkageJstfMaxOffset);
                 ShrinkageJstfMax = new JstfMax(reader);
             }
             if (gsubExtensionEnableOffset != 0)
             {
-                reader.Seek(position + gsubExtensionEnableOffset);
+                reader.Seek(start + gsubExtensionEnableOffset);
                 GsubExtensionEnable = new JstfModList(reader);
             }
             if (gsubExtensionDisableOffset != 0)
             {
-                reader.Seek(position + gsubExtensionDisableOffset);
+                reader.Seek(start + gsubExtensionDisableOffset);
                 GsubExtensionDisable = new JstfModList(reader);
             }
             if (gposExtensionEnableOffset != 0)
             {
-                reader.Seek(position + gposExtensionEnableOffset);
+                reader.Seek(start + gposExtensionEnableOffset);
                 GposExtensionEnable = new JstfModList(reader);
             }
             if (gposExtensionDisableOffset != 0)
             {
-                reader.Seek(position + gposExtensionDisableOffset);
+                reader.Seek(start + gposExtensionDisableOffset);
                 GposExtensionDisable = new JstfModList(reader);
             }
             if (extensionJstfMaxOffset == 0) return;
-            reader.Seek(position + extensionJstfMaxOffset);
+            reader.Seek(start + extensionJstfMaxOffset);
             ExtensionJstfMax = new JstfMax(reader);
         }
     }

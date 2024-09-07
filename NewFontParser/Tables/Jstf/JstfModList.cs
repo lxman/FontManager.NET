@@ -10,10 +10,7 @@ namespace NewFontParser.Tables.Jstf
         public JstfModList(BigEndianReader reader)
         {
             ushort lookupCount = reader.ReadUShort();
-            for (var i = 0; i < lookupCount; i++)
-            {
-                GsubLookupIndices.Add(reader.ReadUShort());
-            }
+            GsubLookupIndices.AddRange(reader.ReadUShortArray(lookupCount));
         }
     }
 }
