@@ -2,12 +2,15 @@
 {
     public class GlyphData
     {
+        public int Index { get; }
+
         public GlyphHeader Header { get; }
 
         public IGlyphSpec GlyphSpec { get; }
 
-        public GlyphData(GlyphHeader header, IGlyphSpec glyphSpec)
+        public GlyphData(int index, GlyphHeader header, IGlyphSpec glyphSpec)
         {
+            Index = index;
             Header = header;
             GlyphSpec = glyphSpec;
         }

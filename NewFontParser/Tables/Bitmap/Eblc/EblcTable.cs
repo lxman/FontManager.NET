@@ -24,8 +24,11 @@ namespace NewFontParser.Tables.Bitmap.Eblc
             uint numSizes = reader.ReadUInt32();
             for (var i = 0; i < numSizes; i++)
             {
+                long bitmapSizeTableOffset = reader.Position;
                 BitmapSizes.Add(new BitmapSize(reader));
+                reader.Seek(bitmapSizeTableOffset + 48);
             }
+            BitmapSizes.ForEach(bs => bs.LoadIndexSubtableList(reader));
         }
     }
 }

@@ -111,7 +111,10 @@ namespace NewFontParser
             fontStructure.TableRecords.ForEach(x =>
             {
                 reader.Seek(x.Offset);
-                x.Data = reader.ReadBytes(x.Length);
+                List<byte> sectionData = reader.ReadBytes(x.Length).ToList();
+                // Pad 4 bytes for badly formed tables
+                if (reader.BytesRemaining >= 4) sectionData.AddRange(reader.ReadBytes(4));
+                x.Data = sectionData.ToArray();
             });
             fontStructure.Process();
             return fontStructure;

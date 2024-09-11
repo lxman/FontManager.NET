@@ -21,6 +21,16 @@ namespace NewFontParser.Tables.Proprietary.Aat.Bloc
             {
                 BitmapSizeTables.Add(new BitmapSizeTable(reader));
             }
+
+            var indexSubtables = new List<IndexSubtableArray>();
+            BitmapSizeTables.ForEach(st =>
+            {
+                reader.Seek(st.IndexSubTableArrayOffset);
+                for (var i = 0; i < st.NumberOfIndexSubTables; i++)
+                {
+                    indexSubtables.Add(new IndexSubtableArray(reader));
+                }
+            });
         }
     }
 }

@@ -2,17 +2,16 @@
 
 namespace NewFontParser.Tables.Bitmap.Common.GlyphBitmapData
 {
-    public class Format1 : IGlyphBitmapDataFormat
+    public class Format1 : IGlyphBitmapData
     {
         public SmallGlyphMetricsRecord SmallGlyphMetrics { get; }
 
         public byte[] BitmapData { get; }
 
-        public Format1(BigEndianReader reader)
+        public Format1(BigEndianReader reader, uint dataSize)
         {
             SmallGlyphMetrics = new SmallGlyphMetricsRecord(reader);
-            // TODO: Figure out how to read the bitmap data
-            BitmapData = reader.ReadBytes(0);
+            BitmapData = reader.ReadBytes(dataSize);
         }
     }
 }

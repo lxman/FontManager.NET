@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Bitmap.Common.GlyphBitmapData
 {
-    public class Format6 : IGlyphBitmapDataFormat
+    public class Format6 : IGlyphBitmapData
     {
         public BigGlyphMetricsRecord BigMetrics { get; }
 

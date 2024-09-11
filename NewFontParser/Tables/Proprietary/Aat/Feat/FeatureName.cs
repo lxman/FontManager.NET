@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using NewFontParser.Reader;
+﻿using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Proprietary.Aat.Feat
 {
@@ -9,29 +8,19 @@ namespace NewFontParser.Tables.Proprietary.Aat.Feat
 
         public short NameIndex { get; }
 
-        public List<SettingName> Settings { get; } = new List<SettingName>();
+        public ushort SettingsCount { get; }
 
-        private readonly ushort _settingCount;
-        private readonly uint _settingTableOffset;
-        private readonly long _tableStart;
+        public uint SettingsTableOffset { get; }
+
+        public ushort FeatureFlags { get; }
 
         public FeatureName(BigEndianReader reader)
         {
-            _tableStart = reader.Position;
             Feature = reader.ReadUShort();
-            _settingCount = reader.ReadUShort();
-            _settingTableOffset = reader.ReadUInt32();
-            ushort featureFlags = reader.ReadUShort();
+            SettingsCount = reader.ReadUShort();
+            SettingsTableOffset = reader.ReadUInt32();
+            FeatureFlags = reader.ReadUShort();
             NameIndex = reader.ReadShort();
-        }
-
-        public void ReadSettings(BigEndianReader reader)
-        {
-            reader.Seek(_tableStart + _settingTableOffset);
-            for (var i = 0; i < _settingCount; i++)
-            {
-                Settings.Add(new SettingName(reader));
-            }
         }
     }
 }

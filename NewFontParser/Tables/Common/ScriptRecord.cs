@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Gpos;
 
@@ -9,19 +8,14 @@ namespace NewFontParser.Tables.Common
     {
         public string ScriptTag { get; }
 
-        public ushort ScriptOffset { get; }
-
         public ScriptTable ScriptTable { get; }
 
-        private readonly ushort _scriptListOffset;
-
-        public ScriptRecord(BigEndianReader reader, ushort offset)
+        public ScriptRecord(BigEndianReader reader, long offset)
         {
-            _scriptListOffset = offset;
             ScriptTag = Encoding.UTF8.GetString(reader.ReadBytes(4));
-            ScriptOffset = reader.ReadUShort();
+            ushort scriptOffset = reader.ReadUShort();
             long position = reader.Position;
-            ScriptTable = new ScriptTable(reader, Convert.ToUInt16(ScriptOffset + _scriptListOffset));
+            ScriptTable = new ScriptTable(reader, scriptOffset + offset);
             reader.Seek(position);
         }
     }

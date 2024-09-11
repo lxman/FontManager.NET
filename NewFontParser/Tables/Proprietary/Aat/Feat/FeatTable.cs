@@ -11,6 +11,8 @@ namespace NewFontParser.Tables.Proprietary.Aat.Feat
 
         public List<FeatureName> Names { get; } = new List<FeatureName>();
 
+        public List<SettingName> SettingNames { get; } = new List<SettingName>();
+
         public FeatTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
@@ -19,7 +21,10 @@ namespace NewFontParser.Tables.Proprietary.Aat.Feat
             {
                 Names.Add(new FeatureName(reader));
             }
-            Names.ForEach(n => n.ReadSettings(reader));
+            for (var i = 0; i < Header.FeatureCount; i++)
+            {
+                SettingNames.Add(new SettingName(reader));
+            }
         }
     }
 }

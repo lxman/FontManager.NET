@@ -10,7 +10,7 @@ namespace NewFontParser.Tables.Gpos
 
         public LangSysRecord[] ScriptRecords { get; }
 
-        public ScriptTable(BigEndianReader reader, ushort offset)
+        public ScriptTable(BigEndianReader reader, long offset)
         {
             reader.Seek(offset);
 

@@ -4,23 +4,18 @@ namespace NewFontParser.Tables.Common
 {
     public class ScriptList
     {
-        public ushort ScriptCount { get; }
-
         public ScriptRecord[] ScriptRecords { get; }
 
-        private readonly ushort _scriptListOffset;
-
-        public ScriptList(BigEndianReader reader, ushort offset)
+        public ScriptList(BigEndianReader reader)
         {
-            reader.Seek(offset);
-            _scriptListOffset = offset;
+            long start = reader.Position;
 
-            ScriptCount = reader.ReadUShort();
+            ushort scriptCount = reader.ReadUShort();
 
-            ScriptRecords = new ScriptRecord[ScriptCount];
-            for (var i = 0; i < ScriptCount; i++)
+            ScriptRecords = new ScriptRecord[scriptCount];
+            for (var i = 0; i < scriptCount; i++)
             {
-                ScriptRecords[i] = new ScriptRecord(reader, _scriptListOffset);
+                ScriptRecords[i] = new ScriptRecord(reader, start);
             }
         }
     }

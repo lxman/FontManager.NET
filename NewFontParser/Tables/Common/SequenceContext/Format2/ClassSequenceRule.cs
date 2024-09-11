@@ -9,14 +9,18 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format2
 
         public ushort SequenceLookupCount { get; }
 
-        public ushort[] InputSequences { get; }
+        public ushort[]? InputSequences { get; }
 
-        public SequenceLookup[] SequenceLookups { get; }
+        public SequenceLookup[]? SequenceLookups { get; }
 
         public ClassSequenceRule(BigEndianReader reader)
         {
             GlyphCount = reader.ReadUShort();
             SequenceLookupCount = reader.ReadUShort();
+            if (GlyphCount == 0 && SequenceLookupCount == 0)
+            {
+                return;
+            }
 
             InputSequences = new ushort[GlyphCount - 1];
             for (var i = 0; i < GlyphCount - 1; i++)

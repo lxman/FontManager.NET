@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NewFontParser.Reader;
-using NewFontParser.Tables.Common.TupleVariationStore;
+using Tuple = NewFontParser.Tables.Common.TupleVariationStore.Tuple;
 
 namespace NewFontParser.Tables.Gvar
 {
@@ -22,7 +23,7 @@ namespace NewFontParser.Tables.Gvar
             bool readLongOffsets = (Header.Flags & 0x0001) != 0;
             for (var i = 0; i <= Header.GlyphCount; i++)
             {
-                glyphVariationDataOffsets.Add(readLongOffsets ? reader.ReadUInt32() : reader.ReadUShort());
+                glyphVariationDataOffsets.Add(readLongOffsets ? reader.ReadUInt32() : Convert.ToUInt32(reader.ReadUShort() * 2));
             }
             reader.Seek(Header.SharedTuplesOffset);
             for (var i = 0; i < Header.SharedTupleCount; i++)
@@ -30,9 +31,9 @@ namespace NewFontParser.Tables.Gvar
                 Tuples.Add(new Tuple(reader, Header.AxisCount));
             }
 
-            foreach (uint offset in glyphVariationDataOffsets)
+            for (var i = 0; i < glyphVariationDataOffsets.Count - 1; i++)
             {
-                reader.Seek(Header.GlyphVariationDataArrayOffset + offset);
+                reader.Seek(Header.GlyphVariationDataArrayOffset + glyphVariationDataOffsets[i]);
                 GlyphVariations.Add(new Common.TupleVariationStore.Header(reader, Header.AxisCount, false));
             }
         }

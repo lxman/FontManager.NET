@@ -1,4 +1,5 @@
-﻿using System.Buffers.Binary;
+﻿using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using NewFontParser.Reader;
@@ -72,7 +73,14 @@ namespace NewFontParser.Tables.Cmap
                     case 14:
                         if (encodingRecord is { PlatformId: 0, EncodingId0: { } } && (int)encodingRecord.EncodingId0.Value == 5)
                         {
-                            SubTables.Add(new Format14(reader));
+                            try
+                            {
+                                SubTables.Add(new Format14(reader));
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("Invalid data for encoding record - not read.");
+                            }
                         }
                         break;
                 }

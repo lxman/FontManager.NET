@@ -5,25 +5,18 @@ namespace NewFontParser.Tables.Common
 {
     public class GsubLookupList
     {
-        public ushort[] Lookups { get; }
-
         public List<GsubLookupTable> LookupTables { get; } = new List<GsubLookupTable>();
 
-        public GsubLookupList(BigEndianReader reader, ushort lookupListOffset)
+        public GsubLookupList(BigEndianReader reader)
         {
-            reader.Seek(lookupListOffset);
             long position = reader.Position;
 
             ushort lookupCount = reader.ReadUShort();
-            Lookups = new ushort[lookupCount];
-            for (var i = 0; i < lookupCount; i++)
-            {
-                Lookups[i] = reader.ReadUShort();
-            }
+            ushort[] lookups = reader.ReadUShortArray(lookupCount);
 
             for (var i = 0; i < lookupCount; i++)
             {
-                reader.Seek(Lookups[i] + position);
+                reader.Seek(lookups[i] + position);
                 LookupTables.Add(new GsubLookupTable(reader));
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.TtTables.Glyf
@@ -7,7 +8,7 @@ namespace NewFontParser.Tables.TtTables.Glyf
     {
         public static string Tag => "glyf";
 
-        public List<GlyphData> Glyphs { get; } = new List<GlyphData>();
+        public List<GlyphData> Glyphs { get; private set; } = new List<GlyphData>();
 
         private readonly BigEndianReader _reader;
 
@@ -20,25 +21,31 @@ namespace NewFontParser.Tables.TtTables.Glyf
         // offsets from loca table
         public void Process(int numGlyphs, LocaTable offsets)
         {
+            var compositeOffsets = new List<int>();
             for (var i = 0; i < numGlyphs; i++)
             {
-                uint length = offsets.Offsets[i + 1] - offsets.Offsets[i];
-                if (length == 0) continue;
                 _reader.Seek(offsets.Offsets[i]);
 
+                uint length = offsets.Offsets[i + 1] - offsets.Offsets[i];
+                if (length == 0) continue;
                 var glyphHeader = new GlyphHeader(_reader.ReadBytes(GlyphHeader.RecordSize));
-                IGlyphSpec spec;
 
                 if (glyphHeader.NumberOfContours >= 0)
                 {
-                    spec = new SimpleGlyph(_reader, glyphHeader);
+                    Glyphs.Add(new GlyphData(i, glyphHeader, new SimpleGlyph(_reader, glyphHeader)));
                 }
                 else
                 {
-                    spec = new CompositeGlyph(_reader, glyphHeader);
+                    compositeOffsets.Add(i);
                 }
-                Glyphs.Add(new GlyphData(glyphHeader, spec));
             }
+            compositeOffsets.ForEach(i =>
+            {
+                _reader.Seek(offsets.Offsets[i]);
+                var glyphHeader = new GlyphHeader(_reader.ReadBytes(GlyphHeader.RecordSize));
+                Glyphs.Add(new GlyphData(i, glyphHeader, new CompositeGlyph(_reader, glyphHeader)));
+            });
+            Glyphs = Glyphs.OrderBy(g => g.Index).ToList();
         }
     }
 }

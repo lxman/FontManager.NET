@@ -12,6 +12,8 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format2
 
         public ClassSequenceRuleSet(BigEndianReader reader)
         {
+            long start = reader.Position;
+
             ClassSeqRuleCount = reader.ReadUShort();
             ClassSeqRuleOffsets = new ushort[ClassSeqRuleCount];
 
@@ -23,7 +25,7 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format2
             ClassSeqRules = new ClassSequenceRule[ClassSeqRuleCount];
             for (var i = 0; i < ClassSeqRuleCount; i++)
             {
-                reader.Seek(ClassSeqRuleOffsets[i]);
+                reader.Seek(start + ClassSeqRuleOffsets[i]);
                 ClassSeqRules[i] = new ClassSequenceRule(reader);
             }
         }

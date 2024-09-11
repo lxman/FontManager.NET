@@ -557,5 +557,24 @@ public enum TupleIndexFormat : ushort
     Reserved = 1 << 12
 }
 
+[Flags]
+public enum KerxCoverage : int
+{
+    Vertical = 1 << 31,
+    Horizontal = 1 << 30,
+    CrossStream = 1 << 29,
+    VariationIndex = 1 << 28,
+    Format = 0xFF,
+    Reserved = 0xFFFFF00
+}
+
+[Flags]
+public enum KerxSubtableActions : ushort
+{
+    Push = 1 << 15,
+    Advance = 1 << 14,
+    ClearStack = 1 << 13,
+    Reserved = 0x1FFF
+}
 
 #endregion

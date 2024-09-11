@@ -11,20 +11,13 @@ namespace NewFontParser.Tables.TtTables.Glyf
 
         public ushort[] EndPtsOfContours { get; }
 
-        public ushort InstructionLength { get; }
-
         public byte[] Instructions { get; }
 
         public SimpleGlyph(BigEndianReader reader, GlyphHeader glyphHeader)
         {
-            EndPtsOfContours = new ushort[glyphHeader.NumberOfContours];
-            for (var i = 0; i < glyphHeader.NumberOfContours; i++)
-            {
-                EndPtsOfContours[i] = reader.ReadUShort();
-            }
-
-            InstructionLength = reader.ReadUShort();
-            Instructions = reader.ReadBytes(InstructionLength);
+            EndPtsOfContours = reader.ReadUShortArray(glyphHeader.NumberOfContours);
+            ushort instructionLength = reader.ReadUShort();
+            Instructions = reader.ReadBytes(instructionLength);
 
             int numberOfPoints = EndPtsOfContours[glyphHeader.NumberOfContours - 1] + 1;
             var flags = new SimpleGlyphFlags[numberOfPoints];

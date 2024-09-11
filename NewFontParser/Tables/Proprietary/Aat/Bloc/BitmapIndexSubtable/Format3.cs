@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Proprietary.Aat.Bloc.BitmapIndexSubtable
 {
-    public class Format3
+    public class Format3 : IBitmapIndexSubtable
     {
         public IndexFormat IndexFormat { get; }
 

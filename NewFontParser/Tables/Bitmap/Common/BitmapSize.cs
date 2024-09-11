@@ -1,14 +1,11 @@
 ﻿using NewFontParser.Reader;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace NewFontParser.Tables.Bitmap.Common
 {
     public class BitmapSize
     {
-        public uint IndexSubtableListOffset { get; }
-
-        public uint IndexSubtableListSize { get; }
-
-        public uint IndexSubtableCount { get; }
+        public IndexSubtableList IndexSubtableList { get; set; }
 
         public uint ColorRef { get; }
 
@@ -28,11 +25,15 @@ namespace NewFontParser.Tables.Bitmap.Common
 
         public BitmapFlags Flags { get; }
 
+        private readonly uint _indexSubtableListOffset;
+        private readonly uint _indexSubtableListSize;
+        private readonly uint _indexSubtableCount;
+
         public BitmapSize(BigEndianReader reader)
         {
-            IndexSubtableListOffset = reader.ReadUInt32();
-            IndexSubtableListSize = reader.ReadUInt32();
-            IndexSubtableCount = reader.ReadUInt32();
+            _indexSubtableListOffset = reader.ReadUInt32();
+            _indexSubtableListSize = reader.ReadUInt32();
+            _indexSubtableCount = reader.ReadUInt32();
             ColorRef = reader.ReadUInt32();
             HorizontalMetrics = new SbitLineMetrics(reader);
             VerticalMetrics = new SbitLineMetrics(reader);
@@ -42,6 +43,12 @@ namespace NewFontParser.Tables.Bitmap.Common
             PpemY = reader.ReadByte();
             BitDepth = (BitmapDepth)reader.ReadByte();
             Flags = (BitmapFlags)reader.ReadByte();
+        }
+
+        public void LoadIndexSubtableList(BigEndianReader reader)
+        {
+            reader.Seek(_indexSubtableListOffset);
+            IndexSubtableList = new IndexSubtableList(reader, _indexSubtableCount);
         }
     }
 }

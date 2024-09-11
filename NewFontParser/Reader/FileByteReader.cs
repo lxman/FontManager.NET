@@ -5,6 +5,8 @@ namespace NewFontParser.Reader
 {
     internal class FileByteReader
     {
+        public uint BytesRemaining => (uint)_data.Length - _position;
+
         private readonly byte[] _data;
         private uint _position;
 

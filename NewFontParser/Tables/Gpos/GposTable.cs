@@ -21,14 +21,15 @@ namespace NewFontParser.Tables.Gpos
 
             Header = new GposHeader(reader);
 
-            reader.Seek(0);
-            ScriptList = new ScriptList(reader, Header.ScriptListOffset);
+            reader.Seek(Header.ScriptListOffset);
+            ScriptList = new ScriptList(reader);
 
-            reader.Seek(0);
-            FeatureList = new FeatureList(reader, Header.FeatureListOffset);
+            reader.Seek(Header.FeatureListOffset);
+            FeatureList = new FeatureList(reader);
 
-            reader.Seek(0);
-            GposLookupList = new GposLookupList(reader, Header.LookupListOffset);
+            // TODO: Come back and fix this
+            //reader.Seek(Header.LookupListOffset);
+            //GposLookupList = new GposLookupList(reader);
         }
     }
 }

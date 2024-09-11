@@ -4,7 +4,7 @@ using NewFontParser.Tables.Bitmap.Ebdt;
 
 namespace NewFontParser.Tables.Bitmap.Common.GlyphBitmapData
 {
-    public class Format9 : IGlyphBitmapDataFormat
+    public class Format9 : IGlyphBitmapData
     {
         public BigGlyphMetricsRecord BigMetrics { get; }
 

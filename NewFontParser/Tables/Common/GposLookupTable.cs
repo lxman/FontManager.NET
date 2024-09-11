@@ -18,10 +18,6 @@ namespace NewFontParser.Tables.Common
 
         public LookupFlag LookupFlags { get; }
 
-        public ushort SubTableCount { get; }
-
-        public ushort[] SubTableOffsets { get; }
-
         public ushort? MarkFilteringSet { get; }
 
         public List<ILookupSubTable> SubTables { get; } = new List<ILookupSubTable>();
@@ -31,19 +27,15 @@ namespace NewFontParser.Tables.Common
             long position = reader.Position;
             LookupType = (GposLookupType)reader.ReadUShort();
             LookupFlags = (LookupFlag)reader.ReadUShort();
-            SubTableCount = reader.ReadUShort();
-            SubTableOffsets = new ushort[SubTableCount];
-            for (var i = 0; i < SubTableCount; i++)
-            {
-                SubTableOffsets[i] = reader.ReadUShort();
-            }
+            ushort subTableCount = reader.ReadUShort();
+            ushort[] subTableOffsets = reader.ReadUShortArray(subTableCount);
             if (LookupFlags.HasFlag(LookupFlag.UseMarkFilteringSet))
             {
                 MarkFilteringSet = reader.ReadUShort();
             }
-            for (var i = 0; i < SubTableCount; i++)
+            for (var i = 0; i < subTableCount; i++)
             {
-                reader.Seek(SubTableOffsets[i] + position);
+                reader.Seek(subTableOffsets[i] + position);
                 switch (LookupType)
                 {
                     case GposLookupType.SingleAdjustment:

@@ -35,6 +35,7 @@ namespace NewFontParser.Tables.Common
             for (var i = 0; i < SubTableCount; i++)
             {
                 reader.Seek(SubTableOffsets[i] + position);
+                // TODO: Come back and fix this
                 //SubTables.Add(new GsubLookupTable(reader));
             }
         }

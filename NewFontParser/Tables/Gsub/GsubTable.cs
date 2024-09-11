@@ -13,7 +13,7 @@ namespace NewFontParser.Tables.Gsub
 
         public FeatureList FeatureList { get; }
 
-        public GposLookupList GposLookupList { get; }
+        public GsubLookupList GsubLookupList { get; }
 
         public FeatureVariationsTable FeatureVariationsTable { get; }
 
@@ -21,15 +21,14 @@ namespace NewFontParser.Tables.Gsub
         {
             var reader = new BigEndianReader(data);
             Header = new GsubHeader(reader);
-            reader.Seek(0);
-            ScriptList = new ScriptList(reader, Header.ScriptListOffset);
-            FeatureList = new FeatureList(reader, Header.FeatureListOffset);
-            //GposLookupList = new GposLookupList(reader, Header.LookupListOffset);
-            //if (Header.FeatureVariationsOffset.HasValue)
-            //{
-            //    reader.Seek(Header.FeatureVariationsOffset ?? 0);
-            //    FeatureVariationsTable = new FeatureVariationsTable(reader);
-            //}
+            reader.Seek(Header.ScriptListOffset);
+            ScriptList = new ScriptList(reader);
+            reader.Seek(Header.FeatureListOffset);
+            FeatureList = new FeatureList(reader);
+            reader.Seek(Header.FeatureListOffset);
+
+            // TODO: Come back and fix this
+            //GsubLookupList = new GsubLookupList(reader);
         }
     }
 }
