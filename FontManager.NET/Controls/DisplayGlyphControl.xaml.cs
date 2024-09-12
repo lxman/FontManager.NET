@@ -30,10 +30,11 @@ namespace FontManager.NET.Controls
             int glyphWidth = glyphData.Header.XMax - glyphData.Header.XMin;
             int glyphHeight = glyphData.Header.YMax - glyphData.Header.YMin;
             SKPoint origin = new(glyphData.Header.XMin, glyphData.Header.YMin);
-            _scaleMatrix.ScaleX = size.Width / glyphWidth;
-            _scaleMatrix.ScaleY = size.Height / glyphHeight;
+            float scaleFactor = size.Height / glyphHeight;
+            _scaleMatrix.ScaleX = scaleFactor;
+            _scaleMatrix.ScaleY = scaleFactor;
             _scaleMatrix.TransX = -origin.X;
-            _scaleMatrix.TransY = -origin.Y;
+            _scaleMatrix.TransY = Convert.ToSingle(-origin.Y * .35);
 
             switch (glyphData.GlyphSpec)
             {
