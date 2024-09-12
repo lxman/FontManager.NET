@@ -1,17 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Cmap.SubTables
 {
     public class Format14 : ICmapSubtable
     {
-        public uint Format { get; }
-
-        public uint Length { get; }
-
-        public int Language { get; } = -1;
-
-        public uint NumVarSelectorRecords { get; }
+        public int Language => -1;
 
         public List<VariationSelectorRecord> VarSelectorRecords { get; } = new List<VariationSelectorRecord>();
 
@@ -19,18 +14,43 @@ namespace NewFontParser.Tables.Cmap.SubTables
         {
             long position = reader.Position;
 
-            Format = reader.ReadUShort();
-            Length = reader.ReadUInt32();
-            NumVarSelectorRecords = reader.ReadUInt32();
-            for (var i = 0; i < NumVarSelectorRecords; i++)
+            ushort format = reader.ReadUShort();
+            uint length = reader.ReadUInt32();
+            uint numVarSelectorRecords = reader.ReadUInt32();
+            for (var i = 0; i < numVarSelectorRecords; i++)
             {
                 VarSelectorRecords.Add(new VariationSelectorRecord(reader, position));
             }
             reader.Seek(position);
-            for (var i = 0; i < NumVarSelectorRecords; i++)
+            for (var i = 0; i < numVarSelectorRecords; i++)
             {
                 VarSelectorRecords[i].Process(reader);
             }
+        }
+
+        public ushort GetGlyphId(ushort codePoint)
+        {
+            foreach (VariationSelectorRecord? record in VarSelectorRecords)
+            {
+                if (!(record.DefaultUvsTableHeader is null))
+                {
+                    if ((from range in record.DefaultUvsTableHeader.UnicodeRangeRecords
+                         let endUnicodeValue = range.StartUnicodeValue + range.AdditionalCount
+                         where codePoint >= range.StartUnicodeValue && codePoint <= endUnicodeValue
+                         select range)
+                        .Any())
+                    {
+                        return 0; // Default UVS returns 0 for the base glyph
+                    }
+                }
+
+                if (record.NonDefaultUvsTableHeader is null) continue;
+                foreach (UvsMappingRecord? mapping in record.NonDefaultUvsTableHeader.UvsMappings.Where(mapping => codePoint == mapping.UnicodeValue))
+                {
+                    return mapping.GlyphId;
+                }
+            }
+            return 0;
         }
     }
 }

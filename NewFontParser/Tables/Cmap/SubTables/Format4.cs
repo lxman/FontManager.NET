@@ -5,10 +5,6 @@ namespace NewFontParser.Tables.Cmap.SubTables
 {
     public class Format4 : ICmapSubtable
     {
-        public uint Format { get; }
-
-        public uint Length { get; }
-
         public int Language { get; }
 
         public uint SegCountX2 { get; }
@@ -33,8 +29,8 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public Format4(BigEndianReader reader)
         {
-            Format = reader.ReadUShort();
-            Length = reader.ReadUShort();
+            ushort format = reader.ReadUShort();
+            uint length = reader.ReadUShort();
             Language = reader.ReadInt16();
             SegCountX2 = reader.ReadUShort();
             SearchRange = reader.ReadUShort();
@@ -63,10 +59,41 @@ namespace NewFontParser.Tables.Cmap.SubTables
                 IdRangeOffsets.Add(reader.ReadUShort());
             }
 
-            uint remainingBytes = Length - 16 - (SegCountX2 * 4);
+            uint remainingBytes = length - 16 - (SegCountX2 * 4);
             for (var i = 0; i < remainingBytes / 2; i++)
             {
                 GlyphIdArray.Add(reader.ReadUShort());
+            }
+        }
+
+        public ushort GetGlyphId(ushort codePoint)
+        {
+            int segCount = EndCodes.Count;
+
+            // Find the segment that contains the codePoint
+            int segmentIndex = -1;
+            for (var i = 0; i < segCount; i++)
+            {
+                if (codePoint > EndCodes[i]) continue;
+                segmentIndex = i;
+                break;
+            }
+
+            // If no segment is found or the codePoint is out of range, return 0
+            if (segmentIndex == -1 || codePoint < StartCodes[segmentIndex])
+            {
+                return 0;
+            }
+
+            // Calculate the glyph index
+            if (IdRangeOffsets[segmentIndex] == 0)
+            {
+                return (ushort)((codePoint + IdDeltas[segmentIndex]) % 65536);
+            }
+            else
+            {
+                int offset = IdRangeOffsets[segmentIndex] / 2 + (codePoint - StartCodes[segmentIndex]) - (segCount - segmentIndex);
+                return GlyphIdArray[offset];
             }
         }
     }

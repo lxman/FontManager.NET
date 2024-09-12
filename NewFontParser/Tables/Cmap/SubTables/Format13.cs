@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Cmap.SubTables
 {
     public class Format13 : ICmapSubtable
     {
-        public uint Format { get; }
-
-        public uint Length { get; }
-
         public int Language { get; }
 
         public int NumGroups { get; }
@@ -17,15 +14,23 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public Format13(BigEndianReader reader)
         {
-            Format = reader.ReadUShort();
+            ushort format = reader.ReadUShort();
             _ = reader.ReadUShort();
-            Length = reader.ReadUInt32();
+            uint length = reader.ReadUInt32();
             Language = reader.ReadInt32();
             NumGroups = reader.ReadInt32();
             for (var i = 0; i < NumGroups; i++)
             {
                 Groups.Add(new ConstantMapGroup(reader.ReadBytes(ConstantMapGroup.RecordSize)));
             }
+        }
+
+        public ushort GetGlyphId(ushort codePoint)
+        {
+            return (from @group in Groups
+                    where codePoint >= @group.StartCharCode && codePoint <= @group.EndCharCode
+                    select (ushort)@group.GlyphId)
+                .FirstOrDefault();
         }
     }
 }

@@ -5,10 +5,6 @@ namespace NewFontParser.Tables.Cmap.SubTables
 {
     public class Format6 : ICmapSubtable
     {
-        public uint Format { get; }
-
-        public uint Length { get; }
-
         public int Language { get; }
 
         public uint FirstCode { get; }
@@ -19,8 +15,8 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public Format6(BigEndianReader reader)
         {
-            Format = reader.ReadUShort();
-            Length = reader.ReadUShort();
+            ushort format = reader.ReadUShort();
+            uint length = reader.ReadUShort();
             Language = reader.ReadInt16();
             FirstCode = reader.ReadUShort();
             EntryCount = reader.ReadUShort();
@@ -29,6 +25,17 @@ namespace NewFontParser.Tables.Cmap.SubTables
             {
                 GlyphIndexArray.Add(reader.ReadUShort());
             }
+        }
+
+        public ushort GetGlyphId(ushort codePoint)
+        {
+            if (codePoint < FirstCode || codePoint >= FirstCode + EntryCount)
+            {
+                return 0; // Code point is out of range
+            }
+
+            var index = (int)(codePoint - FirstCode);
+            return (ushort)GlyphIndexArray[index];
         }
     }
 }

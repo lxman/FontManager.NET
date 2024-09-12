@@ -5,25 +5,24 @@ namespace NewFontParser.Tables.Cmap.SubTables
 {
     public class Format0 : ICmapSubtable
     {
-        public static long RecordSize => 262;
-
-        public uint Format { get; }
-
-        public uint Length { get; }
-
         public int Language { get; }
 
         public List<uint> GlyphIndexArray { get; } = new List<uint>();
 
         public Format0(BigEndianReader reader)
         {
-            Format = reader.ReadUShort();
-            Length = reader.ReadUShort();
+            ushort format = reader.ReadUShort();
+            ushort length = reader.ReadUShort();
             Language = reader.ReadInt16();
             for (var i = 0; i < 256; i++)
             {
                 GlyphIndexArray.Add(reader.ReadByte());
             }
+        }
+
+        public ushort GetGlyphId(ushort codePoint)
+        {
+            return codePoint < 256 ? (ushort)GlyphIndexArray[codePoint] : (ushort)0;
         }
     }
 }

@@ -178,6 +178,16 @@ namespace NewFontParser
             (Tables.Find(x => x is HmtxTable) as HmtxTable)?.Process(GetTable<HheaTable>().NumberOfHMetrics, GetTable<MaxPTable>().NumGlyphs);
             (Tables.Find(x => x is LtshTable) as LtshTable)?.Process(GetTable<MaxPTable>().NumGlyphs);
             (Tables.Find(x => x is EbdtTable) as EbdtTable)?.Process(GetTable<EblcTable>());
+            if (!(Tables.Find(x => x is CmapTable) is CmapTable cmapTable)) return;
+            if (!(Tables.Find(x => x is GlyphTable) is GlyphTable glyphTable)) return;
+            Console.Write("Glyph Ids: ");
+            for (ushort i = 0; i < 0x7F; i++)
+            {
+                ushort glyphId = cmapTable.GetGlyphId(i);
+                Console.Write($"{glyphId}, ");
+                GlyphData? data = glyphTable.GetGlyphData(glyphId);
+            }
+            Console.WriteLine();
             if (!_tables.Any()) return;
             if (_tables.Any(t => !t.Attempted))
             {

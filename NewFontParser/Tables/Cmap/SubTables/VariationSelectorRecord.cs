@@ -6,15 +6,13 @@ namespace NewFontParser.Tables.Cmap.SubTables
     {
         public uint VarSelector { get; }
 
-        private readonly uint _defaultUvsOffset;
-
-        private readonly uint _nonDefaultUvsOffset;
-
         public DefaultUvsTableHeader? DefaultUvsTableHeader { get; private set; }
 
         public NonDefaultUvsTableHeader? NonDefaultUvsTableHeader { get; private set; }
 
         private readonly long _tableStart;
+        private readonly uint _defaultUvsOffset;
+        private readonly uint _nonDefaultUvsOffset;
 
         public VariationSelectorRecord(BigEndianReader reader, long tableStart)
         {

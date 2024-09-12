@@ -2,10 +2,8 @@
 {
     public interface ICmapSubtable
     {
-        uint Format { get; }
-
-        uint Length { get; }
-
         int Language { get; }
+
+        ushort GetGlyphId(ushort codePoint);
     }
 }

@@ -86,5 +86,12 @@ namespace NewFontParser.Tables.Cmap
                 }
             }
         }
+
+        public ushort GetGlyphId(ushort codePoint)
+        {
+            return SubTables
+                .Select(subTable => subTable.GetGlyphId(codePoint))
+                .FirstOrDefault(glyphId => glyphId != 0);
+        }
     }
 }

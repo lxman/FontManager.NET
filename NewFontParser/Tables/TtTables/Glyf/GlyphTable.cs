@@ -47,5 +47,10 @@ namespace NewFontParser.Tables.TtTables.Glyf
             });
             Glyphs = Glyphs.OrderBy(g => g.Index).ToList();
         }
+
+        public GlyphData? GetGlyphData(int index)
+        {
+            return Glyphs.FirstOrDefault(g => g.Index == index);
+        }
     }
 }

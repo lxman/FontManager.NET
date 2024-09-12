@@ -5,16 +5,14 @@ namespace NewFontParser.Tables.Cmap.SubTables
 {
     public class NonDefaultUvsTableHeader
     {
-        public uint NumUvsMappings { get; }
-
         public List<UvsMappingRecord> UvsMappings { get; } = new List<UvsMappingRecord>();
 
         public NonDefaultUvsTableHeader(BigEndianReader reader)
         {
-            NumUvsMappings = reader.ReadUInt32();
-            for (var i = 0; i < NumUvsMappings; i++)
+            uint numUvsMappings = reader.ReadUInt32();
+            for (var i = 0; i < numUvsMappings; i++)
             {
-                UvsMappings.Add(new UvsMappingRecord(reader.ReadBytes(SequentialMapGroup.RecordSize)));
+                UvsMappings.Add(new UvsMappingRecord(reader.ReadBytes(UvsMappingRecord.RecordSize)));
             }
         }
     }
