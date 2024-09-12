@@ -6,6 +6,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using FontManager.NET.Controls;
 using FontManager.NET.Models;
+using NewFontParser;
+using NewFontParser.Tables.TtTables.Glyf;
 using Ookii.Dialogs.Wpf;
 using Xceed.Wpf.Toolkit;
 using FontFamily = System.Windows.Media.FontFamily;
@@ -154,6 +156,17 @@ namespace FontManager.NET
             var item = (ListBoxItem)sender;
             e.Handled = true;
             var f = item.Tag.ToString()!;
+        }
+
+        private void DisplayGlyphTabMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            FontReader reader = new();
+            List<FontStructure> fontStructures = reader.ReadFile(@"C:\Users\jorda\source\TestFonts\arial.ttf");
+            FontStructure structure = fontStructures[0];
+            GlyphTable? glyphTable = structure.GetGlyphTable();
+            GlyphData? glyphData = glyphTable?.GetGlyphData(65);
+            if (glyphData is null) return;
+            DisplayGlyphControl.AssignGlyph(glyphData);
         }
     }
 }

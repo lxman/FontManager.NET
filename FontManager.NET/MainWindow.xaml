@@ -58,6 +58,12 @@
                 </TabItem.Header>
                 <controls:FontEditControl />
             </TabItem>
+            <TabItem MouseLeftButtonDown="DisplayGlyphTabMouseLeftButtonDown">
+                <TabItem.Header>
+                    <TextBlock Text="Display Glyph" />
+                </TabItem.Header>
+                <controls:DisplayGlyphControl x:Name="DisplayGlyphControl" />
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

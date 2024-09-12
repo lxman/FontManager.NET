@@ -93,6 +93,11 @@ namespace NewFontParser
             _currentFile = path.Split("\\", StringSplitOptions.RemoveEmptyEntries)[^1];
         }
 
+        public GlyphTable? GetGlyphTable()
+        {
+            return Tables.Find(x => x is GlyphTable) as GlyphTable;
+        }
+
         public void CollectTableNames()
         {
             _tables.AddRange(TableRecords.Select(r => new TableStatusRecord() { Name = r.Tag }));

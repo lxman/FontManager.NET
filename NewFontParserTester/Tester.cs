@@ -23,7 +23,7 @@ namespace NewFontParserTester
                 try
                 {
                     var fontReader = new FontReader();
-                    List<FontStructure> fontStructures = fontReader.ReadFile(f);
+                    List<FontStructure> fontStructure = fontReader.ReadFile(f);
                 }
                 catch (Exception e)
                 {
