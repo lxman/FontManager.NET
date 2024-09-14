@@ -53,7 +53,7 @@ namespace FontManager.NET.Controls
                     break;
                 case SimpleGlyph simpleGlyph:
                     List<SimpleGlyphCoordinate> coordinates = simpleGlyph.Coordinates;
-                    List<Point> points = coordinates.Select(c => c.Point with { Y = bounds.Height - c.Point.Y }).ToList();
+                    List<PointF> points = coordinates.Select(c => c.Point with { Y = bounds.Height - c.Point.Y }).ToList();
                     ushort[] endPoints = simpleGlyph.EndPtsOfContours;
                     _path.Reset();
                     _path.MoveTo(points[0].ToSKPoint());

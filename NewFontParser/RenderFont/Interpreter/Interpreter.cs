@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 using NewFontParser.Extensions;
 using NewFontParser.Tables;
@@ -23,6 +24,7 @@ namespace NewFontParser.RenderFont.Interpreter
         private readonly GlyphData _glyphData;
         private readonly MaxPTable _maxPTable;
         private readonly Stack<int> _stack;
+        private readonly PointF[] _twilightPoints;
 
         public Interpreter(
             GlyphTable glyphTable,
@@ -38,6 +40,7 @@ namespace NewFontParser.RenderFont.Interpreter
             _stack = new Stack<int>();
             _storageArea = new StorageArea(maxPTable.MaxStorage);
             _maxPTable = maxPTable;
+            _twilightPoints = new PointF[maxPTable.MaxTwilightPoints];
         }
 
         public Interpreter(
@@ -66,6 +69,7 @@ namespace NewFontParser.RenderFont.Interpreter
             {
                 Functions[keyValuePair.Key] = keyValuePair.Value;
             }
+            _twilightPoints = new PointF[maxPTable.MaxTwilightPoints];
         }
 
         public void Execute()
@@ -151,11 +155,26 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // ISECT
                     case 0x0F:
-                        var b1 = Convert.ToUInt32(_stack.Pop());
-                        var b0 = Convert.ToUInt32(_stack.Pop());
-                        var a1 = Convert.ToUInt32(_stack.Pop());
-                        var a0 = Convert.ToUInt32(_stack.Pop());
-                        // TODO: Implement ISECT
+                        // As yet UNTESTED!!!!!!!!!!
+                        int b1 = _stack.Pop();
+                        int b0 = _stack.Pop();
+                        int a1 = _stack.Pop();
+                        int a0 = _stack.Pop();
+                        int pointIndex = _stack.Pop();
+                        PointF pointA0 = GraphicsState.ZonePointers[1] ? _twilightPoints[a0] : ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[a0].Point;
+                        PointF pointA1 = GraphicsState.ZonePointers[1] ? _twilightPoints[a1] : ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[a1].Point;
+                        PointF pointB0 = GraphicsState.ZonePointers[0] ? _twilightPoints[b0] : ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[b0].Point;
+                        PointF pointB1 = GraphicsState.ZonePointers[0] ? _twilightPoints[b1] : ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[b1].Point;
+                        PointF solution = Intersection(pointA0, pointA1, pointB0, pointB1);
+                        switch (GraphicsState.ZonePointers[2])
+                        {
+                            case true:
+                                _twilightPoints[pointIndex] = solution;
+                                break;
+                            case false:
+                                ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[pointIndex].ChangePoint(solution, ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[pointIndex].OnCurve);
+                                break;
+                        }
                         break;
                     // SRP0
                     case 0x10:
@@ -374,7 +393,7 @@ namespace NewFontParser.RenderFont.Interpreter
                         int cvtEntryNumber = _stack.Pop();
                         int pointNumber = _stack.Pop();
                         float? cvtValue = _cvtTable.GetCvtValue(cvtEntryNumber);
-                        var point = ((SimpleGlyph)_glyphData.GlyphSpec).Coordinates[pointNumber];
+                        SimpleGlyphCoordinate? point = ((SimpleGlyph)_glyphData.GlyphSpec).Coordinates[pointNumber];
                         break;
                     // Push Bytes
                     case 0x40:
@@ -950,6 +969,25 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                 }
             }
+        }
+
+        private static PointF Intersection(PointF a0, PointF a1, PointF b0, PointF b1)
+        {
+            float deltaY1 = a1.Y - a0.Y;
+            float deltaX1 = a0.X - a1.X;
+            float factor1 = deltaY1 * a0.X + deltaX1 * a0.Y;
+
+            float deltaY2 = b1.Y - b0.Y;
+            float deltaX2 = b0.X - b1.X;
+            float factor2 = deltaY2 * b0.X + deltaX2 * b0.Y;
+
+            float delta = deltaY1 * deltaX2 - deltaY2 * deltaX1;
+            if (delta == 0) throw new InvalidOperationException("Lines do not intersect");
+
+            float x = (deltaX2 * factor1 - deltaX1 * factor2) / delta;
+            float y = (deltaY1 * factor2 - deltaY2 * factor1) / delta;
+
+            return new PointF(x, y);
         }
 
         private void ReadWriteStorage(byte instruction)

@@ -4,13 +4,19 @@ namespace NewFontParser.Tables.TtTables.Glyf
 {
     public class SimpleGlyphCoordinate
     {
-        public Point Point { get; }
+        public PointF Point { get; private set; }
 
-        public bool OnCurve { get; }
+        public bool OnCurve { get; private set; }
 
-        public SimpleGlyphCoordinate(Point point, bool onCurve)
+        public SimpleGlyphCoordinate(PointF point, bool onCurve)
         {
             Point = point;
+            OnCurve = onCurve;
+        }
+
+        public void ChangePoint(PointF newPoint, bool onCurve)
+        {
+            Point = newPoint;
             OnCurve = onCurve;
         }
 
