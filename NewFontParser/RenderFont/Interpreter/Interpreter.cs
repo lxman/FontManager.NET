@@ -81,11 +81,13 @@ namespace NewFontParser.RenderFont.Interpreter
                 {
                     // SVTCA[0]
                     case 0x00:
-                        GraphicsState.ProjectionVector = Vector2.UnitX;
+                        GraphicsState.FreedomVector = Vector2.UnitY;
+                        GraphicsState.ProjectionVector = Vector2.UnitY;
                         break;
                     // SVTCA[1]
                     case 0x01:
-                        GraphicsState.ProjectionVector = Vector2.UnitY;
+                        GraphicsState.FreedomVector = Vector2.UnitX;
+                        GraphicsState.ProjectionVector = Vector2.UnitX;
                         break;
                     // SPVTCA[0]
                     case 0x02:
@@ -105,19 +107,35 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // SPVTL[0]
                     case 0x06:
-                        // TODO: Implement SPVTL[0]
+                        int point1 = _stack.Pop();
+                        int point2 = _stack.Pop();
+                        PointF p1 = GetPoint(point1, GraphicsState.ZonePointers[2]);
+                        PointF p2 = GetPoint(point2, GraphicsState.ZonePointers[2]);
+                        GraphicsState.ProjectionVector = ToUnit(p1, p2);
                         break;
                     // SPVTL[1]
                     case 0x07:
-                        // TODO: Implement SPVTL[1]
+                        point1 = _stack.Pop();
+                        point2 = _stack.Pop();
+                        p1 = GetPoint(point1, GraphicsState.ZonePointers[2]);
+                        p2 = GetPoint(point2, GraphicsState.ZonePointers[2]);
+                        GraphicsState.ProjectionVector = ToUnit(p1, p2).Rotate(-90);
                         break;
                     // SFVTL[0]
                     case 0x08:
-                        // TODO: Implement SFVTL[0]
+                        point1 = _stack.Pop();
+                        point2 = _stack.Pop();
+                        p1 = GetPoint(point1, GraphicsState.ZonePointers[2]);
+                        p2 = GetPoint(point2, GraphicsState.ZonePointers[2]);
+                        GraphicsState.FreedomVector = ToUnit(p1, p2);
                         break;
                     // SFVTL[1]
                     case 0x09:
-                        // TODO: Implement SFVTL[1]
+                        point1 = _stack.Pop();
+                        point2 = _stack.Pop();
+                        p1 = GetPoint(point1, GraphicsState.ZonePointers[2]);
+                        p2 = GetPoint(point2, GraphicsState.ZonePointers[2]);
+                        GraphicsState.FreedomVector = ToUnit(p1, p2).Rotate(-90);
                         break;
                     // SPVFS
                     case 0x0A:
@@ -289,9 +307,9 @@ namespace NewFontParser.RenderFont.Interpreter
                     case 0x27:
                         // TODO: Implement ALIGNPTS[]
                         break;
-                    // ???
+                    // Deprecated
                     case 0x28:
-                        // TODO: Implement ???
+                        throw new ArgumentException("Instruction 0x28 is deprecated.");
                         break;
                     // UTP[]
                     case 0x29:
@@ -324,7 +342,7 @@ namespace NewFontParser.RenderFont.Interpreter
                     // MDAP
                     case 0x2E:
                     case 0x2F:
-                        bool round = Convert.ToBoolean(instruction - 0x2E);
+                        var round = Convert.ToBoolean(instruction - 0x2E);
                         // TODO: Implement MDAP[1]
                         break;
                     // IUP[0]
@@ -969,6 +987,24 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                 }
             }
+        }
+
+        private PointF GetPoint(int index, bool isTwilight)
+        {
+            return isTwilight
+                ? _twilightPoints[index]
+                : ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[index].Point;
+        }
+
+        private static Vector2 ToUnit(PointF a, PointF b)
+        {
+            float length = Length(a, b);
+            return new Vector2((b.X - a.X) / length, (b.Y - a.Y) / length);
+        }
+
+        private static float Length(PointF a, PointF b)
+        {
+            return (float)Math.Sqrt(Math.Pow(a.X - b.X, 2) + Math.Pow(a.Y - b.Y, 2));
         }
 
         private static PointF Intersection(PointF a0, PointF a1, PointF b0, PointF b1)
