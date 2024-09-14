@@ -1,22 +1,15 @@
-﻿using System.Collections.Generic;
-
-namespace NewFontParser.Tables.TtTables
+﻿namespace NewFontParser.Tables.TtTables
 {
     public class FpgmTable : IInfoTable
     {
         public static string Tag => "fpgm";
 
-        public long Count { get; }
-
-        private readonly Stack<byte> _instructionStream = new Stack<byte>();
+        public byte[] Instructions { get; }
 
         public FpgmTable(byte[] data)
         {
-            Count = data.Length;
-            foreach (byte b in data)
-            {
-                _instructionStream.Push(b);
-            }
+            // Subtract 4 bytes for the fuzz factor
+            Instructions = data[..^4];
         }
     }
 }

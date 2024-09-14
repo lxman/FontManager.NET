@@ -164,7 +164,7 @@ namespace FontManager.NET
             List<FontStructure> fontStructures = reader.ReadFile(@"C:\Users\jorda\source\TestFonts\arial.ttf");
             FontStructure structure = fontStructures[0];
             GlyphTable? glyphTable = structure.GetGlyphTable();
-            GlyphData? glyphData = glyphTable?.GetGlyphData(65);
+            GlyphData? glyphData = glyphTable?.GetGlyphData(67);
             if (glyphData is null) return;
             DisplayGlyphControl.AssignGlyph(glyphData);
         }

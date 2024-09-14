@@ -36,6 +36,15 @@ namespace NewFontParser.Tables.TtTables
             return cvtValues;
         }
 
+        public float? GetCvtValue(int location)
+        {
+            if (location < 0 || location >= FWordCount)
+            {
+                return null;
+            }
+            return _data[location].ToF26Dot6();
+        }
+
         public void WriteCvtValue(int location, float value)
         {
             if (location < 0 || location >= FWordCount)

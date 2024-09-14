@@ -569,6 +569,14 @@ public enum KerxCoverage : int
 }
 
 [Flags]
+public enum InstructionControlFlags : ushort
+{
+    None,
+    InhibitGridFitting = 0x1,
+    UseDefaultGraphicsState = 0x2
+}
+
+[Flags]
 public enum KerxSubtableActions : ushort
 {
     Push = 1 << 15,

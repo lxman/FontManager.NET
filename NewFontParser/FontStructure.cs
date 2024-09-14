@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NewFontParser.Models;
+using NewFontParser.RenderFont.Interpreter;
 using NewFontParser.Tables;
 using NewFontParser.Tables.Avar;
 using NewFontParser.Tables.Base;
@@ -193,6 +194,39 @@ namespace NewFontParser
                 GlyphData? data = glyphTable.GetGlyphData(glyphId);
             }
             Console.WriteLine();
+
+            ushort demoId = cmapTable.GetGlyphId(0x41);
+            GlyphData? demoData = glyphTable.GetGlyphData(demoId);
+            if (!(demoData?.GlyphSpec is SimpleGlyph glyphData)) return;
+            byte[] instructions = glyphData.Instructions;
+            var cvtTable = GetTable<CvtTable>();
+            GraphicsState? graphicsState = null;
+            Dictionary<int, byte[]>? functions = null;
+            var maxpTable = GetTable<MaxPTable>();
+            if (Tables.Find(x => x is FpgmTable) is FpgmTable fpgmTable)
+            {
+                var interpreter = new Interpreter(
+                    glyphTable,
+                    cvtTable,
+                    fpgmTable.Instructions,
+                    maxpTable);
+                interpreter.Execute();
+                graphicsState = interpreter.GraphicsState;
+                functions = interpreter.Functions;
+            }
+            if (!(graphicsState is null))
+            {
+                var interpreter = new Interpreter(
+                    glyphTable,
+                    demoData,
+                    cvtTable,
+                    maxpTable,
+                    graphicsState,
+                    functions,
+                    instructions);
+                interpreter.Execute();
+            }
+
             if (!_tables.Any()) return;
             if (_tables.Any(t => !t.Attempted))
             {

@@ -1,41 +1,41 @@
 ﻿using System.Collections;
-using System.Drawing;
+using System.Numerics;
 
 namespace NewFontParser
 {
     public class GraphicsState
     {
-        public bool AutoFlip { get; set; }
+        public Vector2 FreedomVector { get; set; } = Vector2.UnitX;
+
+        public Vector2 ProjectionVector { get; set; } = Vector2.UnitX;
+
+        public Vector2 DualProjectionVectors { get; set; }
+
+        public InstructionControlFlags InstructControl { get; set; } = InstructionControlFlags.None;
+
+        public RoundState RoundState { get; set; } = RoundState.Grid;
+
+        public bool AutoFlip { get; set; } = true;
 
         public bool Debug { get; set; }
 
-        public uint ControlValueCutIn { get; set; }
+        public float ControlValueCutIn { get; set; } = (17f / 16);
 
-        public int DeltaBase { get; set; }
+        public int DeltaBase { get; set; } = 9;
 
-        public int DeltaShift { get; set; }
-
-        public int? DualProjectionVectors { get; set; }
-
-        public PointF FreedomVector { get; set; }
+        public int DeltaShift { get; set; } = 3;
 
         public BitArray ZonePointers { get; set; } = new BitArray(3, true);
 
-        public int InstructControl { get; set; }
-
         public int Loop { get; set; } = 1;
 
-        public uint MinimumDistance { get; set; }
+        public float MinimumDistance { get; set; } = 1;
 
-        public PointF ProjectionVector { get; set; }
+        public int ScanControl { get; set; } = 0;
 
-        public int RoundState { get; set; }
+        public float SingleWidthCutIn { get; set; } = 0;
 
-        public int ScanControl { get; set; }
-
-        public uint SingleWidthCutIn { get; set; }
-
-        public uint SingleWidthValue { get; set; }
+        public float SingleWidthValue { get; set; } = 0;
 
         public uint[] ReferencePoints { get; set; } = new uint[3];
     }

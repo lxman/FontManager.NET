@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using NewFontParser.Extensions;
+using NewFontParser.Tables;
 using NewFontParser.Tables.TtTables;
 using NewFontParser.Tables.TtTables.Glyf;
 
@@ -10,28 +12,60 @@ namespace NewFontParser.RenderFont.Interpreter
 {
     public class Interpreter
     {
+        public GraphicsState GraphicsState { get; }
+
+        public Dictionary<int, byte[]> Functions { get; } = new Dictionary<int, byte[]>();
+
         private readonly InstructionStream _reader;
         private readonly StorageArea _storageArea;
         private readonly CvtTable _cvtTable;
-        private readonly GlyphTable _glyphGlyphTable;
-        private readonly GraphicsState _graphicsState;
+        private readonly GlyphTable _glyphTable;
+        private readonly GlyphData _glyphData;
+        private readonly MaxPTable _maxPTable;
         private readonly Stack<int> _stack;
 
         public Interpreter(
-            InstructionStream reader,
-            StorageArea storageArea,
+            GlyphTable glyphTable,
             CvtTable cvtTable,
-            GlyphTable glyphGlyphTable,
-            GraphicsState graphicsState,
-            Stack<int> stack
+            byte[] instructions,
+            MaxPTable maxPTable
         )
         {
-            _reader = reader;
-            _storageArea = storageArea;
+            _reader = new InstructionStream(instructions);
             _cvtTable = cvtTable;
-            _glyphGlyphTable = glyphGlyphTable;
-            _graphicsState = graphicsState;
-            _stack = stack;
+            _glyphTable = glyphTable;
+            GraphicsState = new GraphicsState();
+            _stack = new Stack<int>();
+            _storageArea = new StorageArea(maxPTable.MaxStorage);
+            _maxPTable = maxPTable;
+        }
+
+        public Interpreter(
+            GlyphTable glyphTable,
+            GlyphData glyphData,
+            CvtTable cvtTable,
+            MaxPTable maxPTable,
+            GraphicsState graphicsState,
+            Dictionary<int, byte[]> functions,
+            byte[] instructions
+        )
+        {
+            _reader = new InstructionStream(instructions);
+            _storageArea = new StorageArea(maxPTable.MaxStorage);
+            _cvtTable = cvtTable;
+            _glyphTable = glyphTable;
+            _glyphData = glyphData;
+            GraphicsState = graphicsState;
+            _stack = new Stack<int>();
+            _maxPTable = maxPTable;
+            for (var i = 0; i < maxPTable.MaxFunctionDefs; i++)
+            {
+                Functions.Add(i, Array.Empty<byte>());
+            }
+            foreach (KeyValuePair<int, byte[]> keyValuePair in functions)
+            {
+                Functions[keyValuePair.Key] = keyValuePair.Value;
+            }
         }
 
         public void Execute()
@@ -43,27 +77,27 @@ namespace NewFontParser.RenderFont.Interpreter
                 {
                     // SVTCA[0]
                     case 0x00:
-                        _graphicsState.ProjectionVector = new System.Drawing.PointF(1, 0);
+                        GraphicsState.ProjectionVector = Vector2.UnitX;
                         break;
                     // SVTCA[1]
                     case 0x01:
-                        _graphicsState.ProjectionVector = new System.Drawing.PointF(0, 1);
+                        GraphicsState.ProjectionVector = Vector2.UnitY;
                         break;
                     // SPVTCA[0]
                     case 0x02:
-                        _graphicsState.ProjectionVector = new System.Drawing.PointF(1, 0);
+                        GraphicsState.ProjectionVector = Vector2.UnitX;
                         break;
                     // SPVTCA[1]
                     case 0x03:
-                        _graphicsState.ProjectionVector = new System.Drawing.PointF(0, 1);
+                        GraphicsState.ProjectionVector = Vector2.UnitY;
                         break;
                     // SFVTCA[0]
                     case 0x04:
-                        _graphicsState.FreedomVector = new System.Drawing.PointF(1, 0);
+                        GraphicsState.FreedomVector = Vector2.UnitX;
                         break;
                     // SFVTCA[1]
                     case 0x05:
-                        _graphicsState.FreedomVector = new System.Drawing.PointF(0, 1);
+                        GraphicsState.FreedomVector = Vector2.UnitY;
                         break;
                     // SPVTL[0]
                     case 0x06:
@@ -87,7 +121,7 @@ namespace NewFontParser.RenderFont.Interpreter
                         int x = _stack.Pop();
                         float y214 = y / 16384f;
                         float x214 = x / 16384f;
-                        _graphicsState.ProjectionVector = new System.Drawing.PointF(x214, y214);
+                        GraphicsState.ProjectionVector = new Vector2(x214, y214);
                         break;
                     // SFVFS
                     case 0x0B:
@@ -95,25 +129,25 @@ namespace NewFontParser.RenderFont.Interpreter
                         x = _stack.Pop();
                         y214 = y / 16384f;
                         x214 = x / 16384f;
-                        _graphicsState.FreedomVector = new System.Drawing.PointF(x214, y214);
+                        GraphicsState.FreedomVector = new Vector2(x214, y214);
                         break;
                     // GPV
                     case 0x0C:
-                        y214 = _graphicsState.ProjectionVector.Y;
-                        x214 = _graphicsState.ProjectionVector.X;
+                        y214 = GraphicsState.ProjectionVector.Y;
+                        x214 = GraphicsState.ProjectionVector.X;
                         _stack.Push((int)(x214 * 16384));
                         _stack.Push((int)(y214 * 16384));
                         break;
                     // GFV
                     case 0x0D:
-                        x214 = _graphicsState.FreedomVector.X;
-                        y214 = _graphicsState.FreedomVector.Y;
+                        x214 = GraphicsState.FreedomVector.X;
+                        y214 = GraphicsState.FreedomVector.Y;
                         _stack.Push((int)(x214 * 16384));
                         _stack.Push((int)(y214 * 16384));
                         break;
                     // SFVTPV
                     case 0x0E:
-                        _graphicsState.FreedomVector = _graphicsState.ProjectionVector;
+                        GraphicsState.FreedomVector = GraphicsState.ProjectionVector;
                         break;
                     // ISECT
                     case 0x0F:
@@ -125,47 +159,47 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // SRP0
                     case 0x10:
-                        _graphicsState.ReferencePoints[0] = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.ReferencePoints[0] = Convert.ToUInt32(_stack.Pop());
                         break;
                     // SRP1
                     case 0x11:
-                        _graphicsState.ReferencePoints[1] = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.ReferencePoints[1] = Convert.ToUInt32(_stack.Pop());
                         break;
                     // SRP2
                     case 0x12:
-                        _graphicsState.ReferencePoints[2] = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.ReferencePoints[2] = Convert.ToUInt32(_stack.Pop());
                         break;
                     // SZP0
                     case 0x13:
-                        _graphicsState.ReferencePoints[3] = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.ReferencePoints[3] = Convert.ToUInt32(_stack.Pop());
                         break;
                     // SZP1
                     case 0x14:
-                        _graphicsState.ReferencePoints[4] = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.ReferencePoints[4] = Convert.ToUInt32(_stack.Pop());
                         break;
                     // SZP2
                     case 0x15:
-                        _graphicsState.ReferencePoints[5] = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.ReferencePoints[5] = Convert.ToUInt32(_stack.Pop());
                         break;
                     // SZPS
                     case 0x16:
-                        _graphicsState.ReferencePoints[6] = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.ReferencePoints[6] = Convert.ToUInt32(_stack.Pop());
                         break;
                     // SLOOP
                     case 0x17:
-                        _graphicsState.Loop = _stack.Pop();
+                        GraphicsState.Loop = _stack.Pop();
                         break;
                     // RTG
                     case 0x18:
-                        _graphicsState.RoundState = (int)RoundState.Grid;
+                        GraphicsState.RoundState = RoundState.Grid;
                         break;
                     // RTHG
                     case 0x19:
-                        _graphicsState.RoundState = (int)RoundState.HalfGrid;
+                        GraphicsState.RoundState = RoundState.HalfGrid;
                         break;
                     // SMD
                     case 0x1A:
-                        _graphicsState.MinimumDistance = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.MinimumDistance = Convert.ToUInt32(_stack.Pop());
                         break;
                     // ELSE
                     case 0x1B:
@@ -177,15 +211,15 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // SCVTCI
                     case 0x1D:
-                        _graphicsState.ControlValueCutIn = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.ControlValueCutIn = Convert.ToUInt32(_stack.Pop());
                         break;
                     // SSWCI
                     case 0x1E:
-                        _graphicsState.SingleWidthCutIn = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.SingleWidthCutIn = Convert.ToUInt32(_stack.Pop());
                         break;
                     // SSW
                     case 0x1F:
-                        _graphicsState.SingleWidthValue = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.SingleWidthValue = Convert.ToUInt32(_stack.Pop());
                         break;
                     // DUP
                     case 0x20:
@@ -214,40 +248,50 @@ namespace NewFontParser.RenderFont.Interpreter
                     case 0x25:
                         // TODO: Implement CINDEX
                         break;
-                    // MINDEX
+                    // MINDEX[]
                     case 0x26:
-                        // TODO: Implement MINDEX
+                        // TODO: Implement MINDEX[]
                         break;
-                    // ALIGNPTS
+                    // ALIGNPTS[]
                     case 0x27:
-                        // TODO: Implement ALIGNPTS
+                        // TODO: Implement ALIGNPTS[]
                         break;
-                    // UTP
+                    // ???
                     case 0x28:
-                        // TODO: Implement UTP
+                        // TODO: Implement ???
                         break;
-                    // LOOPCALL
+                    // UTP[]
                     case 0x29:
-                        // TODO: Implement LOOPCALL
+                        // TODO: Implement UTP[]
                         break;
-                    // CALL
+                    // LOOPCALL[]
                     case 0x2A:
-                        // TODO: Implement CALL
+                        // TODO: Implement LOOPCALL[]
                         break;
-                    // FDEF
+                    // CALL[]
                     case 0x2B:
-                        // TODO: Implement FDEF
+                        int funcId = _stack.Pop();
+                        // TODO: Implement CALL[]
                         break;
-                    // ENDF
+                    // FDEF[]
                     case 0x2C:
-                        // TODO: Implement ENDF
+                        var function = new List<byte>();
+                        int funcIndex = _stack.Pop();
+                        var currInstruction = 0;
+                        while (currInstruction != 0x2D)
+                        {
+                            currInstruction = _reader.ReadByte();
+                            if (currInstruction != 0x2D)
+                            {
+                                function.Add(_reader.ReadByte());
+                            }
+                        }
+                        Functions[funcIndex] = function.ToArray();
                         break;
-                    // MDAP[0]
-                    case 0x2D:
-                        // TODO: Implement MDAP[0]
-                        break;
-                    // MDAP[1]
+                    // MDAP
                     case 0x2E:
+                    case 0x2F:
+                        bool round = Convert.ToBoolean(instruction - 0x2E);
                         // TODO: Implement MDAP[1]
                         break;
                     // IUP[0]
@@ -313,37 +357,43 @@ namespace NewFontParser.RenderFont.Interpreter
                     // MIAP[1]
                     case 0x3F:
                         // TODO: Implement MIAP[1]
+                        int cvtEntryNumber = _stack.Pop();
+                        int pointNumber = _stack.Pop();
+                        float? cvtValue = _cvtTable.GetCvtValue(cvtEntryNumber);
+                        var point = ((SimpleGlyph)_glyphData.GlyphSpec).Coordinates[pointNumber];
                         break;
-                    // NPUSHB
+                    // Push Bytes
                     case 0x40:
-                        byte n = _reader.ReadByte();
-                        for (var i = 0; i < n; i++)
-                        {
-                            _stack.Push(_reader.ReadByte());
-                        }
+                    case 0xB0:
+                    case 0xB1:
+                    case 0xB2:
+                    case 0xB3:
+                    case 0xB4:
+                    case 0xB5:
+                    case 0xB6:
+                    case 0xB7:
+                        PushBytes(instruction);
                         break;
-                    // NPUSHW
+                    // Push Words
                     case 0x41:
-                        n = _reader.ReadByte();
-                        for (var i = 0; i < n; i++)
-                        {
-                            _stack.Push(_reader.ReadWord());
-                        }
+                    case 0xB8:
+                    case 0xB9:
+                    case 0xBA:
+                    case 0xBB:
+                    case 0xBC:
+                    case 0xBD:
+                    case 0xBE:
+                    case 0xBF:
+                        PushWords(instruction);
                         break;
-                    // WS
+                    // Storage Area
                     case 0x42:
-                        int value = _stack.Pop();
-                        int address = _stack.Pop();
-                        _storageArea[address] = value;
-                        break;
-                    // RS
                     case 0x43:
-                        address = _stack.Pop();
-                        _stack.Push(_storageArea[address]);
+                        ReadWriteStorage(instruction);
                         break;
                     // WCVTP
                     case 0x44:
-                        value = _stack.Pop();
+                        int value = _stack.Pop();
                         _cvtTable.WriteCvtValue(_stack.Pop(), value);
                         break;
                     // RCVT
@@ -352,23 +402,23 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // GC[0]
                     case 0x46:
-                        _graphicsState.ControlValueCutIn = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.ControlValueCutIn = Convert.ToUInt32(_stack.Pop());
                         break;
                     // GC[1]
                     case 0x47:
-                        _graphicsState.SingleWidthValue = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.SingleWidthValue = Convert.ToUInt32(_stack.Pop());
                         break;
                     // SCFS
                     case 0x48:
-                        _graphicsState.SingleWidthCutIn = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.SingleWidthCutIn = Convert.ToUInt32(_stack.Pop());
                         break;
                     // MD[0]
                     case 0x49:
-                        _graphicsState.MinimumDistance = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.MinimumDistance = Convert.ToUInt32(_stack.Pop());
                         break;
                     // MD[1]
                     case 0x4A:
-                        _graphicsState.DeltaBase = _stack.Pop();
+                        GraphicsState.DeltaBase = _stack.Pop();
                         break;
                     // MPPEM
                     case 0x4B:
@@ -382,15 +432,15 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // FLIPON
                     case 0x4D:
-                        _graphicsState.AutoFlip = true;
+                        GraphicsState.AutoFlip = true;
                         break;
                     // FLIPOFF
                     case 0x4E:
-                        _graphicsState.AutoFlip = false;
+                        GraphicsState.AutoFlip = false;
                         break;
                     // DEBUG
                     case 0x4F:
-                        _graphicsState.Debug = true;
+                        GraphicsState.Debug = true;
                         break;
                     // LT
                     case 0x50:
@@ -450,11 +500,11 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // SDB
                     case 0x5E:
-                        _graphicsState.DeltaBase = _stack.Pop();
+                        GraphicsState.DeltaBase = _stack.Pop();
                         break;
                     // SDS
                     case 0x5F:
-                        _graphicsState.DeltaShift = _stack.Pop();
+                        GraphicsState.DeltaShift = _stack.Pop();
                         break;
                     // ADD
                     case 0x60:
@@ -531,7 +581,7 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // SROUND
                     case 0x76:
-                        _graphicsState.RoundState = _stack.Pop();
+                        GraphicsState.RoundState = (RoundState)_stack.Pop();
                         break;
                     // S45ROUND
                     case 0x77:
@@ -579,7 +629,7 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // SCANCTRL
                     case 0x85:
-                        _graphicsState.ScanControl = _stack.Pop();
+                        GraphicsState.ScanControl = _stack.Pop();
                         break;
                     // SDPVTL[0]
                     case 0x86:
@@ -620,134 +670,6 @@ namespace NewFontParser.RenderFont.Interpreter
                     // INSTCTRL
                     case 0x8E:
                         // TODO: Implement INSTCTRL
-                        break;
-                    // PUSHB[000]
-                    case 0xB0:
-                        n = _reader.ReadByte();
-                        for (var i = 0; i < n; i++)
-                        {
-                            _stack.Push(_reader.ReadByte());
-                        }
-                        break;
-                    // PUSHB[001]
-                    case 0xB1:
-                        byte[] data = _reader.ReadBytes(2);
-                        for (var i = 0; i < data.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadByte());
-                        }
-                        break;
-                    // PUSHB[010]
-                    case 0xB2:
-                        data = _reader.ReadBytes(3);
-                        for (var i = 0; i < data.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadByte());
-                        }
-                        break;
-                    // PUSHB[011]
-                    case 0xB3:
-                        data = _reader.ReadBytes(4);
-                        for (var i = 0; i < data.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadByte());
-                        }
-                        break;
-                    // PUSHB[100]
-                    case 0xB4:
-                        data = _reader.ReadBytes(5);
-                        for (var i = 0; i < data.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadByte());
-                        }
-                        break;
-                    // PUSHB[101]
-                    case 0xB5:
-                        data = _reader.ReadBytes(6);
-                        for (var i = 0; i < data.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadByte());
-                        }
-                        break;
-                    // PUSHB[110]
-                    case 0xB6:
-                        data = _reader.ReadBytes(7);
-                        for (var i = 0; i < data.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadByte());
-                        }
-                        break;
-                    // PUSHB[111]
-                    case 0xB7:
-                        data = _reader.ReadBytes(8);
-                        for (var i = 0; i < data.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadByte());
-                        }
-                        break;
-                    // PUSHW[000]
-                    case 0xB8:
-                        short word = _reader.ReadWord();
-                        for (var i = 0; i < 1; i++)
-                        {
-                            _stack.Push(_reader.ReadWord());
-                        }
-                        break;
-                    // PUSHW[001]
-                    case 0xB9:
-                        short[] words = _reader.ReadWords(2);
-                        for (var i = 0; i < words.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadWord());
-                        }
-                        break;
-                    // PUSHW[010]
-                    case 0xBA:
-                        words = _reader.ReadWords(3);
-                        for (var i = 0; i < words.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadWord());
-                        }
-                        break;
-                    // PUSHW[011]
-                    case 0xBB:
-                        words = _reader.ReadWords(4);
-                        for (var i = 0; i < words.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadWord());
-                        }
-                        break;
-                    // PUSHW[100]
-                    case 0xBC:
-                        words = _reader.ReadWords(5);
-                        for (var i = 0; i < words.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadWord());
-                        }
-                        break;
-                    // PUSHW[101]
-                    case 0xBD:
-                        words = _reader.ReadWords(6);
-                        for (var i = 0; i < words.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadWord());
-                        }
-                        break;
-                    // PUSHW[110]
-                    case 0xBE:
-                        words = _reader.ReadWords(7);
-                        for (var i = 0; i < words.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadWord());
-                        }
-                        break;
-                    // PUSHW[111]
-                    case 0xBF:
-                        words = _reader.ReadWords(8);
-                        for (var i = 0; i < words.Length; i++)
-                        {
-                            _stack.Push(_reader.ReadWord());
-                        }
                         break;
                     // MDRP[00000]
                     case 0xC0:
@@ -1006,6 +928,65 @@ namespace NewFontParser.RenderFont.Interpreter
                         // TODO: Implement MIRP[11111]
                         break;
                 }
+            }
+        }
+
+        private void ReadWriteStorage(byte instruction)
+        {
+            switch (instruction)
+            {
+                case 0x42:
+                    int value = _stack.Pop();
+                    int address = _stack.Pop();
+                    _storageArea[address] = value;
+                    break;
+                case 0x43:
+                    address = _stack.Pop();
+                    _stack.Push(_storageArea[address]);
+                    break;
+            }
+        }
+
+        private void PushBytes(byte instruction)
+        {
+            int n;
+            if (instruction == 0x40)
+            {
+                n = _reader.ReadByte();
+            }
+            else
+            {
+                n = (instruction - 0xB0) + 1;
+            }
+            for (var i = 0; i < n; i++)
+            {
+                _stack.Push(_reader.ReadByte());
+            }
+        }
+
+        private void PushWords(byte instruction)
+        {
+            int n;
+            if (instruction == 0x41)
+            {
+                n = _reader.ReadByte();
+            }
+            else
+            {
+                n = (instruction - 0xB8) + 1;
+            }
+            for (var i = 0; i < n; i++)
+            {
+                _stack.Push(_reader.ReadWord());
+            }
+        }
+
+        private void FromReaderToStack(byte arg)
+        {
+            int numToXfer = arg - 0xB7;
+            for (var i = 0; i < numToXfer; i++)
+            {
+                _stack.Push(_reader.ReadWord());
             }
         }
     }
