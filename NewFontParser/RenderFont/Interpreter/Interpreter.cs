@@ -211,15 +211,15 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // SCVTCI
                     case 0x1D:
-                        GraphicsState.ControlValueCutIn = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.ControlValueCutIn = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
                         break;
                     // SSWCI
                     case 0x1E:
-                        GraphicsState.SingleWidthCutIn = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.SingleWidthCutIn = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
                         break;
                     // SSW
                     case 0x1F:
-                        GraphicsState.SingleWidthValue = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.SingleWidthValue = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
                         break;
                     // DUP
                     case 0x20:
@@ -246,11 +246,25 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // CINDEX
                     case 0x25:
-                        // TODO: Implement CINDEX
+                        int index = _stack.Pop();
+                        int indexedValue = _stack.ToArray()[index];
+                        _stack.Push(indexedValue);
                         break;
                     // MINDEX[]
                     case 0x26:
-                        // TODO: Implement MINDEX[]
+                        index = _stack.Pop();
+                        var values = new int[index + 1];
+                        for (var i = 0; i <= index; i++)
+                        {
+                            values[i] = _stack.Pop();
+                        }
+                        indexedValue = values[index];
+                        values[index] = values[0];
+                        values[0] = indexedValue;
+                        for (int i = index; i >= 0; i--)
+                        {
+                            _stack.Push(values[i]);
+                        }
                         break;
                     // ALIGNPTS[]
                     case 0x27:
@@ -393,7 +407,7 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // WCVTP
                     case 0x44:
-                        int value = _stack.Pop();
+                        float value = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
                         _cvtTable.WriteCvtValue(_stack.Pop(), value);
                         break;
                     // RCVT
@@ -402,19 +416,19 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // GC[0]
                     case 0x46:
-                        GraphicsState.ControlValueCutIn = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.ControlValueCutIn = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
                         break;
                     // GC[1]
                     case 0x47:
-                        GraphicsState.SingleWidthValue = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.SingleWidthValue = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
                         break;
                     // SCFS
                     case 0x48:
-                        GraphicsState.SingleWidthCutIn = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.SingleWidthCutIn = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
                         break;
                     // MD[0]
                     case 0x49:
-                        GraphicsState.MinimumDistance = Convert.ToUInt32(_stack.Pop());
+                        GraphicsState.MinimumDistance = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
                         break;
                     // MD[1]
                     case 0x4A:
@@ -572,7 +586,7 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // WCVTF
                     case 0x70:
-                        value = _stack.Pop();
+                        value = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
                         _cvtTable.WriteCvtValue(_stack.Pop(), value);
                         break;
                     // DELTAC1
@@ -649,7 +663,14 @@ namespace NewFontParser.RenderFont.Interpreter
                         break;
                     // ROLL
                     case 0x8A:
-                        // TODO: Implement ROLL
+                        values = new int[3];
+                        values[0] = _stack.Pop();
+                        values[1] = _stack.Pop();
+                        values[2] = _stack.Pop();
+                        int last = values[2];
+                        values[2] = values[1];
+                        values[1] = values[0];
+                        values[0] = last;
                         break;
                     // MAX
                     case 0x8B:
