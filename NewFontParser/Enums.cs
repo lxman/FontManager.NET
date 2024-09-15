@@ -354,6 +354,14 @@ public enum BitmapSizeFlag : byte
     Vertical = 2
 }
 
+public enum TouchState : ushort
+{
+    None = 0,
+    X = 1,
+    Y = 2,
+    Both = X | Y
+}
+
 #endregion
 
 #region Flags

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Numerics;
 
-namespace NewFontParser
+namespace NewFontParser.RenderFont.Interpreter
 {
     public class GraphicsState
     {
@@ -19,7 +19,7 @@ namespace NewFontParser
 
         public bool Debug { get; set; }
 
-        public float ControlValueCutIn { get; set; } = (17f / 16);
+        public float ControlValueCutIn { get; set; } = 17f / 16;
 
         public int DeltaBase { get; set; } = 9;
 

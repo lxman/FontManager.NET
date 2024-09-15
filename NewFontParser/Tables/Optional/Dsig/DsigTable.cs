@@ -9,8 +9,6 @@ namespace NewFontParser.Tables.Optional.Dsig
 
         public uint Version { get; }
 
-        public ushort NumSigs { get; }
-
         public PermissionFlags PermissionFlags { get; }
 
         public List<SigRecord> SigRecords { get; } = new List<SigRecord>();
@@ -19,11 +17,11 @@ namespace NewFontParser.Tables.Optional.Dsig
         {
             var reader = new BigEndianReader(data);
             Version = reader.ReadUInt32();
-            NumSigs = reader.ReadUShort();
-            if (NumSigs == 0) return;
+            ushort _numSigs = reader.ReadUShort();
+            if (_numSigs == 0) return;
             PermissionFlags = (PermissionFlags)reader.ReadUShort();
 
-            for (var i = 0; i < NumSigs; i++)
+            for (var i = 0; i < _numSigs; i++)
             {
                 SigRecords.Add(new SigRecord(reader));
             }

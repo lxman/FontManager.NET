@@ -21,10 +21,11 @@ namespace NewFontParser.RenderFont.Interpreter
         private readonly StorageArea _storageArea;
         private readonly CvtTable _cvtTable;
         private readonly GlyphTable _glyphTable;
-        private readonly GlyphData _glyphData;
         private readonly MaxPTable _maxPTable;
         private readonly Stack<int> _stack;
-        private readonly PointF[] _twilightPoints;
+        private readonly Zone TwilightZone = new Zone();
+        private readonly Zone GlyphZone = new Zone();
+        private readonly SimpleGlyph _glyphData;
 
         public Interpreter(
             GlyphTable glyphTable,
@@ -40,7 +41,7 @@ namespace NewFontParser.RenderFont.Interpreter
             _stack = new Stack<int>();
             _storageArea = new StorageArea(maxPTable.MaxStorage);
             _maxPTable = maxPTable;
-            _twilightPoints = new PointF[maxPTable.MaxTwilightPoints];
+            TwilightZone = new Zone(true, new PointF[maxPTable.MaxTwilightPoints]);
         }
 
         public Interpreter(
@@ -57,7 +58,6 @@ namespace NewFontParser.RenderFont.Interpreter
             _storageArea = new StorageArea(maxPTable.MaxStorage);
             _cvtTable = cvtTable;
             _glyphTable = glyphTable;
-            _glyphData = glyphData;
             GraphicsState = graphicsState;
             _stack = new Stack<int>();
             _maxPTable = maxPTable;
@@ -69,7 +69,14 @@ namespace NewFontParser.RenderFont.Interpreter
             {
                 Functions[keyValuePair.Key] = keyValuePair.Value;
             }
-            _twilightPoints = new PointF[maxPTable.MaxTwilightPoints];
+            TwilightZone = new Zone(true, new PointF[maxPTable.MaxTwilightPoints]);
+            _glyphData = (SimpleGlyph)glyphData.GlyphSpec;
+            List<SimpleGlyphCoordinate> coords = _glyphData.Coordinates;
+            coords.Add(new SimpleGlyphCoordinate(new PointF(0, 0), false));
+            coords.Add(new SimpleGlyphCoordinate(new PointF(0, 0), false));
+            coords.Add(new SimpleGlyphCoordinate(new PointF(0, 0), false));
+            coords.Add(new SimpleGlyphCoordinate(new PointF(0, 0), false));
+            GlyphZone = new Zone(false, coords.ToArray());
         }
 
         public void Execute()
@@ -179,18 +186,18 @@ namespace NewFontParser.RenderFont.Interpreter
                         int a1 = _stack.Pop();
                         int a0 = _stack.Pop();
                         int pointIndex = _stack.Pop();
-                        PointF pointA0 = GraphicsState.ZonePointers[1] ? _twilightPoints[a0] : ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[a0].Point;
-                        PointF pointA1 = GraphicsState.ZonePointers[1] ? _twilightPoints[a1] : ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[a1].Point;
-                        PointF pointB0 = GraphicsState.ZonePointers[0] ? _twilightPoints[b0] : ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[b0].Point;
-                        PointF pointB1 = GraphicsState.ZonePointers[0] ? _twilightPoints[b1] : ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[b1].Point;
+                        PointF pointA0 = GetPoint(a0, GraphicsState.ZonePointers[1]);
+                        PointF pointA1 = GetPoint(a1, GraphicsState.ZonePointers[1]);
+                        PointF pointB0 = GetPoint(b0, GraphicsState.ZonePointers[0]);
+                        PointF pointB1 = GetPoint(b1, GraphicsState.ZonePointers[0]);
                         PointF solution = Intersection(pointA0, pointA1, pointB0, pointB1);
                         switch (GraphicsState.ZonePointers[2])
                         {
                             case true:
-                                _twilightPoints[pointIndex] = solution;
+                                TwilightZone.MovePoint(pointIndex, solution);
                                 break;
                             case false:
-                                ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[pointIndex].ChangePoint(solution, ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[pointIndex].OnCurve);
+                                GlyphZone.MovePoint(pointIndex, solution);
                                 break;
                         }
                         break;
@@ -342,7 +349,7 @@ namespace NewFontParser.RenderFont.Interpreter
                     // MDAP
                     case 0x2E:
                     case 0x2F:
-                        var round = Convert.ToBoolean(instruction - 0x2E);
+                        bool round = !Convert.ToBoolean(instruction - 0x2E);
                         // TODO: Implement MDAP[1]
                         break;
                     // IUP[0]
@@ -411,7 +418,7 @@ namespace NewFontParser.RenderFont.Interpreter
                         int cvtEntryNumber = _stack.Pop();
                         int pointNumber = _stack.Pop();
                         float? cvtValue = _cvtTable.GetCvtValue(cvtEntryNumber);
-                        SimpleGlyphCoordinate? point = ((SimpleGlyph)_glyphData.GlyphSpec).Coordinates[pointNumber];
+                        SimpleGlyphCoordinate? point = _glyphData.Coordinates[pointNumber];
                         break;
                     // Push Bytes
                     case 0x40:
@@ -992,8 +999,8 @@ namespace NewFontParser.RenderFont.Interpreter
         private PointF GetPoint(int index, bool isTwilight)
         {
             return isTwilight
-                ? _twilightPoints[index]
-                : ((SimpleGlyph)(_glyphData.GlyphSpec)).Coordinates[index].Point;
+                ? TwilightZone.Current[index].PointF
+                : GlyphZone.Current[index].PointF;
         }
 
         private static Vector2 ToUnit(PointF a, PointF b)

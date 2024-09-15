@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Text;
+using NewFontParser.Models;
 using NewFontParser.Reader;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace NewFontParser.Tables.Name
 {
@@ -11,15 +14,14 @@ namespace NewFontParser.Tables.Name
 
         public Enum EncodingId { get; }
 
-        public ushort LanguageId { get; }
+        public string LanguageId { get; }
 
         public string NameId { get; }
 
-        public ushort Length { get; }
-
-        public ushort Offset { get; }
-
         public string? Name { get; set; }
+
+        private readonly ushort _length;
+        private readonly ushort _offset;
 
         public NameRecord(byte[] data)
         {
@@ -50,10 +52,21 @@ namespace NewFontParser.Tables.Name
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            LanguageId = reader.ReadUShort();
+            LanguageId = Language.Ids[reader.ReadUShort()];
             NameId = NameIdTranslator.Translate(reader.ReadUShort());
-            Length = reader.ReadUShort();
-            Offset = reader.ReadUShort();
+            _length = reader.ReadUShort();
+            _offset = reader.ReadUShort();
+        }
+
+        public void Process(BigEndianReader reader, ushort offset)
+        {
+            reader.Seek(offset + _offset);
+            if (EncodingId.ToString().ToLower().Contains("unicode"))
+            {
+                Name = Encoding.BigEndianUnicode.GetString(reader.ReadBytes(_length));
+                return;
+            }
+            Name = Encoding.ASCII.GetString(reader.ReadBytes(_length));
         }
     }
 }

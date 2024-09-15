@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using NewFontParser.Reader;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace NewFontParser.Tables.Svg
 {
@@ -28,6 +29,11 @@ namespace NewFontParser.Tables.Svg
         {
             reader.Seek(docIndexStart + _svgDocOffset);
             _svgDocument = reader.ReadBytes(_svgDocLength);
+            if (_svgDocument.IsCompressed())
+            {
+                Instructions = Encoding.UTF8.GetString(_svgDocument.Decompress());
+                return;
+            }
             Instructions = Encoding.UTF8.GetString(_svgDocument);
         }
     }

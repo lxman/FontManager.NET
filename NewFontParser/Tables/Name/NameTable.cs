@@ -9,13 +9,7 @@ namespace NewFontParser.Tables.Name
 
         public ushort Format { get; }
 
-        public ushort Count { get; }
-
-        public ushort StringStorageOffset { get; }
-
         public List<NameRecord> NameRecords { get; } = new List<NameRecord>();
-
-        public ushort? LangTagCount { get; }
 
         public List<LangTagRecord>? LangTagRecords { get; }
 
@@ -24,20 +18,22 @@ namespace NewFontParser.Tables.Name
             var reader = new BigEndianReader(data);
 
             Format = reader.ReadUShort();
-            Count = reader.ReadUShort();
-            StringStorageOffset = reader.ReadUShort();
-            for (var i = 0; i < Count; i++)
+            ushort count = reader.ReadUShort();
+            ushort stringStorageOffset = reader.ReadUShort();
+            for (var i = 0; i < count; i++)
             {
                 NameRecords.Add(new NameRecord(reader.ReadBytes(NameRecord.RecordSize)));
             }
+            NameRecords.ForEach(r => r.Process(reader, stringStorageOffset));
             if (Format == 0) return;
-            LangTagCount = reader.ReadUShort();
-            if (LangTagCount == null) return;
+            ushort langTagCount = reader.ReadUShort();
+            if (langTagCount == 0) return;
             LangTagRecords = new List<LangTagRecord>();
-            for (var i = 0; i < LangTagCount; i++)
+            for (var i = 0; i < langTagCount; i++)
             {
                 LangTagRecords.Add(new LangTagRecord(reader.ReadBytes(LangTagRecord.RecordSize)));
             }
+            LangTagRecords.ForEach(r => r.Process(reader, stringStorageOffset));
         }
     }
 }
