@@ -4,14 +4,15 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format1
 {
     public class SequenceLookup
     {
-        public ushort LookupCount { get; }
+        public ushort SequenceIndex { get; }
+
         public ushort LookupListIndex { get; }
 
         public SequenceLookup(byte[] data)
         {
             var reader = new BigEndianReader(data);
 
-            LookupCount = reader.ReadUShort();
+            SequenceIndex = reader.ReadUShort();
             LookupListIndex = reader.ReadUShort();
         }
     }

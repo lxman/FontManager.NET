@@ -6,16 +6,14 @@ namespace NewFontParser.Tables.Common.CoverageFormat
     {
         public ushort Format => 1;
 
-        public ushort GlyphCount { get; }
-
         public ushort[] GlyphArray { get; }
 
         public Format1(BigEndianReader reader)
         {
             _ = reader.ReadUShort(); // Skip format
-            GlyphCount = reader.ReadUShort();
-            GlyphArray = new ushort[GlyphCount];
-            for (var i = 0; i < GlyphCount; i++)
+            ushort glyphCount = reader.ReadUShort();
+            GlyphArray = new ushort[glyphCount];
+            for (var i = 0; i < glyphCount; i++)
             {
                 GlyphArray[i] = reader.ReadUShort();
             }
