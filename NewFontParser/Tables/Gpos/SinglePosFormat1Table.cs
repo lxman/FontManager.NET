@@ -1,5 +1,4 @@
-﻿using NewFontParser.Extensions;
-using NewFontParser.Reader;
+﻿using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
 
 namespace NewFontParser.Tables.Gpos
@@ -21,7 +20,7 @@ namespace NewFontParser.Tables.Gpos
             PosFormat = reader.ReadUShort();
             CoverageOffset = reader.ReadUShort();
             ValueFormat = (ValueFormat)reader.ReadUShort();
-            ValueRecord = new ValueRecord(ValueFormat.GetFlags(), reader);
+            ValueRecord = new ValueRecord(ValueFormat, reader);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using NewFontParser.Extensions;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
 
@@ -26,14 +25,14 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables
             ValueFormat = (ValueFormat)reader.ReadUShort();
             if (Format == 1)
             {
-                ValueRecord = new ValueRecord(ValueFormat.GetFlags(), reader);
+                ValueRecord = new ValueRecord(ValueFormat, reader);
                 return;
             }
             ValueCount = reader.ReadUShort();
             ValueRecords = new List<ValueRecord>();
             for (var i = 0; i < ValueCount; i++)
             {
-                ValueRecords.Add(new ValueRecord(ValueFormat.GetFlags(), reader));
+                ValueRecords.Add(new ValueRecord(ValueFormat, reader));
             }
         }
     }

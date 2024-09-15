@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using NewFontParser.Reader;
+﻿using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Common
 {
@@ -23,48 +20,44 @@ namespace NewFontParser.Tables.Common
 
         public ushort? YAdvDeviceLength { get; internal set; }
 
-        public ValueRecord(IEnumerable<ValueFormat> flags, BigEndianReader reader)
+        public ValueRecord(ValueFormat flags, BigEndianReader reader)
         {
-            flags.ToList().ForEach(f =>
+            if (flags.HasFlag(ValueFormat.XPlacement))
             {
-                switch (f)
-                {
-                    case ValueFormat.XPlacement:
-                        XPlacement = reader.ReadShort();
-                        break;
+                XPlacement = reader.ReadShort();
+            }
+            if (flags.HasFlag(ValueFormat.YPlacement))
+            {
+                YPlacement = reader.ReadShort();
+            }
+            if (flags.HasFlag(ValueFormat.XAdvance))
+            {
+                XAdvance = reader.ReadShort();
+            }
 
-                    case ValueFormat.YPlacement:
-                        YPlacement = reader.ReadShort();
-                        break;
+            if (flags.HasFlag(ValueFormat.YAdvance))
+            {
+                YAdvance = reader.ReadShort();
+            }
+            if (flags.HasFlag(ValueFormat.XPlacementDevice))
+            {
+                XPlaDeviceOffset = reader.ReadUShort();
+            }
 
-                    case ValueFormat.XAdvance:
-                        XAdvance = reader.ReadShort();
-                        break;
+            if (flags.HasFlag(ValueFormat.YPlacementDevice))
+            {
+                YPlaDeviceLength = reader.ReadUShort();
+            }
 
-                    case ValueFormat.YAdvance:
-                        YAdvance = reader.ReadShort();
-                        break;
+            if (flags.HasFlag(ValueFormat.XAdvanceDevice))
+            {
+                XAdvDeviceOffset = reader.ReadUShort();
+            }
 
-                    case ValueFormat.XPlacementDevice:
-                        XPlaDeviceOffset = reader.ReadUShort();
-                        break;
-
-                    case ValueFormat.YPlacementDevice:
-                        YPlaDeviceLength = reader.ReadUShort();
-                        break;
-
-                    case ValueFormat.XAdvanceDevice:
-                        XAdvDeviceOffset = reader.ReadUShort();
-                        break;
-
-                    case ValueFormat.YAdvanceDevice:
-                        YAdvDeviceLength = reader.ReadUShort();
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(f), f, null);
-                }
-            });
+            if (flags.HasFlag(ValueFormat.YAdvanceDevice))
+            {
+                YAdvDeviceLength = reader.ReadUShort();
+            }
         }
     }
 }

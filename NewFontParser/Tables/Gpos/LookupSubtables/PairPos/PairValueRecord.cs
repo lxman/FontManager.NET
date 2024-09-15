@@ -1,4 +1,6 @@
-﻿using NewFontParser.Reader;
+﻿using System.Collections.Generic;
+using NewFontParser.Reader;
+using NewFontParser.Tables.Common;
 
 namespace NewFontParser.Tables.Gpos.LookupSubtables.PairPos
 {
@@ -6,17 +8,15 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.PairPos
     {
         public ushort SecondGlyph { get; }
 
-        public short Value1 { get; }
+        public ValueRecord Value1 { get; }
 
-        public short Value2 { get; }
+        public ValueRecord Value2 { get; }
 
-        public PairValueRecord(byte[] data)
+        public PairValueRecord(BigEndianReader reader, IList<ValueFormat> formats)
         {
-            var reader = new BigEndianReader(data);
-
             SecondGlyph = reader.ReadUShort();
-            Value1 = reader.ReadShort();
-            Value2 = reader.ReadShort();
+            Value1 = new ValueRecord(formats[0], reader);
+            Value2 = new ValueRecord(formats[1], reader);
         }
     }
 }

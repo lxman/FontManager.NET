@@ -1,5 +1,4 @@
-﻿using NewFontParser.Extensions;
-using NewFontParser.Reader;
+﻿using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
 
 namespace NewFontParser.Tables.Gpos.LookupSubtables.PairPos
@@ -12,8 +11,8 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.PairPos
 
         public Class2Record(ValueFormat vf1, ValueFormat vf2, BigEndianReader reader)
         {
-            ValueRecord1 = new ValueRecord(vf1.GetFlags(), reader);
-            ValueRecord2 = new ValueRecord(vf2.GetFlags(), reader);
+            ValueRecord1 = new ValueRecord(vf1, reader);
+            ValueRecord2 = new ValueRecord(vf2, reader);
         }
     }
 }

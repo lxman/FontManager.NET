@@ -24,7 +24,7 @@ namespace NewFontParser.Tables.Common
 
         public GposLookupTable(BigEndianReader reader)
         {
-            long position = reader.Position;
+            long lookupTableStart = reader.Position;
             LookupType = (GposLookupType)reader.ReadUShort();
             LookupFlags = (LookupFlag)reader.ReadUShort();
             ushort subTableCount = reader.ReadUShort();
@@ -35,7 +35,7 @@ namespace NewFontParser.Tables.Common
             }
             for (var i = 0; i < subTableCount; i++)
             {
-                reader.Seek(subTableOffsets[i] + position);
+                reader.Seek(subTableOffsets[i] + lookupTableStart);
                 switch (LookupType)
                 {
                     case GposLookupType.SingleAdjustment:

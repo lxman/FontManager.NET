@@ -1,4 +1,5 @@
-﻿using NewFontParser.Reader;
+﻿using System.Collections.Generic;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Common.SequenceContext.Format2
 {
@@ -6,26 +7,25 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format2
     {
         public ushort Format { get; }
 
-        public ushort CoverageOffset { get; }
-
-        public ushort ClassDefOffset { get; }
-
-        public ushort ClassSequenceRuleSetCount { get; }
-
-        public ClassSequenceRuleSet[] ClassSequenceRuleSets { get; }
+        public List<ClassSequenceRuleSet> ClassSequenceRuleSets { get; } = new List<ClassSequenceRuleSet>();
 
         public SequenceContextFormat2(BigEndianReader reader)
         {
+            long startOfTable = reader.Position;
             Format = reader.ReadUShort();
-            CoverageOffset = reader.ReadUShort();
-            ClassDefOffset = reader.ReadUShort();
-            ClassSequenceRuleSetCount = reader.ReadUShort();
+            ushort coverageOffset = reader.ReadUShort();
+            ushort classDefOffset = reader.ReadUShort();
+            ushort classSequenceRuleSetCount = reader.ReadUShort();
+            ushort[] classSequenceRuleSetOffsets = reader.ReadUShortArray(classSequenceRuleSetCount);
 
-            ClassSequenceRuleSets = new ClassSequenceRuleSet[ClassSequenceRuleSetCount];
-            for (var i = 0; i < ClassSequenceRuleSetCount; i++)
+            for (var i = 0; i < classSequenceRuleSetCount; i++)
             {
-                reader.Seek(ClassDefOffset);
-                ClassSequenceRuleSets[i] = new ClassSequenceRuleSet(reader);
+                if (classSequenceRuleSetOffsets[i] == 0)
+                {
+                    continue;
+                }
+                reader.Seek(startOfTable + classSequenceRuleSetOffsets[i]);
+                ClassSequenceRuleSets.Add(new ClassSequenceRuleSet(reader));
             }
         }
     }

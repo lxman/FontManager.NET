@@ -5,33 +5,25 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
 {
     public class ChainedClassSequenceRule
     {
-        public ushort BacktrackGlyphCount { get; }
+        public ushort[] BacktrackSequences { get; }
 
-        public ushort[] BacktrackSequence { get; }
+        public ushort[] InputSequences { get; }
 
-        public ushort InputGlyphCount { get; }
-
-        public ushort[] InputSequence { get; }
-
-        public ushort LookaheadGlyphCount { get; }
-
-        public ushort[] LookaheadSequence { get; }
-
-        public ushort SeqLookupCount { get; }
+        public ushort[] LookaheadSequences { get; }
 
         public SequenceLookup[] SequenceLookups { get; }
 
         public ChainedClassSequenceRule(BigEndianReader reader)
         {
-            BacktrackGlyphCount = reader.ReadUShort();
-            BacktrackSequence = reader.ReadUShortArray(BacktrackGlyphCount);
-            InputGlyphCount = reader.ReadUShort();
-            InputSequence = reader.ReadUShortArray(InputGlyphCount);
-            LookaheadGlyphCount = reader.ReadUShort();
-            LookaheadSequence = reader.ReadUShortArray(LookaheadGlyphCount);
-            SeqLookupCount = reader.ReadUShort();
-            SequenceLookups = new SequenceLookup[SeqLookupCount];
-            for (var i = 0; i < SeqLookupCount; i++)
+            ushort backtrackGlyphCount = reader.ReadUShort();
+            BacktrackSequences = reader.ReadUShortArray(backtrackGlyphCount);
+            ushort inputGlyphCount = reader.ReadUShort();
+            InputSequences = reader.ReadUShortArray(inputGlyphCount - 1);
+            ushort lookaheadGlyphCount = reader.ReadUShort();
+            LookaheadSequences = reader.ReadUShortArray(lookaheadGlyphCount);
+            ushort seqLookupCount = reader.ReadUShort();
+            SequenceLookups = new SequenceLookup[seqLookupCount];
+            for (var i = 0; i < seqLookupCount; i++)
             {
                 SequenceLookups[i] = new SequenceLookup(reader.ReadBytes(4));
             }

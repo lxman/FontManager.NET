@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
 
@@ -8,38 +8,27 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.PairPos
     {
         public ushort PosFormat { get; }
 
-        public ushort CoverageOffset { get; }
-
         public ValueFormat ValueFormat1 { get; }
 
         public ValueFormat ValueFormat2 { get; }
-
-        public ushort PairSetCount { get; }
-
-        public ushort[] PairSetOffsets { get; }
 
         public PairSet[] PairSets { get; }
 
         public Format1(BigEndianReader reader)
         {
-            long position = reader.Position;
+            long startOfTable = reader.Position;
             PosFormat = reader.ReadUShort();
-            CoverageOffset = reader.ReadUShort();
+            ushort coverageOffset = reader.ReadUShort();
             ValueFormat1 = (ValueFormat)reader.ReadShort();
             ValueFormat2 = (ValueFormat)reader.ReadShort();
-            PairSetCount = reader.ReadUShort();
-
-            PairSetOffsets = new ushort[PairSetCount];
-            for (var i = 0; i < PairSetCount; i++)
+            ushort pairSetCount = reader.ReadUShort();
+            ushort[] pairSetOffsets = reader.ReadUShortArray(pairSetCount);
+            PairSets = new PairSet[pairSetCount];
+            for (var i = 0; i < pairSetCount; i++)
             {
-                PairSetOffsets[i] = reader.ReadUShort();
+                reader.Seek(startOfTable + pairSetOffsets[i]);
+                PairSets[i] = new PairSet(reader, new List<ValueFormat> { ValueFormat1, ValueFormat2 });
             }
-
-            reader.Seek(position);
-            byte[] data = reader.PeekBytes(Convert.ToInt32(reader.BytesRemaining));
-            var reader2 = new BigEndianReader(data);
-            var tables = new ReadSubTablesFromOffset16Array<PairSet>(reader2, PairSetOffsets);
-            PairSets = tables.Tables;
         }
     }
 }

@@ -12,16 +12,6 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
     {
         public ushort Format { get; }
 
-        public ushort CoverageOffset { get; }
-
-        public ushort BacktrackClassDefOffset { get; }
-
-        public ushort InputClassDefOffset { get; }
-
-        public ushort LookaheadClassDefOffset { get; }
-
-        public ushort ChainedClassSequenceRuleSetCount { get; }
-
         public IClassDefinition BacktrackClassDef { get; }
 
         public IClassDefinition InputClassDef { get; }
@@ -34,18 +24,18 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
 
         public ChainedSequenceContextFormat2(BigEndianReader reader)
         {
-            long position = reader.Position;
+            long startOfTable = reader.Position;
 
             Format = reader.ReadUShort();
-            CoverageOffset = reader.ReadUShort();
-            BacktrackClassDefOffset = reader.ReadUShort();
-            InputClassDefOffset = reader.ReadUShort();
-            LookaheadClassDefOffset = reader.ReadUShort();
-            ChainedClassSequenceRuleSetCount = reader.ReadUShort();
-            ushort[] chainedClassSequenceRuleSetOffsets = reader.ReadUShortArray(ChainedClassSequenceRuleSetCount);
-            if (BacktrackClassDefOffset > 0)
+            ushort coverageOffset = reader.ReadUShort();
+            ushort backtrackClassDefOffset = reader.ReadUShort();
+            ushort inputClassDefOffset = reader.ReadUShort();
+            ushort lookaheadClassDefOffset = reader.ReadUShort();
+            ushort chainedClassSequenceRuleSetCount = reader.ReadUShort();
+            ushort[] chainedClassSequenceRuleSetOffsets = reader.ReadUShortArray(chainedClassSequenceRuleSetCount);
+            if (backtrackClassDefOffset > 0)
             {
-                reader.Seek(position + BacktrackClassDefOffset);
+                reader.Seek(startOfTable + backtrackClassDefOffset);
                 byte backtrackFormat = reader.PeekBytes(2)[1];
                 BacktrackClassDef = backtrackFormat switch
                 {
@@ -54,9 +44,9 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
                     _ => BacktrackClassDef
                 };
             }
-            if (InputClassDefOffset > 0)
+            if (inputClassDefOffset > 0)
             {
-                reader.Seek(position + InputClassDefOffset);
+                reader.Seek(startOfTable + inputClassDefOffset);
                 byte inputFormat = reader.PeekBytes(2)[1];
                 InputClassDef = inputFormat switch
                 {
@@ -66,9 +56,9 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
                 };
             }
 
-            if (LookaheadClassDefOffset > 0)
+            if (lookaheadClassDefOffset > 0)
             {
-                reader.Seek(position + LookaheadClassDefOffset);
+                reader.Seek(startOfTable + lookaheadClassDefOffset);
                 byte lookaheadFormat = reader.PeekBytes(2)[1];
                 LookaheadClassDef = lookaheadFormat switch
                 {
@@ -78,16 +68,16 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
                 };
             }
 
-            ChainedClassSequenceRuleSets = new ChainedClassSequenceRuleSet[ChainedClassSequenceRuleSetCount];
-            for (var i = 0; i < ChainedClassSequenceRuleSetCount; i++)
+            ChainedClassSequenceRuleSets = new ChainedClassSequenceRuleSet[chainedClassSequenceRuleSetCount];
+            for (var i = 0; i < chainedClassSequenceRuleSetCount; i++)
             {
                 if (chainedClassSequenceRuleSetOffsets[i] == 0) continue;
-                reader.Seek(position + chainedClassSequenceRuleSetOffsets[i]);
+                reader.Seek(startOfTable + chainedClassSequenceRuleSetOffsets[i]);
                 ChainedClassSequenceRuleSets[i] = new ChainedClassSequenceRuleSet(reader);
             }
 
-            if (CoverageOffset == 0) return;
-            reader.Seek(position + CoverageOffset);
+            if (coverageOffset == 0) return;
+            reader.Seek(startOfTable + coverageOffset);
             byte coverageFormat = reader.PeekBytes(2)[1];
             Coverage = coverageFormat switch
             {

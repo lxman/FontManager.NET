@@ -8,10 +8,8 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format1
 
         public SequenceRule[] SequenceRules { get; }
 
-        public SequenceRuleSet(byte[] data)
+        public SequenceRuleSet(BigEndianReader reader)
         {
-            var reader = new BigEndianReader(data);
-
             RuleCount = reader.ReadUShort();
             SequenceRules = new SequenceRule[RuleCount];
 

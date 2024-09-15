@@ -1,5 +1,4 @@
-﻿using NewFontParser.Extensions;
-using NewFontParser.Reader;
+﻿using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
 
 namespace NewFontParser.Tables.Gpos
@@ -28,7 +27,7 @@ namespace NewFontParser.Tables.Gpos
             ValueRecords = new ValueRecord[ValueCount];
             for (var i = 0; i < ValueCount; i++)
             {
-                ValueRecords[i] = new ValueRecord(ValueFormat.GetFlags(), reader);
+                ValueRecords[i] = new ValueRecord(ValueFormat, reader);
             }
         }
     }

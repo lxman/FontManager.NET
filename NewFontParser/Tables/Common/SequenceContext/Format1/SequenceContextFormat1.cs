@@ -18,6 +18,7 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format1
 
         public SequenceContextFormat1(BigEndianReader reader)
         {
+            long startOfTable = reader.Position;
             Format = reader.ReadUShort();
             CoverageOffset = reader.ReadUShort();
             RuleSetCount = reader.ReadUShort();
@@ -33,17 +34,8 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format1
 
             for (var i = 0; i < RuleSetCount; i++)
             {
-                uint offset = RuleSetOffsets[i];
-                if (RuleSetCount == 1)
-                {
-                    long shortLength = reader.Position + reader.BytesRemaining - offset;
-                    reader.Seek(reader.Position + offset);
-                    SequenceRuleSets[i] = new SequenceRuleSet(reader.ReadBytes((int)shortLength));
-                    continue;
-                }
-                uint length = RuleSetOffsets[i + 1] - offset;
-                reader.Seek(offset);
-                SequenceRuleSets[i] = new SequenceRuleSet(reader.ReadBytes(length));
+                reader.Seek(startOfTable + RuleSetOffsets[i]);
+                SequenceRuleSets[i] = new SequenceRuleSet(reader);
             }
         }
     }

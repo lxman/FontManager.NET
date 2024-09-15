@@ -28,8 +28,8 @@ namespace NewFontParser.Tables.Gpos
             FeatureList = new FeatureList(reader);
 
             // TODO: Come back and fix this
-            //reader.Seek(Header.LookupListOffset);
-            //GposLookupList = new GposLookupList(reader);
+            reader.Seek(Header.LookupListOffset);
+            GposLookupList = new GposLookupList(reader);
         }
     }
 }

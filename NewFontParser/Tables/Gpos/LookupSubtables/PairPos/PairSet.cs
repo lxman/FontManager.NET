@@ -1,20 +1,19 @@
-﻿using NewFontParser.Reader;
+﻿using System.Collections.Generic;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Gpos.LookupSubtables.PairPos
 {
     public class PairSet
     {
-        public ushort PairValueCount { get; }
-
         public PairValueRecord[] PairValueRecords { get; }
 
-        public PairSet(BigEndianReader reader)
+        public PairSet(BigEndianReader reader, IList<ValueFormat> formats)
         {
-            PairValueCount = reader.ReadUShort();
-            PairValueRecords = new PairValueRecord[PairValueCount];
-            for (var i = 0; i < PairValueCount; i++)
+            ushort pairValueCount = reader.ReadUShort();
+            PairValueRecords = new PairValueRecord[pairValueCount];
+            for (var i = 0; i < pairValueCount; i++)
             {
-                PairValueRecords[i] = new PairValueRecord(reader.ReadBytes(6));
+                PairValueRecords[i] = new PairValueRecord(reader, formats);
             }
         }
     }
