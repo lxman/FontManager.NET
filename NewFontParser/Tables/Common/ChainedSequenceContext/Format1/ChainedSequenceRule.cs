@@ -5,47 +5,25 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format1
 {
     public class ChainedSequenceRule
     {
-        public ushort BacktrackGlyphCount { get; }
-
         public ushort[] BacktrackSequence { get; }
-
-        public ushort InputGlyphCount { get; }
 
         public ushort[] InputSequence { get; }
 
-        public ushort LookaheadGlyphCount { get; }
-
         public ushort[] LookaheadSequence { get; }
-
-        public ushort SeqLookupCount { get; }
 
         public SequenceLookup[] SequenceLookups { get; }
 
         public ChainedSequenceRule(BigEndianReader reader)
         {
-            BacktrackGlyphCount = reader.ReadUShort();
-            BacktrackSequence = new ushort[BacktrackGlyphCount];
-            for (var i = 0; i < BacktrackGlyphCount; i++)
-            {
-                BacktrackSequence[i] = reader.ReadUShort();
-            }
-
-            InputGlyphCount = reader.ReadUShort();
-            InputSequence = new ushort[InputGlyphCount];
-            for (var i = 0; i < InputGlyphCount; i++)
-            {
-                InputSequence[i] = reader.ReadUShort();
-            }
-
-            LookaheadGlyphCount = reader.ReadUShort();
-            LookaheadSequence = new ushort[LookaheadGlyphCount];
-            for (var i = 0; i < LookaheadGlyphCount; i++)
-            {
-                LookaheadSequence[i] = reader.ReadUShort();
-            }
-
-            SequenceLookups = new SequenceLookup[SeqLookupCount];
-            for (var i = 0; i < SeqLookupCount; i++)
+            ushort backtrackGlyphCount = reader.ReadUShort();
+            BacktrackSequence = reader.ReadUShortArray(backtrackGlyphCount);
+            ushort inputGlyphCount = reader.ReadUShort();
+            InputSequence = reader.ReadUShortArray(inputGlyphCount - 1);
+            ushort lookaheadGlyphCount = reader.ReadUShort();
+            LookaheadSequence = reader.ReadUShortArray(lookaheadGlyphCount);
+            ushort seqLookupCount = reader.ReadUShort();
+            SequenceLookups = new SequenceLookup[seqLookupCount];
+            for (var i = 0; i < seqLookupCount; i++)
             {
                 SequenceLookups[i] = new SequenceLookup(reader.ReadBytes(4));
             }

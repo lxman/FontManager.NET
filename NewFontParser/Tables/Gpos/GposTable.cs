@@ -27,7 +27,6 @@ namespace NewFontParser.Tables.Gpos
             reader.Seek(Header.FeatureListOffset);
             FeatureList = new FeatureList(reader);
 
-            // TODO: Come back and fix this
             reader.Seek(Header.LookupListOffset);
             GposLookupList = new GposLookupList(reader);
         }

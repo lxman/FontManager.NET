@@ -9,14 +9,14 @@ namespace NewFontParser.Tables.Common
 
         public GsubLookupList(BigEndianReader reader)
         {
-            long position = reader.Position;
+            long startOfTable = reader.Position;
 
             ushort lookupCount = reader.ReadUShort();
-            ushort[] lookups = reader.ReadUShortArray(lookupCount);
+            ushort[] lookupOffsets = reader.ReadUShortArray(lookupCount);
 
             for (var i = 0; i < lookupCount; i++)
             {
-                reader.Seek(lookups[i] + position);
+                reader.Seek(startOfTable + lookupOffsets[i]);
                 LookupTables.Add(new GsubLookupTable(reader));
             }
         }

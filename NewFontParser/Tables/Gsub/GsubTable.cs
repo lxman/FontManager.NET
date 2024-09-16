@@ -28,7 +28,8 @@ namespace NewFontParser.Tables.Gsub
             reader.Seek(Header.FeatureListOffset);
 
             // TODO: Come back and fix this
-            //GsubLookupList = new GsubLookupList(reader);
+            reader.Seek(Header.LookupListOffset);
+            GsubLookupList = new GsubLookupList(reader);
         }
     }
 }

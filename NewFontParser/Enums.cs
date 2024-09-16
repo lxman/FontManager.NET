@@ -209,7 +209,8 @@ public enum GsubLookupType : ushort
     LigatureSubstitution = 4,
     ContextSubstitution = 5,
     ChainedContextSubstitution = 6,
-    ExtensionSubstitution = 7
+    SubstitutionExtension = 7,
+    ReverseChainedContexts = 8
 }
 
 public enum RoundState : byte

@@ -15,7 +15,7 @@ namespace NewFontParserTester
             fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".ttc")).ToList());
             fonts.AddRange(Directory.GetFiles(rootDirectory2).Where(f => f.EndsWith(".ttf") || f.EndsWith(".otf")));
             fonts.AddRange(Directory.GetFiles(rootDirectory2).Where(f => f.EndsWith(".ttc")).ToList());
-            //fonts = fonts.Where(f => f.EndsWith("SansSerifCollection.ttf")).ToList();
+            //fonts = fonts.Where(f => f.EndsWith("NotoSans-Bold.ttf")).ToList();
             Log.Debug($"Found {fonts.Count} fonts to load.");
             fonts.ForEach(f =>
             {

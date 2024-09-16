@@ -6,29 +6,21 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format1
     {
         public ushort Format { get; }
 
-        public ushort CoverageOffset { get; }
-
-        public ushort ChainedSequenceRuleSetCount { get; }
-
-        public ushort[] ChainedSequenceRuleSetOffsets { get; }
-
         public ChainedSequenceRuleSet[] ChainedSequenceRuleSets { get; }
 
         public ChainedSequenceContextFormat1(BigEndianReader reader)
         {
-            long position = reader.Position;
+            long startOfTable = reader.Position;
             Format = reader.ReadUShort();
-            CoverageOffset = reader.ReadUShort();
-            ChainedSequenceRuleSetCount = reader.ReadUShort();
-            ChainedSequenceRuleSetOffsets = new ushort[ChainedSequenceRuleSetCount];
-            for (var i = 0; i < ChainedSequenceRuleSetCount; i++)
+            ushort coverageOffset = reader.ReadUShort();
+            ushort chainedSequenceRuleSetCount = reader.ReadUShort();
+            ushort[] chainedSequenceRuleSetOffsets = reader.ReadUShortArray(chainedSequenceRuleSetCount);
+            ChainedSequenceRuleSets = new ChainedSequenceRuleSet[chainedSequenceRuleSetCount];
+            for (var i = 0; i < chainedSequenceRuleSetCount; i++)
             {
-                ChainedSequenceRuleSetOffsets[i] = reader.ReadUShort();
+                reader.Seek(startOfTable + chainedSequenceRuleSetOffsets[i]);
+                ChainedSequenceRuleSets[i] = new ChainedSequenceRuleSet(reader);
             }
-
-            reader.Seek(position);
-            var tables = new ReadSubTablesFromOffset16Array<ChainedSequenceRuleSet>(reader, ChainedSequenceRuleSetOffsets);
-            ChainedSequenceRuleSets = tables.Tables;
         }
     }
 }
