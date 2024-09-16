@@ -78,13 +78,7 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
 
             if (coverageOffset == 0) return;
             reader.Seek(startOfTable + coverageOffset);
-            byte coverageFormat = reader.PeekBytes(2)[1];
-            Coverage = coverageFormat switch
-            {
-                1 => new CoverageFormat.Format1(reader),
-                2 => new CoverageFormat.Format2(reader),
-                _ => Coverage
-            };
+            Coverage = CoverageTable.Retrieve(reader);
         }
     }
 }

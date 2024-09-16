@@ -9,16 +9,14 @@ namespace NewFontParser.Tables.Common.GlyphClassDef
 
         public ushort StartGlyph { get; }
 
-        public ushort GlyphCount { get; }
-
         public ushort[] Classes { get; }
 
         public ClassDefinition1(BigEndianReader reader)
         {
             _ = reader.ReadBytes(2);
             StartGlyph = reader.ReadUShort();
-            GlyphCount = reader.ReadUShort();
-            Classes = reader.ReadUShortArray(GlyphCount);
+            ushort glyphCount = reader.ReadUShort();
+            Classes = reader.ReadUShortArray(glyphCount);
         }
     }
 }

@@ -9,6 +9,8 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.ReverseChainSingleSubstituti
     {
         public ushort Format { get; }
 
+        public ICoverageFormat Coverage { get; }
+
         public List<ICoverageFormat> BacktrackCoverages { get; } = new List<ICoverageFormat>();
 
         public List<ICoverageFormat> LookaheadCoverages { get; } = new List<ICoverageFormat>();
@@ -29,13 +31,15 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.ReverseChainSingleSubstituti
             for (var i = 0; i < backtrackGlyphCount; i++)
             {
                 reader.Seek(startOfTable + backtrackOffsets[i]);
-                //BacktrackCoverages.Add(CoverageFormatExtensions.CreateCoverageFormat(reader));
+                BacktrackCoverages.Add(CoverageTable.Retrieve(reader));
             }
             for (var i = 0; i < lookaheadGlyphCount; i++)
             {
                 reader.Seek(startOfTable + lookaheadOffsets[i]);
-                //LookaheadCoverages.Add(CoverageFormatExtensions.CreateCoverageFormat(reader));
+                LookaheadCoverages.Add(CoverageTable.Retrieve(reader));
             }
+            reader.Seek(startOfTable + coverageOffset);
+            Coverage = CoverageTable.Retrieve(reader);
         }
     }
 }

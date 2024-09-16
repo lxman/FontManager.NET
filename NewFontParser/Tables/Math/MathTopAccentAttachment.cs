@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NewFontParser.Reader;
+using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.CoverageFormat;
 
 namespace NewFontParser.Tables.Math
@@ -8,7 +9,7 @@ namespace NewFontParser.Tables.Math
     {
         public ICoverageFormat TopAccentCoverage { get; }
 
-        private List<MathValueRecord> TopAccentAttachments { get; } = new List<MathValueRecord>();
+        public List<MathValueRecord> TopAccentAttachments { get; } = new List<MathValueRecord>();
 
         public MathTopAccentAttachment(BigEndianReader reader)
         {
@@ -24,14 +25,7 @@ namespace NewFontParser.Tables.Math
             }
 
             reader.Seek(position + topAccentCoverageOffset);
-
-            byte format = reader.PeekBytes(2)[1];
-            TopAccentCoverage = format switch
-            {
-                1 => new Format1(reader),
-                2 => new Format2(reader),
-                _ => TopAccentCoverage
-            };
+            TopAccentCoverage = CoverageTable.Retrieve(reader);
         }
     }
 }

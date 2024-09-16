@@ -8,21 +8,14 @@ namespace NewFontParser.Tables.Gpos
 
         public ushort RequiredFeatureIndex { get; }
 
-        public ushort FeatureIndexCount { get; }
-
         public ushort[] FeatureIndices { get; }
 
         public LangSysTable(BigEndianReader reader)
         {
             LookupOrder = reader.ReadUShort();
             RequiredFeatureIndex = reader.ReadUShort();
-            FeatureIndexCount = reader.ReadUShort();
-
-            FeatureIndices = new ushort[FeatureIndexCount];
-            for (var i = 0; i < FeatureIndexCount; i++)
-            {
-                FeatureIndices[i] = reader.ReadUShort();
-            }
+            ushort featureIndexCount = reader.ReadUShort();
+            FeatureIndices = reader.ReadUShortArray(featureIndexCount);
         }
     }
 }

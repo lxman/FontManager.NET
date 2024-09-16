@@ -2,8 +2,6 @@
 using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.CoverageFormat;
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable CS8601 // Possible null reference assignment.
 
 namespace NewFontParser.Tables.Gsub.LookupSubTables.AlternateSubstitution
 {
@@ -28,13 +26,7 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.AlternateSubstitution
                 AlternateSets.Add(new AlternateSet(reader));
             }
             reader.Seek(startOfTable + coverageOffset);
-            byte format = reader.PeekBytes(2)[1];
-            Coverage = format switch
-            {
-                1 => new Common.CoverageFormat.Format1(reader),
-                2 => new Common.CoverageFormat.Format2(reader),
-                _ => Coverage
-            };
+            Coverage = CoverageTable.Retrieve(reader);
         }
     }
 }

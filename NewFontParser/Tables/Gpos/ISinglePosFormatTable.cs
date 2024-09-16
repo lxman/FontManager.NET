@@ -1,10 +1,12 @@
-﻿namespace NewFontParser.Tables.Gpos
+﻿using NewFontParser.Tables.Common.CoverageFormat;
+
+namespace NewFontParser.Tables.Gpos
 {
     public interface ISinglePosFormatTable
     {
         ushort PosFormat { get; }
 
-        ushort CoverageOffset { get; }
+        ICoverageFormat Coverage { get; }
 
         ValueFormat ValueFormat { get; }
     }

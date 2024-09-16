@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
+using NewFontParser.Tables.Common.CoverageFormat;
 
 namespace NewFontParser.Tables.Gsub.LookupSubTables.LigatureSubstitution
 {
     public class Format1 : ILookupSubTable
     {
         public ushort Format { get; }
+
+        public ICoverageFormat Coverage { get; }
 
         public List<LigatureSet> LigatureSets { get; } = new List<LigatureSet>();
 
@@ -27,6 +30,8 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.LigatureSubstitution
                 reader.Seek(startOfTable + ligSetOffsets[i]);
                 LigatureSets.Add(new LigatureSet(reader));
             }
+            reader.Seek(startOfTable + coverageOffset);
+            Coverage = CoverageTable.Retrieve(reader);
         }
     }
 }

@@ -5,23 +5,18 @@ namespace NewFontParser.Tables.Common
 {
     public class ConditionSetTable
     {
-        public ushort ConditionCount { get; }
-
-        public uint[] ConditionOffsets { get; }
-
         public ConditionTableFormat1[] Conditions { get; }
 
         public ConditionSetTable(BigEndianReader reader)
         {
-            ConditionCount = reader.ReadUShort();
+            ushort conditionCount = reader.ReadUShort();
 
-            ConditionOffsets = reader.ReadUInt32Array(ConditionCount);
+            uint[] conditionOffsets = reader.ReadUInt32Array(conditionCount);
 
-            var offsets = new ReadSubTablesFromOffset32Array<ConditionTableFormat1>(reader, ConditionOffsets);
-            Conditions = new ConditionTableFormat1[ConditionCount];
-            for (var i = 0; i < ConditionCount; i++)
+            Conditions = new ConditionTableFormat1[conditionCount];
+            for (var i = 0; i < conditionCount; i++)
             {
-                reader.Seek(ConditionOffsets[i]);
+                reader.Seek(conditionOffsets[i]);
                 Conditions[i] = new ConditionTableFormat1(reader);
             }
         }

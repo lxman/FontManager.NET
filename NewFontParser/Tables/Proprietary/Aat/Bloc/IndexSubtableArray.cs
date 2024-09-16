@@ -33,9 +33,11 @@ namespace NewFontParser.Tables.Proprietary.Aat.Bloc
                 case 1:
                     BitmapIndexSubtables.Add(new Format1(_reader));
                     break;
+
                 case 2:
                     BitmapIndexSubtables.Add(new Format2(_reader));
                     break;
+
                 case 3:
                     BitmapIndexSubtables.Add(new Format3(_reader));
                     break;

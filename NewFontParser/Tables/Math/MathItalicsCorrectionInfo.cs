@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NewFontParser.Reader;
+using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.CoverageFormat;
 
 namespace NewFontParser.Tables.Math
 {
     public class MathItalicsCorrectionInfo
     {
-        public ICoverageFormat CoverageTable { get; }
+        public ICoverageFormat Coverage { get; }
 
         public List<MathValueRecord> ItalicsCorrections { get; } = new List<MathValueRecord>();
 
@@ -25,15 +25,7 @@ namespace NewFontParser.Tables.Math
             }
 
             reader.Seek(position + italicCorrectionCoverageOffset);
-
-            int format = reader.PeekBytes(2)[1];
-
-            CoverageTable = format switch
-            {
-                1 => new Format1(reader),
-                2 => new Format2(reader),
-                _ => throw new ArgumentException("Unknown format version")
-            };
+            Coverage = CoverageTable.Retrieve(reader);
         }
     }
 }

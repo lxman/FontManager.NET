@@ -2,13 +2,13 @@
 
 namespace NewFontParser.Tables.Common.CoverageFormat
 {
-    public class Format1 : ICoverageFormat
+    public class CoverageFormat1 : ICoverageFormat
     {
         public ushort Format => 1;
 
         public ushort[] GlyphArray { get; }
 
-        public Format1(BigEndianReader reader)
+        public CoverageFormat1(BigEndianReader reader)
         {
             _ = reader.ReadUShort(); // Skip format
             ushort glyphCount = reader.ReadUShort();

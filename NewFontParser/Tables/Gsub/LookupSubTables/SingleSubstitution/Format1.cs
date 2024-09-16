@@ -14,9 +14,12 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.SingleSubstitution
 
         public Format1(BigEndianReader reader)
         {
+            long startOfTable = reader.Position;
             Format = reader.ReadUShort();
             ushort coverageOffset = reader.ReadUShort();
             DeltaGlyphId = reader.ReadUShort();
+            reader.Seek(startOfTable + coverageOffset);
+            Coverage = CoverageTable.Retrieve(reader);
         }
     }
 }

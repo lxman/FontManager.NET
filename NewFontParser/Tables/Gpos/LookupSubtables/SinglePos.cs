@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
+using NewFontParser.Tables.Common.CoverageFormat;
 
 namespace NewFontParser.Tables.Gpos.LookupSubtables
 {
@@ -8,32 +9,33 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables
     {
         public ushort Format { get; }
 
-        public ushort CoverageOffset { get; }
+        public ICoverageFormat Coverage { get; }
 
         public ValueFormat ValueFormat { get; }
 
         public ValueRecord? ValueRecord { get; }
 
-        public ushort? ValueCount { get; }
-
         public List<ValueRecord>? ValueRecords { get; }
 
         public SinglePos(BigEndianReader reader)
         {
+            long startOfTable = reader.Position;
             Format = reader.ReadUShort();
-            CoverageOffset = reader.ReadUShort();
+            ushort coverageOffset = reader.ReadUShort();
             ValueFormat = (ValueFormat)reader.ReadUShort();
             if (Format == 1)
             {
                 ValueRecord = new ValueRecord(ValueFormat, reader);
                 return;
             }
-            ValueCount = reader.ReadUShort();
+            ushort valueCount = reader.ReadUShort();
             ValueRecords = new List<ValueRecord>();
-            for (var i = 0; i < ValueCount; i++)
+            for (var i = 0; i < valueCount; i++)
             {
                 ValueRecords.Add(new ValueRecord(ValueFormat, reader));
             }
+            reader.Seek(startOfTable + coverageOffset);
+            Coverage = CoverageTable.Retrieve(reader);
         }
     }
 }

@@ -8,16 +8,14 @@ namespace NewFontParser.Tables.Common.GlyphClassDef
     {
         public ushort Format => 2;
 
-        public ushort ClassRangeCount { get; }
-
         public List<ClassRangeRecord> ClassRangeRecords { get; }
 
         public ClassDefinition2(BigEndianReader reader)
         {
             _ = reader.ReadBytes(2);
-            ClassRangeCount = reader.ReadUShort();
+            ushort classRangeCount = reader.ReadUShort();
             ClassRangeRecords = new List<ClassRangeRecord>();
-            for (var i = 0; i < ClassRangeCount; i++)
+            for (var i = 0; i < classRangeCount; i++)
             {
                 ClassRangeRecords.Add(new ClassRangeRecord(reader));
             }

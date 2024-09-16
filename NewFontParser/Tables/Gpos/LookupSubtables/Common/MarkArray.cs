@@ -4,15 +4,13 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.Common
 {
     public class MarkArray
     {
-        public ushort MarkCount { get; }
-
         public MarkRecord[] MarkRecords { get; }
 
         public MarkArray(BigEndianReader reader)
         {
-            MarkCount = reader.ReadUShort();
-            MarkRecords = new MarkRecord[MarkCount];
-            for (var i = 0; i < MarkCount; i++)
+            ushort markCount = reader.ReadUShort();
+            MarkRecords = new MarkRecord[markCount];
+            for (var i = 0; i < markCount; i++)
             {
                 MarkRecords[i] = new MarkRecord(reader.ReadBytes(4));
             }

@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
+using NewFontParser.Tables.Common.CoverageFormat;
 
 namespace NewFontParser.Tables.Gpos.LookupSubtables.PairPos
 {
     public class Format1 : ILookupSubTable
     {
         public ushort PosFormat { get; }
+
+        public ICoverageFormat Coverage { get; }
 
         public ValueFormat ValueFormat1 { get; }
 
@@ -29,6 +32,8 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.PairPos
                 reader.Seek(startOfTable + pairSetOffsets[i]);
                 PairSets[i] = new PairSet(reader, new List<ValueFormat> { ValueFormat1, ValueFormat2 });
             }
+            reader.Seek(startOfTable + coverageOffset);
+            Coverage = CoverageTable.Retrieve(reader);
         }
     }
 }

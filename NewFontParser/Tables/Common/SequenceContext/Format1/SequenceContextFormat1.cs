@@ -1,4 +1,5 @@
 ﻿using NewFontParser.Reader;
+using NewFontParser.Tables.Common.CoverageFormat;
 
 namespace NewFontParser.Tables.Common.SequenceContext.Format1
 {
@@ -6,13 +7,9 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format1
     {
         public ushort Format { get; }
 
-        public ushort CoverageOffset { get; }
-
-        public ushort RuleSetCount { get; }
+        public ICoverageFormat Coverage { get; }
 
         public ushort[] RuleSetOffsets { get; }
-
-        //public CoverageTable Coverage { get; }
 
         public SequenceRuleSet[] SequenceRuleSets { get; }
 
@@ -20,23 +17,25 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format1
         {
             long startOfTable = reader.Position;
             Format = reader.ReadUShort();
-            CoverageOffset = reader.ReadUShort();
-            RuleSetCount = reader.ReadUShort();
-            RuleSetOffsets = new ushort[RuleSetCount];
+            ushort coverageOffset = reader.ReadUShort();
+            ushort ruleSetCount = reader.ReadUShort();
+            RuleSetOffsets = new ushort[ruleSetCount];
 
-            for (var i = 0; i < RuleSetCount; i++)
+            for (var i = 0; i < ruleSetCount; i++)
             {
                 RuleSetOffsets[i] = reader.ReadUShort();
             }
 
-            //Coverage = new CoverageTable(data, CoverageOffset);
-            SequenceRuleSets = new SequenceRuleSet[RuleSetCount];
+            SequenceRuleSets = new SequenceRuleSet[ruleSetCount];
 
-            for (var i = 0; i < RuleSetCount; i++)
+            for (var i = 0; i < ruleSetCount; i++)
             {
                 reader.Seek(startOfTable + RuleSetOffsets[i]);
                 SequenceRuleSets[i] = new SequenceRuleSet(reader);
             }
+
+            reader.Seek(startOfTable + coverageOffset);
+            Coverage = CoverageTable.Retrieve(reader);
         }
     }
 }

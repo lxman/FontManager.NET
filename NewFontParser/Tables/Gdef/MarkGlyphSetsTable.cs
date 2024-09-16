@@ -28,8 +28,8 @@ namespace NewFontParser.Tables.Gdef
                 byte format = reader.PeekBytes(2)[1];
                 MarkSetTables.Add(format switch
                 {
-                    1 => new Format1(reader),
-                    2 => new Format2(reader),
+                    1 => new CoverageFormat1(reader),
+                    2 => new CoverageFormat2(reader),
                     _ => throw new NotSupportedException($"MarkGlyphSetsTable format {Format} is not supported.")
                 });
             }

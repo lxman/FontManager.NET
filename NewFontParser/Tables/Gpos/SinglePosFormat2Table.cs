@@ -1,5 +1,6 @@
 ﻿using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
+using NewFontParser.Tables.Common.CoverageFormat;
 
 namespace NewFontParser.Tables.Gpos
 {
@@ -7,11 +8,9 @@ namespace NewFontParser.Tables.Gpos
     {
         public ushort PosFormat { get; }
 
-        public ushort CoverageOffset { get; }
+        public ICoverageFormat Coverage { get; }
 
         public ValueFormat ValueFormat { get; }
-
-        public ushort ValueCount { get; }
 
         public ValueRecord[] ValueRecords { get; }
 
@@ -20,15 +19,17 @@ namespace NewFontParser.Tables.Gpos
             var reader = new BigEndianReader(data);
 
             PosFormat = reader.ReadUShort();
-            CoverageOffset = reader.ReadUShort();
+            ushort coverageOffset = reader.ReadUShort();
             ValueFormat = (ValueFormat)reader.ReadUShort();
-            ValueCount = reader.ReadUShort();
+            ushort valueCount = reader.ReadUShort();
 
-            ValueRecords = new ValueRecord[ValueCount];
-            for (var i = 0; i < ValueCount; i++)
+            ValueRecords = new ValueRecord[valueCount];
+            for (var i = 0; i < valueCount; i++)
             {
                 ValueRecords[i] = new ValueRecord(ValueFormat, reader);
             }
+            reader.Seek(coverageOffset);
+            Coverage = CoverageTable.Retrieve(reader);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using NewFontParser.Reader;
+using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.CoverageFormat;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -39,7 +40,7 @@ namespace NewFontParser.Tables.Math
             if (extendedShapeCoverageOffset > 0)
             {
                 reader.Seek(position + extendedShapeCoverageOffset);
-                ExtendedShapeCoverage = new Format1(reader);
+                ExtendedShapeCoverage = CoverageTable.Retrieve(reader);
             }
             if (kernInfoOffset == 0) return;
             reader.Seek(position + kernInfoOffset);

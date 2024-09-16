@@ -1,5 +1,7 @@
 ﻿using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
+using NewFontParser.Tables.Common.CoverageFormat;
+using NewFontParser.Tables.Gpos.LookupSubtables.Common;
 
 namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkLigPos
 {
@@ -7,32 +9,34 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkLigPos
     {
         public ushort Format { get; }
 
-        public ushort MarkCoverageOffset { get; }
+        public ICoverageFormat MarkCoverage { get; }
 
-        public ushort LigatureCoverageOffset { get; }
+        public ICoverageFormat LigatureCoverage { get; }
 
-        public ushort MarkClassCount { get; }
-
-        public ushort MarkArrayOffset { get; }
-
-        public ushort LigatureArrayOffset { get; }
+        public MarkArray MarkArray { get; }
 
         public LigatureArrayTable? LigatureArrayTable { get; }
 
         public Format1(BigEndianReader reader)
         {
-            long position = reader.Position;
+            long startOfTable = reader.Position;
 
             Format = reader.ReadUShort();
-            MarkCoverageOffset = reader.ReadUShort();
-            LigatureCoverageOffset = reader.ReadUShort();
-            MarkClassCount = reader.ReadUShort();
-            MarkArrayOffset = reader.ReadUShort();
-            LigatureArrayOffset = reader.ReadUShort();
+            ushort markCoverageOffset = reader.ReadUShort();
+            ushort ligatureCoverageOffset = reader.ReadUShort();
+            ushort markClassCount = reader.ReadUShort();
+            ushort markArrayOffset = reader.ReadUShort();
+            ushort ligatureArrayOffset = reader.ReadUShort();
 
-            if (LigatureArrayOffset == 0) return;
-            reader.Seek(position + LigatureArrayOffset);
-            LigatureArrayTable = new LigatureArrayTable(reader, MarkClassCount);
+            if (ligatureArrayOffset == 0) return;
+            reader.Seek(startOfTable + ligatureArrayOffset);
+            LigatureArrayTable = new LigatureArrayTable(reader, markClassCount);
+            reader.Seek(startOfTable + markCoverageOffset);
+            MarkCoverage = CoverageTable.Retrieve(reader);
+            reader.Seek(startOfTable + ligatureCoverageOffset);
+            LigatureCoverage = CoverageTable.Retrieve(reader);
+            reader.Seek(startOfTable + markArrayOffset);
+            MarkArray = new MarkArray(reader);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
+using NewFontParser.Tables.Common.CoverageFormat;
+using NewFontParser.Tables.Gpos.LookupSubtables.Common;
 
 namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkBasePos
 {
@@ -7,29 +9,31 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkBasePos
     {
         public ushort Format { get; }
 
-        public ushort MarkCoverageOffset { get; }
+        public ICoverageFormat MarkCoverage { get; }
 
-        public ushort BaseCoverageOffset { get; }
+        public ICoverageFormat BaseCoverage { get; }
 
-        public ushort MarkClassCount { get; }
-
-        public MarkArrayTable MarkArray { get; }
+        public MarkArray MarkArray { get; }
 
         public BaseArrayTable BaseArray { get; }
 
         public Format1(BigEndianReader reader)
         {
-            long position = reader.Position;
+            long startOfTable = reader.Position;
             Format = reader.ReadUShort();
-            MarkCoverageOffset = reader.ReadUShort();
-            BaseCoverageOffset = reader.ReadUShort();
-            MarkClassCount = reader.ReadUShort();
+            ushort markCoverageOffset = reader.ReadUShort();
+            ushort baseCoverageOffset = reader.ReadUShort();
+            ushort markClassCount = reader.ReadUShort();
             ushort markArrayOffset = reader.ReadUShort();
             ushort baseArrayOffset = reader.ReadUShort();
-            reader.Seek(markArrayOffset + position);
-            MarkArray = new MarkArrayTable(reader);
-            reader.Seek(baseArrayOffset + position);
-            BaseArray = new BaseArrayTable(reader, MarkClassCount);
+            reader.Seek(markArrayOffset + startOfTable);
+            MarkArray = new MarkArray(reader);
+            reader.Seek(baseArrayOffset + startOfTable);
+            BaseArray = new BaseArrayTable(reader, markClassCount);
+            reader.Seek(startOfTable + markCoverageOffset);
+            MarkCoverage = CoverageTable.Retrieve(reader);
+            reader.Seek(startOfTable + baseCoverageOffset);
+            BaseCoverage = CoverageTable.Retrieve(reader);
         }
     }
 }

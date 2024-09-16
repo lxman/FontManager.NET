@@ -29,15 +29,19 @@ namespace NewFontParser.Tables.Proprietary.Aat.Kerx
                     case 0:
                         Subtables.Add(new Format0(reader));
                         break;
+
                     case 1:
                         Subtables.Add(new Format1(reader));
                         break;
+
                     case 2:
                         Subtables.Add(new Format2(reader));
                         break;
+
                     case 4:
                         Subtables.Add(new Format4(reader));
                         break;
+
                     case 6:
                         Subtables.Add(new Format6(reader));
                         break;

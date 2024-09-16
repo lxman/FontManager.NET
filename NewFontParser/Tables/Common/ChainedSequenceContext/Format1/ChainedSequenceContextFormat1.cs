@@ -21,6 +21,8 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format1
                 reader.Seek(startOfTable + chainedSequenceRuleSetOffsets[i]);
                 ChainedSequenceRuleSets[i] = new ChainedSequenceRuleSet(reader);
             }
+            reader.Seek(startOfTable + coverageOffset);
+            CoverageTable.Retrieve(reader);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NewFontParser.Reader;
+using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.CoverageFormat;
 
 namespace NewFontParser.Tables.Math
@@ -34,13 +35,13 @@ namespace NewFontParser.Tables.Math
             if (vertGlyphCoverageOffset > 0)
             {
                 reader.Seek(position + vertGlyphCoverageOffset);
-                VertGlyphCoverage = new Format1(reader);
+                VertGlyphCoverage = CoverageTable.Retrieve(reader);
             }
 
             if (horizGlyphCoverageOffset > 0)
             {
                 reader.Seek(position + horizGlyphCoverageOffset);
-                HorizGlyphCoverage = new Format1(reader);
+                HorizGlyphCoverage = CoverageTable.Retrieve(reader);
             }
 
             for (var i = 0; i < vertGlyphCount; i++)

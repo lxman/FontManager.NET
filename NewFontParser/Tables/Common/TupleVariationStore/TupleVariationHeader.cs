@@ -27,6 +27,7 @@ namespace NewFontParser.Tables.Common.TupleVariationStore
                 case TupleIndexFormat.EmbeddedPeakTuple:
                     PeakTuple = new Tuple(reader, axisCount);
                     break;
+
                 case TupleIndexFormat.IntermediateRegion:
                     IntermediateStartTuple = new Tuple(reader, axisCount);
                     IntermediateEndTuple = new Tuple(reader, axisCount);

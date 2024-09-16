@@ -12,16 +12,6 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos
     {
         public ushort Format { get; }
 
-        public ushort Mark1CoverageOffset { get; }
-
-        public ushort Mark2CoverageOffset { get; }
-
-        public ushort MarkClassCount { get; }
-
-        public ushort MarkArrayOffset { get; }
-
-        public ushort Mark2ArrayOffset { get; }
-
         public ICoverageFormat MarkCoverage { get; }
 
         public ICoverageFormat Mark2Coverage { get; }
@@ -35,33 +25,20 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos
             long tableBase = reader.Position;
 
             Format = reader.ReadUShort();
-            Mark1CoverageOffset = reader.ReadUShort();
-            Mark2CoverageOffset = reader.ReadUShort();
-            MarkClassCount = reader.ReadUShort();
-            MarkArrayOffset = reader.ReadUShort();
-            Mark2ArrayOffset = reader.ReadUShort();
+            ushort mark1CoverageOffset = reader.ReadUShort();
+            ushort mark2CoverageOffset = reader.ReadUShort();
+            ushort markClassCount = reader.ReadUShort();
+            ushort markArrayOffset = reader.ReadUShort();
+            ushort mark2ArrayOffset = reader.ReadUShort();
 
-            reader.Seek(tableBase + Mark1CoverageOffset);
-            byte mark1CoverageFormat = reader.PeekBytes(2)[1];
-            MarkCoverage = mark1CoverageFormat switch
-            {
-                1 => new Tables.Common.CoverageFormat.Format1(reader),
-                2 => new Tables.Common.CoverageFormat.Format2(reader),
-                _ => MarkCoverage
-            };
-
-            reader.Seek(tableBase + Mark2CoverageOffset);
-            byte mark2CoverageFormat = reader.PeekBytes(2)[1];
-            Mark2Coverage = mark2CoverageFormat switch
-            {
-                1 => new Tables.Common.CoverageFormat.Format1(reader),
-                2 => new Tables.Common.CoverageFormat.Format2(reader),
-                _ => Mark2Coverage
-            };
-            reader.Seek(tableBase + MarkArrayOffset);
+            reader.Seek(tableBase + mark1CoverageOffset);
+            MarkCoverage = CoverageTable.Retrieve(reader);
+            reader.Seek(tableBase + mark2CoverageOffset);
+            Mark2Coverage = CoverageTable.Retrieve(reader);
+            reader.Seek(tableBase + markArrayOffset);
             MarkArray = new MarkArray(reader);
-            //reader.Seek(Mark2ArrayOffset);
-            //Mark2Array = new Mark2Array(reader, MarkClassCount);
+            reader.Seek(tableBase + mark2ArrayOffset);
+            Mark2Array = new Mark2Array(reader, markClassCount);
         }
     }
 }

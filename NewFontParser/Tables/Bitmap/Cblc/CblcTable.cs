@@ -13,6 +13,7 @@ namespace NewFontParser.Tables.Bitmap.Cblc
         public ushort MinorVersion { get; }
 
         public List<BitmapSize> BitmapSizes { get; } = new List<BitmapSize>();
+
         public CblcTable(byte[] data)
         {
             var reader = new BigEndianReader(data);

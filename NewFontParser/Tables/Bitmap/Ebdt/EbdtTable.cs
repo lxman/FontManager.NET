@@ -43,10 +43,13 @@ namespace NewFontParser.Tables.Bitmap.Ebdt
                     {
                         case Common.IndexSubtables.Format1 subtable:
                             break;
+
                         case Common.IndexSubtables.Format2 subtable:
                             break;
+
                         case Common.IndexSubtables.Format3 subtable:
                             break;
+
                         case Common.IndexSubtables.Format4 subtable:
                             {
                                 ushort imageFormat = subtable.ImageFormat;
@@ -66,6 +69,7 @@ namespace NewFontParser.Tables.Bitmap.Ebdt
                                             _reader.Seek(imageDataOffset + op.Offset);
                                             BitmapData.Add(new GlyphObject(op.GlyphId, new Common.GlyphBitmapData.Format1(_reader, dataSize)));
                                             break;
+
                                         case 2:
                                         case 3:
                                         case 4:
@@ -75,6 +79,7 @@ namespace NewFontParser.Tables.Bitmap.Ebdt
                                             _reader.Seek(imageDataOffset + op.Offset);
                                             BitmapData.Add(new GlyphObject(Convert.ToUInt16(op.GlyphId + firstGlyph), new Format7(_reader, dataSize)));
                                             break;
+
                                         case 8:
                                         case 9:
                                             break;

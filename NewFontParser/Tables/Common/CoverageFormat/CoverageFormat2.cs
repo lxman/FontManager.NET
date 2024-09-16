@@ -2,13 +2,13 @@
 
 namespace NewFontParser.Tables.Common.CoverageFormat
 {
-    public class Format2 : ICoverageFormat
+    public class CoverageFormat2 : ICoverageFormat
     {
         public ushort Format => 2;
 
         public RangeRecord[] RangeRecords { get; }
 
-        public Format2(BigEndianReader reader)
+        public CoverageFormat2(BigEndianReader reader)
         {
             _ = reader.ReadUShort(); // Skip format
             ushort rangeCount = reader.ReadUShort();

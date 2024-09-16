@@ -7,10 +7,6 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format3
     {
         public ushort Format { get; }
 
-        public ushort GlyphCount { get; }
-
-        public ushort SeqLookupCount { get; }
-
         public ushort[] CoverageOffsets { get; }
 
         public SequenceLookup[] SequenceLookups { get; }
@@ -18,17 +14,11 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format3
         public SequenceContextFormat3(BigEndianReader reader)
         {
             Format = reader.ReadUShort();
-            GlyphCount = reader.ReadUShort();
-            SeqLookupCount = reader.ReadUShort();
-
-            CoverageOffsets = new ushort[GlyphCount];
-            for (var i = 0; i < GlyphCount; i++)
-            {
-                CoverageOffsets[i] = reader.ReadUShort();
-            }
-
-            SequenceLookups = new SequenceLookup[SeqLookupCount];
-            for (var i = 0; i < SeqLookupCount; i++)
+            ushort glyphCount = reader.ReadUShort();
+            ushort seqLookupCount = reader.ReadUShort();
+            CoverageOffsets = reader.ReadUShortArray(glyphCount);
+            SequenceLookups = new SequenceLookup[seqLookupCount];
+            for (var i = 0; i < seqLookupCount; i++)
             {
                 SequenceLookups[i] = new SequenceLookup(reader.ReadBytes(4));
             }
