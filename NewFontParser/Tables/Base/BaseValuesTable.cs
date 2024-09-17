@@ -30,15 +30,15 @@ namespace NewFontParser.Tables.Base
                 switch (format)
                 {
                     case 1:
-                        BaseCoordFormats.Add(new Format1(reader));
+                        BaseCoordFormats.Add(new BaseCoordFormat1(reader));
                         break;
 
                     case 2:
-                        BaseCoordFormats.Add(new Format2(reader));
+                        BaseCoordFormats.Add(new BaseCoordFormat2(reader));
                         break;
 
                     case 3:
-                        BaseCoordFormats.Add(new Format3(reader));
+                        BaseCoordFormats.Add(new BaseCoordFormat3(reader));
                         break;
                 }
             }

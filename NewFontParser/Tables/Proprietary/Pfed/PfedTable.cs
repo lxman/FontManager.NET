@@ -3,7 +3,7 @@ using NewFontParser.Tables.Proprietary.Pfed.SubTables;
 
 namespace NewFontParser.Tables.Proprietary.Pfed
 {
-    public class PfedTable : IInfoTable
+    public class PfedTable : IFontTable
     {
         public static string Tag => "PfEd";
 

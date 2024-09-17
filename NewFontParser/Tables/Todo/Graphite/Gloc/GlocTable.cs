@@ -1,6 +1,6 @@
 ﻿namespace NewFontParser.Tables.Todo.Graphite.Gloc
 {
-    public class GlocTable : IInfoTable
+    public class GlocTable : IFontTable
     {
         public static string Tag => "Gloc";
 

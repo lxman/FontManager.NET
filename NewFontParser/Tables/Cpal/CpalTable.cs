@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Cpal
 {
-    public class CpalTable : IInfoTable
+    public class CpalTable : IFontTable
     {
         public static string Tag => "CPAL";
 

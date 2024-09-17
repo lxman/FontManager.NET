@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Mvar
 {
-    public class MvarTable : IInfoTable
+    public class MvarTable : IFontTable
     {
         public static string Tag => "MVAR";
 

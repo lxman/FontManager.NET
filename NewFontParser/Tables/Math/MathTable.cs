@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Math
 {
-    public class MathTable : IInfoTable
+    public class MathTable : IFontTable
     {
         public static string Tag => "MATH";
 

@@ -7,17 +7,15 @@ using NewFontParser.Tables.Cmap.SubTables;
 
 namespace NewFontParser.Tables.Cmap
 {
-    public class CmapTable : IInfoTable
+    public class CmapTable : IFontTable
     {
         public static string Tag => "cmap";
 
         public ushort Version { get; }
 
-        public ushort NumTables { get; }
+        public List<EncodingRecord> EncodingRecords { get; } = new List<EncodingRecord>();
 
-        internal List<EncodingRecord> EncodingRecords { get; } = new List<EncodingRecord>();
-
-        internal List<ICmapSubtable> SubTables { get; } = new List<ICmapSubtable>();
+        public List<ICmapSubtable> SubTables { get; } = new List<ICmapSubtable>();
 
         public CmapTable(byte[] cmapData)
         {
@@ -25,8 +23,8 @@ namespace NewFontParser.Tables.Cmap
             byte[] data = reader.ReadBytes(2);
             Version = BinaryPrimitives.ReadUInt16BigEndian(data);
             data = reader.ReadBytes(2);
-            NumTables = BinaryPrimitives.ReadUInt16BigEndian(data);
-            for (var i = 0; i < NumTables; i++)
+            ushort numTables = BinaryPrimitives.ReadUInt16BigEndian(data);
+            for (var i = 0; i < numTables; i++)
             {
                 EncodingRecords.Add(new EncodingRecord(reader.ReadBytes(EncodingRecord.RecordSize)));
             }
@@ -39,35 +37,35 @@ namespace NewFontParser.Tables.Cmap
                 switch (format)
                 {
                     case 0:
-                        SubTables.Add(new Format0(reader));
+                        SubTables.Add(new CmapSubtableFormat0(reader));
                         break;
 
                     case 2:
-                        SubTables.Add(new Format2(reader));
+                        SubTables.Add(new CmapSubtablesFormat2(reader));
                         break;
 
                     case 4:
-                        SubTables.Add(new Format4(reader));
+                        SubTables.Add(new CmapSubtablesFormat4(reader));
                         break;
 
                     case 6:
-                        SubTables.Add(new Format6(reader));
+                        SubTables.Add(new CmapSubtablesFormat6(reader));
                         break;
 
                     case 8:
-                        SubTables.Add(new Format8(reader));
+                        SubTables.Add(new CmapSubtablesFormat8(reader));
                         break;
 
                     case 10:
-                        SubTables.Add(new Format10(reader));
+                        SubTables.Add(new CmapSubtablesFormat10(reader));
                         break;
 
                     case 12:
-                        SubTables.Add(new Format12(reader));
+                        SubTables.Add(new CmapSubtablesFormat12(reader));
                         break;
 
                     case 13:
-                        SubTables.Add(new Format13(reader));
+                        SubTables.Add(new CmapSubtablesFormat13(reader));
                         break;
 
                     case 14:
@@ -75,7 +73,7 @@ namespace NewFontParser.Tables.Cmap
                         {
                             try
                             {
-                                SubTables.Add(new Format14(reader));
+                                SubTables.Add(new CmapSubtablesFormat14(reader));
                             }
                             catch (Exception e)
                             {

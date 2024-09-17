@@ -3,7 +3,7 @@ using NewFontParser.Tables.Common;
 
 namespace NewFontParser.Tables.Gsub
 {
-    public class GsubTable : IInfoTable
+    public class GsubTable : IFontTable
     {
         public static string Tag => "GSUB";
 

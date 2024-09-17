@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Optional.Dsig
 {
-    public class DsigTable : IInfoTable
+    public class DsigTable : IFontTable
     {
         public static string Tag => "DSIG";
 

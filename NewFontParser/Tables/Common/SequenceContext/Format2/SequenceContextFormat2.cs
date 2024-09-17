@@ -43,7 +43,7 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format2
             ClassDef = classDefFormat switch
             {
                 1 => new ClassDefinition.Format1(reader),
-                2 => new ClassDefinition.Format2(reader),
+                2 => new ClassDefinition.ClassDefinitionFormat2(reader),
                 _ => ClassDef
             };
         }

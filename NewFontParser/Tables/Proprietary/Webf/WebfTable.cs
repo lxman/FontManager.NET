@@ -1,6 +1,6 @@
 ﻿namespace NewFontParser.Tables.Proprietary.Webf
 {
-    public class WebfTable : IInfoTable
+    public class WebfTable : IFontTable
     {
         public static string Tag => "webf";
 

@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Optional
 {
-    public class VmtxTable : IInfoTable
+    public class VmtxTable : IFontTable
     {
         public static string Tag => "vmtx";
 

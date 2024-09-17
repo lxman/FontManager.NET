@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Bitmap.Cbdt
 {
-    public class CbdtTable : IInfoTable
+    public class CbdtTable : IFontTable
     {
         public static string Tag => "CBDT";
 

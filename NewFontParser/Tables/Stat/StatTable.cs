@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Stat
 {
-    public class StatTable : IInfoTable
+    public class StatTable : IFontTable
     {
         public static string Tag => "STAT";
 

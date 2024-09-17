@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Bitmap.Ebsc
 {
-    public class EbscTable : IInfoTable
+    public class EbscTable : IFontTable
     {
         public static string Tag => "EBSC";
 

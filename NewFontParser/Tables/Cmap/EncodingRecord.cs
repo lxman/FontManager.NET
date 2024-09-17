@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Cmap
 {
-    internal class EncodingRecord
+    public class EncodingRecord
     {
         public static long RecordSize => 8;
 
@@ -16,7 +16,7 @@ namespace NewFontParser.Tables.Cmap
 
         public Platform3EncodingId? EncodingId3 { get; }
 
-        public uint Offset { get; }
+        internal uint Offset { get; }
 
         public EncodingRecord(byte[] data)
         {

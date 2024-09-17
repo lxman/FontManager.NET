@@ -1,7 +1,7 @@
 ﻿namespace NewFontParser.Tables.Proprietary.Tex
 {
     // A proprietary obsoleted table created by the FF people. Replaced now by the 'MATH' table.
-    public class TexTable : IInfoTable
+    public class TexTable : IFontTable
     {
         public static string Tag => "TeX ";
 

@@ -4,7 +4,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.TtTables.Glyf
 {
-    public class GlyphTable : IInfoTable
+    public class GlyphTable : IFontTable
     {
         public static string Tag => "glyf";
 

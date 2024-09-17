@@ -9,7 +9,7 @@ using NewFontParser.Tables.Cff.Type1.Charsets;
 
 namespace NewFontParser.Tables.Cff.Type1
 {
-    public class Type1Table : IInfoTable
+    public class Type1Table : IFontTable
     {
         public static string Tag => "CFF ";
 
@@ -189,9 +189,9 @@ namespace NewFontParser.Tables.Cff.Type1
             {
                 0 => new Format0(reader,
                     Convert.ToUInt16(CharStrings.Data.Length)),
-                1 => new Format1(reader,
+                1 => new CharsetsFormat1(reader,
                     Convert.ToUInt16(CharStrings.Data.Length)),
-                2 => new Format2(reader,
+                2 => new CharsetsFormat2(reader,
                     Convert.ToUInt16(CharStrings.Data.Length)),
                 _ => CharSet
             };

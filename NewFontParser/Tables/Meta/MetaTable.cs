@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Meta
 {
-    public class MetaTable : IInfoTable
+    public class MetaTable : IFontTable
     {
         public static string Tag => "meta";
 

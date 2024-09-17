@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Proprietary.Aat.Feat
 {
-    public class FeatTable : IInfoTable
+    public class FeatTable : IFontTable
     {
         public static string Tag => "feat";
 

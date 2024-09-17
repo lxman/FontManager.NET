@@ -4,7 +4,7 @@ using NewFontParser.Tables.Common.ClassDefinition;
 
 namespace NewFontParser.Tables.Merg
 {
-    public class MergTable : IInfoTable
+    public class MergTable : IFontTable
     {
         public static string Tag => "MERG";
 
@@ -35,7 +35,7 @@ namespace NewFontParser.Tables.Merg
                         break;
 
                     case 2:
-                        ClassDefinitions.Add(new Format2(reader));
+                        ClassDefinitions.Add(new ClassDefinitionFormat2(reader));
                         break;
                 }
             }

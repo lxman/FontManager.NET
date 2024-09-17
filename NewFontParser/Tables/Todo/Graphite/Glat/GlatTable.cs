@@ -1,6 +1,6 @@
 ﻿namespace NewFontParser.Tables.Todo.Graphite.Glat
 {
-    public class GlatTable : IInfoTable
+    public class GlatTable : IFontTable
     {
         public static string Tag => "Glat";
 

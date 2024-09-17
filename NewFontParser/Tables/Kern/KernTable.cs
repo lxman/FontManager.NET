@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Kern
 {
-    public class KernTable : IInfoTable
+    public class KernTable : IFontTable
     {
         public static string Tag => "kern";
 

@@ -82,7 +82,7 @@ namespace NewFontParser
 
         public List<TableRecord> TableRecords { get; set; } = new List<TableRecord>();
 
-        public List<IInfoTable> Tables { get; set; } = new List<IInfoTable>();
+        public List<IFontTable> Tables { get; set; } = new List<IFontTable>();
 
         private readonly List<TableStatusRecord> _tables = new List<TableStatusRecord>();
 
@@ -183,16 +183,16 @@ namespace NewFontParser
             (Tables.Find(x => x is HmtxTable) as HmtxTable)?.Process(GetTable<HheaTable>().NumberOfHMetrics, GetTable<MaxPTable>().NumGlyphs);
             (Tables.Find(x => x is LtshTable) as LtshTable)?.Process(GetTable<MaxPTable>().NumGlyphs);
             (Tables.Find(x => x is EbdtTable) as EbdtTable)?.Process(GetTable<EblcTable>());
-            if (!(Tables.Find(x => x is CmapTable) is CmapTable cmapTable)) return;
-            if (!(Tables.Find(x => x is GlyphTable) is GlyphTable glyphTable)) return;
-            Console.Write("Glyph Ids: ");
-            for (ushort i = 0; i < 0x7F; i++)
-            {
-                ushort glyphId = cmapTable.GetGlyphId(i);
-                Console.Write($"{glyphId}, ");
-                GlyphData? data = glyphTable.GetGlyphData(glyphId);
-            }
-            Console.WriteLine();
+            //if (!(Tables.Find(x => x is CmapTable) is CmapTable cmapTable)) return;
+            //if (!(Tables.Find(x => x is GlyphTable) is GlyphTable glyphTable)) return;
+            //Console.Write("Glyph Ids: ");
+            //for (ushort i = 0; i < 0x7F; i++)
+            //{
+            //    ushort glyphId = cmapTable.GetGlyphId(i);
+            //    Console.Write($"{glyphId}, ");
+            //    GlyphData? data = glyphTable.GetGlyphData(glyphId);
+            //}
+            //Console.WriteLine();
 
             // For testing the interpreter
             //ushort demoId = cmapTable.GetGlyphId(0x41);
@@ -244,7 +244,7 @@ namespace NewFontParser
             return GetTable<SvgTable>().Documents;
         }
 
-        private bool ProcessTable<T>() where T : IInfoTable
+        private bool ProcessTable<T>() where T : IFontTable
         {
             string tag;
             try
@@ -278,9 +278,9 @@ namespace NewFontParser
             return true;
         }
 
-        private T GetTable<T>() where T : IInfoTable
+        private T GetTable<T>() where T : IFontTable
         {
-            IInfoTable table = Tables.Find(x => x is T);
+            IFontTable table = Tables.Find(x => x is T);
             return (T)table;
         }
     }

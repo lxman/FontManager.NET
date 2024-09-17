@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Fvar
 {
-    public class FvarTable : IInfoTable
+    public class FvarTable : IFontTable
     {
         public static string Tag => "fvar";
 

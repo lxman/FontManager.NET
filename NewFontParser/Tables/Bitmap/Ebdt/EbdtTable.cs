@@ -8,7 +8,7 @@ using NewFontParser.Tables.Bitmap.Eblc;
 
 namespace NewFontParser.Tables.Bitmap.Ebdt
 {
-    public class EbdtTable : IInfoTable
+    public class EbdtTable : IFontTable
     {
         public static string Tag => "EBDT";
 
@@ -41,16 +41,16 @@ namespace NewFontParser.Tables.Bitmap.Ebdt
                     ushort lastGlyph = table.LastGlyphIndex;
                     switch (table.Subtable)
                     {
-                        case Common.IndexSubtables.Format1 subtable:
+                        case Common.IndexSubtables.IndexSubtableFormat1 subtable:
                             break;
 
-                        case Common.IndexSubtables.Format2 subtable:
+                        case Common.IndexSubtables.IndexSubtablesFormat2 subtable:
                             break;
 
-                        case Common.IndexSubtables.Format3 subtable:
+                        case Common.IndexSubtables.IndexSubtablesFormat3 subtable:
                             break;
 
-                        case Common.IndexSubtables.Format4 subtable:
+                        case Common.IndexSubtables.IndexSubtablesFormat4 subtable:
                             {
                                 ushort imageFormat = subtable.ImageFormat;
                                 uint imageDataOffset = subtable.ImageDataOffset;
@@ -67,7 +67,7 @@ namespace NewFontParser.Tables.Bitmap.Ebdt
                                     {
                                         case 1:
                                             _reader.Seek(imageDataOffset + op.Offset);
-                                            BitmapData.Add(new GlyphObject(op.GlyphId, new Common.GlyphBitmapData.Format1(_reader, dataSize)));
+                                            BitmapData.Add(new GlyphObject(op.GlyphId, new Common.GlyphBitmapData.GlyphBitmapDataFormat1(_reader, dataSize)));
                                             break;
 
                                         case 2:
@@ -77,7 +77,7 @@ namespace NewFontParser.Tables.Bitmap.Ebdt
                                         case 6:
                                         case 7:
                                             _reader.Seek(imageDataOffset + op.Offset);
-                                            BitmapData.Add(new GlyphObject(Convert.ToUInt16(op.GlyphId + firstGlyph), new Format7(_reader, dataSize)));
+                                            BitmapData.Add(new GlyphObject(Convert.ToUInt16(op.GlyphId + firstGlyph), new GlyphBitmapDataFormat7(_reader, dataSize)));
                                             break;
 
                                         case 8:
@@ -88,7 +88,7 @@ namespace NewFontParser.Tables.Bitmap.Ebdt
 
                                 break;
                             }
-                        case Common.IndexSubtables.Format5 subtable:
+                        case Common.IndexSubtables.IndexSubtablesFormat5 subtable:
                             break;
                     }
                 });

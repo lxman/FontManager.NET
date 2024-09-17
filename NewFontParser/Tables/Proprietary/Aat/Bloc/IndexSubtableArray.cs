@@ -31,15 +31,15 @@ namespace NewFontParser.Tables.Proprietary.Aat.Bloc
             switch (format)
             {
                 case 1:
-                    BitmapIndexSubtables.Add(new Format1(_reader));
+                    BitmapIndexSubtables.Add(new BitmapIndexSubtableFormat1(_reader));
                     break;
 
                 case 2:
-                    BitmapIndexSubtables.Add(new Format2(_reader));
+                    BitmapIndexSubtables.Add(new BitmapIndexSubtableFormat2(_reader));
                     break;
 
                 case 3:
-                    BitmapIndexSubtables.Add(new Format3(_reader));
+                    BitmapIndexSubtables.Add(new BitmapIndexSubtableFormat3(_reader));
                     break;
             }
         }

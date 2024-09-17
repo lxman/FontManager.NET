@@ -4,7 +4,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables
 {
-    public class PostTable : IInfoTable
+    public class PostTable : IFontTable
     {
         public static string Tag => "post";
 

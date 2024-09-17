@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Todo.Arabic.Tsis
 {
-    public class TsisTable : IInfoTable
+    public class TsisTable : IFontTable
     {
         public static string Tag => "TSIS";
 

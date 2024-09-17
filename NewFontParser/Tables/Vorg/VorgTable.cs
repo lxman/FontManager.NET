@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Vorg
 {
-    public class VorgTable : IInfoTable
+    public class VorgTable : IFontTable
     {
         public static string Tag => "VORG";
 

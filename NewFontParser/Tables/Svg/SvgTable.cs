@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Svg
 {
-    public class SvgTable : IInfoTable
+    public class SvgTable : IFontTable
     {
         public static string Tag => "SVG ";
 

@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Todo.Graphite.Feat
 {
-    public class FeatTable : IInfoTable
+    public class FeatTable : IFontTable
     {
         public static string Tag => "Feat";
 

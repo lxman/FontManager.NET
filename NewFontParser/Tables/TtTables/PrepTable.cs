@@ -1,6 +1,6 @@
 ﻿namespace NewFontParser.Tables.TtTables
 {
-    public class PrepTable : IInfoTable
+    public class PrepTable : IFontTable
     {
         public static string Tag => "prep";
 

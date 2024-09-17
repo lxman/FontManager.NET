@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Proprietary.Aat.Bloc
 {
-    public class BlocTable : IInfoTable
+    public class BlocTable : IFontTable
     {
         public static string Tag => "bloc";
 

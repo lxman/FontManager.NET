@@ -1,6 +1,6 @@
 ﻿namespace NewFontParser.Tables.Todo.Ttfa
 {
-    public class TtfaTable : IInfoTable
+    public class TtfaTable : IFontTable
     {
         public static string Tag => "TTFA";
 

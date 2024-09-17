@@ -3,7 +3,7 @@ using NewFontParser.Tables.Common.TupleVariationStore;
 
 namespace NewFontParser.Tables.Cvar
 {
-    public class CvarTable : IInfoTable
+    public class CvarTable : IFontTable
     {
         public static string Tag => "cvar";
 

@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Proprietary.Aat.Zapf
 {
-    public class ZapfTable : IInfoTable
+    public class ZapfTable : IFontTable
     {
         public static string Tag => "Zapf";
 

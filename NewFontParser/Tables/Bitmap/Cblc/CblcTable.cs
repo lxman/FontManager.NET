@@ -4,7 +4,7 @@ using NewFontParser.Tables.Bitmap.Common;
 
 namespace NewFontParser.Tables.Bitmap.Cblc
 {
-    public class CblcTable : IInfoTable
+    public class CblcTable : IFontTable
     {
         public static string Tag => "CBLC";
 

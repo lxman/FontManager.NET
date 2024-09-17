@@ -6,11 +6,49 @@ using System.Linq;
 using System.Text;
 using NewFontParser.Models;
 using NewFontParser.Reader;
+using NewFontParser.Tables.Name;
 
 namespace NewFontParser
 {
     public class FontReader
     {
+        public List<(string, List<IFontTable>)> GetTables(string file)
+        {
+            List<FontStructure> fontStructure = ReadFile(file);
+            var toReturn = new List<(string, List<IFontTable>)>();
+            fontStructure.ForEach(fs =>
+            {
+                var nameTable = (NameTable?)fs.Tables.FirstOrDefault(t => t is NameTable);
+                NameRecord? nameRecord =
+                    nameTable?.NameRecords.FirstOrDefault(r => r.LanguageId.Contains("English") && r.NameId == "Full Name");
+                if (nameRecord is null)
+                {
+                    return;
+                }
+
+                string name = nameRecord.Name ?? string.Empty;
+                var toAdd = new List<IFontTable>();
+                fs.Tables.ForEach(t =>
+                {
+                    toAdd.Add(t);
+                });
+                toReturn.Add((name, toAdd));
+            });
+
+            return toReturn;
+        }
+
+        public List<(string, List<string>)> GetTableNames(string file)
+        {
+            var toReturn = new List<(string, List<string>)>();
+            List<(string, List<IFontTable>)> tables = GetTables(file);
+            tables.ForEach(t =>
+            {
+                toReturn.Add((t.Item1, t.Item2.Select(i => i.GetType().GetProperty("Tag").GetValue(i).ToString()).ToList()));
+            });
+            return toReturn;
+        }
+
         public List<FontStructure> ReadFile(string file)
         {
             var reader = new FileByteReader(file);

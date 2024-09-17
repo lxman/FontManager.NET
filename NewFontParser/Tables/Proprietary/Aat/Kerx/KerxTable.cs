@@ -4,7 +4,7 @@ using NewFontParser.Tables.Proprietary.Aat.Kerx.Subtables;
 
 namespace NewFontParser.Tables.Proprietary.Aat.Kerx
 {
-    public class KerxTable : IInfoTable
+    public class KerxTable : IFontTable
     {
         public static string Tag => "kerx";
 
@@ -31,19 +31,19 @@ namespace NewFontParser.Tables.Proprietary.Aat.Kerx
                         break;
 
                     case 1:
-                        Subtables.Add(new Format1(reader));
+                        Subtables.Add(new KerxSubtablesFormat1(reader));
                         break;
 
                     case 2:
-                        Subtables.Add(new Format2(reader));
+                        Subtables.Add(new KerxSubtablesFormat2(reader));
                         break;
 
                     case 4:
-                        Subtables.Add(new Format4(reader));
+                        Subtables.Add(new KerxSubtablesFormat4(reader));
                         break;
 
                     case 6:
-                        Subtables.Add(new Format6(reader));
+                        Subtables.Add(new KerxSubtablesFormat6(reader));
                         break;
                 }
             }

@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Optional
 {
-    public class VheaTable : IInfoTable
+    public class VheaTable : IFontTable
     {
         public static string Tag => "vhea";
 

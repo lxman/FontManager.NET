@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Todo.Arabic.Tsid
 {
-    public class TsidTable : IInfoTable
+    public class TsidTable : IFontTable
     {
         public static string Tag => "TSID";
 

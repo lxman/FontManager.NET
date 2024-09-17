@@ -5,14 +5,12 @@ namespace NewFontParser.Tables.Cmap.SubTables
 {
     public class DefaultUvsTableHeader
     {
-        public uint NumUnicodeRangeRecords { get; }
-
         public List<UnicodeRangeRecord> UnicodeRangeRecords { get; } = new List<UnicodeRangeRecord>();
 
         public DefaultUvsTableHeader(BigEndianReader reader)
         {
-            NumUnicodeRangeRecords = reader.ReadUInt32();
-            for (var i = 0; i < NumUnicodeRangeRecords; i++)
+            uint numUnicodeRangeRecords = reader.ReadUInt32();
+            for (var i = 0; i < numUnicodeRangeRecords; i++)
             {
                 UnicodeRangeRecords.Add(new UnicodeRangeRecord(reader.ReadBytes(UnicodeRangeRecord.RecordSize)));
             }

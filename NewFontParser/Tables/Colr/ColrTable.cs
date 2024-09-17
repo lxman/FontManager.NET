@@ -4,7 +4,7 @@ using NewFontParser.Tables.Common.ItemVariationStore;
 
 namespace NewFontParser.Tables.Colr
 {
-    public class ColrTable : IInfoTable
+    public class ColrTable : IFontTable
     {
         public static string Tag => "COLR";
 

@@ -32,11 +32,11 @@ namespace NewFontParser.Tables.Bitmap.Common
             var numOffsets = Convert.ToUInt16(LastGlyphIndex - FirstGlyphIndex + 2);
             Subtable = format switch
             {
-                1 => new Format1(reader, numOffsets),
-                2 => new Format2(reader),
-                3 => new Format3(reader, numOffsets),
-                4 => new Format4(reader),
-                5 => new Format5(reader),
+                1 => new IndexSubtableFormat1(reader, numOffsets),
+                2 => new IndexSubtablesFormat2(reader),
+                3 => new IndexSubtablesFormat3(reader, numOffsets),
+                4 => new IndexSubtablesFormat4(reader),
+                5 => new IndexSubtablesFormat5(reader),
                 _ => Subtable
             };
         }

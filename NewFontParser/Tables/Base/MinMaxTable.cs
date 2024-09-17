@@ -28,18 +28,18 @@ namespace NewFontParser.Tables.Base
             ushort minFormat = reader.ReadUShort();
             MinCoord = minFormat switch
             {
-                1 => new Format1(reader),
-                2 => new Format2(reader),
-                3 => new Format3(reader),
+                1 => new BaseCoordFormat1(reader),
+                2 => new BaseCoordFormat2(reader),
+                3 => new BaseCoordFormat3(reader),
                 _ => MinCoord
             };
             reader.Seek(position + maxCoordOffset);
             ushort maxFormat = reader.ReadUShort();
             MaxCoord = maxFormat switch
             {
-                1 => new Format1(reader),
-                2 => new Format2(reader),
-                3 => new Format3(reader),
+                1 => new BaseCoordFormat1(reader),
+                2 => new BaseCoordFormat2(reader),
+                3 => new BaseCoordFormat3(reader),
                 _ => MaxCoord
             };
         }

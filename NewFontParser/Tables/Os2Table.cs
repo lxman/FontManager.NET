@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables
 {
-    public class Os2Table : IInfoTable
+    public class Os2Table : IFontTable
     {
         public static string Tag => "OS/2";
 

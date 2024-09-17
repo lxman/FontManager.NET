@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Todo.Arabic.Tsiv
 {
-    public class TsivTable : IInfoTable
+    public class TsivTable : IFontTable
     {
         public static string Tag => "TSIV";
 

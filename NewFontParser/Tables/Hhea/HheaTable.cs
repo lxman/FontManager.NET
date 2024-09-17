@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Hhea
 {
-    public class HheaTable : IInfoTable
+    public class HheaTable : IFontTable
     {
         public static string Tag => "hhea";
 

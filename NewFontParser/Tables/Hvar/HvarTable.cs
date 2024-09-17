@@ -3,7 +3,7 @@ using NewFontParser.Tables.Common.ItemVariationStore;
 
 namespace NewFontParser.Tables.Hvar
 {
-    public class HvarTable : IInfoTable
+    public class HvarTable : IFontTable
     {
         public static string Tag => "HVAR";
 

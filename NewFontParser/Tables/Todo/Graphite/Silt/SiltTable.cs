@@ -1,6 +1,6 @@
 ﻿namespace NewFontParser.Tables.Todo.Graphite.Silt
 {
-    public class SiltTable : IInfoTable
+    public class SiltTable : IFontTable
     {
         public static string Tag => "Silt";
 

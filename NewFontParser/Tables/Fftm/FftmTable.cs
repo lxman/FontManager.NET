@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Fftm
 {
-    public class FftmTable : IInfoTable
+    public class FftmTable : IFontTable
     {
         public static string Tag => "FFTM";
 

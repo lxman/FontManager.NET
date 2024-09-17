@@ -39,19 +39,19 @@ namespace NewFontParser.Tables.Stat
                 switch (format)
                 {
                     case 1:
-                        AxisValueTables.Add(new Format1(reader));
+                        AxisValueTables.Add(new AxisValueFormat1(reader));
                         break;
 
                     case 2:
-                        AxisValueTables.Add(new Format2(reader));
+                        AxisValueTables.Add(new AxisValueFormat2(reader));
                         break;
 
                     case 3:
-                        AxisValueTables.Add(new Format3(reader));
+                        AxisValueTables.Add(new AxisValueFormat3(reader));
                         break;
 
                     case 4:
-                        AxisValueTables.Add(new Format4(reader));
+                        AxisValueTables.Add(new AxisValueFormat4(reader));
                         break;
                 }
             }

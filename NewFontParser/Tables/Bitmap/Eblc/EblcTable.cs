@@ -4,7 +4,7 @@ using NewFontParser.Tables.Bitmap.Common;
 
 namespace NewFontParser.Tables.Bitmap.Eblc
 {
-    public class EblcTable : IInfoTable
+    public class EblcTable : IFontTable
     {
         public static string Tag => "EBLC";
 

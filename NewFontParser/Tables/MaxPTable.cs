@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables
 {
-    public class MaxPTable : IInfoTable
+    public class MaxPTable : IFontTable
     {
         public static string Tag => "maxp";
 

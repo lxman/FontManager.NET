@@ -4,7 +4,7 @@ using NewFontParser.Tables.Proprietary.Aat.Bdat.GlyphBitmap;
 
 namespace NewFontParser.Tables.Proprietary.Aat.Bdat
 {
-    public class BdatTable : IInfoTable
+    public class BdatTable : IFontTable
     {
         public static string Tag => "bdat";
 

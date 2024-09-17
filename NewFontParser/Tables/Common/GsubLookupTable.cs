@@ -36,25 +36,25 @@ namespace NewFontParser.Tables.Common
                         switch (subType)
                         {
                             case 1:
-                                SubTables.Add(new Gsub.LookupSubTables.SingleSubstitution.Format1(reader));
+                                SubTables.Add(new Gsub.LookupSubTables.SingleSubstitution.SingleSubstitutionFormat1(reader));
                                 break;
 
                             case 2:
-                                SubTables.Add(new Gsub.LookupSubTables.SingleSubstitution.Format2(reader));
+                                SubTables.Add(new Gsub.LookupSubTables.SingleSubstitution.SingleSubstitutionFormat2(reader));
                                 break;
                         }
                         break;
 
                     case GsubLookupType.MultipleSubstitution:
-                        SubTables.Add(new Gsub.LookupSubTables.MultipleSubstitution.Format1(reader));
+                        SubTables.Add(new Gsub.LookupSubTables.MultipleSubstitution.MultipleSubstitutionFormat1(reader));
                         break;
 
                     case GsubLookupType.AlternateSubstitution:
-                        SubTables.Add(new Gsub.LookupSubTables.AlternateSubstitution.Format1(reader));
+                        SubTables.Add(new Gsub.LookupSubTables.AlternateSubstitution.AlternateSubstitutionFormat1(reader));
                         break;
 
                     case GsubLookupType.LigatureSubstitution:
-                        SubTables.Add(new Gsub.LookupSubTables.LigatureSubstitution.Format1(reader));
+                        SubTables.Add(new Gsub.LookupSubTables.LigatureSubstitution.LigatureSubstitutionFormat1(reader));
                         break;
 
                     case GsubLookupType.ContextSubstitution:
@@ -94,11 +94,11 @@ namespace NewFontParser.Tables.Common
                         break;
 
                     case GsubLookupType.SubstitutionExtension:
-                        SubTables.Add(new Gsub.LookupSubTables.SubstitutionExtension.Format1(reader));
+                        SubTables.Add(new Gsub.LookupSubTables.SubstitutionExtension.SubstitutionExtensionFormat1(reader));
                         break;
 
                     case GsubLookupType.ReverseChainedContexts:
-                        SubTables.Add(new Gsub.LookupSubTables.ReverseChainSingleSubstitution.Format1(reader));
+                        SubTables.Add(new Gsub.LookupSubTables.ReverseChainSingleSubstitution.ReverseChainSingleSubstitutionFormat1(reader));
                         break;
 
                     default:

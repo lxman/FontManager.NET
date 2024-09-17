@@ -4,7 +4,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.TtTables
 {
-    public class LocaTable : IInfoTable
+    public class LocaTable : IFontTable
     {
         public static string Tag => "loca";
 

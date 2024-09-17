@@ -16,11 +16,11 @@ namespace NewFontParser.Tables.Proprietary.Aat.Morx
             FsHeader = Format switch
             {
                 0 => new Format0(reader),
-                2 => new Format2(reader),
-                4 => new Format4(reader),
-                6 => new Format6(reader),
-                8 => new Format8(reader),
-                10 => new Format10(reader),
+                2 => new LookupTablesFormat2(reader),
+                4 => new LookupTablesFormat4(reader),
+                6 => new LookupTablesFormat6(reader),
+                8 => new LookupTablesFormat8(reader),
+                10 => new LookupTablesFormat10(reader),
                 _ => throw new NotSupportedException($"LookupType {Format} is not supported.")
             };
         }

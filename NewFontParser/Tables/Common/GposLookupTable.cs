@@ -43,29 +43,29 @@ namespace NewFontParser.Tables.Common
                         switch (version)
                         {
                             case 1:
-                                SubTables.Add(new Format1(reader));
+                                SubTables.Add(new PairPosFormat1(reader));
                                 break;
 
                             case 2:
-                                SubTables.Add(new Format2(reader));
+                                SubTables.Add(new PairPosFormat2(reader));
                                 break;
                         }
                         break;
 
                     case GposLookupType.CursiveAttachment:
-                        SubTables.Add(new Gpos.LookupSubtables.CursivePos.Format1(reader));
+                        SubTables.Add(new Gpos.LookupSubtables.CursivePos.CursivePosFormat1(reader));
                         break;
 
                     case GposLookupType.MarkToBaseAttachment:
-                        SubTables.Add(new Gpos.LookupSubtables.MarkBasePos.Format1(reader));
+                        SubTables.Add(new Gpos.LookupSubtables.MarkBasePos.MarkBasePosFormat1(reader));
                         break;
 
                     case GposLookupType.MarkToLigatureAttachment:
-                        SubTables.Add(new Gpos.LookupSubtables.MarkLigPos.Format1(reader));
+                        SubTables.Add(new Gpos.LookupSubtables.MarkLigPos.MarkLigPosFormat1(reader));
                         break;
 
                     case GposLookupType.MarkToMarkAttachment:
-                        SubTables.Add(new Gpos.LookupSubtables.MarkMarkPos.Format1(reader));
+                        SubTables.Add(new Gpos.LookupSubtables.MarkMarkPos.MarkMarkPosFormat1(reader));
                         break;
 
                     case GposLookupType.ContextPositioning:

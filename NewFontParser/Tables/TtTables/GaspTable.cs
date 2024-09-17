@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.TtTables
 {
-    public class GaspTable : IInfoTable
+    public class GaspTable : IFontTable
     {
         public static string Tag => "gasp";
 

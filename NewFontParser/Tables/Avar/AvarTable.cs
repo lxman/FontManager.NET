@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Avar
 {
-    public class AvarTable : IInfoTable
+    public class AvarTable : IFontTable
     {
         public static string Tag => "avar";
 

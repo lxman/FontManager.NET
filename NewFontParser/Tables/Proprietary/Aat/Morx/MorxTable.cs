@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Proprietary.Aat.Morx
 {
-    public class MorxTable : IInfoTable
+    public class MorxTable : IFontTable
     {
         public static string Tag => "morx";
 

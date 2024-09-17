@@ -3,7 +3,7 @@ using NewFontParser.Tables.Common.ItemVariationStore;
 
 namespace NewFontParser.Tables.Base
 {
-    public class BaseTable : IInfoTable
+    public class BaseTable : IFontTable
     {
         public static string Tag => "BASE";
 

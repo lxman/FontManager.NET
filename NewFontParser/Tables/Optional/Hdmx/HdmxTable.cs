@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Optional.Hdmx
 {
-    public class HdmxTable : IInfoTable
+    public class HdmxTable : IFontTable
     {
         public static string Tag => "hdmx";
 

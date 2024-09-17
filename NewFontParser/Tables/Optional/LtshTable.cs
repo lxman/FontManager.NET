@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Optional
 {
-    public class LtshTable : IInfoTable
+    public class LtshTable : IFontTable
     {
         public static string Tag => "LTSH";
 

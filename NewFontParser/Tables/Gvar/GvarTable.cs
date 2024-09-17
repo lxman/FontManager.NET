@@ -5,7 +5,7 @@ using Tuple = NewFontParser.Tables.Common.TupleVariationStore.Tuple;
 
 namespace NewFontParser.Tables.Gvar
 {
-    public class GvarTable : IInfoTable
+    public class GvarTable : IFontTable
     {
         public static string Tag => "gvar";
 

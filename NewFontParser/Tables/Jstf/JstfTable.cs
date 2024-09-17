@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Jstf
 {
-    public class JstfTable : IInfoTable
+    public class JstfTable : IFontTable
     {
         public static string Tag => "JSTF";
 

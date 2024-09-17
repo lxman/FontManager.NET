@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Proprietary.Pclt
 {
-    public class PcltTable : IInfoTable
+    public class PcltTable : IFontTable
     {
         public static string Tag => "PCLT";
 

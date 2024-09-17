@@ -1,6 +1,6 @@
 ﻿namespace NewFontParser.Tables.Proprietary.Aat.Prop
 {
-    public class PropTable : IInfoTable
+    public class PropTable : IFontTable
     {
         public static string Tag => "prop";
 

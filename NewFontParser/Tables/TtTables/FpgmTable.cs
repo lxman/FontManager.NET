@@ -1,6 +1,6 @@
 ﻿namespace NewFontParser.Tables.TtTables
 {
-    public class FpgmTable : IInfoTable
+    public class FpgmTable : IFontTable
     {
         public static string Tag => "fpgm";
 

@@ -3,7 +3,7 @@ using NewFontParser.Tables.Common;
 
 namespace NewFontParser.Tables.Gpos
 {
-    public class GposTable : IInfoTable
+    public class GposTable : IFontTable
     {
         public static string Tag => "GPOS";
 

@@ -4,7 +4,7 @@ using NewFontParser.Tables.Common.GlyphClassDef;
 
 namespace NewFontParser.Tables.Gdef
 {
-    public class GdefTable : IInfoTable
+    public class GdefTable : IFontTable
     {
         public static string Tag => "GDEF";
 

@@ -5,7 +5,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Head
 {
-    public class HeadTable : IInfoTable
+    public class HeadTable : IFontTable
     {
         public static string Tag => "head";
 

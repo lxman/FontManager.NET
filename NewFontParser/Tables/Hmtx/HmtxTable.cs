@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Hmtx
 {
-    public class HmtxTable : IInfoTable
+    public class HmtxTable : IFontTable
     {
         public static string Tag => "hmtx";
 

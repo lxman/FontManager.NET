@@ -3,7 +3,7 @@ using NewFontParser.Extensions;
 
 namespace NewFontParser.Tables.TtTables
 {
-    public class CvtTable : IInfoTable
+    public class CvtTable : IFontTable
     {
         public static string Tag => "cvt ";
 
