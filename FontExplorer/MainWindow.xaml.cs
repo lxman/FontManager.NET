@@ -378,6 +378,38 @@ namespace FontExplorer
                     case GsubTable gsubTable:
                         break;
                     case HeadTable headTable:
+                        var headRoot = new TreeViewItem { Header = "head" };
+                        ResultView.Items.Add(headRoot);
+                        var headVersion = new TreeViewItem { Header = $"Version: {headTable.Version}" };
+                        var headVersion2 = new TreeViewItem { Header = $"Version2: {headTable.MajorVersion}.{headTable.MinorVersion}" };
+                        var headMagicNumber = new TreeViewItem { Header = $"Magic Number: {headTable.MagicNumber}" };
+                        var headFlags = new TreeViewItem { Header = $"Flags: {headTable.Flags}" };
+                        var headCheckSumAdjustment = new TreeViewItem { Header = $"CheckSum Adjustment: {headTable.CheckSumAdjustment}" };
+                        var headCreated = new TreeViewItem { Header = $"Created: {headTable.Created}" };
+                        var headModified = new TreeViewItem { Header = $"Modified: {headTable.Modified}" };
+                        var fontDirectionHint = new TreeViewItem { Header = $"Font Direction Hint: {headTable.FontDirectionHint}" };
+                        var fontRevision = new TreeViewItem { Header = $"Font Revision: {headTable.FontRevision}" };
+                        var headGlyphDataFormat = new TreeViewItem { Header = $"Glyph Data Format: {headTable.GlyphDataFormat}" };
+                        var headIndexToLocFormat = new TreeViewItem { Header = $"Index To Loc Format: {headTable.IndexToLocFormat}" };
+                        var headLowestRecPpem = new TreeViewItem { Header = $"Lowest Rec Ppem: {headTable.LowestRecPpem}" };
+                        var headMacStyle = new TreeViewItem { Header = $"Mac Style: {headTable.MacStyle}" };
+                        var headUnitsPerEm = new TreeViewItem { Header = $"Units Per EM: {headTable.UnitsPerEm}" };
+                        var headBounds = new TreeViewItem { Header = $"Bounds: {headTable.XMin}, {headTable.YMin} {headTable.XMax}, {headTable.YMax}" };
+                        headRoot.Items.Add(headVersion);
+                        headRoot.Items.Add(headVersion2);
+                        headRoot.Items.Add(headMagicNumber);
+                        headRoot.Items.Add(headFlags);
+                        headRoot.Items.Add(headCheckSumAdjustment);
+                        headRoot.Items.Add(headCreated);
+                        headRoot.Items.Add(headModified);
+                        headRoot.Items.Add(fontDirectionHint);
+                        headRoot.Items.Add(fontRevision);
+                        headRoot.Items.Add(headGlyphDataFormat);
+                        headRoot.Items.Add(headIndexToLocFormat);
+                        headRoot.Items.Add(headLowestRecPpem);
+                        headRoot.Items.Add(headMacStyle);
+                        headRoot.Items.Add(headUnitsPerEm);
+                        headRoot.Items.Add(headBounds);
                         break;
                     case HmtxTable hmtxTable:
                         break;
