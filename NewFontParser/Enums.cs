@@ -5,6 +5,24 @@
 
 #region Enums
 
+public enum GlyfTransform : byte
+{
+    Transform = 0,
+    Null = 3
+}
+
+public enum LocaTransform : byte
+{
+    Transform = 0,
+    Null = 3
+}
+
+public enum HmtxTransform : byte
+{
+    Null = 0,
+    Transform = 1
+}
+
 public enum FileType
 {
     Unk,
@@ -594,15 +612,6 @@ public enum KerxSubtableActions : ushort
     Advance = 1 << 14,
     ClearStack = 1 << 13,
     Reserved = 0x1FFF
-}
-
-[Flags]
-public enum TransformationFlags : byte
-{
-    Glyf = 0,
-    Loca = 1,
-    Hmtx = 2,
-    GlyfNull = 3,
 }
 
 #endregion
