@@ -62,6 +62,28 @@ namespace NewFontParser
                         tag = entry.Tag;
                         break;
                     case Woff2TableDirectoryEntry entry:
+                        tag = entry.Tag;
+                        //if (tag != "glyf" && tag != "loca" && tag != "hmtx")
+                        //{
+                        //    _reader.Seek(entry.);
+                        //    byte[] compressedData = _reader.ReadBytes(entry.TransformLength);
+                        //    uncompressedData = ZlibUtility.Inflate(compressedData);
+                        //}
+                        //else
+                        //{
+                        //    switch (tag)
+                        //    {
+                        //        case "glyf":
+                        //            uncompressedData = entry.GlyfTransform.Transform(_reader, entry.OriginalLength);
+                        //            break;
+                        //        case "loca":
+                        //            uncompressedData = entry.LocaTransform.Transform(_reader, entry.OriginalLength);
+                        //            break;
+                        //        case "hmtx":
+                        //            uncompressedData = entry.HmtxTransform.Transform(_reader, entry.OriginalLength);
+                        //            break;
+                        //    }
+                        //}
                         uncompressedData = Array.Empty<byte>();
                         break;
                 }
