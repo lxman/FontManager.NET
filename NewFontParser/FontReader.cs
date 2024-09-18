@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using NewFontParser.Models;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Name;
@@ -67,6 +65,18 @@ namespace NewFontParser
             {
                 fontStructure.FileType = FileType.Ttc;
             }
+            else if (EqualByteArrays(data, new byte[] { 0x4F, 0x54, 0x43, 0x46 }))
+            {
+                fontStructure.FileType = FileType.Otc;
+            }
+            else if (EqualByteArrays(data, new byte[] { 0x77, 0x4F, 0x46, 0x46 }))
+            {
+                fontStructure.FileType = FileType.Woff;
+            }
+            else if (EqualByteArrays(data, new byte[] { 0x77, 0x4F, 0x46, 0x32 }))
+            {
+                fontStructure.FileType = FileType.Woff2;
+            }
             else
             {
                 throw new InvalidDataException("We do not know how to parse this file.");
@@ -76,7 +86,7 @@ namespace NewFontParser
             {
                 case FileType.Unk:
                     Console.WriteLine("This is an unknown file type.");
-                    return new List<FontStructure>();
+                    break;
 
                 case FileType.Ttf:
                 case FileType.Otf:
@@ -87,59 +97,64 @@ namespace NewFontParser
 
                 case FileType.Otc:
                     Console.WriteLine("I am not aware how to parse otc files yet.");
-                    return new List<FontStructure>();
+                    break;
 
+                case FileType.Woff:
+                    break;
+                case FileType.Woff2:
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            return new List<FontStructure>();
         }
 
         private static List<FontStructure> ParseTtc(FileByteReader reader, string file)
         {
             var fontStructures = new List<FontStructure>();
-            byte[] data = reader.ReadBytes(2);
-            ushort majorVersion = BinaryPrimitives.ReadUInt16BigEndian(data);
-            data = reader.ReadBytes(2);
-            ushort minorVersion = BinaryPrimitives.ReadUInt16BigEndian(data);
-            data = reader.ReadBytes(4);
-            uint numFonts = BinaryPrimitives.ReadUInt32BigEndian(data);
+            ushort majorVersion = reader.ReadUInt16();
+            ushort minorVersion = reader.ReadUInt16();
+            uint numFonts = reader.ReadUInt32();
             var offsets = new uint[numFonts];
             for (var i = 0; i < numFonts; i++)
             {
-                data = reader.ReadBytes(4);
-                offsets[i] = BinaryPrimitives.ReadUInt32BigEndian(data);
+                offsets[i] = reader.ReadUInt32();
             }
 
             if (majorVersion == 2)
             {
-                data = reader.ReadBytes(4);
-                uint dsigTag = BinaryPrimitives.ReadUInt32BigEndian(data);
-                data = reader.ReadBytes(4);
-                uint dsigLength = BinaryPrimitives.ReadUInt32BigEndian(data);
-                data = reader.ReadBytes(4);
-                uint dsigOffset = BinaryPrimitives.ReadUInt32BigEndian(data);
+                uint dsigTag = reader.ReadUInt32();
+                uint dsigLength = reader.ReadUInt32();
+                uint dsigOffset = reader.ReadUInt32();
             }
             for (var i = 0; i < numFonts; i++)
             {
                 reader.Seek(offsets[i]);
                 var fontStructure = new FontStructure(file) { FileType = FileType.Ttc };
-                data = reader.ReadBytes(4);
+                _ = reader.ReadBytes(4);
                 Console.WriteLine($"\tParsing subfont {i + 1}");
                 fontStructures.Add(ParseSingle(reader, fontStructure));
             }
             return fontStructures;
         }
 
+        private static List<FontStructure> ParseWoff(FileByteReader reader)
+        {
+            return new List<FontStructure>();
+        }
+
+        private static List<FontStructure> ParseWoff2(FileByteReader reader)
+        {
+            return new List<FontStructure>();
+        }
+
         private static FontStructure ParseSingle(FileByteReader reader, FontStructure fontStructure)
         {
-            byte[] data = reader.ReadBytes(2);
-            fontStructure.TableCount = BinaryPrimitives.ReadUInt16BigEndian(data);
-            data = reader.ReadBytes(2);
-            fontStructure.SearchRange = BinaryPrimitives.ReadUInt16BigEndian(data);
-            data = reader.ReadBytes(2);
-            fontStructure.EntrySelector = BinaryPrimitives.ReadUInt16BigEndian(data);
-            data = reader.ReadBytes(2);
-            fontStructure.RangeShift = BinaryPrimitives.ReadUInt16BigEndian(data);
+            fontStructure.TableCount = reader.ReadUInt16();
+            fontStructure.SearchRange = reader.ReadUInt16();
+            fontStructure.EntrySelector = reader.ReadUInt16();
+            fontStructure.RangeShift = reader.ReadUInt16();
             for (var i = 0; i < fontStructure.TableCount; i++)
             {
                 fontStructure.TableRecords.Add(ReadTableRecord(reader));
@@ -169,23 +184,13 @@ namespace NewFontParser
 
         private static TableRecord ReadTableRecord(FileByteReader reader)
         {
-            var tableRecord = new TableRecord();
-            byte[] tag = reader.ReadBytes(4);
-            tableRecord.Tag = ToString(tag);
-            byte[] checkSum = reader.ReadBytes(4);
-            tableRecord.CheckSum = BinaryPrimitives.ReadUInt32BigEndian(checkSum);
-            byte[] offset = reader.ReadBytes(4);
-            tableRecord.Offset = BinaryPrimitives.ReadUInt32BigEndian(offset);
-            byte[] length = reader.ReadBytes(4);
-            tableRecord.Length = BinaryPrimitives.ReadUInt32BigEndian(length);
-            return tableRecord;
-        }
-
-        private static string ToString(byte[]? bytes)
-        {
-            return bytes is null
-                ? string.Empty
-                : Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+            return new TableRecord
+            {
+                Tag = reader.ReadString(4),
+                CheckSum = reader.ReadUInt32(),
+                Offset = reader.ReadUInt32(),
+                Length = reader.ReadUInt32()
+            };
         }
     }
 }

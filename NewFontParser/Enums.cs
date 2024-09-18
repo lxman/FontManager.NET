@@ -11,7 +11,9 @@ public enum FileType
     Ttf,
     Otf,
     Ttc,
-    Otc
+    Otc,
+    Woff,
+    Woff2
 }
 
 public enum FontDirectionHint : short
@@ -592,6 +594,15 @@ public enum KerxSubtableActions : ushort
     Advance = 1 << 14,
     ClearStack = 1 << 13,
     Reserved = 0x1FFF
+}
+
+[Flags]
+public enum TransformationFlags : byte
+{
+    Glyf = 0,
+    Loca = 1,
+    Hmtx = 2,
+    GlyfNull = 3,
 }
 
 #endregion

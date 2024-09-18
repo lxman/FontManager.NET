@@ -187,7 +187,7 @@ namespace NewFontParser.Tables.Cff.Type1
             byte charsetFormat = reader.ReadByte();
             CharSet = charsetFormat switch
             {
-                0 => new Format0(reader,
+                0 => new CharsetsFormat0(reader,
                     Convert.ToUInt16(CharStrings.Data.Length)),
                 1 => new CharsetsFormat1(reader,
                     Convert.ToUInt16(CharStrings.Data.Length)),
