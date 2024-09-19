@@ -16,7 +16,7 @@ namespace NewFontParser
         public WoffPreprocessor(FileByteReader reader, int version)
         {
             _reader = reader;
-            uint flavor = reader.ReadUInt32();
+            var flavor = (Flavor)reader.ReadUInt32();
             uint length = reader.ReadUInt32();
             ushort numTables = reader.ReadUInt16();
             ushort reserved = reader.ReadUInt16();
@@ -26,6 +26,7 @@ namespace NewFontParser
             ushort minorVersion = reader.ReadUInt16();
             uint metaOffset = reader.ReadUInt32();
             uint metaLength = reader.ReadUInt32();
+            uint metaOriginalLength = reader.ReadUInt32();
             uint privateOffset = reader.ReadUInt32();
             uint privateLength = reader.ReadUInt32();
             var directoryEntries = new List<IDirectoryEntry>();
@@ -45,20 +46,24 @@ namespace NewFontParser
             directoryEntries.ForEach(d =>
             {
                 var tag = string.Empty;
-                byte[]? uncompressedData = Array.Empty<byte>();
+                byte[] uncompressedData = Array.Empty<byte>();
                 switch (d)
                 {
                     case WoffTableDirectoryEntry entry:
-                        if (entry.OriginalLength != entry.CompressedLength)
-                        {
-                            _reader.Seek(entry.Offset);
-                            byte[] compressedData = _reader.ReadBytes(entry.CompressedLength);
-                            uncompressedData = ZlibUtility.Inflate(compressedData);
-                        }
-                        else
-                        {
-                            uncompressedData = _reader.ReadBytes(entry.OriginalLength);
-                        }
+                        _reader.Seek(entry.Offset);
+                        byte[] compressedData = _reader.ReadBytes(entry.CompressedLength);
+                        int cmf = compressedData[0];
+                        int flags = compressedData[1];
+                        int compressionMethod = cmf & 0x0F;
+                        int compressionInfo = (cmf & 0xF0) >> 4;
+                        int checkBits = flags & 0x0F;
+                        int dictionary = (flags & 0x20) >> 5;
+                        int compressionLevel = (flags & 0xC0) >> 6;
+                        uncompressedData = entry.CompressedLength != entry.OriginalLength
+                            ? ZlibUtility.Inflate(dictionary == 0
+                                ? compressedData[2..]
+                                : compressedData[6..])
+                            : compressedData;
                         tag = entry.Tag;
                         break;
                     case Woff2TableDirectoryEntry entry:
@@ -87,7 +92,11 @@ namespace NewFontParser
                         uncompressedData = Array.Empty<byte>();
                         break;
                 }
-                TableRecords.Add(new TableRecord { Tag = tag, Data = uncompressedData });
+
+                if (tag != string.Empty)
+                {
+                    TableRecords.Add(new TableRecord { Tag = tag, Data = uncompressedData });
+                }
             });
         }
     }

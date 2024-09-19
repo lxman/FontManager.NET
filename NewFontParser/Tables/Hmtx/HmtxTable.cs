@@ -24,7 +24,7 @@ namespace NewFontParser.Tables.Hmtx
         {
             for (var i = 0; i < numberOfHMetricRecords; i++)
             {
-                LongHMetricRecords.Add(new LongHMetricRecord(_reader.ReadBytes(LongHMetricRecord.RecordSize)));
+                LongHMetricRecords.Add(new LongHMetricRecord(_reader));
             }
 
             if (LongHMetricRecords.Count >= numOfGlyphs) return;

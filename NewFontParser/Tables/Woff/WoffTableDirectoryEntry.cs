@@ -22,5 +22,10 @@ namespace NewFontParser.Tables.Woff
             OriginalLength = reader.ReadUInt32();
             Checksum = reader.ReadUInt32();
         }
+
+#if DEBUG
+
+        public new string ToString() => $"{Tag} Offset={Offset} Compressed Length={CompressedLength} OriginalLength={OriginalLength}";
+#endif
     }
 }

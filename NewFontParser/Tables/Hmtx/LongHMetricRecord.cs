@@ -10,9 +10,8 @@ namespace NewFontParser.Tables.Hmtx
 
         public short LeftSideBearing { get; }
 
-        public LongHMetricRecord(byte[] data)
+        public LongHMetricRecord(BigEndianReader reader)
         {
-            var reader = new BigEndianReader(data);
             AdvanceWidth = reader.ReadUShort();
             LeftSideBearing = reader.ReadShort();
         }

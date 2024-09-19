@@ -9,17 +9,15 @@ namespace NewFontParser.Tables.TtTables
 
         public ushort Version { get; set; }
 
-        public ushort NumRanges { get; set; }
-
         public List<GaspRange> GaspRanges { get; set; } = new List<GaspRange>();
 
         public GaspTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
             Version = reader.ReadUShort();
-            NumRanges = reader.ReadUShort();
+            ushort numRanges = reader.ReadUShort();
 
-            for (var i = 0; i < NumRanges; i++)
+            for (var i = 0; i < numRanges; i++)
             {
                 var range = new GaspRange
                 {

@@ -17,8 +17,10 @@ namespace NewFontParser.Tables.Woff.Zlib
                 switch (level)
                 {
                     case CompressionLevel.NoCompression:
-                    case CompressionLevel.Fastest:
                         memStream.WriteByte(0x01);
+                        break;
+                    case CompressionLevel.Fastest:
+                        memStream.WriteByte(0x5E);
                         break;
                     case CompressionLevel.Optimal:
                         memStream.WriteByte(0xDA);
@@ -56,12 +58,7 @@ namespace NewFontParser.Tables.Woff.Zlib
         public static byte[] Inflate(byte[] input)
         {
             using var output = new MemoryStream();
-
-            if (input[0] != 0x78 || input[0] != 0x9C)//zlib header
-                throw new Exception("Incorrect zlib header");
-
-            using var data = new MemoryStream(input[2..]);
-
+            using var data = new MemoryStream(input);
             using var deflateStream = new DeflateStream(data, CompressionMode.Decompress, true);
             deflateStream.CopyTo(output);
             return output.ToArray();

@@ -100,7 +100,7 @@ namespace NewFontParser
                     break;
 
                 case FileType.Woff:
-                    break;
+                    return new List<FontStructure> { ParseWoff(reader, file) };
                 case FileType.Woff2:
                     break;
                 default:
@@ -139,9 +139,14 @@ namespace NewFontParser
             return fontStructures;
         }
 
-        private static List<FontStructure> ParseWoff(FileByteReader reader)
+        private static FontStructure ParseWoff(FileByteReader reader, string file)
         {
-            return new List<FontStructure>();
+            var fontStructure = new FontStructure(file);
+            var woffProcessor = new WoffPreprocessor(reader, 1);
+            fontStructure.TableRecords = woffProcessor.TableRecords;
+            fontStructure.CollectTableNames();
+            fontStructure.Process();
+            return fontStructure;
         }
 
         private static List<FontStructure> ParseWoff2(FileByteReader reader)

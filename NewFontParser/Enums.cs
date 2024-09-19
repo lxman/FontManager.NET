@@ -23,6 +23,13 @@ public enum HmtxTransform : byte
     Transform = 1
 }
 
+public enum Flavor : uint
+{
+    TrueType = 0x00010000,
+    Cff = 0x4F54544F,
+    Cff2 = 0x4F545443
+}
+
 public enum FileType
 {
     Unk,
