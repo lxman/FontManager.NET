@@ -6,10 +6,11 @@ namespace NewFontParser.Reader
 {
     public class FileByteReader
     {
-        public uint BytesRemaining => (uint)_data.Length - _position;
+        public uint BytesRemaining => (uint)_data.Length - Position;
+
+        public uint Position { get; private set; }
 
         private readonly byte[] _data;
-        private uint _position;
 
         public FileByteReader(string file)
         {
@@ -26,14 +27,14 @@ namespace NewFontParser.Reader
 
         public void Seek(uint position)
         {
-            _position = position;
+            Position = position;
         }
 
         public byte[] ReadBytes(uint count)
         {
             var result = new byte[count];
-            Array.Copy(_data, _position, result, 0, count);
-            _position += count;
+            Array.Copy(_data, Position, result, 0, count);
+            Position += count;
             return result;
         }
 

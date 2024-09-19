@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NewFontParser.Models;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Woff;
+using NewFontParser.Tables.Woff.Brotli;
 using NewFontParser.Tables.Woff.Zlib;
 
 namespace NewFontParser
@@ -43,10 +44,14 @@ namespace NewFontParser
                 }
             }
 
+            long woff2OffsetTracker = 0;
+            long woff2ExpectedStart = 0;
+            byte[] uncompressedWoff2Data = Array.Empty<byte>();
+            if (version == 2) uncompressedWoff2Data = BrotliUtility.Decompress(reader.ReadBytes(totalCompressedSize));
             directoryEntries.ForEach(d =>
             {
                 var tag = string.Empty;
-                byte[] uncompressedData = Array.Empty<byte>();
+                byte[] uncompressedWoffData = Array.Empty<byte>();
                 switch (d)
                 {
                     case WoffTableDirectoryEntry entry:
@@ -59,7 +64,7 @@ namespace NewFontParser
                         int checkBits = flags & 0x0F;
                         int dictionary = (flags & 0x20) >> 5;
                         int compressionLevel = (flags & 0xC0) >> 6;
-                        uncompressedData = entry.CompressedLength != entry.OriginalLength
+                        uncompressedWoffData = entry.CompressedLength != entry.OriginalLength
                             ? ZlibUtility.Inflate(dictionary == 0
                                 ? compressedData[2..]
                                 : compressedData[6..])
@@ -68,11 +73,19 @@ namespace NewFontParser
                         break;
                     case Woff2TableDirectoryEntry entry:
                         tag = entry.Tag;
+                        long dataStart = woff2OffsetTracker;
+                        if (woff2ExpectedStart > dataStart)
+                        {
+                            throw new ApplicationException("Bad WOFF2 file");
+                        }
+                        woff2OffsetTracker += entry.TransformLength is null ? entry.OriginalLength : Convert.ToUInt32(entry.TransformLength);
+                        long dataLength = woff2OffsetTracker - dataStart;
+                        woff2ExpectedStart = dataStart + dataLength;
                         //if (tag != "glyf" && tag != "loca" && tag != "hmtx")
                         //{
                         //    _reader.Seek(entry.);
-                        //    byte[] compressedData = _reader.ReadBytes(entry.TransformLength);
-                        //    uncompressedData = ZlibUtility.Inflate(compressedData);
+                        //    compressedData = _reader.ReadBytes(entry.TransformLength);
+                        //    uncompressedData = BrotliUtility.Decompress(compressedData);
                         //}
                         //else
                         //{
@@ -89,13 +102,13 @@ namespace NewFontParser
                         //            break;
                         //    }
                         //}
-                        uncompressedData = Array.Empty<byte>();
+                        //uncompressedData = Array.Empty<byte>();
                         break;
                 }
 
                 if (tag != string.Empty)
                 {
-                    TableRecords.Add(new TableRecord { Tag = tag, Data = uncompressedData });
+                    TableRecords.Add(new TableRecord { Tag = tag, Data = uncompressedWoffData });
                 }
             });
         }

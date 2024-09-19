@@ -102,6 +102,7 @@ namespace NewFontParser
                 case FileType.Woff:
                     return new List<FontStructure> { ParseWoff(reader, file) };
                 case FileType.Woff2:
+                    return new List<FontStructure> { ParseWoff2(reader, file) };
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -149,9 +150,14 @@ namespace NewFontParser
             return fontStructure;
         }
 
-        private static List<FontStructure> ParseWoff2(FileByteReader reader)
+        private static FontStructure ParseWoff2(FileByteReader reader, string file)
         {
-            return new List<FontStructure>();
+            var fontStructure = new FontStructure(file);
+            var woffProcessor = new WoffPreprocessor(reader, 2);
+            fontStructure.TableRecords = woffProcessor.TableRecords;
+            fontStructure.CollectTableNames();
+            fontStructure.Process();
+            return fontStructure;
         }
 
         private static FontStructure ParseSingle(FileByteReader reader, FontStructure fontStructure)

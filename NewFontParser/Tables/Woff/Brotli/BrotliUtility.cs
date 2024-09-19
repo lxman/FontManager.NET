@@ -7,9 +7,9 @@ namespace NewFontParser.Tables.Woff.Brotli
     {
         public static byte[] Decompress(byte[] data)
         {
-            using var memoryStream = new MemoryStream(data);
+            using var inputStream = new MemoryStream(data);
             using var outputStream = new MemoryStream();
-            using var decompressStream = new BrotliStream(memoryStream, CompressionMode.Decompress);
+            using var decompressStream = new BrotliStream(inputStream, CompressionMode.Decompress);
             decompressStream.CopyTo(outputStream);
             return outputStream.ToArray();
         }
