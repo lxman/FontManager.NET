@@ -1,5 +1,7 @@
 ﻿using System;
 using NewFontParser.Reader;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS8601 // Possible null reference assignment.
 
 namespace NewFontParser.Tables.Woff
 {
@@ -7,11 +9,7 @@ namespace NewFontParser.Tables.Woff
     {
         public string Tag { get; }
 
-        public GlyfTransform GlyfTransform { get; }
-
-        public LocaTransform LocaTransform { get; }
-
-        public HmtxTransform HmtxTransform { get; }
+        public Enum Transformation { get; }
 
         public uint OriginalLength { get; }
 
@@ -22,13 +20,17 @@ namespace NewFontParser.Tables.Woff
             byte flags = reader.ReadBytes(1)[0];
             var tableTag = Convert.ToByte(flags & 0x3F);
             var transformationVersion = Convert.ToByte((flags & 0xC0) >> 6);
-            GlyfTransform = (GlyfTransform)transformationVersion;
-            LocaTransform = (LocaTransform)transformationVersion;
-            HmtxTransform = (HmtxTransform)transformationVersion;
             var newFlag = 0;
             Tag = tableTag <= 62
                 ? Woff2KnownTableTags.Values[tableTag]
                 : reader.ReadString(4);
+            Transformation = Tag switch
+            {
+                "glyf" => (GlyfTransform)transformationVersion,
+                "loca" => (LocaTransform)transformationVersion,
+                "hmtx" => (HmtxTransform)transformationVersion,
+                _ => Transformation
+            };
             OriginalLength = reader.ReadUintBase128();
             if (Tag == "glyf" || Tag == "loca")
             {

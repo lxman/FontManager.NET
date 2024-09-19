@@ -24,7 +24,7 @@ namespace NewFontParser.Tables.Bitmap.Common.IndexSubtables
             ImageDataOffset = reader.ReadUInt32();
             uint numGlyphs = reader.ReadUInt32();
             BigMetrics = new BigGlyphMetricsRecord(reader);
-            GlyphIds = reader.ReadUShortArray(Convert.ToInt32(numGlyphs)).ToList();
+            GlyphIds = reader.ReadUShortArray(Convert.ToUInt32(numGlyphs)).ToList();
         }
     }
 }

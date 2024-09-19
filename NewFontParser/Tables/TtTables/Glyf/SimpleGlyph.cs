@@ -15,7 +15,7 @@ namespace NewFontParser.Tables.TtTables.Glyf
 
         public SimpleGlyph(BigEndianReader reader, GlyphHeader glyphHeader)
         {
-            EndPtsOfContours = reader.ReadUShortArray(glyphHeader.NumberOfContours);
+            EndPtsOfContours = reader.ReadUShortArray(Convert.ToUInt32(glyphHeader.NumberOfContours));
             ushort instructionLength = reader.ReadUShort();
             Instructions = reader.ReadBytes(instructionLength);
 

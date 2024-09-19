@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.CoverageFormat;
@@ -19,7 +20,7 @@ namespace NewFontParser.Tables.Math
 
             ushort mathKernCount = reader.ReadUShort();
 
-            ushort[] mathKernValues = reader.ReadUShortArray(4 * mathKernCount);
+            ushort[] mathKernValues = reader.ReadUShortArray(Convert.ToUInt32(4 * mathKernCount));
             ushort mathKernIndex = 0;
 
             for (var i = 0; i < mathKernCount; i++)

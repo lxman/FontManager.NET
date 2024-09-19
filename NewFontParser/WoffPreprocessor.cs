@@ -74,35 +74,20 @@ namespace NewFontParser
                     case Woff2TableDirectoryEntry entry:
                         tag = entry.Tag;
                         long dataStart = woff2OffsetTracker;
-                        if (woff2ExpectedStart > dataStart)
+                        if (woff2ExpectedStart != dataStart)
                         {
                             throw new ApplicationException("Bad WOFF2 file");
                         }
                         woff2OffsetTracker += entry.TransformLength is null ? entry.OriginalLength : Convert.ToUInt32(entry.TransformLength);
                         long dataLength = woff2OffsetTracker - dataStart;
                         woff2ExpectedStart = dataStart + dataLength;
-                        //if (tag != "glyf" && tag != "loca" && tag != "hmtx")
-                        //{
-                        //    _reader.Seek(entry.);
-                        //    compressedData = _reader.ReadBytes(entry.TransformLength);
-                        //    uncompressedData = BrotliUtility.Decompress(compressedData);
-                        //}
-                        //else
-                        //{
-                        //    switch (tag)
-                        //    {
-                        //        case "glyf":
-                        //            uncompressedData = entry.GlyfTransform.Transform(_reader, entry.OriginalLength);
-                        //            break;
-                        //        case "loca":
-                        //            uncompressedData = entry.LocaTransform.Transform(_reader, entry.OriginalLength);
-                        //            break;
-                        //        case "hmtx":
-                        //            uncompressedData = entry.HmtxTransform.Transform(_reader, entry.OriginalLength);
-                        //            break;
-                        //    }
-                        //}
-                        //uncompressedData = Array.Empty<byte>();
+                        if (tag != "glyf" && tag != "loca" && tag != "hmtx")
+                        {
+                            uncompressedWoffData = uncompressedWoff2Data[(int)dataStart..(int)(dataStart + dataLength)];
+                        }
+                        else
+                        {
+                        }
                         break;
                 }
 

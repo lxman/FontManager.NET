@@ -1,4 +1,5 @@
-﻿using NewFontParser.Reader;
+﻿using System;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Gsub.LookupSubTables.LigatureSubstitution
 {
@@ -12,7 +13,7 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.LigatureSubstitution
         {
             LigatureGlyph = reader.ReadUShort();
             ushort componentCount = reader.ReadUShort();
-            ComponentGlyphIds = reader.ReadUShortArray(componentCount - 1);
+            ComponentGlyphIds = reader.ReadUShortArray(Convert.ToUInt32(componentCount - 1));
         }
     }
 }

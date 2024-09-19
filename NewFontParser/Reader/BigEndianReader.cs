@@ -137,7 +137,7 @@ namespace NewFontParser.Reader
             return BinaryPrimitives.ReadUInt16BigEndian(ReadBytes(2));
         }
 
-        public ushort[] ReadUShortArray(int count)
+        public ushort[] ReadUShortArray(uint count)
         {
             var result = new ushort[count];
             for (var i = 0; i < count; i++)
@@ -147,7 +147,17 @@ namespace NewFontParser.Reader
             return result;
         }
 
-        public uint[] ReadUInt32Array(int count)
+        public short[] ReadShortArray(uint count)
+        {
+            var result = new short[count];
+            for (var i = 0; i < count; i++)
+            {
+                result[i] = ReadShort();
+            }
+            return result;
+        }
+
+        public uint[] ReadUInt32Array(uint count)
         {
             var result = new uint[count];
             for (var i = 0; i < count; i++)

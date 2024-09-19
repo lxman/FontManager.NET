@@ -1,4 +1,5 @@
-﻿using NewFontParser.Reader;
+﻿using System;
+using NewFontParser.Reader;
 using NewFontParser.Tables.Common.SequenceContext.Format1;
 
 namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
@@ -18,7 +19,7 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
             ushort backtrackGlyphCount = reader.ReadUShort();
             BacktrackSequences = reader.ReadUShortArray(backtrackGlyphCount);
             ushort inputGlyphCount = reader.ReadUShort();
-            InputSequences = reader.ReadUShortArray(inputGlyphCount - 1);
+            InputSequences = reader.ReadUShortArray(Convert.ToUInt32(inputGlyphCount - 1));
             ushort lookaheadGlyphCount = reader.ReadUShort();
             LookaheadSequences = reader.ReadUShortArray(lookaheadGlyphCount);
             ushort seqLookupCount = reader.ReadUShort();
