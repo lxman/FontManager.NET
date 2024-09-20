@@ -115,6 +115,7 @@ namespace FontExplorer
                                     glyphIdArray.Items.Add(glyphIdArrayData);
                                     subtableItem.Items.Add(format0Item);
                                     break;
+
                                 case CmapSubtablesFormat2 format2:
                                     var format2Item = new TreeViewItem { Header = "Format 2" };
                                     languageItem = new TreeViewItem { Header = $"Language - {format2.Language}" };
@@ -143,6 +144,7 @@ namespace FontExplorer
                                     });
                                     subtableItem.Items.Add(format2Item);
                                     break;
+
                                 case CmapSubtablesFormat4 format4:
                                     var format4Item = new TreeViewItem { Header = "Format 4" };
                                     languageItem = new TreeViewItem { Header = $"Language - {format4.Language}" };
@@ -180,6 +182,7 @@ namespace FontExplorer
                                     format4Item.Items.Add(rangesItem);
                                     subtableItem.Items.Add(format4Item);
                                     break;
+
                                 case CmapSubtablesFormat6 format6:
                                     var format6Item = new TreeViewItem { Header = "Format 6" };
                                     languageItem = new TreeViewItem { Header = $"Language - {format6.Language}" };
@@ -193,6 +196,7 @@ namespace FontExplorer
                                     glyphIdArray.Items.Add(glyphIndexArrayData);
                                     subtableItem.Items.Add(format6Item);
                                     break;
+
                                 case CmapSubtablesFormat8 format8:
                                     var format8Item = new TreeViewItem { Header = "Format 8" };
                                     languageItem = new TreeViewItem { Header = $"Language - {format8.Language}" };
@@ -214,6 +218,7 @@ namespace FontExplorer
                                     });
                                     subtableItem.Items.Add(format8Item);
                                     break;
+
                                 case CmapSubtablesFormat10 format10:
                                     var format10Item = new TreeViewItem { Header = "Format 10" };
                                     languageItem = new TreeViewItem { Header = $"Language - {format10.Language}" };
@@ -227,6 +232,7 @@ namespace FontExplorer
                                     glyphIdArray.Items.Add(glyphIndexArrayData);
                                     subtableItem.Items.Add(format10Item);
                                     break;
+
                                 case CmapSubtablesFormat12 format12:
                                     var format12Item = new TreeViewItem { Header = "Format 12" };
                                     languageItem = new TreeViewItem { Header = $"Language - {format12.Language}" };
@@ -247,6 +253,7 @@ namespace FontExplorer
                                     });
                                     subtableItem.Items.Add(format12Item);
                                     break;
+
                                 case CmapSubtablesFormat13 format13:
                                     var format13Item = new TreeViewItem { Header = "Format 13" };
                                     languageItem = new TreeViewItem { Header = $"Language - {format13.Language}" };
@@ -264,6 +271,7 @@ namespace FontExplorer
                                     });
                                     subtableItem.Items.Add(format13Item);
                                     break;
+
                                 case CmapSubtablesFormat14 format14:
                                     var format14Item = new TreeViewItem { Header = "Format 14" };
                                     languageItem = new TreeViewItem { Header = $"Language - {format14.Language}" };
@@ -314,6 +322,7 @@ namespace FontExplorer
                             }
                         });
                         break;
+
                     case NameTable nameTable:
                         var nameRoot = new TreeViewItem { Header = "name" };
                         ResultView.Items.Add(nameRoot);
@@ -343,40 +352,58 @@ namespace FontExplorer
                             nameRecords.Items.Add(languageGroup);
                         });
                         break;
+
                     case GposTable gposTable:
                         break;
+
                     case GdefTable gdefTable:
                         break;
+
                     case GvarTable gvarTable:
                         break;
+
                     case AvarTable avarTable:
                         break;
+
                     case BaseTable baseTable:
                         break;
+
                     case CbdtTable cbdtTable:
                         break;
+
                     case CblcTable cblcTable:
                         break;
+
                     case EbdtTable ebdtTable:
                         break;
+
                     case EbscTable ebscTable:
                         break;
+
                     case EblcTable eblcTable:
                         break;
+
                     case Type1Table type1Table:
                         break;
+
                     case ColrTable colrTable:
                         break;
+
                     case CpalTable cpalTable:
                         break;
+
                     case CvarTable cvarTable:
                         break;
+
                     case FftmTable fftmTable:
                         break;
+
                     case FvarTable fvarTable:
                         break;
+
                     case GsubTable gsubTable:
                         break;
+
                     case HeadTable headTable:
                         var headRoot = new TreeViewItem { Header = "head" };
                         ResultView.Items.Add(headRoot);
@@ -411,30 +438,75 @@ namespace FontExplorer
                         headRoot.Items.Add(headUnitsPerEm);
                         headRoot.Items.Add(headBounds);
                         break;
+
                     case HmtxTable hmtxTable:
                         break;
+
                     case HheaTable hheaTable:
                         break;
+
                     case HvarTable hvarTable:
                         break;
+
                     case JstfTable jstfTable:
                         break;
+
                     case KernTable kernTable:
                         break;
+
                     case MathTable mathTable:
                         break;
+
                     case MaxPTable maxPTable:
+                        var maxPRoot = new TreeViewItem { Header = "maxp" };
+                        ResultView.Items.Add(maxPRoot);
+                        var maxPVersion = new TreeViewItem { Header = $"Version: {maxPTable.Version}" };
+                        var maxStorage = new TreeViewItem { Header = $"Max Storage: {maxPTable.MaxStorage}" };
+                        var maxPoints = new TreeViewItem { Header = $"Max Points: {maxPTable.MaxPoints}" };
+                        var maxContours = new TreeViewItem { Header = $"Max Contours: {maxPTable.MaxContours}" };
+                        var maxSizeOfInstructions = new TreeViewItem { Header = $"Max Size of Instructions: {maxPTable.MaxSizeOfInstructions}" };
+                        var maxInstructionDefs = new TreeViewItem { Header = $"Max Instruction Defs: {maxPTable.MaxInstructionDefs}" };
+                        var maxFunctionDefs = new TreeViewItem { Header = $"Max Function Defs: {maxPTable.MaxFunctionDefs}" };
+                        var maxTwilightPoints = new TreeViewItem { Header = $"Max Twilight Points: {maxPTable.MaxTwilightPoints}" };
+                        var maxComponentDepth = new TreeViewItem { Header = $"Max Component Depth: {maxPTable.MaxComponentDepth}" };
+                        var maxComponentElements = new TreeViewItem { Header = $"Max Component Elements: {maxPTable.MaxComponentElements}" };
+                        var maxCompositeContours = new TreeViewItem { Header = $"Max Composite Contours: {maxPTable.MaxCompositeContours}" };
+                        var maxCompositePoints = new TreeViewItem { Header = $"Max Composite Points: {maxPTable.MaxCompositePoints}" };
+                        var maxStackElements = new TreeViewItem { Header = $"Max Stack Elements: {maxPTable.MaxStackElements}" };
+                        var maxZones = new TreeViewItem { Header = $"Max Zones: {maxPTable.MaxZones}" };
+                        var numGlyphs = new TreeViewItem { Header = $"Number of Glyphs: {maxPTable.NumGlyphs}" };
+                        maxPRoot.Items.Add(maxPVersion);
+                        maxPRoot.Items.Add(maxStorage);
+                        maxPRoot.Items.Add(maxPoints);
+                        maxPRoot.Items.Add(maxContours);
+                        maxPRoot.Items.Add(maxSizeOfInstructions);
+                        maxPRoot.Items.Add(maxInstructionDefs);
+                        maxPRoot.Items.Add(maxFunctionDefs);
+                        maxPRoot.Items.Add(maxTwilightPoints);
+                        maxPRoot.Items.Add(maxComponentDepth);
+                        maxPRoot.Items.Add(maxComponentElements);
+                        maxPRoot.Items.Add(maxCompositeContours);
+                        maxPRoot.Items.Add(maxCompositePoints);
+                        maxPRoot.Items.Add(maxStackElements);
+                        maxPRoot.Items.Add(maxZones);
+                        maxPRoot.Items.Add(numGlyphs);
                         break;
+
                     case MergTable mergTable:
                         break;
+
                     case MetaTable metaTable:
                         break;
+
                     case MvarTable mvarTable:
                         break;
+
                     case DsigTable dsigTable:
                         break;
+
                     case HdmxTable hdmxTable:
                         break;
+
                     case LtshTable ltshTable:
                         break;
                 }
