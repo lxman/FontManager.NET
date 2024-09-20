@@ -3,7 +3,7 @@ using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Common.ClassDefinition
 {
-    public class Format1 : IClassDefinition
+    public class ClassDefinitionFormat1 : IClassDefinition
     {
         public ushort Format { get; }
 
@@ -11,11 +11,11 @@ namespace NewFontParser.Tables.Common.ClassDefinition
 
         public List<ushort> ClassValues { get; } = new List<ushort>();
 
-        public Format1(BigEndianReader reader)
+        public ClassDefinitionFormat1(BigEndianReader reader)
         {
             Format = reader.ReadUShort();
             StartGlyph = reader.ReadUShort();
-            var glyphCount = reader.ReadUShort();
+            ushort glyphCount = reader.ReadUShort();
             for (var i = 0; i < glyphCount; i++)
             {
                 ClassValues.Add(reader.ReadUShort());

@@ -7,8 +7,6 @@ namespace NewFontParser.Tables.Meta
     {
         public static string Tag => "meta";
 
-        public uint Version { get; }
-
         public uint Flags { get; }
 
         public List<DataMap> DataMaps { get; } = new List<DataMap>();
@@ -16,7 +14,7 @@ namespace NewFontParser.Tables.Meta
         public MetaTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            Version = reader.ReadUInt32();
+            _ = reader.ReadUInt32();
             Flags = reader.ReadUInt32();
             _ = reader.ReadUInt32();
             uint dataMapsCount = reader.ReadUInt32();

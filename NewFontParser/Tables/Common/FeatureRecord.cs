@@ -1,20 +1,22 @@
-﻿using NewFontParser.Reader;
+﻿using System.Text;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Common
 {
     public class FeatureRecord
     {
-        public ushort FeatureIndex { get; }
+        public string FeatureTag { get; }
 
-        public ushort FeatureTag { get; }
+        public FeatureTable FeatureTable { get; }
 
-        public ushort Offset { get; }
-
-        public FeatureRecord(BigEndianReader reader)
+        public FeatureRecord(BigEndianReader reader, long startOfTable)
         {
-            FeatureIndex = reader.ReadUShort();
-            FeatureTag = reader.ReadUShort();
-            Offset = reader.ReadUShort();
+            FeatureTag = Encoding.ASCII.GetString(reader.ReadBytes(4));
+            ushort offset = reader.ReadUShort();
+            long before = reader.Position;
+            reader.Seek(startOfTable + offset);
+            FeatureTable = new FeatureTable(reader);
+            reader.Seek(before);
         }
     }
 }

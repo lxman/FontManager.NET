@@ -5,13 +5,13 @@ namespace NewFontParser.Tables.Merg
 {
     public class MergeEntryRow
     {
-        public List<MergeEntryFlags> MergeEntries { get; } = new List<MergeEntryFlags>();
+        public List<MergeEntryFlags> MergeEntryFlags { get; } = new List<MergeEntryFlags>();
 
         public MergeEntryRow(BigEndianReader reader, ushort mergeClassCount)
         {
             for (var i = 0; i < mergeClassCount; i++)
             {
-                MergeEntries.Add((MergeEntryFlags)reader.ReadByte());
+                MergeEntryFlags.Add((MergeEntryFlags)reader.ReadByte());
             }
         }
     }

@@ -9,12 +9,13 @@ namespace NewFontParser.Tables.Common
 
         public FeatureList(BigEndianReader reader)
         {
+            long startOfTable = reader.Position;
             ushort featureCount = reader.ReadUShort();
             FeatureRecords = new List<FeatureRecord>(featureCount);
 
             for (var i = 0; i < featureCount; i++)
             {
-                FeatureRecords.Add(new FeatureRecord(reader));
+                FeatureRecords.Add(new FeatureRecord(reader, startOfTable));
             }
         }
     }

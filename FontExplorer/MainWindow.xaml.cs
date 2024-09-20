@@ -14,6 +14,7 @@ using NewFontParser.Tables.Cff.Type1;
 using NewFontParser.Tables.Cmap;
 using NewFontParser.Tables.Cmap.SubTables;
 using NewFontParser.Tables.Colr;
+using NewFontParser.Tables.Common.ClassDefinition;
 using NewFontParser.Tables.Cpal;
 using NewFontParser.Tables.Cvar;
 using NewFontParser.Tables.Fftm;
@@ -354,6 +355,8 @@ namespace FontExplorer
                         break;
 
                     case GposTable gposTable:
+                        var gposRoot = new TreeViewItem { Header = "gpos" };
+                        ResultView.Items.Add(gposRoot);
                         break;
 
                     case GdefTable gdefTable:
@@ -493,9 +496,65 @@ namespace FontExplorer
                         break;
 
                     case MergTable mergTable:
+                        var mergRoot = new TreeViewItem { Header = "merg" };
+                        ResultView.Items.Add(mergRoot);
+                        var version = new TreeViewItem { Header = $"Version: {mergTable.Version}" };
+                        mergRoot.Items.Add(version);
+                        var classDefinitions = new TreeViewItem { Header = "Class Definitions" };
+                        mergRoot.Items.Add(classDefinitions);
+                        mergTable.ClassDefinitions.ForEach(cd =>
+                        {
+                            var classDefinition = new TreeViewItem { Header = "Class Definition" };
+                            classDefinitions.Items.Add(classDefinition);
+                            switch (cd)
+                            {
+                                case ClassDefinitionFormat1 format1:
+                                    var format1Item = new TreeViewItem { Header = "Format 1" };
+                                    var startGlyph = new TreeViewItem { Header = $"Start Glyph: {format1.StartGlyph}" };
+                                    format1Item.Items.Add(startGlyph);
+                                    format1.ClassValues.ForEach(cv =>
+                                    {
+                                        var classValue = new TreeViewItem { Header = $"Class Value - {cv}" };
+                                        format1Item.Items.Add(classValue);
+                                    });
+                                    classDefinition.Items.Add(format1Item);
+                                    break;
+
+                                case ClassDefinitionFormat2 format2:
+                                    var format2Item = new TreeViewItem { Header = "Format 2" };
+                                    var classRangeRecords = new TreeViewItem { Header = "Class Range Records" };
+                                    format2Item.Items.Add(classRangeRecords);
+                                    format2.ClassRanges.ForEach(crr =>
+                                    {
+                                        var classRangeRecord = new TreeViewItem { Header = "Class Range Record" };
+                                        classRangeRecords.Items.Add(classRangeRecord);
+                                        var startClass = new TreeViewItem { Header = $"Start Class: {crr.Class}" };
+                                        var beginGlyph = new TreeViewItem { Header = $"Start Glyph: {crr.StartGlyphID}" };
+                                        var endGlyph = new TreeViewItem { Header = $"End Glyph: {crr.EndGlyphID}" };
+                                        classRangeRecord.Items.Add(startClass);
+                                        classRangeRecord.Items.Add(beginGlyph);
+                                        classRangeRecord.Items.Add(endGlyph);
+                                    });
+                                    classDefinition.Items.Add(format2Item);
+                                    break;
+                            }
+                        });
                         break;
 
                     case MetaTable metaTable:
+                        var metaRoot = new TreeViewItem { Header = "meta" };
+                        ResultView.Items.Add(metaRoot);
+                        var dataMaps = new TreeViewItem { Header = "Data Maps" };
+                        metaRoot.Items.Add(dataMaps);
+                        metaTable.DataMaps.ForEach(dm =>
+                        {
+                            var dataMap = new TreeViewItem { Header = "Data Map" };
+                            var tag = new TreeViewItem { Header = $"Tag: {dm.Tag}" };
+                            var data = new TreeViewItem { Header = $"Data: {dm.Data}" };
+                            dataMaps.Items.Add(dataMap);
+                            dataMap.Items.Add(tag);
+                            dataMap.Items.Add(data);
+                        });
                         break;
 
                     case MvarTable mvarTable:
