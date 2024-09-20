@@ -5,6 +5,7 @@ using System.Linq;
 using NewFontParser.Models;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Name;
+using NewFontParser.Tables.Woff;
 
 namespace NewFontParser
 {
@@ -155,6 +156,13 @@ namespace NewFontParser
             var fontStructure = new FontStructure(file);
             var woffProcessor = new WoffPreprocessor(reader, 2);
             fontStructure.TableRecords = woffProcessor.TableRecords;
+            byte[]? glyphData = woffProcessor.TableRecords.FirstOrDefault(t => t.Tag == "glyf")?.Data;
+            if (glyphData is null)
+            {
+                throw new InvalidDataException("No glyph data found in WOFF2 file.");
+            }
+            var beReader = new BigEndianReader(glyphData);
+            var table = new TransformedGlyfTable(beReader);
             fontStructure.CollectTableNames();
             fontStructure.Process();
             return fontStructure;

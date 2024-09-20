@@ -202,5 +202,55 @@ namespace NewFontParser.Reader
 
             return Encoding.ASCII.GetString(data.ToArray());
         }
+
+        public uint ReadUintBase128()
+        {
+            uint accumulator = 0;
+            for (var i = 0; i < 5; i++)
+            {
+                byte b = ReadBytes(1)[0];
+                if (i == 0 && b == 0x80)
+                {
+                    throw new Exception("Invalid base 128 value");
+                }
+                if ((accumulator & 0xFE000000) != 0)
+                {
+                    throw new Exception("Invalid base 128 value");
+                }
+                accumulator = (accumulator << 7) | (uint)(b & 0x7F);
+                if ((b & 0x80) == 0)
+                {
+                    return accumulator;
+                }
+            }
+
+            throw new Exception("Invalid base 128 value");
+        }
+
+        public ushort Read255UInt16()
+        {
+            ushort value;
+
+            byte code = ReadBytes(1)[0];
+            switch (code)
+            {
+                case 253:
+                    value = ReadUShort();
+                    break;
+                case 254:
+                    value = ReadBytes(1)[0];
+                    value += 253 * 2;
+                    break;
+                case 255:
+                    value = ReadBytes(1)[0];
+                    value += 253;
+                    break;
+                default:
+                    value = code;
+                    break;
+            }
+
+            return value;
+        }
     }
 }

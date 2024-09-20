@@ -87,6 +87,10 @@ namespace NewFontParser
                         }
                         else
                         {
+                            if (tag == "glyf")
+                            {
+                                uncompressedWoffData = uncompressedWoff2Data[(int)dataStart..(int)(dataStart + dataLength)];
+                            }
                         }
                         break;
                 }
