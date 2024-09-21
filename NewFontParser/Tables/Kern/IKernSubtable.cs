@@ -4,8 +4,6 @@
     {
         ushort Version { get; }
 
-        ushort Length { get; }
-
-        ushort Coverage { get; }
+        KernCoverage Coverage { get; }
     }
 }

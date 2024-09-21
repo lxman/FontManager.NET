@@ -621,4 +621,14 @@ public enum KerxSubtableActions : ushort
     Reserved = 0x1FFF
 }
 
+[Flags]
+public enum KernCoverage : ushort
+{
+    Horizontal = 1 << 0,
+    Minimum = 1 << 1,
+    CrossStream = 1 << 2,
+    Override = 1 << 3,
+    Reserved = 0xFFF0
+}
+
 #endregion

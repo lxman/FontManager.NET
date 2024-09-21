@@ -7,25 +7,32 @@ namespace NewFontParser.Tables.Kern
     {
         public ushort Version { get; }
 
-        public ushort Length { get; }
-
-        public ushort Coverage { get; }
+        public KernCoverage Coverage { get; }
 
         public List<KernPair> KernPairs { get; } = new List<KernPair>();
 
+        private readonly BigEndianReader _reader;
+        private readonly ushort _nPairs;
+
         public KernSubtableFormat0(BigEndianReader reader)
         {
+            _reader = reader;
             Version = reader.ReadUShort();
-            Length = reader.ReadUShort();
-            Coverage = reader.ReadUShort();
-            ushort nPairs = reader.ReadUShort();
+            _ = reader.ReadUShort();
+            Coverage = (KernCoverage)reader.ReadUShort();
+            _nPairs = reader.ReadUShort();
             ushort searchRange = reader.ReadUShort();
             ushort entrySelector = reader.ReadUShort();
             ushort rangeShift = reader.ReadUShort();
-            for (var i = 0; i < nPairs; i++)
+            for (var i = 0; i < _nPairs; i++)
             {
                 KernPairs.Add(new KernPair(reader));
             }
+        }
+
+        public void Process()
+        {
+
         }
     }
 }

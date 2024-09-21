@@ -1,4 +1,5 @@
-﻿using NewFontParser.Reader;
+﻿using System;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Common
 {
@@ -21,24 +22,30 @@ namespace NewFontParser.Tables.Common
         public FeatureParametersTable(BigEndianReader reader)
         {
             // TODO: Come back and fix this
-            return;
-            Format = reader.ReadUShort();
-            FeatureUILabelNameId = reader.ReadUShort();
-            FeatureUITooltipTextNameId = reader.ReadUShort();
-            SampleTextNameId = reader.ReadUShort();
-            NumNamedParameters = reader.ReadUShort();
-            FirstParamUILabelNameId = reader.ReadUShort();
-            ushort charCount = reader.ReadUShort();
-            UnicodeScalarValues = new uint[charCount];
-            for (var i = 0; i < charCount; i++)
+            try
             {
-                // TODO: Come back and fix this
-                if (reader.BytesRemaining < 3)
+                Format = reader.ReadUShort();
+                FeatureUILabelNameId = reader.ReadUShort();
+                FeatureUITooltipTextNameId = reader.ReadUShort();
+                SampleTextNameId = reader.ReadUShort();
+                NumNamedParameters = reader.ReadUShort();
+                FirstParamUILabelNameId = reader.ReadUShort();
+                ushort charCount = reader.ReadUShort();
+                UnicodeScalarValues = new uint[charCount];
+                for (var i = 0; i < charCount; i++)
                 {
-                    UnicodeScalarValues[i] = 0;
-                    continue;
+                    if (reader.BytesRemaining < 3)
+                    {
+                        Console.WriteLine("Ran out of data reading USVs");
+                        UnicodeScalarValues[i] = 0;
+                        return;
+                    }
+                    UnicodeScalarValues[i] = reader.ReadUInt24();
                 }
-                UnicodeScalarValues[i] = reader.ReadUInt24();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Failed parsing FeatureParametersTable");
             }
         }
     }
