@@ -656,8 +656,50 @@ public partial class MainWindow : Window
                                             break;
                                         case ChainedSequenceContextFormat2 cscf2:
                                             cscHeader.Items.Add(BuildCommonCoverageItem(cscf2.Coverage));
+                                            TreeViewItem bcdHeader = cscHeader.FormChild("Backtrack Class Definition");
+                                            bcdHeader.Items.Add(BuildCommonClassDefinition(cscf2.BacktrackClassDef));
+                                            TreeViewItem inpHeader = cscHeader.FormChild("Input Class Definition");
+                                            inpHeader.Items.Add(BuildCommonClassDefinition(cscf2.InputClassDef));
+                                            TreeViewItem laHeader = cscHeader.FormChild("Lookahead Class Definition");
+                                            laHeader.Items.Add(BuildCommonClassDefinition(cscf2.LookaheadClassDef));
+                                            TreeViewItem ccsrsHeader = cscHeader.FormChild("Chained Class Sequence Rule Sets");
+                                            cscf2.ChainedClassSequenceRuleSets.ForEach(ccsrs =>
+                                            {
+                                                TreeViewItem ccsrHeader = ccsrsHeader.FormChild("Chained Class Sequence Rule");
+                                                ccsrs.ChainedClassSequenceRules.ForEach(ccsr =>
+                                                {
+                                                    ccsrHeader.FormChild(nameof(ccsr.InputSequences), string.Join(", ", ccsr.InputSequences));
+                                                    ccsrHeader.FormChild(nameof(ccsr.LookaheadSequences), string.Join(", ", ccsr.LookaheadSequences));
+                                                    ccsrHeader.FormChild(nameof(ccsr.BacktrackSequences), string.Join(", ", ccsr.BacktrackSequences));
+                                                    TreeViewItem slHeader = ccsrHeader.FormChild("Sequence Lookups");
+                                                    ccsr.SequenceLookups.ForEach(sl =>
+                                                    {
+                                                        slHeader.FormChild($"Sequence index: {sl.SequenceIndex}, Lookup list index: {sl.LookupListIndex}");
+                                                    });
+                                                });
+                                            });
                                             break;
                                         case ChainedSequenceContextFormat3 cscf3:
+                                            TreeViewItem icHeader = cscHeader.FormChild("Input Coverages");
+                                            cscf3.InputCoverages.ForEach(ic =>
+                                            {
+                                                icHeader.Items.Add(BuildCommonCoverageItem(ic));
+                                            });
+                                            TreeViewItem lookaheadHeader = cscHeader.FormChild("Lookahead Coverages");
+                                            cscf3.LookaheadCoverages.ForEach(lc =>
+                                            {
+                                                lookaheadHeader.Items.Add(BuildCommonCoverageItem(lc));
+                                            });
+                                            TreeViewItem backtrackHeader = cscHeader.FormChild("Backtrack Coverages");
+                                            cscf3.BacktrackCoverages.ForEach(bc =>
+                                            {
+                                                backtrackHeader.Items.Add(BuildCommonCoverageItem(bc));
+                                            });
+                                            TreeViewItem slHeader = cscHeader.FormChild("Sequence Lookups");
+                                            cscf3.SequenceLookups.ForEach(sl =>
+                                            {
+                                                slHeader.FormChild($"Sequence index: {sl.SequenceIndex}, Lookup list index: {sl.LookupListIndex}");
+                                            });
                                             break;
                                     }
                                     break;
