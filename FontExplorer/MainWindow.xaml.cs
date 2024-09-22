@@ -999,6 +999,128 @@ public partial class MainWindow : Window
                     TreeViewItem radicalRuleThickness =
                         constants.FormChild(nameof(mathTable.Constants.RadicalRuleThickness));
                     radicalRuleThickness.Items.Add(BuildMathValueRecord(mathTable.Constants.RadicalRuleThickness));
+                    TreeViewItem radicalVerticalGap =
+                        constants.FormChild(nameof(mathTable.Constants.RadicalVerticalGap));
+                    radicalVerticalGap.Items.Add(BuildMathValueRecord(mathTable.Constants.RadicalVerticalGap));
+                    TreeViewItem flattenedAccentBaseHeight = constants.FormChild(nameof(mathTable.Constants.FlattenedAccentBaseHeight));
+                    flattenedAccentBaseHeight.Items.Add(BuildMathValueRecord(mathTable.Constants.FlattenedAccentBaseHeight));
+                    TreeViewItem subscriptShiftDown =
+                        constants.FormChild(nameof(mathTable.Constants.SubscriptShiftDown));
+                    subscriptShiftDown.Items.Add(BuildMathValueRecord(mathTable.Constants.SubscriptShiftDown));
+                    TreeViewItem subscriptTopMax = constants.FormChild(nameof(mathTable.Constants.SubscriptTopMax));
+                    subscriptTopMax.FormChild(nameof(mathTable.Constants.SubscriptTopMax));
+                    TreeViewItem subscriptBaselineDropMin = constants.FormChild(nameof(mathTable.Constants.SubscriptBaselineDropMin));
+                    subscriptBaselineDropMin.Items.Add(BuildMathValueRecord(mathTable.Constants.SubscriptBaselineDropMin));
+                    TreeViewItem superscriptShiftUp = constants.FormChild(nameof(mathTable.Constants.SuperscriptShiftUp));
+                    superscriptShiftUp.Items.Add(BuildMathValueRecord(mathTable.Constants.SuperscriptShiftUp));
+                    TreeViewItem superscriptShiftUpCramped = constants.FormChild(nameof(mathTable.Constants.SuperscriptShiftUpCramped));
+                    superscriptShiftUpCramped.Items.Add(BuildMathValueRecord(mathTable.Constants.SuperscriptShiftUpCramped));
+                    TreeViewItem superscriptBottomMin = constants.FormChild(nameof(mathTable.Constants.SuperscriptBottomMin));
+                    superscriptBottomMin.Items.Add(BuildMathValueRecord(mathTable.Constants.SuperscriptBottomMin));
+                    TreeViewItem superscriptBaselineDropMax = constants.FormChild(nameof(mathTable.Constants.SuperscriptBaselineDropMax));
+                    superscriptBaselineDropMax.Items.Add(BuildMathValueRecord(mathTable.Constants.SuperscriptBaselineDropMax));
+                    TreeViewItem subSuperscriptGapMin =
+                        constants.FormChild(nameof(mathTable.Constants.SubSuperscriptGapMin));
+                    subSuperscriptGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.SubSuperscriptGapMin));
+                    TreeViewItem superscriptBottomMaxWithSubscript = constants.FormChild(nameof(mathTable.Constants.SuperscriptBottomMaxWithSubscript));
+                    superscriptBottomMaxWithSubscript.Items.Add(BuildMathValueRecord(mathTable.Constants.SuperscriptBottomMaxWithSubscript));
+                    TreeViewItem spaceAfterScript = constants.FormChild(nameof(mathTable.Constants.SpaceAfterScript));
+                    spaceAfterScript.Items.Add(BuildMathValueRecord(mathTable.Constants.SpaceAfterScript));
+                    TreeViewItem upperLimitGapMin = constants.FormChild(nameof(mathTable.Constants.UpperLimitGapMin));
+                    upperLimitGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.UpperLimitGapMin));
+                    TreeViewItem upperLimitBaselineRiseMin = constants.FormChild(nameof(mathTable.Constants.UpperLimitBaselineRiseMin));
+                    upperLimitBaselineRiseMin.Items.Add(BuildMathValueRecord(mathTable.Constants.UpperLimitBaselineRiseMin));
+                    TreeViewItem lowerLimitGapMin = constants.FormChild(nameof(mathTable.Constants.LowerLimitGapMin));
+                    lowerLimitGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.LowerLimitGapMin));
+                    TreeViewItem lowerLimitBaselineDropMin = constants.FormChild(nameof(mathTable.Constants.LowerLimitBaselineDropMin));
+                    lowerLimitBaselineDropMin.Items.Add(BuildMathValueRecord(mathTable.Constants.LowerLimitBaselineDropMin));
+                    TreeViewItem stackTopShiftUp = constants.FormChild(nameof(mathTable.Constants.StackTopShiftUp));
+                    stackTopShiftUp.Items.Add(BuildMathValueRecord(mathTable.Constants.StackTopShiftUp));
+                    TreeViewItem stackTopDisplayStyleShiftUp = constants.FormChild(nameof(mathTable.Constants.StackTopDisplayStyleShiftUp));
+                    stackTopDisplayStyleShiftUp.Items.Add(BuildMathValueRecord(mathTable.Constants.StackTopDisplayStyleShiftUp));
+                    TreeViewItem stackBottomShiftDown = constants.FormChild(nameof(mathTable.Constants.StackBottomShiftDown));
+                    stackBottomShiftDown.Items.Add(BuildMathValueRecord(mathTable.Constants.StackBottomShiftDown));
+                    TreeViewItem stackBottomDisplayStyleShiftDown = constants.FormChild(nameof(mathTable.Constants.StackBottomDisplayStyleShiftDown));
+                    stackBottomDisplayStyleShiftDown.Items.Add(BuildMathValueRecord(mathTable.Constants.StackBottomDisplayStyleShiftDown));
+                    TreeViewItem stackGapMin = constants.FormChild(nameof(mathTable.Constants.StackGapMin));
+                    stackGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.StackGapMin));
+                    TreeViewItem stackDisplayStyleGapMin = constants.FormChild(nameof(mathTable.Constants.StackDisplayStyleGapMin));
+                    stackDisplayStyleGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.StackDisplayStyleGapMin));
+                    TreeViewItem stretchStackTopShiftUp = constants.FormChild(nameof(mathTable.Constants.StretchStackTopShiftUp));
+                    stretchStackTopShiftUp.Items.Add(BuildMathValueRecord(mathTable.Constants.StretchStackTopShiftUp));
+                    TreeViewItem stretchStackBottomShiftDown = constants.FormChild(nameof(mathTable.Constants.StretchStackBottomShiftDown));
+                    stretchStackBottomShiftDown.Items.Add(BuildMathValueRecord(mathTable.Constants.StretchStackBottomShiftDown));
+                    TreeViewItem stretchStackGapAboveMin = constants.FormChild(nameof(mathTable.Constants.StretchStackGapAboveMin));
+                    stretchStackGapAboveMin.Items.Add(BuildMathValueRecord(mathTable.Constants.StretchStackGapAboveMin));
+                    TreeViewItem stretchStackGapBelowMin = constants.FormChild(nameof(mathTable.Constants.StretchStackGapBelowMin));
+                    stretchStackGapBelowMin.Items.Add(BuildMathValueRecord(mathTable.Constants.StretchStackGapBelowMin));
+                    TreeViewItem fractionNumeratorShiftUp = constants.FormChild(nameof(mathTable.Constants.FractionNumeratorShiftUp));
+                    fractionNumeratorShiftUp.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionNumeratorShiftUp));
+                    TreeViewItem fractionNumeratorDisplayStyleShiftUp = constants.FormChild(nameof(mathTable.Constants.FractionNumeratorDisplayStyleShiftUp));
+                    fractionNumeratorDisplayStyleShiftUp.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionNumeratorDisplayStyleShiftUp));
+                    TreeViewItem fractionDenominatorShiftDown = constants.FormChild(nameof(mathTable.Constants.FractionDenominatorShiftDown));
+                    fractionDenominatorShiftDown.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionDenominatorShiftDown));
+                    TreeViewItem fractionDenominatorDisplayStyleShiftDown = constants.FormChild(nameof(mathTable.Constants.FractionDenominatorDisplayStyleShiftDown));
+                    fractionDenominatorDisplayStyleShiftDown.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionDenominatorDisplayStyleShiftDown));
+                    TreeViewItem fractionNumeratorGapMin = constants.FormChild(nameof(mathTable.Constants.FractionNumeratorGapMin));
+                    fractionNumeratorGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionNumeratorGapMin));
+                    TreeViewItem fractionNumDisplayStyleGapMin =
+                        constants.FormChild(nameof(mathTable.Constants.FractionNumDisplayStyleGapMin));
+                    fractionNumDisplayStyleGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionNumDisplayStyleGapMin));
+                    TreeViewItem fractionDenominatorGapMin = constants.FormChild(nameof(mathTable.Constants.FractionDenominatorGapMin));
+                    fractionDenominatorGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionDenominatorGapMin));
+                    TreeViewItem fractionDenomDisplayStyleGapMin = constants.FormChild(nameof(mathTable.Constants.FractionDenomDisplayStyleGapMin));
+                    fractionDenomDisplayStyleGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionDenomDisplayStyleGapMin));
+                    TreeViewItem skewedFractionHorizontalGap = constants.FormChild(nameof(mathTable.Constants.SkewedFractionHorizontalGap));
+                    skewedFractionHorizontalGap.Items.Add(BuildMathValueRecord(mathTable.Constants.SkewedFractionHorizontalGap));
+                    TreeViewItem skewedFractionVerticalGap = constants.FormChild(nameof(mathTable.Constants.SkewedFractionVerticalGap));
+                    skewedFractionVerticalGap.Items.Add(BuildMathValueRecord(mathTable.Constants.SkewedFractionVerticalGap));
+                    TreeViewItem underbarVerticalGap = constants.FormChild(nameof(mathTable.Constants.UnderbarVerticalGap));
+                    underbarVerticalGap.Items.Add(BuildMathValueRecord(mathTable.Constants.UnderbarVerticalGap));
+                    TreeViewItem underbarRuleThickness = constants.FormChild(nameof(mathTable.Constants.UnderbarRuleThickness));
+                    underbarRuleThickness.Items.Add(BuildMathValueRecord(mathTable.Constants.UnderbarRuleThickness));
+                    TreeViewItem underbarExtraDescender = constants.FormChild(nameof(mathTable.Constants.UnderbarExtraDescender));
+                    underbarExtraDescender.Items.Add(BuildMathValueRecord(mathTable.Constants.UnderbarExtraDescender));
+                    TreeViewItem radicalDisplayStyleVerticalGap =
+                        constants.FormChild(nameof(mathTable.Constants.RadicalDisplayStyleVerticalGap));
+                    radicalDisplayStyleVerticalGap.Items.Add(
+                        BuildMathValueRecord(mathTable.Constants.RadicalDisplayStyleVerticalGap));
+                    TreeViewItem radicalKernBeforeDegree =
+                        constants.FormChild(nameof(mathTable.Constants.RadicalKernBeforeDegree));
+                    radicalKernBeforeDegree.Items.Add(
+                        BuildMathValueRecord(mathTable.Constants.RadicalKernBeforeDegree));
+                    TreeViewItem radicalKernAfterDegree =
+                        constants.FormChild(nameof(mathTable.Constants.RadicalKernAfterDegree));
+                    radicalKernAfterDegree.Items.Add(BuildMathValueRecord(mathTable.Constants.RadicalKernAfterDegree));
+                    constants.FormChild(nameof(mathTable.Constants.ScriptPercentScaleDown), mathTable.Constants.ScriptPercentScaleDown);
+                    constants.FormChild(nameof(mathTable.Constants.ScriptPercentScaleUp), mathTable.Constants.ScriptPercentScaleUp);
+                    constants.FormChild(nameof(mathTable.Constants.DelimitedSubFormulaMinHeight), mathTable.Constants.DelimitedSubFormulaMinHeight);
+                    constants.FormChild(nameof(mathTable.Constants.DisplayOperatorMinHeight), mathTable.Constants.DisplayOperatorMinHeight);
+                    constants.FormChild(nameof(mathTable.Constants.RadicalDegreeBottomRaisePercent),
+                        mathTable.Constants.RadicalDegreeBottomRaisePercent);
+                    TreeViewItem mathGlyphInfoTable = mathRoot.FormChild("Glyph Info");
+                    mathGlyphInfoTable.Items.Add(BuildCommonCoverageItem(mathTable.GlyphInfo.ExtendedShapeCoverage));
+                    TreeViewItem mathKernInfoTable = mathGlyphInfoTable.FormChild("Kern Info");
+                    mathKernInfoTable.Items.Add(BuildCommonCoverageItem(mathTable.GlyphInfo.KernInfo.MathKernCoverage));
+                    TreeViewItem mathKernInfoRecords = mathKernInfoTable.FormChild("Kern Info Records");
+                    mathTable.GlyphInfo.KernInfo.MathKernInfoRecords.ForEach(mki =>
+                    {
+                        mathKernInfoRecords.Items.Add(BuildMathKernInfo(mki));
+                    });
+                    TreeViewItem mathItalicsCorrectionInfo = mathGlyphInfoTable.FormChild("Italics Correction Info");
+                    mathItalicsCorrectionInfo.Items.Add(BuildCommonCoverageItem(mathTable.GlyphInfo.ItalicsCorrectionInfo.Coverage));
+                    TreeViewItem italicsCorrections = mathItalicsCorrectionInfo.FormChild("Italics Corrections");
+                    mathTable.GlyphInfo.ItalicsCorrectionInfo.ItalicsCorrections.ForEach(ic =>
+                    {
+                        italicsCorrections.Items.Add(BuildMathValueRecord(ic));
+                    });
+                    TreeViewItem topAccentAttachment = mathGlyphInfoTable.FormChild("Top Accent Attachment Coverage");
+                    topAccentAttachment.Items.Add(BuildCommonCoverageItem(mathTable.GlyphInfo.TopAccentAttachment.TopAccentCoverage));
+                    TreeViewItem topAccentAttachments = mathGlyphInfoTable.FormChild("Top Accent Attachments");
+                    mathTable.GlyphInfo.TopAccentAttachment.TopAccentAttachments.ForEach(a =>
+                    {
+                        topAccentAttachments.Items.Add(BuildMathValueRecord(a));
+                    });
                     break;
 
                 case MaxPTable maxPTable:
@@ -1325,6 +1447,51 @@ public partial class MainWindow : Window
             {
                 anchorTablesHeader.Items.Add(BuildAnchorTable(at));
             });
+        });
+        return toReturn;
+    }
+
+    private static TreeViewItem BuildMathKernInfo(MathKernInfoRecord mathKernInfoRecord)
+    {
+        var toReturn = new TreeViewItem { Header = "Math Kern Info Record" };
+        if (mathKernInfoRecord.TopRightMathKern is not null)
+        {
+            TreeViewItem topRightMathKern = toReturn.FormChild("Top Right Math Kern");
+            topRightMathKern.Items.Add(BuildMathKernTable(mathKernInfoRecord.TopRightMathKern));
+        }
+
+        if (mathKernInfoRecord.TopLeftMathKern is not null)
+        {
+            TreeViewItem topLeftMathKern = toReturn.FormChild("Top Left Math Kern");
+            topLeftMathKern.Items.Add(BuildMathKernTable(mathKernInfoRecord.TopLeftMathKern));
+        }
+
+        if (mathKernInfoRecord.BottomLeftMathKern is not null)
+        {
+            TreeViewItem bottomLeftMathKern = toReturn.FormChild("Bottom Left Math Kern");
+            bottomLeftMathKern.Items.Add(BuildMathKernTable(mathKernInfoRecord.BottomLeftMathKern));
+        }
+
+        if (mathKernInfoRecord.BottomRightMathKern is null) return toReturn;
+        TreeViewItem bottomRightMathKern = toReturn.FormChild("Bottom Right Math Kern");
+        bottomRightMathKern.Items.Add(BuildMathKernTable(mathKernInfoRecord.BottomRightMathKern));
+
+        return toReturn;
+    }
+
+    private static TreeViewItem BuildMathKernTable(MathKernTable mathKernTable)
+    {
+        var toReturn = new TreeViewItem { Header = "Math Kern Table" };
+        TreeViewItem correctionHeights = toReturn.FormChild("Correction Heights");
+        mathKernTable.CorrectionHeights.ForEach(ch =>
+        {
+            correctionHeights.FormChild(nameof(ch.Value), ch.Value);
+            if (ch.DeviceTable is not null) correctionHeights.Items.Add(BuildDeviceTable(ch.DeviceTable));
+        });
+        TreeViewItem kernValues = toReturn.FormChild("Kern Values");
+        mathKernTable.KernValues.ForEach(kv =>
+        {
+            kernValues.Items.Add(BuildMathValueRecord(kv));
         });
         return toReturn;
     }

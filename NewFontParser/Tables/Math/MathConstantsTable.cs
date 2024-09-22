@@ -12,6 +12,8 @@ namespace NewFontParser.Tables.Math
 
         public ushort DisplayOperatorMinHeight { get; }
 
+        public short RadicalDegreeBottomRaisePercent { get; }
+
         public MathValueRecord MathLeading { get; }
 
         public MathValueRecord AxisHeight { get; }
@@ -113,8 +115,6 @@ namespace NewFontParser.Tables.Math
         public MathValueRecord RadicalKernBeforeDegree { get; }
 
         public MathValueRecord RadicalKernAfterDegree { get; }
-
-        public short RadicalDegreeBottomRaisePercent { get; }
 
         public MathConstantsTable(BigEndianReader reader)
         {

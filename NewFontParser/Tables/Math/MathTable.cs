@@ -6,8 +6,6 @@ namespace NewFontParser.Tables.Math
     {
         public static string Tag => "MATH";
 
-        public MathHeader Header { get; }
-
         public MathConstantsTable Constants { get; }
 
         public MathGlyphInfoTable GlyphInfo { get; }
@@ -18,15 +16,15 @@ namespace NewFontParser.Tables.Math
         {
             var reader = new BigEndianReader(data);
 
-            Header = new MathHeader(reader);
+            var header = new MathHeader(reader);
 
-            reader.Seek(Header.MathConstantsOffset);
+            reader.Seek(header.MathConstantsOffset);
             Constants = new MathConstantsTable(reader);
 
-            reader.Seek(Header.MathGlyphInfoOffset);
+            reader.Seek(header.MathGlyphInfoOffset);
             GlyphInfo = new MathGlyphInfoTable(reader);
 
-            reader.Seek(Header.MathVariantsOffset);
+            reader.Seek(header.MathVariantsOffset);
             Variants = new MathVariantsTable(reader);
         }
     }
