@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Common.SequenceContext.Format1;
 
@@ -6,27 +8,26 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
 {
     public class ChainedClassSequenceRule
     {
-        public ushort[] BacktrackSequences { get; }
+        public List<ushort> BacktrackSequences { get; }
 
-        public ushort[] InputSequences { get; }
+        public List<ushort> InputSequences { get; }
 
-        public ushort[] LookaheadSequences { get; }
+        public List<ushort> LookaheadSequences { get; }
 
-        public SequenceLookup[] SequenceLookups { get; }
+        public List<SequenceLookup> SequenceLookups { get; } = new List<SequenceLookup>();
 
         public ChainedClassSequenceRule(BigEndianReader reader)
         {
             ushort backtrackGlyphCount = reader.ReadUShort();
-            BacktrackSequences = reader.ReadUShortArray(backtrackGlyphCount);
+            BacktrackSequences = reader.ReadUShortArray(backtrackGlyphCount).ToList();
             ushort inputGlyphCount = reader.ReadUShort();
-            InputSequences = reader.ReadUShortArray(Convert.ToUInt32(inputGlyphCount - 1));
+            InputSequences = reader.ReadUShortArray(Convert.ToUInt32(inputGlyphCount - 1)).ToList();
             ushort lookaheadGlyphCount = reader.ReadUShort();
-            LookaheadSequences = reader.ReadUShortArray(lookaheadGlyphCount);
+            LookaheadSequences = reader.ReadUShortArray(lookaheadGlyphCount).ToList();
             ushort seqLookupCount = reader.ReadUShort();
-            SequenceLookups = new SequenceLookup[seqLookupCount];
             for (var i = 0; i < seqLookupCount; i++)
             {
-                SequenceLookups[i] = new SequenceLookup(reader.ReadBytes(4));
+                SequenceLookups.Add(new SequenceLookup(reader.ReadBytes(4)));
             }
         }
     }

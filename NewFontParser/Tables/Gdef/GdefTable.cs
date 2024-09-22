@@ -1,6 +1,6 @@
 ﻿using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
-using NewFontParser.Tables.Common.GlyphClassDef;
+using NewFontParser.Tables.Common.ClassDefinition;
 
 namespace NewFontParser.Tables.Gdef
 {
@@ -32,11 +32,11 @@ namespace NewFontParser.Tables.Gdef
                 byte[] format = reader.PeekBytes(2);
                 if (format[1] == 1)
                 {
-                    GlyphClassDef = new ClassDefinition1(reader);
+                    GlyphClassDef = new ClassDefinitionFormat1(reader);
                 }
                 else
                 {
-                    GlyphClassDef = new ClassDefinition2(reader);
+                    GlyphClassDef = new ClassDefinitionFormat2(reader);
                 }
             }
 
@@ -58,11 +58,11 @@ namespace NewFontParser.Tables.Gdef
                 byte[] format = reader.PeekBytes(2);
                 if (format[1] == 1)
                 {
-                    MarkAttachClassDef = new ClassDefinition1(reader);
+                    MarkAttachClassDef = new ClassDefinitionFormat1(reader);
                 }
                 else
                 {
-                    MarkAttachClassDef = new ClassDefinition2(reader);
+                    MarkAttachClassDef = new ClassDefinitionFormat2(reader);
                 }
             }
 

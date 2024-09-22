@@ -1,24 +1,22 @@
-﻿using NewFontParser.Reader;
+﻿using System.Collections.Generic;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format2
 {
     public class ChainedClassSequenceRuleSet
     {
-        public ushort ChainedClassSequenceRuleCount { get; }
-
-        public ChainedClassSequenceRule[] ChainedClassSequenceRules { get; }
+        public List<ChainedClassSequenceRule> ChainedClassSequenceRules { get; } = new List<ChainedClassSequenceRule>();
 
         public ChainedClassSequenceRuleSet(BigEndianReader reader)
         {
             long position = reader.Position;
 
-            ChainedClassSequenceRuleCount = reader.ReadUShort();
-            ushort[] chainedClassSequenceRuleOffsets = reader.ReadUShortArray(ChainedClassSequenceRuleCount);
-            ChainedClassSequenceRules = new ChainedClassSequenceRule[ChainedClassSequenceRuleCount];
-            for (var i = 0; i < ChainedClassSequenceRuleCount; i++)
+            ushort chainedClassSequenceRuleCount = reader.ReadUShort();
+            ushort[] chainedClassSequenceRuleOffsets = reader.ReadUShortArray(chainedClassSequenceRuleCount);
+            for (var i = 0; i < chainedClassSequenceRuleCount; i++)
             {
                 reader.Seek(position + chainedClassSequenceRuleOffsets[i]);
-                ChainedClassSequenceRules[i] = new ChainedClassSequenceRule(reader);
+                ChainedClassSequenceRules.Add(new ChainedClassSequenceRule(reader));
             }
         }
     }

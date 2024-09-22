@@ -9,7 +9,7 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables
     {
         public ushort Format { get; }
 
-        public ICoverageFormat Coverage { get; }
+        public ICoverageFormat? Coverage { get; }
 
         public ValueFormat ValueFormat { get; }
 

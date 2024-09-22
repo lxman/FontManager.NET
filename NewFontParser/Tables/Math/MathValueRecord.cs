@@ -1,4 +1,6 @@
-﻿using NewFontParser.Reader;
+﻿using System;
+using System.Diagnostics;
+using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
 
 namespace NewFontParser.Tables.Math
@@ -17,9 +19,10 @@ namespace NewFontParser.Tables.Math
             {
                 return;
             }
-            // TODO: Come back and fix this
-            //reader.Seek(parentTableOrigin + deviceOffset);
-            //DeviceTable = new DeviceTable(reader);
+            long before = reader.Position;
+            reader.Seek(parentTableOrigin + deviceOffset);
+            DeviceTable = new DeviceTable(reader);
+            reader.Seek(before);
         }
     }
 }

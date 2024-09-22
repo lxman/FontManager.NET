@@ -2,7 +2,6 @@
 using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.CoverageFormat;
-using NewFontParser.Tables.Common.GlyphClassDef;
 
 namespace NewFontParser.Tables.Gpos.LookupSubtables.PairPos
 {
@@ -12,9 +11,9 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.PairPos
 
         public ICoverageFormat Coverage { get; }
 
-        public ClassDefinition1 ClassDef1 { get; }
+        public NewFontParser.Tables.Common.ClassDefinition.ClassDefinitionFormat1 ClassDef1 { get; }
 
-        public ClassDefinition2 ClassDef2 { get; }
+        public NewFontParser.Tables.Common.ClassDefinition.ClassDefinitionFormat2 ClassDef2 { get; }
 
         public ValueFormat ValueFormat1 { get; }
 

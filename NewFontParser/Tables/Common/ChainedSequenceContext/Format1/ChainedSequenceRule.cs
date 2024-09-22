@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Common.SequenceContext.Format1;
 
@@ -12,7 +13,7 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format1
 
         public ushort[] LookaheadSequence { get; }
 
-        public SequenceLookup[] SequenceLookups { get; }
+        public List<SequenceLookup> SequenceLookups { get; } = new List<SequenceLookup>();
 
         public ChainedSequenceRule(BigEndianReader reader)
         {
@@ -23,10 +24,9 @@ namespace NewFontParser.Tables.Common.ChainedSequenceContext.Format1
             ushort lookaheadGlyphCount = reader.ReadUShort();
             LookaheadSequence = reader.ReadUShortArray(lookaheadGlyphCount);
             ushort seqLookupCount = reader.ReadUShort();
-            SequenceLookups = new SequenceLookup[seqLookupCount];
             for (var i = 0; i < seqLookupCount; i++)
             {
-                SequenceLookups[i] = new SequenceLookup(reader.ReadBytes(4));
+                SequenceLookups.Add(new SequenceLookup(reader.ReadBytes(4)));
             }
         }
     }

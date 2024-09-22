@@ -9,10 +9,6 @@ namespace NewFontParser.Tables.Optional.Hdmx
 
         public ushort Version { get; private set; }
 
-        public short NumRecords { get; private set; }
-
-        public int RecordSize { get; private set; }
-
         public List<HdmxRecord> Records { get; } = new List<HdmxRecord>();
 
         private readonly BigEndianReader _reader;
@@ -26,10 +22,10 @@ namespace NewFontParser.Tables.Optional.Hdmx
         public void Process(ushort numGlyphs)
         {
             Version = _reader.ReadUShort();
-            NumRecords = _reader.ReadShort();
-            RecordSize = _reader.ReadInt32();
+            short numRecords = _reader.ReadShort();
+            int recordSize = _reader.ReadInt32();
 
-            for (var i = 0; i < NumRecords; i++)
+            for (var i = 0; i < numRecords; i++)
             {
                 Records.Add(new HdmxRecord(_reader, numGlyphs));
             }

@@ -1,19 +1,48 @@
-﻿using NewFontParser.Reader;
+﻿using System;
+using NewFontParser.Reader;
+using NewFontParser.Tables.Gpos.LookupSubtables.AnchorTable;
 
 namespace NewFontParser.Tables.Gpos.LookupSubtables.CursivePos
 {
     public class EntryExitRecord
     {
-        public ushort EntryAnchorOffset { get; }
+        public IAnchorTable? EntryAnchorTable { get; }
+        
+        public IAnchorTable? ExitAnchorTable { get; }
 
-        public ushort ExitAnchorOffset { get; }
-
-        public EntryExitRecord(byte[] data)
+        public EntryExitRecord(BigEndianReader reader, long startOfTable)
         {
-            var reader = new BigEndianReader(data);
+            ushort entryAnchorOffset = reader.ReadUShort();
+            ushort exitAnchorOffset = reader.ReadUShort();
+            long before = reader.Position;
+            if (entryAnchorOffset != 0)
+            {
+                reader.Seek(startOfTable + entryAnchorOffset);
+                ushort entryFormat = reader.PeekBytes(2)[1];
+                EntryAnchorTable = entryFormat switch
+                {
+                    1 => new AnchorTableFormat1(reader),
+                    2 => new AnchorTableFormat2(reader),
+                    3 => new AnchorTableFormat3(reader),
+                    _ => EntryAnchorTable
+                };
+            }
 
-            EntryAnchorOffset = reader.ReadUShort();
-            ExitAnchorOffset = reader.ReadUShort();
+            if (exitAnchorOffset == 0)
+            {
+                reader.Seek(before);
+                return;
+            }
+            reader.Seek(startOfTable + exitAnchorOffset);
+            ushort exitFormat = reader.PeekBytes(2)[1];
+            ExitAnchorTable = exitFormat switch
+            {
+                1 => new AnchorTableFormat1(reader),
+                2 => new AnchorTableFormat2(reader),
+                3 => new AnchorTableFormat3(reader),
+                _ => ExitAnchorTable
+            };
+            reader.Seek(before);
         }
     }
 }

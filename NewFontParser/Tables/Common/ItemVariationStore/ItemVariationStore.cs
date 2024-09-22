@@ -11,7 +11,7 @@ namespace NewFontParser.Tables.Common.ItemVariationStore
 
         public List<ItemVariationData> ItemVariationData { get; } = new List<ItemVariationData>();
 
-        public ItemVariationStore(BigEndianReader reader)
+        public ItemVariationStore(BigEndianReader reader, bool useLongWords)
         {
             long position = reader.Position;
 
@@ -26,7 +26,7 @@ namespace NewFontParser.Tables.Common.ItemVariationStore
             for (var i = 0; i < itemVariationDataCount; i++)
             {
                 reader.Seek(position + itemVariationDataOffsets[i]);
-                ItemVariationData.Add(new ItemVariationData(reader));
+                ItemVariationData.Add(new ItemVariationData(reader, useLongWords));
             }
         }
     }

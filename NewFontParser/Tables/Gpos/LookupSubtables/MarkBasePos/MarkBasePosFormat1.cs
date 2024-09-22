@@ -26,9 +26,9 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkBasePos
             ushort markClassCount = reader.ReadUShort();
             ushort markArrayOffset = reader.ReadUShort();
             ushort baseArrayOffset = reader.ReadUShort();
-            reader.Seek(markArrayOffset + startOfTable);
+            reader.Seek(startOfTable + markArrayOffset);
             MarkArray = new MarkArray(reader);
-            reader.Seek(baseArrayOffset + startOfTable);
+            reader.Seek(startOfTable + baseArrayOffset);
             BaseArray = new BaseArrayTable(reader, markClassCount);
             reader.Seek(startOfTable + markCoverageOffset);
             MarkCoverage = CoverageTable.Retrieve(reader);

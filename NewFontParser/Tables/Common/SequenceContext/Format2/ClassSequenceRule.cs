@@ -5,31 +5,27 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format2
 {
     public class ClassSequenceRule
     {
-        public ushort GlyphCount { get; }
-
-        public ushort SequenceLookupCount { get; }
-
         public ushort[]? InputSequences { get; }
 
         public SequenceLookup[]? SequenceLookups { get; }
 
         public ClassSequenceRule(BigEndianReader reader)
         {
-            GlyphCount = reader.ReadUShort();
-            SequenceLookupCount = reader.ReadUShort();
-            if (GlyphCount == 0 && SequenceLookupCount == 0)
+            ushort glyphCount = reader.ReadUShort();
+            ushort sequenceLookupCount = reader.ReadUShort();
+            if (glyphCount == 0 && sequenceLookupCount == 0)
             {
                 return;
             }
 
-            InputSequences = new ushort[GlyphCount - 1];
-            for (var i = 0; i < GlyphCount - 1; i++)
+            InputSequences = new ushort[glyphCount - 1];
+            for (var i = 0; i < glyphCount - 1; i++)
             {
                 InputSequences[i] = reader.ReadUShort();
             }
 
-            SequenceLookups = new SequenceLookup[SequenceLookupCount];
-            for (var i = 0; i < SequenceLookupCount; i++)
+            SequenceLookups = new SequenceLookup[sequenceLookupCount];
+            for (var i = 0; i < sequenceLookupCount; i++)
             {
                 SequenceLookups[i] = new SequenceLookup(reader.ReadBytes(4));
             }

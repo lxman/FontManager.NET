@@ -19,12 +19,14 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.CursivePos
             Format = reader.ReadUShort();
             ushort coverageOffset = reader.ReadUShort();
             ushort entryExitCount = reader.ReadUShort();
+            long before = reader.Position;
             for (var i = 0; i < entryExitCount; i++)
             {
-                EntryExitRecords.Add(new EntryExitRecord(reader.ReadBytes(4)));
+                EntryExitRecords.Add(new EntryExitRecord(reader, startOfTable));
             }
             reader.Seek(startOfTable + coverageOffset);
             Coverage = CoverageTable.Retrieve(reader);
+            reader.Seek(before);
         }
     }
 }

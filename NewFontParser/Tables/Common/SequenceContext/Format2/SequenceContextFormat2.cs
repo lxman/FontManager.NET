@@ -8,10 +8,8 @@ using NewFontParser.Tables.Common.CoverageFormat;
 
 namespace NewFontParser.Tables.Common.SequenceContext.Format2
 {
-    public class SequenceContextFormat2 : ILookupSubTable
+    public class SequenceContextFormat2 : ILookupSubTable, ISequenceContext
     {
-        public ushort Format { get; }
-
         public List<ClassSequenceRuleSet> ClassSequenceRuleSets { get; } = new List<ClassSequenceRuleSet>();
 
         public ICoverageFormat Coverage { get; }
@@ -21,7 +19,7 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format2
         public SequenceContextFormat2(BigEndianReader reader)
         {
             long startOfTable = reader.Position;
-            Format = reader.ReadUShort();
+            _ = reader.ReadUShort();
             ushort coverageOffset = reader.ReadUShort();
             ushort classDefOffset = reader.ReadUShort();
             ushort classSequenceRuleSetCount = reader.ReadUShort();

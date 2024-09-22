@@ -14,12 +14,7 @@ namespace NewFontParser.Tables.Optional.Hdmx
         {
             PixelSize = reader.ReadByte();
             MaxWidth = reader.ReadByte();
-
-            Widths = new byte[numGlyphs];
-            for (var i = 0; i < numGlyphs; i++)
-            {
-                Widths[i] = reader.ReadByte();
-            }
+            Widths = reader.ReadBytes(numGlyphs);
         }
     }
 }

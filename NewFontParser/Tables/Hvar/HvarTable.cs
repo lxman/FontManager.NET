@@ -30,7 +30,7 @@ namespace NewFontParser.Tables.Hvar
             uint lsbMappingOffset = reader.ReadUInt32();
             uint rsbMappingOffset = reader.ReadUInt32();
             reader.Seek(itemVariationStoreOffset);
-            ItemVariationStore = new ItemVariationStore(reader);
+            ItemVariationStore = new ItemVariationStore(reader, false);
             reader.Seek(advancedWidthMappingOffset);
             AdvancedWidthMapping = new DeltaSetIndexMap(reader);
             reader.Seek(lsbMappingOffset);

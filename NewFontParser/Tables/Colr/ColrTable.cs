@@ -86,7 +86,7 @@ namespace NewFontParser.Tables.Colr
 
             if (!itemVariationStoreOffset.HasValue || itemVariationStoreOffset == 0) return;
             reader.Seek(itemVariationStoreOffset.Value);
-            ItemVariationStore = new ItemVariationStore(reader);
+            ItemVariationStore = new ItemVariationStore(reader, true);
         }
     }
 }

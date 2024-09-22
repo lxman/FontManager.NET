@@ -4,8 +4,6 @@ namespace NewFontParser.Tables.Common.TupleVariationStore
 {
     public class TupleVariationHeader
     {
-        public ushort VariationDataSize { get; }
-
         public TupleIndexFormat TupleIndex { get; }
 
         public Tuple? PeakTuple { get; }
@@ -14,11 +12,11 @@ namespace NewFontParser.Tables.Common.TupleVariationStore
 
         public Tuple? IntermediateEndTuple { get; }
 
-        public byte[] SerializedDate { get; }
+        public byte[] SerializedData { get; }
 
         public TupleVariationHeader(BigEndianReader reader, ushort axisCount, long dataOffset)
         {
-            VariationDataSize = reader.ReadUShort();
+            ushort variationDataSize = reader.ReadUShort();
             ushort tupleIndex = reader.ReadUShort();
             int tupleIndexMask = tupleIndex & 0x0FFF;
             TupleIndex = (TupleIndexFormat)(tupleIndex - tupleIndexMask);
@@ -34,7 +32,7 @@ namespace NewFontParser.Tables.Common.TupleVariationStore
                     break;
             }
             //reader.Seek(dataOffset);
-            //SerializedDate = reader.ReadBytes(VariationDataSize);
+            //SerializedDate = reader.ReadBytes(variationDataSize);
         }
     }
 }

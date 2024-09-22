@@ -1,4 +1,5 @@
-﻿using NewFontParser.Reader;
+﻿using System;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Common
 {
@@ -16,11 +17,7 @@ namespace NewFontParser.Tables.Common
             DeltaFormat = (DeltaFormat)reader.ReadUShort();
 
             int deltaCount = EndSize - StartSize;
-            DeltaValues = new ushort[deltaCount];
-            for (var i = 0; i < deltaCount; i++)
-            {
-                DeltaValues[i] = reader.ReadUShort();
-            }
+            DeltaValues = reader.ReadUShortArray(Convert.ToUInt32(deltaCount));
         }
     }
 }

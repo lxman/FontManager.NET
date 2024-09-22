@@ -1,19 +1,33 @@
-﻿using NewFontParser.Reader;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NewFontParser.Reader;
+using NewFontParser.Tables.Gpos.LookupSubtables.AnchorTable;
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
 
 namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos
 {
     public class Mark2Record
     {
-        public ushort[] Mark2AnchorOffsets { get; }
-
-        public Mark2Record(byte[] data, ushort markClassCount)
+        public List<IAnchorTable> AnchorTables { get; } = new List<IAnchorTable>();
+        
+        public Mark2Record(BigEndianReader reader, ushort markClassCount, long startOfTable)
         {
-            var reader = new BigEndianReader(data);
-            Mark2AnchorOffsets = new ushort[markClassCount];
-            for (var i = 0; i < markClassCount; i++)
+            List<ushort> mark2AnchorOffsets = reader.ReadUShortArray(markClassCount).ToList();
+            long before = reader.Position;
+            mark2AnchorOffsets.ForEach(o =>
             {
-                Mark2AnchorOffsets[i] = reader.ReadUShort();
-            }
+                reader.Seek(startOfTable + o);
+                byte format = reader.PeekBytes(2)[1];
+                IAnchorTable anchorTable = format switch
+                {
+                    1 => new AnchorTableFormat1(reader),
+                    2 => new AnchorTableFormat2(reader),
+                    3 => new AnchorTableFormat3(reader),
+                    _ => null
+                };
+                if (!(anchorTable is null)) AnchorTables.Add(anchorTable);
+            });
+            reader.Seek(before);
         }
     }
 }
