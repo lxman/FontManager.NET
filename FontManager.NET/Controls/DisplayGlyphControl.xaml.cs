@@ -54,7 +54,7 @@ namespace FontManager.NET.Controls
                 case SimpleGlyph simpleGlyph:
                     List<SimpleGlyphCoordinate> coordinates = simpleGlyph.Coordinates;
                     List<PointF> points = coordinates.Select(c => c.Point with { Y = bounds.Height - c.Point.Y }).ToList();
-                    ushort[] endPoints = simpleGlyph.EndPtsOfContours;
+                    List<ushort> endPoints = simpleGlyph.EndPtsOfContours;
                     _path.Reset();
                     _path.MoveTo(points[0].ToSKPoint());
                     for (var i = 1; i < points.Count; i++)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.TtTables.Glyf
@@ -9,15 +10,15 @@ namespace NewFontParser.Tables.TtTables.Glyf
     {
         public List<SimpleGlyphCoordinate> Coordinates { get; } = new List<SimpleGlyphCoordinate>();
 
-        public ushort[] EndPtsOfContours { get; }
+        public List<ushort> EndPtsOfContours { get; }
 
-        public byte[] Instructions { get; }
+        public List<byte> Instructions { get; }
 
         public SimpleGlyph(BigEndianReader reader, GlyphHeader glyphHeader)
         {
-            EndPtsOfContours = reader.ReadUShortArray(Convert.ToUInt32(glyphHeader.NumberOfContours));
+            EndPtsOfContours = reader.ReadUShortArray(Convert.ToUInt32(glyphHeader.NumberOfContours)).ToList();
             ushort instructionLength = reader.ReadUShort();
-            Instructions = reader.ReadBytes(instructionLength);
+            Instructions = reader.ReadBytes(instructionLength).ToList();
 
             int numberOfPoints = EndPtsOfContours[glyphHeader.NumberOfContours - 1] + 1;
             var flags = new SimpleGlyphFlags[numberOfPoints];

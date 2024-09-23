@@ -22,7 +22,7 @@ namespace NewFontParser.Tables.TtTables.Glyf
 
         public override string ToString()
         {
-            return $"Point: {Point}, OnCurve: {OnCurve}";
+            return $"Point: {Point.X}, {Point.Y} OnCurve: {OnCurve}";
         }
     }
 }

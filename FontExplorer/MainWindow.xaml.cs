@@ -58,6 +58,7 @@ using NewFontParser.Tables.Name;
 using NewFontParser.Tables.Optional;
 using NewFontParser.Tables.Optional.Dsig;
 using NewFontParser.Tables.Optional.Hdmx;
+using NewFontParser.Tables.TtTables.Glyf;
 
 namespace FontExplorer;
 
@@ -366,6 +367,15 @@ public partial class MainWindow : Window
                                 subtableItem.Items.Add(format14Item);
                                 break;
                         }
+                    });
+                    break;
+                
+                case GlyphTable glyphTable:
+                    var glyphRoot = new TreeViewItem { Header = $"glyf {glyphTable.Glyphs.Count}" };
+                    ResultView.Items.Add(glyphRoot);
+                    glyphTable.Glyphs.ForEach(g =>
+                    {
+                        glyphRoot.Items.Add(Utilities.BuildGlyphData(g));
                     });
                     break;
 

@@ -7,6 +7,7 @@ using NewFontParser.Tables.Gpos.LookupSubtables.AnchorTable;
 using NewFontParser.Tables.Gpos.LookupSubtables.Common;
 using NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos;
 using NewFontParser.Tables.Math;
+using NewFontParser.Tables.TtTables.Glyf;
 
 namespace FontExplorer;
 
@@ -289,6 +290,38 @@ public static class Utilities
         {
             kernValues.Items.Add(BuildMathValueRecord(kv));
         });
+        return toReturn;
+    }
+
+    public static TreeViewItem BuildGlyphData(GlyphData data)
+    {
+        var toReturn = new TreeViewItem { Header = "Glyph Data" };
+        TreeViewItem header = toReturn.FormChild("Header");
+        header.FormChild(nameof(data.Header.NumberOfContours), data.Header.NumberOfContours);
+        header.FormChild(
+            $"XMin: {data.Header.XMin} YMin: {data.Header.YMin} XMax: {data.Header.XMax} YMax: {data.Header.YMax}");
+        toReturn.FormChild(nameof(data.Index), data.Index);
+        switch (data.GlyphSpec)
+        {
+            case SimpleGlyph simpleGlyph:
+                TreeViewItem sgHeader = toReturn.FormChild("Simple Glyph");
+                sgHeader.FormChild(nameof(simpleGlyph.EndPtsOfContours), string.Join(',', simpleGlyph.EndPtsOfContours));
+                sgHeader.FormChild(nameof(simpleGlyph.Instructions), string.Join(',', simpleGlyph.Instructions));
+                TreeViewItem cHeader = sgHeader.FormChild("Coordinates");
+                simpleGlyph.Coordinates.ForEach(c =>
+                {
+                    cHeader.FormChild(c.ToString());
+                });
+                break;
+            case CompositeGlyph compositeGlyph:
+                TreeViewItem cgHeader = toReturn.FormChild("Composite Glyph");
+                cgHeader.FormChild(nameof(compositeGlyph.GlyphIndex), compositeGlyph.GlyphIndex);
+                cgHeader.FormChild(nameof(compositeGlyph.Flags), compositeGlyph.Flags);
+                cgHeader.FormChild(nameof(compositeGlyph.Argument1), compositeGlyph.Argument1);
+                cgHeader.FormChild(nameof(compositeGlyph.Argument2), compositeGlyph.Argument2);
+                break;
+        }
+
         return toReturn;
     }
 }

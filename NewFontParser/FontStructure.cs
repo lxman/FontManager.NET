@@ -251,7 +251,7 @@ namespace NewFontParser
             {
                 tag = typeof(T).GetProperty("Tag", BindingFlags.Static | BindingFlags.Public)?.GetValue(null).ToString() ?? string.Empty;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Log.Debug($"Tag name not found for table {typeof(T).FullName}");
                 return false;
