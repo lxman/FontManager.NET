@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using NewFontParser.Models;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Name;
@@ -11,43 +12,47 @@ namespace NewFontParser
 {
     public class FontReader
     {
-        public List<(string, List<IFontTable>)> GetTables(string file)
+        public async Task<List<FontStructure>> ReadFileAsync(string file)
         {
-            List<FontStructure> fontStructure = ReadFile(file);
-            var toReturn = new List<(string, List<IFontTable>)>();
-            fontStructure.ForEach(fs =>
+            var result = new List<FontStructure>();
+        
+            if (!File.Exists(file))
             {
-                var nameTable = (NameTable?)fs.Tables.FirstOrDefault(t => t is NameTable);
-                NameRecord? nameRecord =
-                    nameTable?.NameRecords.FirstOrDefault(r => r.LanguageId.Contains("English") && r.NameId == "Full Name");
-                if (nameRecord is null)
-                {
-                    return;
-                }
+                return result;
+            }
 
-                string name = nameRecord.Name ?? string.Empty;
-                var toAdd = new List<IFontTable>();
-                fs.Tables.ForEach(t =>
-                {
-                    toAdd.Add(t);
-                });
-                toReturn.Add((name, toAdd));
-            });
+            await using FileStream fs = File.OpenRead(file);
+            var reader = new FileByteReader(fs);
 
-            return toReturn;
+            if (file.EndsWith(".ttc", StringComparison.OrdinalIgnoreCase))
+            {
+                return await Task.Run(() => ParseTtc(reader, file));
+            }
+            else if (file.EndsWith(".woff", StringComparison.OrdinalIgnoreCase))
+            {
+                FontStructure font = ParseWoff(reader, file);
+                result.Add(font);
+            }
+            else if (file.EndsWith(".woff2", StringComparison.OrdinalIgnoreCase))
+            {
+                FontStructure font = ParseWoff2(reader, file);
+                result.Add(font);
+            }
+            else
+            {
+                FontStructure font = ParseSingle(reader, new FontStructure(file));
+                result.Add(font);
+            }
+
+            return result;
         }
 
-        public List<(string, List<string>)> GetTableNames(string file)
+        public async Task<List<(string, List<IFontTable>)>?> GetTablesAsync(string file)
         {
-            var toReturn = new List<(string, List<string>)>();
-            List<(string, List<IFontTable>)> tables = GetTables(file);
-            tables.ForEach(t =>
-            {
-                toReturn.Add((t.Item1, t.Item2.Select(i => i.GetType().GetProperty("Tag").GetValue(i).ToString()).ToList()));
-            });
-            return toReturn;
+            List<FontStructure> fontStructures = await ReadFileAsync(file);
+            return CompileTableDictionary(fontStructures);
         }
-
+        
         public List<FontStructure> ReadFile(string file)
         {
             var reader = new FileByteReader(file);
@@ -110,6 +115,48 @@ namespace NewFontParser
             }
 
             return new List<FontStructure>();
+        }
+
+        public List<(string, List<IFontTable>)>? GetTables(string file)
+        {
+            List<FontStructure> fontStructure = ReadFile(file);
+            return CompileTableDictionary(fontStructure);
+        }
+
+        public List<(string, List<string>)> GetTableNames(string file)
+        {
+            var toReturn = new List<(string, List<string>)>();
+            List<(string, List<IFontTable>)> tables = GetTables(file);
+            tables.ForEach(t =>
+            {
+                toReturn.Add((t.Item1, t.Item2.Select(i => i.GetType().GetProperty("Tag").GetValue(i).ToString()).ToList()));
+            });
+            return toReturn;
+        }
+
+        private static List<(string, List<IFontTable>)>? CompileTableDictionary(List<FontStructure> fontStructures)
+        {
+            var toReturn = new List<(string, List<IFontTable>)>();
+            fontStructures.ForEach(fs =>
+            {
+                var nameTable = (NameTable?)fs.Tables.FirstOrDefault(t => t is NameTable);
+                NameRecord? nameRecord =
+                    nameTable?.NameRecords.FirstOrDefault(r => r.LanguageId.Contains("English") && r.NameId == "Full Name");
+                if (nameRecord is null)
+                {
+                    return;
+                }
+
+                string name = nameRecord.Name ?? string.Empty;
+                var toAdd = new List<IFontTable>();
+                fs.Tables.ForEach(t =>
+                {
+                    toAdd.Add(t);
+                });
+                toReturn.Add((name, toAdd));
+            });
+
+            return toReturn;
         }
 
         private static List<FontStructure> ParseTtc(FileByteReader reader, string file)

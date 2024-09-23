@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
@@ -65,24 +66,24 @@ namespace FontExplorer;
 /// </summary>
 public partial class MainWindow : Window
 {
+    private readonly BackgroundWorker _worker = new();
+    private List<(string, List<IFontTable>)>? _tableDictionary; 
+    
     public MainWindow()
     {
         InitializeComponent();
+        _worker.DoWork += (sender, args) =>
+        {
+            if (args.Argument is not ReadTablesInfo info) return;
+            _tableDictionary = info.Reader.GetTables(info.FileName);
+        };
+        _worker.RunWorkerCompleted += WorkerCompleted;
     }
 
-    private void OpenFontClick(object sender, RoutedEventArgs e)
+    private void WorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
     {
-        var dialog = new OpenFileDialog
-        {
-            Filter = "TrueType Font (*.ttf)|*.ttf|OpenType Font (*.otf)|*.otf|TrueType Collection (*.ttc)|*.ttc"
-        };
-        bool ofdResult = dialog.ShowDialog() ?? false;
-        if (!ofdResult) return;
-        MWindow.Title = dialog.FileName.Split('\\').Last();
-        ResultView.Items.Clear();
-        var reader = new FontReader();
-        List<(string, List<IFontTable>)> result2 = reader.GetTables(dialog.FileName);
-        (string, List<IFontTable>) firstItem = result2.FirstOrDefault();
+        if (_tableDictionary is null) return;
+        (string, List<IFontTable>) firstItem = _tableDictionary.FirstOrDefault();
         List<IFontTable>? tables = firstItem.Item2;
         tables.ForEach(t =>
         {
@@ -854,6 +855,9 @@ public partial class MainWindow : Window
                 case FftmTable fftmTable:
                     var fftmRoot = new TreeViewItem { Header = "FFTM" };
                     ResultView.Items.Add(fftmRoot);
+                    fftmRoot.FormChild(nameof(fftmTable.FFTimestamp), fftmTable.FFTimestamp);
+                    fftmRoot.FormChild(nameof(fftmTable.CreatedFFTimestamp), fftmTable.CreatedFFTimestamp);
+                    fftmRoot.FormChild(nameof(fftmTable.ModifiedFFTimestamp), fftmTable.ModifiedFFTimestamp);
                     break;
 
                 case FvarTable fvarTable:
@@ -1078,11 +1082,31 @@ public partial class MainWindow : Window
                 case HmtxTable hmtxTable:
                     var hmtxRoot = new TreeViewItem { Header = "hmtx" };
                     ResultView.Items.Add(hmtxRoot);
+                    hmtxRoot.FormChild(nameof(hmtxTable.LeftSideBearings), string.Join(", ", hmtxTable.LeftSideBearings));
+                    TreeViewItem lhrHeader = hmtxRoot.FormChild("Long Horizontal Metrics");
+                    hmtxTable.LongHMetricRecords.ForEach(lhr =>
+                    {
+                        lhrHeader.FormChild($"Left side bearing: {lhr.LeftSideBearing} Advance width: {lhr.AdvanceWidth}");
+                    });
                     break;
 
                 case HheaTable hheaTable:
                     var hheaRoot = new TreeViewItem { Header = "hhea" };
                     ResultView.Items.Add(hheaRoot);
+                    hheaRoot.FormChild(nameof(hheaTable.Version), hheaTable.Version);
+                    hheaRoot.FormChild(nameof(hheaTable.Ascender), hheaTable.Ascender);
+                    hheaRoot.FormChild(nameof(hheaTable.Descender), hheaTable.Descender);
+                    hheaRoot.FormChild(nameof(hheaTable.AdvanceWidthMax), hheaTable.AdvanceWidthMax);
+                    hheaRoot.FormChild(nameof(hheaTable.CaretOffset), hheaTable.CaretOffset);
+                    hheaRoot.FormChild(nameof(hheaTable.LineGap), hheaTable.LineGap);
+                    hheaRoot.FormChild(nameof(hheaTable.CaretSlopeRise), hheaTable.CaretSlopeRise);
+                    hheaRoot.FormChild(nameof(hheaTable.CaretSlopeRun), hheaTable.CaretSlopeRun);
+                    hheaRoot.FormChild(nameof(hheaTable.CaretOffset), hheaTable.CaretOffset);
+                    hheaRoot.FormChild(nameof(hheaTable.MetricDataFormat), hheaTable.MetricDataFormat);
+                    hheaRoot.FormChild(nameof(hheaTable.XMaxExtent), hheaTable.XMaxExtent);
+                    hheaRoot.FormChild(nameof(hheaTable.MinLeftSideBearing), hheaTable.MinLeftSideBearing);
+                    hheaRoot.FormChild(nameof(hheaTable.MinRightSideBearing), hheaTable.MinRightSideBearing);
+                    hheaRoot.FormChild(nameof(hheaTable.NumberOfHMetrics), hheaTable.NumberOfHMetrics);
                     break;
 
                 case HvarTable hvarTable:
@@ -1465,5 +1489,21 @@ public partial class MainWindow : Window
                     break;
             }
         });
+        ProcessingMarker.Text = string.Empty;
+    }
+
+    private void OpenFontClick(object sender, RoutedEventArgs e)
+    {
+        var dialog = new OpenFileDialog
+        {
+            Filter = "TrueType Font (*.ttf)|*.ttf|OpenType Font (*.otf)|*.otf|TrueType Collection (*.ttc)|*.ttc"
+        };
+        bool ofdResult = dialog.ShowDialog() ?? false;
+        if (!ofdResult) return;
+        MWindow.Title = dialog.FileName.Split('\\').Last();
+        ProcessingMarker.Text = "Processing";
+        ResultView.Items.Clear();
+        var reader = new FontReader();
+        _worker.RunWorkerAsync(new ReadTablesInfo { Reader = reader, FileName = dialog.FileName });
     }
 }

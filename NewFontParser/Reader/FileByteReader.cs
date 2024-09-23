@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers.Binary;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NewFontParser.Reader
 {
@@ -11,6 +12,12 @@ namespace NewFontParser.Reader
         public uint Position { get; private set; }
 
         private readonly byte[] _data;
+
+        public FileByteReader(FileStream fs)
+        {
+            _data = new byte[fs.Length];
+            Task.Run(() => fs.ReadAsync(_data, 0, _data.Length)).ConfigureAwait(false);
+        }
 
         public FileByteReader(string file)
         {

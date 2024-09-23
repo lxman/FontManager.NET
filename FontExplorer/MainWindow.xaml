@@ -11,7 +11,12 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="9*" />
         </Grid.RowDefinitions>
-        <Button Grid.Row="0" Height="25" Click="OpenFontClick">Open Font</Button>
-        <TreeView Grid.Row="1" Name="ResultView" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Button Grid.Column="0" Grid.Row="0" Height="25" Click="OpenFontClick">Open Font</Button>
+        <TextBlock Grid.Row="0" Grid.Column="1" Name="ProcessingMarker"></TextBlock>
+        <TreeView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="ResultView" />
     </Grid>
 </Window>

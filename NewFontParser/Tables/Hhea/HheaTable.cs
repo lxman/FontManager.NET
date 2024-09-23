@@ -6,49 +6,40 @@ namespace NewFontParser.Tables.Hhea
     {
         public static string Tag => "hhea";
 
-        public ushort MajorVersion { get; set; }
+        public string Version => $"{_majorVersion}.{_minorVersion}";
 
-        public ushort MinorVersion { get; set; }
+        public short Ascender { get; }
 
-        public string Version => $"{MajorVersion}.{MinorVersion}";
+        public short Descender { get; }
 
-        public short Ascender { get; set; }
+        public short LineGap { get; }
 
-        public short Descender { get; set; }
+        public ushort AdvanceWidthMax { get; }
 
-        public short LineGap { get; set; }
+        public short MinLeftSideBearing { get; }
 
-        public ushort AdvanceWidthMax { get; set; }
+        public short MinRightSideBearing { get; }
 
-        public short MinLeftSideBearing { get; set; }
+        public short XMaxExtent { get; }
 
-        public short MinRightSideBearing { get; set; }
+        public short CaretSlopeRise { get; }
 
-        public short XMaxExtent { get; set; }
+        public short CaretSlopeRun { get; }
 
-        public short CaretSlopeRise { get; set; }
+        public short CaretOffset { get; }
 
-        public short CaretSlopeRun { get; set; }
+        public short MetricDataFormat { get; }
 
-        public short CaretOffset { get; set; }
+        public ushort NumberOfHMetrics { get; }
 
-        public short Reserved1 { get; set; }
-
-        public short Reserved2 { get; set; }
-
-        public short Reserved3 { get; set; }
-
-        public short Reserved4 { get; set; }
-
-        public short MetricDataFormat { get; set; }
-
-        public ushort NumberOfHMetrics { get; set; }
+        private readonly ushort _majorVersion;
+        private readonly ushort _minorVersion;
 
         public HheaTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            MajorVersion = reader.ReadUShort();
-            MinorVersion = reader.ReadUShort();
+            _majorVersion = reader.ReadUShort();
+            _minorVersion = reader.ReadUShort();
             Ascender = reader.ReadShort();
             Descender = reader.ReadShort();
             LineGap = reader.ReadShort();
@@ -59,10 +50,10 @@ namespace NewFontParser.Tables.Hhea
             CaretSlopeRise = reader.ReadShort();
             CaretSlopeRun = reader.ReadShort();
             CaretOffset = reader.ReadShort();
-            Reserved1 = reader.ReadShort();
-            Reserved2 = reader.ReadShort();
-            Reserved3 = reader.ReadShort();
-            Reserved4 = reader.ReadShort();
+            _ = reader.ReadShort();
+            _ = reader.ReadShort();
+            _ = reader.ReadShort();
+            _ = reader.ReadShort();
             MetricDataFormat = reader.ReadShort();
             NumberOfHMetrics = reader.ReadUShort();
         }

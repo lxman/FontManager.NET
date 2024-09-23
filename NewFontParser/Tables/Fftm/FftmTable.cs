@@ -1,4 +1,5 @@
-﻿using NewFontParser.Reader;
+﻿using System;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Fftm
 {
@@ -8,20 +9,21 @@ namespace NewFontParser.Tables.Fftm
 
         public uint Version { get; }
 
-        public long FFTimestamp { get; }
+        public DateTime FFTimestamp { get; }
 
-        public long CreatedFFTimestamp { get; }
+        public DateTime CreatedFFTimestamp { get; }
 
-        public long ModifiedFFTimestamp { get; }
+        public DateTime ModifiedFFTimestamp { get; }
 
         public FftmTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
 
+            var baseTime = new DateTime(1904, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             Version = reader.ReadUInt32();
-            FFTimestamp = reader.ReadLong();
-            CreatedFFTimestamp = reader.ReadLong();
-            ModifiedFFTimestamp = reader.ReadLong();
+            FFTimestamp = baseTime.AddSeconds(reader.ReadLong());
+            CreatedFFTimestamp = baseTime.AddSeconds(reader.ReadLong());
+            ModifiedFFTimestamp = baseTime.AddSeconds(reader.ReadLong());
         }
     }
 }
