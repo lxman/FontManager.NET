@@ -8,15 +8,13 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.SubstitutionExtension
 {
     public class SubstitutionExtensionFormat1 : ILookupSubTable
     {
-        public ushort Format { get; }
-
         public ILookupSubTable SubstitutionTable { get; }
 
         public SubstitutionExtensionFormat1(BigEndianReader reader)
         {
             // TODO: Needs work
             long startOfTable = reader.Position;
-            Format = reader.ReadUShort();
+            _ = reader.ReadUShort();
             ushort extensionLookupType = reader.ReadUShort();
             uint extensionOffset = reader.ReadUInt32();
             reader.Seek(startOfTable + extensionOffset);

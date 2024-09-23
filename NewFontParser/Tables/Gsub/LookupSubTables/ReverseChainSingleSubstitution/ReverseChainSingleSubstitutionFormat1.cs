@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.CoverageFormat;
@@ -7,27 +8,25 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.ReverseChainSingleSubstituti
 {
     public class ReverseChainSingleSubstitutionFormat1 : ILookupSubTable
     {
-        public ushort Format { get; }
-
         public ICoverageFormat Coverage { get; }
 
         public List<ICoverageFormat> BacktrackCoverages { get; } = new List<ICoverageFormat>();
 
         public List<ICoverageFormat> LookaheadCoverages { get; } = new List<ICoverageFormat>();
 
-        public ushort[] SubstituteGlyphIds { get; }
+        public List<ushort> SubstituteGlyphIds { get; }
 
         public ReverseChainSingleSubstitutionFormat1(BigEndianReader reader)
         {
             long startOfTable = reader.Position;
-            Format = reader.ReadUShort();
+            _ = reader.ReadUShort();
             ushort coverageOffset = reader.ReadUShort();
             ushort backtrackGlyphCount = reader.ReadUShort();
             ushort[] backtrackOffsets = reader.ReadUShortArray(backtrackGlyphCount);
             ushort lookaheadGlyphCount = reader.ReadUShort();
             ushort[] lookaheadOffsets = reader.ReadUShortArray(lookaheadGlyphCount);
             ushort substCount = reader.ReadUShort();
-            SubstituteGlyphIds = reader.ReadUShortArray(substCount);
+            SubstituteGlyphIds = reader.ReadUShortArray(substCount).ToList();
             for (var i = 0; i < backtrackGlyphCount; i++)
             {
                 reader.Seek(startOfTable + backtrackOffsets[i]);

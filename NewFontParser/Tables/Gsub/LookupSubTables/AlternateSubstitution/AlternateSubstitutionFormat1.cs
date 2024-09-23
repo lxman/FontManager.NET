@@ -7,8 +7,6 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.AlternateSubstitution
 {
     public class AlternateSubstitutionFormat1 : ILookupSubTable
     {
-        public ushort Format { get; }
-
         public ICoverageFormat Coverage { get; }
 
         public List<AlternateSet> AlternateSets { get; } = new List<AlternateSet>();
@@ -16,7 +14,7 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.AlternateSubstitution
         public AlternateSubstitutionFormat1(BigEndianReader reader)
         {
             long startOfTable = reader.Position;
-            Format = reader.ReadUShort();
+            _ = reader.ReadUShort();
             ushort coverageOffset = reader.ReadUShort();
             ushort alternateSetCount = reader.ReadUShort();
             ushort[] alternateSetOffsets = reader.ReadUShortArray(alternateSetCount);

@@ -7,8 +7,6 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.MultipleSubstitution
 {
     public class MultipleSubstitutionFormat1 : ILookupSubTable
     {
-        public ushort Format { get; }
-
         public ICoverageFormat Coverage { get; }
 
         public List<SequenceTable> Sequences { get; } = new List<SequenceTable>();
@@ -16,7 +14,7 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.MultipleSubstitution
         public MultipleSubstitutionFormat1(BigEndianReader reader)
         {
             long startOfTable = reader.Position;
-            Format = reader.ReadUShort();
+            _ = reader.ReadUShort();
             ushort coverageOffset = reader.ReadUShort();
             ushort sequenceCount = reader.ReadUShort();
             ushort[] sequenceOffsets = reader.ReadUShortArray(sequenceCount);

@@ -1,4 +1,5 @@
-﻿using NewFontParser.Reader;
+﻿using System.Collections.Generic;
+using NewFontParser.Reader;
 using NewFontParser.Tables.Common.CoverageFormat;
 
 namespace NewFontParser.Tables.Common.SequenceContext.Format1
@@ -7,7 +8,7 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format1
     {
         public ICoverageFormat Coverage { get; }
 
-        public SequenceRuleSet[] SequenceRuleSets { get; }
+        public List<SequenceRuleSet> SequenceRuleSets { get; } = new List<SequenceRuleSet>();
 
         public SequenceContextFormat1(BigEndianReader reader)
         {
@@ -16,11 +17,10 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format1
             ushort coverageOffset = reader.ReadUShort();
             ushort ruleSetCount = reader.ReadUShort();
             ushort[] ruleSetOffsets = reader.ReadUShortArray(ruleSetCount);
-            SequenceRuleSets = new SequenceRuleSet[ruleSetCount];
             for (var i = 0; i < ruleSetCount; i++)
             {
                 reader.Seek(startOfTable + ruleSetOffsets[i]);
-                SequenceRuleSets[i] = new SequenceRuleSet(reader);
+                SequenceRuleSets.Add(new SequenceRuleSet(reader));
             }
 
             reader.Seek(startOfTable + coverageOffset);

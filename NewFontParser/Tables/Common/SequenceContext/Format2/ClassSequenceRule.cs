@@ -1,4 +1,5 @@
-﻿using NewFontParser.Reader;
+﻿using System.Collections.Generic;
+using NewFontParser.Reader;
 using NewFontParser.Tables.Common.SequenceContext.Format1;
 
 namespace NewFontParser.Tables.Common.SequenceContext.Format2
@@ -7,7 +8,7 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format2
     {
         public ushort[]? InputSequences { get; }
 
-        public SequenceLookup[]? SequenceLookups { get; }
+        public List<SequenceLookup> SequenceLookups { get; } = new List<SequenceLookup>();
 
         public ClassSequenceRule(BigEndianReader reader)
         {
@@ -23,11 +24,9 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format2
             {
                 InputSequences[i] = reader.ReadUShort();
             }
-
-            SequenceLookups = new SequenceLookup[sequenceLookupCount];
             for (var i = 0; i < sequenceLookupCount; i++)
             {
-                SequenceLookups[i] = new SequenceLookup(reader.ReadBytes(4));
+                SequenceLookups.Add(new SequenceLookup(reader.ReadBytes(4)));
             }
         }
     }

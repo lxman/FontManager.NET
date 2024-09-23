@@ -7,7 +7,7 @@ namespace NewFontParser.Tables.Math
 {
     public class MathGlyphConstructionTable
     {
-        public GlyphAssemblyTable GlyphAssembly { get; }
+        public GlyphAssemblyTable? GlyphAssembly { get; }
 
         public List<MathGlyphVariantRecord> GlyphVariantRecords { get; } = new List<MathGlyphVariantRecord>();
 

@@ -9,7 +9,7 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format3
 {
     public class SequenceContextFormat3 : ILookupSubTable, ISequenceContext
     {
-        public SequenceLookup[] SequenceLookups { get; }
+        public List<SequenceLookup> SequenceLookups { get; } = new List<SequenceLookup>();
         
         public List<ICoverageFormat> CoverageFormats { get; } = new List<ICoverageFormat>();
 
@@ -20,10 +20,9 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format3
             ushort glyphCount = reader.ReadUShort();
             ushort seqLookupCount = reader.ReadUShort();
             List<ushort> coverageOffsets = reader.ReadUShortArray(glyphCount).ToList();
-            SequenceLookups = new SequenceLookup[seqLookupCount];
             for (var i = 0; i < seqLookupCount; i++)
             {
-                SequenceLookups[i] = new SequenceLookup(reader.ReadBytes(4));
+                SequenceLookups.Add(new SequenceLookup(reader.ReadBytes(4)));
             }
 
             long before = reader.Position;

@@ -8,8 +8,6 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.LigatureSubstitution
 {
     public class LigatureSubstitutionFormat1 : ILookupSubTable
     {
-        public ushort Format { get; }
-
         public ICoverageFormat Coverage { get; }
 
         public List<LigatureSet> LigatureSets { get; } = new List<LigatureSet>();
@@ -17,11 +15,7 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.LigatureSubstitution
         public LigatureSubstitutionFormat1(BigEndianReader reader)
         {
             long startOfTable = reader.Position;
-            Format = reader.ReadUShort();
-            if (Format != 1)
-            {
-                throw new Exception($"Expected Format 1, but got {Format}");
-            }
+            _ = reader.ReadUShort();
             ushort coverageOffset = reader.ReadUShort();
             ushort ligSetCount = reader.ReadUShort();
             ushort[] ligSetOffsets = reader.ReadUShortArray(ligSetCount);

@@ -1,4 +1,5 @@
-﻿using NewFontParser.Reader;
+﻿using System;
+using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
 
 namespace NewFontParser.Tables.Gsub
@@ -7,29 +8,27 @@ namespace NewFontParser.Tables.Gsub
     {
         public static string Tag => "GSUB";
 
-        public GsubHeader Header { get; }
-
         public ScriptList ScriptList { get; }
 
         public FeatureList FeatureList { get; }
 
         public GsubLookupList GsubLookupList { get; }
 
-        public FeatureVariationsTable FeatureVariationsTable { get; }
+        public FeatureVariationsTable? FeatureVariationsTable { get; }
 
         public GsubTable(byte[] data)
         {
             var reader = new BigEndianReader(data);
-            Header = new GsubHeader(reader);
-            reader.Seek(Header.ScriptListOffset);
+            var header = new GsubHeader(reader);
+            reader.Seek(header.ScriptListOffset);
             ScriptList = new ScriptList(reader);
-            reader.Seek(Header.FeatureListOffset);
+            reader.Seek(header.FeatureListOffset);
             FeatureList = new FeatureList(reader);
-            reader.Seek(Header.FeatureListOffset);
-
-            // TODO: Come back and fix this
-            reader.Seek(Header.LookupListOffset);
+            reader.Seek(header.LookupListOffset);
             GsubLookupList = new GsubLookupList(reader);
+            if (header.FeatureVariationsOffset is null) return;
+            reader.Seek(Convert.ToUInt32(header.FeatureVariationsOffset));
+            FeatureVariationsTable = new FeatureVariationsTable(reader);
         }
     }
 }

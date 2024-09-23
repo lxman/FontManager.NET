@@ -15,13 +15,10 @@ using NewFontParser.Tables.Cff.Type1;
 using NewFontParser.Tables.Cmap;
 using NewFontParser.Tables.Cmap.SubTables;
 using NewFontParser.Tables.Colr;
-using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.ChainedSequenceContext;
 using NewFontParser.Tables.Common.ChainedSequenceContext.Format1;
 using NewFontParser.Tables.Common.ChainedSequenceContext.Format2;
 using NewFontParser.Tables.Common.ChainedSequenceContext.Format3;
-using NewFontParser.Tables.Common.ClassDefinition;
-using NewFontParser.Tables.Common.CoverageFormat;
 using NewFontParser.Tables.Common.SequenceContext;
 using NewFontParser.Tables.Common.SequenceContext.Format1;
 using NewFontParser.Tables.Common.SequenceContext.Format2;
@@ -33,14 +30,18 @@ using NewFontParser.Tables.Fvar;
 using NewFontParser.Tables.Gdef;
 using NewFontParser.Tables.Gpos;
 using NewFontParser.Tables.Gpos.LookupSubtables;
-using NewFontParser.Tables.Gpos.LookupSubtables.AnchorTable;
-using NewFontParser.Tables.Gpos.LookupSubtables.Common;
 using NewFontParser.Tables.Gpos.LookupSubtables.CursivePos;
 using NewFontParser.Tables.Gpos.LookupSubtables.MarkBasePos;
 using NewFontParser.Tables.Gpos.LookupSubtables.MarkLigPos;
 using NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos;
 using NewFontParser.Tables.Gpos.LookupSubtables.PairPos;
 using NewFontParser.Tables.Gsub;
+using NewFontParser.Tables.Gsub.LookupSubTables.AlternateSubstitution;
+using NewFontParser.Tables.Gsub.LookupSubTables.LigatureSubstitution;
+using NewFontParser.Tables.Gsub.LookupSubTables.MultipleSubstitution;
+using NewFontParser.Tables.Gsub.LookupSubTables.ReverseChainSingleSubstitution;
+using NewFontParser.Tables.Gsub.LookupSubTables.SingleSubstitution;
+using NewFontParser.Tables.Gsub.LookupSubTables.SubstitutionExtension;
 using NewFontParser.Tables.Gvar;
 using NewFontParser.Tables.Head;
 using NewFontParser.Tables.Hhea;
@@ -56,8 +57,6 @@ using NewFontParser.Tables.Name;
 using NewFontParser.Tables.Optional;
 using NewFontParser.Tables.Optional.Dsig;
 using NewFontParser.Tables.Optional.Hdmx;
-using IClassDefinition = NewFontParser.Tables.Common.ClassDefinition.IClassDefinition;
-using ValueRecord = NewFontParser.Tables.Common.ValueRecord;
 
 namespace FontExplorer;
 
@@ -464,7 +463,7 @@ public partial class MainWindow : Window
                                 case SinglePos singlePos:
                                     TreeViewItem spHeader = subTables.FormChild("Single Pos Format 1");
                                     if (singlePos.ValueRecord is not null)
-                                        spHeader.Items.Add(BuildCommonValueRecord(singlePos.ValueRecord,
+                                        spHeader.Items.Add(Utilities.BuildCommonValueRecord(singlePos.ValueRecord,
                                             singlePos.ValueFormat));
 
                                     if (singlePos.ValueRecords is not null)
@@ -473,12 +472,12 @@ public partial class MainWindow : Window
                                         singlePos.ValueRecords.ForEach(vr =>
                                         {
                                             valueRecords.Items.Add(
-                                                BuildCommonValueRecord(vr, singlePos.ValueFormat));
+                                                Utilities.BuildCommonValueRecord(vr, singlePos.ValueFormat));
                                         });
                                     }
 
                                     if (singlePos.Coverage is not null)
-                                        spHeader.Items.Add(BuildCommonCoverageItem(singlePos.Coverage));
+                                        spHeader.Items.Add(Utilities.BuildCommonCoverageItem(singlePos.Coverage));
                                     break;
                                 case PairPosFormat1 pairPosFormat1:
                                     TreeViewItem ppf1Header = subTables.FormChild("Pair Pos Format 1");
@@ -497,69 +496,69 @@ public partial class MainWindow : Window
                                             pairValueRecord.FormChild(nameof(pv.SecondGlyph), pv.SecondGlyph);
                                             if (pairPosFormat1.ValueFormat1 != 0)
                                             {
-                                                TreeViewItem pairValueRecord1 = BuildCommonValueRecord(pv.Value1, pairPosFormat1.ValueFormat1);
+                                                TreeViewItem pairValueRecord1 = Utilities.BuildCommonValueRecord(pv.Value1, pairPosFormat1.ValueFormat1);
                                                 pairValueRecord1.Header = "Pair Value Record 1";
                                                 pairValueRecord.Items.Add(pairValueRecord1);
                                             }
                                             if (pairPosFormat1.ValueFormat2 == 0) return;
-                                            TreeViewItem pairValueRecord2 = BuildCommonValueRecord(pv.Value2, pairPosFormat1.ValueFormat2);
+                                            TreeViewItem pairValueRecord2 = Utilities.BuildCommonValueRecord(pv.Value2, pairPosFormat1.ValueFormat2);
                                             pairValueRecord2.Header = "Pair Value Record 2";
                                             pairValueRecord.Items.Add(pairValueRecord2);
                                         });
                                     });
-                                    ppf1Header.Items.Add(BuildCommonCoverageItem(pairPosFormat1.Coverage));
+                                    ppf1Header.Items.Add(Utilities.BuildCommonCoverageItem(pairPosFormat1.Coverage));
                                     break;
                                 case PairPosFormat2 pairPosFormat2:
                                     TreeViewItem ppf2Header = subTables.FormChild("Pair Pos Format 2");
                                     ppf2Header.FormChild(nameof(pairPosFormat2.ValueFormat1), pairPosFormat2.ValueFormat1);
                                     ppf2Header.FormChild(nameof(pairPosFormat2.ValueFormat2), pairPosFormat2.ValueFormat2);
-                                    ppf2Header.Items.Add(BuildCommonCoverageItem(pairPosFormat2.Coverage));
-                                    ppf2Header.Items.Add(BuildCommonClassDefinition(pairPosFormat2.ClassDef1));
-                                    ppf2Header.Items.Add(BuildGdefClassDefinition(pairPosFormat2.ClassDef2));
+                                    ppf2Header.Items.Add(Utilities.BuildCommonCoverageItem(pairPosFormat2.Coverage));
+                                    ppf2Header.Items.Add(Utilities.BuildCommonClassDefinition(pairPosFormat2.ClassDef1));
+                                    ppf2Header.Items.Add(Utilities.BuildGdefClassDefinition(pairPosFormat2.ClassDef2));
                                     TreeViewItem c1Records = ppf2Header.FormChild("Class 1 Records");
                                     pairPosFormat2.Class1Records.ForEach(c1R =>
                                     {
                                         TreeViewItem c2Records = c1Records.FormChild("Class 2 Records");
                                         c1R.Class2Records.ForEach(c2R =>
                                         {
-                                            c2Records.Items.Add(BuildCommonValueRecord(c2R.ValueRecord1, pairPosFormat2.ValueFormat1));
-                                            c2Records.Items.Add(BuildCommonValueRecord(c2R.ValueRecord2, pairPosFormat2.ValueFormat2));
+                                            c2Records.Items.Add(Utilities.BuildCommonValueRecord(c2R.ValueRecord1, pairPosFormat2.ValueFormat1));
+                                            c2Records.Items.Add(Utilities.BuildCommonValueRecord(c2R.ValueRecord2, pairPosFormat2.ValueFormat2));
                                         });
                                     });
                                     break;
                                 case CursivePosFormat1 cpf1:
                                     TreeViewItem cpf1Header = subTables.FormChild("Cursive Pos Format 1");
-                                    cpf1Header.Items.Add(BuildCommonCoverageItem(cpf1.Coverage));
+                                    cpf1Header.Items.Add(Utilities.BuildCommonCoverageItem(cpf1.Coverage));
                                     TreeViewItem entryExitRecords = cpf1Header.FormChild("Entry Exit Records");
                                     cpf1.EntryExitRecords.ForEach(r =>
                                     {
                                         if (r.EntryAnchorTable is not null)
                                         {
-                                            entryExitRecords.Items.Add(BuildAnchorTable(r.EntryAnchorTable));
+                                            entryExitRecords.Items.Add(Utilities.BuildAnchorTable(r.EntryAnchorTable));
                                         }
 
                                         if (r.ExitAnchorTable is not null)
                                         {
-                                            entryExitRecords.Items.Add(BuildAnchorTable(r.ExitAnchorTable));
+                                            entryExitRecords.Items.Add(Utilities.BuildAnchorTable(r.ExitAnchorTable));
                                         }
                                     });
                                     break;
                                 case MarkBasePosFormat1 mbp1:
                                     TreeViewItem mbp1Header = subTables.FormChild("Mark Base Pos Format 1");
-                                    mbp1Header.Items.Add(BuildCommonCoverageItem(mbp1.BaseCoverage));
+                                    mbp1Header.Items.Add(Utilities.BuildCommonCoverageItem(mbp1.BaseCoverage));
                                     TreeViewItem baseArray = mbp1Header.FormChild("Base Array");
                                     mbp1.BaseArray.BaseRecords.ToList().ForEach(br =>
                                     {
                                         baseArray.FormChild(nameof(br.BaseAnchorOffsets), string.Join(", ", br.BaseAnchorOffsets));
                                     });
-                                    mbp1Header.Items.Add(BuildCommonCoverageItem(mbp1.MarkCoverage));
-                                    mbp1Header.Items.Add(BuildMarkArray(mbp1.MarkArray));
+                                    mbp1Header.Items.Add(Utilities.BuildCommonCoverageItem(mbp1.MarkCoverage));
+                                    mbp1Header.Items.Add(Utilities.BuildMarkArray(mbp1.MarkArray));
                                     break;
                                 case MarkLigPosFormat1 mlp1:
                                     TreeViewItem mlp1Header = subTables.FormChild("Mark Lig Pos Format 1");
-                                    mlp1Header.Items.Add(BuildCommonCoverageItem(mlp1.MarkCoverage));
-                                    mlp1Header.Items.Add(BuildMarkArray(mlp1.MarkArray));
-                                    mlp1Header.Items.Add(BuildCommonCoverageItem(mlp1.LigatureCoverage));
+                                    mlp1Header.Items.Add(Utilities.BuildCommonCoverageItem(mlp1.MarkCoverage));
+                                    mlp1Header.Items.Add(Utilities.BuildMarkArray(mlp1.MarkArray));
+                                    mlp1Header.Items.Add(Utilities.BuildCommonCoverageItem(mlp1.LigatureCoverage));
                                     TreeViewItem latHeader = mlp1Header.FormChild("Ligature Array");
                                     if (mlp1.LigatureArrayTable is not null)
                                     {
@@ -576,17 +575,17 @@ public partial class MainWindow : Window
                                     break;
                                 case MarkMarkPosFormat1 mmpf1:
                                     TreeViewItem mmpf1Header = subTables.FormChild("Mark Mark Pos Format 1");
-                                    mmpf1Header.Items.Add(BuildCommonCoverageItem(mmpf1.MarkCoverage));
-                                    mmpf1Header.Items.Add(BuildMarkArray(mmpf1.MarkArray));
-                                    mmpf1Header.Items.Add(BuildCommonCoverageItem(mmpf1.Mark2Coverage));
-                                    mmpf1Header.Items.Add(BuildMark2Array(mmpf1.Mark2Array));
+                                    mmpf1Header.Items.Add(Utilities.BuildCommonCoverageItem(mmpf1.MarkCoverage));
+                                    mmpf1Header.Items.Add(Utilities.BuildMarkArray(mmpf1.MarkArray));
+                                    mmpf1Header.Items.Add(Utilities.BuildCommonCoverageItem(mmpf1.Mark2Coverage));
+                                    mmpf1Header.Items.Add(Utilities.BuildMark2Array(mmpf1.Mark2Array));
                                     break;
                                 case ISequenceContext sc:
                                     TreeViewItem scHeader = subTables.FormChild("Sequence Context");
                                     switch (sc)
                                     {
                                         case SequenceContextFormat1 scf1:
-                                            scHeader.Items.Add(BuildCommonCoverageItem(scf1.Coverage));
+                                            scHeader.Items.Add(Utilities.BuildCommonCoverageItem(scf1.Coverage));
                                             TreeViewItem srsHeader = scHeader.FormChild(nameof(scf1.SequenceRuleSets));
                                             scf1.SequenceRuleSets.ToList().ForEach(srs =>
                                             {
@@ -597,21 +596,21 @@ public partial class MainWindow : Window
                                             });
                                             break;
                                         case SequenceContextFormat2 scf2:
-                                            scHeader.Items.Add(BuildCommonCoverageItem(scf2.Coverage));
-                                            scHeader.Items.Add(BuildCommonClassDefinition(scf2.ClassDef));
+                                            scHeader.Items.Add(Utilities.BuildCommonCoverageItem(scf2.Coverage));
+                                            scHeader.Items.Add(Utilities.BuildCommonClassDefinition(scf2.ClassDef));
                                             TreeViewItem csrsHeader = scHeader.FormChild(nameof(scf2.ClassSequenceRuleSets));
                                             scf2.ClassSequenceRuleSets.ForEach(csrs =>
                                             {
                                                 TreeViewItem csrHeader = csrsHeader.FormChild("Class Sequence Rules");
                                                 csrs.ClassSeqRules.ToList().ForEach(csr =>
                                                 {
-                                                    if (csr.InputSequences is null && csr.SequenceLookups is null) return;
+                                                    if (csr.InputSequences is null && csr.SequenceLookups.Count == 0) return;
                                                     if (csr.InputSequences is not null)
                                                     {
                                                         TreeViewItem csRuleHeader = csrHeader.FormChild("Class Sequence Rule");
                                                         csRuleHeader.FormChild(nameof(csr.InputSequences), string.Join(", ", csr.InputSequences));
                                                     }
-                                                    if (csr.SequenceLookups is null) return;
+                                                    if (csr.SequenceLookups.Count == 0) return;
                                                     TreeViewItem slHeader = csrHeader.FormChild("Sequence Lookups");
                                                     csr.SequenceLookups?.ToList().ForEach(sl =>
                                                     {
@@ -625,7 +624,7 @@ public partial class MainWindow : Window
                                             TreeViewItem cfHeader = scHeader.FormChild("Coverage Formats");
                                             scf3.CoverageFormats.ForEach(cf =>
                                             {
-                                                cfHeader.Items.Add(BuildCommonCoverageItem(cf));
+                                                cfHeader.Items.Add(Utilities.BuildCommonCoverageItem(cf));
                                             });
                                             TreeViewItem slHeader = scHeader.FormChild("Sequence Lookups");
                                             scf3.SequenceLookups.ToList().ForEach(sl =>
@@ -640,7 +639,7 @@ public partial class MainWindow : Window
                                     switch (csc)
                                     {
                                         case ChainedSequenceContextFormat1 cscf1:
-                                            cscHeader.Items.Add(BuildCommonCoverageItem(cscf1.CoverageFormat));
+                                            cscHeader.Items.Add(Utilities.BuildCommonCoverageItem(cscf1.CoverageFormat));
                                             TreeViewItem csrsHeader = cscHeader.FormChild("Chained Sequence Rule Sets");
                                             cscf1.ChainedSequenceRuleSets.ForEach(csrs =>
                                             {
@@ -655,13 +654,13 @@ public partial class MainWindow : Window
                                             });
                                             break;
                                         case ChainedSequenceContextFormat2 cscf2:
-                                            cscHeader.Items.Add(BuildCommonCoverageItem(cscf2.Coverage));
+                                            cscHeader.Items.Add(Utilities.BuildCommonCoverageItem(cscf2.Coverage));
                                             TreeViewItem bcdHeader = cscHeader.FormChild("Backtrack Class Definition");
-                                            bcdHeader.Items.Add(BuildCommonClassDefinition(cscf2.BacktrackClassDef));
+                                            bcdHeader.Items.Add(Utilities.BuildCommonClassDefinition(cscf2.BacktrackClassDef));
                                             TreeViewItem inpHeader = cscHeader.FormChild("Input Class Definition");
-                                            inpHeader.Items.Add(BuildCommonClassDefinition(cscf2.InputClassDef));
+                                            inpHeader.Items.Add(Utilities.BuildCommonClassDefinition(cscf2.InputClassDef));
                                             TreeViewItem laHeader = cscHeader.FormChild("Lookahead Class Definition");
-                                            laHeader.Items.Add(BuildCommonClassDefinition(cscf2.LookaheadClassDef));
+                                            laHeader.Items.Add(Utilities.BuildCommonClassDefinition(cscf2.LookaheadClassDef));
                                             TreeViewItem ccsrsHeader = cscHeader.FormChild("Chained Class Sequence Rule Sets");
                                             cscf2.ChainedClassSequenceRuleSets.ForEach(ccsrs =>
                                             {
@@ -683,17 +682,17 @@ public partial class MainWindow : Window
                                             TreeViewItem icHeader = cscHeader.FormChild("Input Coverages");
                                             cscf3.InputCoverages.ForEach(ic =>
                                             {
-                                                icHeader.Items.Add(BuildCommonCoverageItem(ic));
+                                                icHeader.Items.Add(Utilities.BuildCommonCoverageItem(ic));
                                             });
                                             TreeViewItem lookaheadHeader = cscHeader.FormChild("Lookahead Coverages");
                                             cscf3.LookaheadCoverages.ForEach(lc =>
                                             {
-                                                lookaheadHeader.Items.Add(BuildCommonCoverageItem(lc));
+                                                lookaheadHeader.Items.Add(Utilities.BuildCommonCoverageItem(lc));
                                             });
                                             TreeViewItem backtrackHeader = cscHeader.FormChild("Backtrack Coverages");
                                             cscf3.BacktrackCoverages.ForEach(bc =>
                                             {
-                                                backtrackHeader.Items.Add(BuildCommonCoverageItem(bc));
+                                                backtrackHeader.Items.Add(Utilities.BuildCommonCoverageItem(bc));
                                             });
                                             TreeViewItem slHeader = cscHeader.FormChild("Sequence Lookups");
                                             cscf3.SequenceLookups.ForEach(sl =>
@@ -712,18 +711,18 @@ public partial class MainWindow : Window
                     var gdefRoot = new TreeViewItem { Header = "gdef" };
                     ResultView.Items.Add(gdefRoot);
                     if (gdefTable.GlyphClassDef is not null)
-                        gdefRoot.Items.Add(BuildGdefClassDefinition(gdefTable.GlyphClassDef));
+                        gdefRoot.Items.Add(Utilities.BuildGdefClassDefinition(gdefTable.GlyphClassDef));
                     if (gdefTable.MarkAttachClassDef is not null)
-                        gdefRoot.Items.Add(BuildGdefClassDefinition(gdefTable.MarkAttachClassDef));
+                        gdefRoot.Items.Add(Utilities.BuildGdefClassDefinition(gdefTable.MarkAttachClassDef));
                     if (gdefTable.AttachListTable is not null)
                     {
                         gdefRoot.FormChild(nameof(gdefTable.AttachListTable.AttachPointOffsets),
                             string.Join(", ", gdefTable.AttachListTable.AttachPointOffsets));
-                        gdefRoot.Items.Add(BuildCommonCoverageItem(gdefTable.AttachListTable.Coverage));
+                        gdefRoot.Items.Add(Utilities.BuildCommonCoverageItem(gdefTable.AttachListTable.Coverage));
                     }
 
                     if (gdefTable.ItemVarStore is not null)
-                        gdefRoot.Items.Add(BuildCommonVariationIndex(gdefTable.ItemVarStore));
+                        gdefRoot.Items.Add(Utilities.BuildCommonVariationIndex(gdefTable.ItemVarStore));
                     if (gdefTable.LigCaretListTable is not null)
                     {
                         TreeViewItem ligCaretListRoot = gdefRoot.FormChild("Ligature Caret List Table");
@@ -733,7 +732,7 @@ public partial class MainWindow : Window
                         {
                             offsets.FormChild(nameof(l.CaretValueOffsets), string.Join(", ", l.CaretValueOffsets));
                         });
-                        ligCaretListRoot.Items.Add(BuildCommonCoverageItem(gdefTable.LigCaretListTable.Coverage));
+                        ligCaretListRoot.Items.Add(Utilities.BuildCommonCoverageItem(gdefTable.LigCaretListTable.Coverage));
                     }
 
                     break;
@@ -786,13 +785,13 @@ public partial class MainWindow : Window
                     ResultView.Items.Add(baseRoot);
                     if (baseTable.HorizontalAxisTable is not null)
                     {
-                        TreeViewItem? horzAxisView = BuildAxisTable(baseTable.HorizontalAxisTable);
+                        TreeViewItem? horzAxisView = Utilities.BuildAxisTable(baseTable.HorizontalAxisTable);
                         if (horzAxisView is not null) baseRoot.Items.Add(horzAxisView);
                     }
 
                     if (baseTable.VerticalAxisTable is not null)
                     {
-                        TreeViewItem? vertAxisView = BuildAxisTable(baseTable.VerticalAxisTable);
+                        TreeViewItem? vertAxisView = Utilities.BuildAxisTable(baseTable.VerticalAxisTable);
                         if (vertAxisView is not null) baseRoot.Items.Add(vertAxisView);
                     }
 
@@ -808,21 +807,33 @@ public partial class MainWindow : Window
                     break;
 
                 case CbdtTable cbdtTable:
+                    var cbdtRoot = new TreeViewItem { Header = "cbdt" };
+                    ResultView.Items.Add(cbdtRoot);
                     break;
 
                 case CblcTable cblcTable:
+                    var cblcRoot = new TreeViewItem { Header = "cblc" };
+                    ResultView.Items.Add(cblcRoot);
                     break;
 
                 case EbdtTable ebdtTable:
+                    var ebdtRoot = new TreeViewItem { Header = "ebdt" };
+                    ResultView.Items.Add(ebdtRoot);
                     break;
 
                 case EbscTable ebscTable:
+                    var ebscRoot = new TreeViewItem { Header = "ebsc" };
+                    ResultView.Items.Add(ebscRoot);
                     break;
 
                 case EblcTable eblcTable:
+                    var eblcRoot = new TreeViewItem { Header = "eblc" };
+                    ResultView.Items.Add(eblcRoot);
                     break;
 
                 case Type1Table type1Table:
+                    var type1Root = new TreeViewItem { Header = "CFF" };
+                    ResultView.Items.Add(type1Root);
                     break;
 
                 case ColrTable colrTable:
@@ -831,20 +842,216 @@ public partial class MainWindow : Window
                     break;
 
                 case CpalTable cpalTable:
+                    var cpalRoot = new TreeViewItem { Header = "CPAL" };
+                    ResultView.Items.Add(cpalRoot);
                     break;
 
                 case CvarTable cvarTable:
+                    var cvarRoot = new TreeViewItem { Header = "Cvar" };
+                    ResultView.Items.Add(cvarRoot);
                     break;
 
                 case FftmTable fftmTable:
+                    var fftmRoot = new TreeViewItem { Header = "FFTM" };
+                    ResultView.Items.Add(fftmRoot);
                     break;
 
                 case FvarTable fvarTable:
+                    var fvarRoot = new TreeViewItem { Header = "Fvar" };
+                    ResultView.Items.Add(fvarRoot);
                     break;
 
                 case GsubTable gsubTable:
                     var gsubRoot = new TreeViewItem { Header = "gsub" };
                     ResultView.Items.Add(gsubRoot);
+                    TreeViewItem lookupList = gsubRoot.FormChild("Subtables");
+                    gsubTable.GsubLookupList.LookupTables.ForEach(lt =>
+                    {
+                        lt.SubTables.ForEach(st =>
+                        {
+                            switch (st)
+                            {
+                                case SingleSubstitutionFormat1 ssf1:
+                                    TreeViewItem ssf1Header = lookupList.FormChild("Single Substitution Format 1");
+                                    ssf1Header.FormChild(nameof(ssf1.DeltaGlyphId), ssf1.DeltaGlyphId);
+                                    ssf1Header.Items.Add(Utilities.BuildCommonCoverageItem(ssf1.Coverage));
+                                    break;
+                                case SingleSubstitutionFormat2 ssf2:
+                                    TreeViewItem ssf2Header = lookupList.FormChild("Single Substitution Format 2");
+                                    ssf2Header.Items.Add(Utilities.BuildCommonCoverageItem(ssf2.Coverage));
+                                    ssf2Header.FormChild(nameof(ssf2.SubstituteGlyphIds), string.Join(", ", ssf2.SubstituteGlyphIds));
+                                    break;
+                                case MultipleSubstitutionFormat1 msf1:
+                                    TreeViewItem msf1Header = lookupList.FormChild("Multiple Substitution Format 1");
+                                    msf1Header.Items.Add(Utilities.BuildCommonCoverageItem(msf1.Coverage));
+                                    TreeViewItem seqHeader = msf1Header.FormChild("Sequences");
+                                    msf1.Sequences.ForEach(s =>
+                                    {
+                                        seqHeader.FormChild(nameof(s.SubstituteGlyphIds), string.Join(", ", s.SubstituteGlyphIds));
+                                    });
+                                    break;
+                                case AlternateSubstitutionFormat1 asf1:
+                                    TreeViewItem asf1Header = lookupList.FormChild("Alternate Substitution Format 1");
+                                    asf1Header.Items.Add(Utilities.BuildCommonCoverageItem(asf1.Coverage));
+                                    TreeViewItem asHeader = asf1Header.FormChild("Alternate Sets");
+                                    asf1.AlternateSets.ForEach(altSet =>
+                                    {
+                                        asHeader.FormChild(nameof(altSet.AlternateGlyphIds), string.Join(", ", altSet.AlternateGlyphIds));
+                                    });
+                                    break;
+                                case LigatureSubstitutionFormat1 lsf1:
+                                    TreeViewItem lsf1Header = lookupList.FormChild("Ligature Substitution Format 1");
+                                    lsf1Header.Items.Add(Utilities.BuildCommonCoverageItem(lsf1.Coverage));
+                                    TreeViewItem lsHeader = lsf1Header.FormChild("Ligature Sets");
+                                    lsf1.LigatureSets.ForEach(ls =>
+                                    {
+                                        TreeViewItem ltHeader = lsHeader.FormChild("Ligature Tables");
+                                        ls.LigatureTables.ForEach(ligt =>
+                                        {
+                                            TreeViewItem lHeader = ltHeader.FormChild("Ligature Table");
+                                            lHeader.FormChild(nameof(ligt.LigatureGlyph), ligt.LigatureGlyph);
+                                            lHeader.FormChild(nameof(ligt.ComponentGlyphIds), string.Join(", ", ligt.ComponentGlyphIds));
+                                        });
+                                    });
+                                    break;
+                                case SequenceContextFormat1 scf1:
+                                    TreeViewItem scf1Header = lookupList.FormChild("Sequence Context Format 1");
+                                    scf1Header.Items.Add(Utilities.BuildCommonCoverageItem(scf1.Coverage));
+                                    TreeViewItem srsHeader = scf1Header.FormChild("Sequence Rule Sets");
+                                    scf1.SequenceRuleSets.ForEach(srs =>
+                                    {
+                                        TreeViewItem srHeader = srsHeader.FormChild("Sequence Rules");
+                                        srs.SequenceRules.ForEach(sr =>
+                                        {
+                                            srHeader.FormChild(nameof(sr.GlyphIds), string.Join(", ", sr.GlyphIds));
+                                        });
+                                    });
+                                    break;
+                                case SequenceContextFormat2 scf2:
+                                    TreeViewItem scf2Header = lookupList.FormChild("Sequence Context Format 2");
+                                    scf2Header.Items.Add(Utilities.BuildCommonCoverageItem(scf2.Coverage));
+                                    scf2Header.Items.Add(Utilities.BuildCommonClassDefinition(scf2.ClassDef));
+                                    TreeViewItem csrsHeader = scf2Header.FormChild("Class Sequence Rule Sets");
+                                    scf2.ClassSequenceRuleSets.ForEach(csrs =>
+                                    {
+                                        TreeViewItem csrHeader = csrsHeader.FormChild("Class Sequence Rules");
+                                        csrs.ClassSeqRules.ForEach(csr =>
+                                        {
+                                            TreeViewItem slHeader = csrHeader.FormChild("Sequence Lookups");
+                                            csr.SequenceLookups.ForEach(sl =>
+                                            {
+                                                slHeader.FormChild($"Sequence index: {sl.SequenceIndex} Lookup list index: {sl.LookupListIndex}");
+                                            });
+                                        });
+                                    });
+                                    break;
+                                case SequenceContextFormat3 scf3:
+                                    TreeViewItem scf3Header = lookupList.FormChild("Sequence Context Format 3");
+                                    TreeViewItem cfHeader = scf3Header.FormChild("Coverage formats");
+                                    scf3.CoverageFormats.ForEach(cf =>
+                                    {
+                                        cfHeader.Items.Add(Utilities.BuildCommonCoverageItem(cf));
+                                    });
+                                    TreeViewItem slHeader = scf3Header.FormChild("Sequence lookups");
+                                    scf3.SequenceLookups.ForEach(sl =>
+                                    {
+                                        slHeader.FormChild($"Sequence index: {sl.SequenceIndex} Lookup list index: {sl.LookupListIndex}");
+                                    });
+                                    break;
+                                case ChainedSequenceContextFormat1 cscf1:
+                                    TreeViewItem cscf1Header = lookupList.FormChild("Chained Sequence Context Format 1");
+                                    cscf1Header.Items.Add(Utilities.BuildCommonCoverageItem(cscf1.CoverageFormat));
+                                    TreeViewItem csrs1Header = cscf1Header.FormChild("Chained Sequence Rule Sets");
+                                    cscf1.ChainedSequenceRuleSets.ForEach(csrs =>
+                                    {
+                                        TreeViewItem csr1Header = csrs1Header.FormChild("Chained Sequence Rules");
+                                        csrs.ChainedSequenceRules.ForEach(csr =>
+                                        {
+                                            TreeViewItem csr2Header = csr1Header.FormChild("Chained Sequence Rule");
+                                            csr2Header.FormChild(nameof(csr.BacktrackSequence), string.Join(", ", csr.BacktrackSequence));
+                                            csr2Header.FormChild(nameof(csr.InputSequence), string.Join(", ", csr.InputSequence));
+                                            csr2Header.FormChild(nameof(csr.LookaheadSequence), string.Join(", ", csr.LookaheadSequence));
+                                            TreeViewItem sl1Header = csr2Header.FormChild("Chained Sequence Lookups");
+                                            csr.SequenceLookups.ForEach(sl =>
+                                            {
+                                                sl1Header.FormChild(
+                                                    $"Sequence index: {sl.SequenceIndex} Lookup list index: {sl.LookupListIndex}");
+                                            });
+                                        });
+                                    });
+                                    break;
+                                case ChainedSequenceContextFormat2 cscf2:
+                                    TreeViewItem cscf2Header = lookupList.FormChild("Chained Sequence Context Format 2");
+                                    cscf2Header.Items.Add(Utilities.BuildCommonCoverageItem(cscf2.Coverage));
+                                    cscf2Header.Items.Add(
+                                        Utilities.BuildCommonClassDefinition(cscf2.BacktrackClassDef));
+                                    cscf2Header.Items.Add(Utilities.BuildCommonClassDefinition(cscf2.InputClassDef));
+                                    cscf2Header.Items.Add(Utilities.BuildCommonClassDefinition(cscf2.LookaheadClassDef));
+                                    TreeViewItem ccsrsHeader = cscf2Header.FormChild("Chained Class Sequence Rule Sets");
+                                    cscf2.ChainedClassSequenceRuleSets.ForEach(ccsrs =>
+                                    {
+                                        TreeViewItem ccsrHeader = ccsrsHeader.FormChild("Chained Class Sequence Rules");
+                                        ccsrs.ChainedClassSequenceRules.ForEach(ccsr =>
+                                        {
+                                            ccsrHeader.FormChild(nameof(ccsr.BacktrackSequences), string.Join(", ", ccsr.BacktrackSequences));
+                                            ccsrHeader.FormChild(nameof(ccsr.InputSequences), string.Join(", ", ccsr.InputSequences));
+                                            ccsrHeader.FormChild(nameof(ccsr.LookaheadSequences), string.Join(", ", ccsr.LookaheadSequences));
+                                            TreeViewItem sl1Header = ccsrHeader.FormChild("Sequence Lookups");
+                                            ccsr.SequenceLookups.ForEach(sl =>
+                                            {
+                                                sl1Header.FormChild($"Sequence index: {sl.SequenceIndex} Lookup list index: {sl.LookupListIndex}");
+                                            });
+                                        });
+                                    });
+                                    break;
+                                case ChainedSequenceContextFormat3 cscf3:
+                                    TreeViewItem cscf3Header = lookupList.FormChild("Chained Sequence Context Format 3");
+                                    TreeViewItem bcHeader = cscf3Header.FormChild("Backtrack Coverages");
+                                    cscf3.BacktrackCoverages.ForEach(bc =>
+                                    {
+                                        bcHeader.Items.Add(Utilities.BuildCommonCoverageItem(bc));
+                                    });
+                                    TreeViewItem icHeader = cscf3Header.FormChild("Input Coverages");
+                                    cscf3.InputCoverages.ForEach(ic =>
+                                    {
+                                        icHeader.Items.Add(Utilities.BuildCommonCoverageItem(ic));
+                                    });
+                                    TreeViewItem lcHeader = cscf3Header.FormChild("Lookahead Coverages");
+                                    cscf3.LookaheadCoverages.ForEach(lc =>
+                                    {
+                                        lcHeader.Items.Add(Utilities.BuildCommonCoverageItem(lc));
+                                    });
+                                    TreeViewItem sl2Header = cscf3Header.FormChild("Sequence Lookups");
+                                    cscf3.SequenceLookups.ForEach(sl =>
+                                    {
+                                        sl2Header.FormChild($"Sequence index: {sl.SequenceIndex} Lookup list index: {sl.LookupListIndex}");
+                                    });
+                                    break;
+                                case SubstitutionExtensionFormat1 sef1:
+                                    TreeViewItem sef1Header = lookupList.FormChild("Substitution Extension Format 1");
+                                    TreeViewItem subTableHeader = sef1Header.FormChild("Substitution Table");
+                                    switch (sef1.SubstitutionTable)
+                                    {
+                                    }
+                                    break;
+                                case ReverseChainSingleSubstitutionFormat1 rcssf1:
+                                    TreeViewItem rcssf1Header = lookupList.FormChild("Reverse Chain Single Substitution Format 1");
+                                    rcssf1Header.Items.Add(Utilities.BuildCommonCoverageItem(rcssf1.Coverage));
+                                    rcssf1Header.FormChild(nameof(rcssf1.SubstituteGlyphIds), string.Join(", ", rcssf1.SubstituteGlyphIds));
+                                    TreeViewItem bcCoveragesHeader = rcssf1Header.FormChild("Backtrack Coverages");
+                                    rcssf1.BacktrackCoverages.ForEach(bc =>
+                                    {
+                                        bcCoveragesHeader.Items.Add(Utilities.BuildCommonCoverageItem(bc));
+                                    });
+                                    TreeViewItem lcCoveragesHeader = rcssf1Header.FormChild("Lookahead Coverages");
+                                    rcssf1.LookaheadCoverages.ForEach(lc =>
+                                    {
+                                        lcCoveragesHeader.Items.Add(Utilities.BuildCommonCoverageItem(lc));
+                                    });
+                                    break;
+                            }
+                        });
+                    });
                     break;
 
                 case HeadTable headTable:
@@ -869,12 +1076,18 @@ public partial class MainWindow : Window
                     break;
 
                 case HmtxTable hmtxTable:
+                    var hmtxRoot = new TreeViewItem { Header = "hmtx" };
+                    ResultView.Items.Add(hmtxRoot);
                     break;
 
                 case HheaTable hheaTable:
+                    var hheaRoot = new TreeViewItem { Header = "hhea" };
+                    ResultView.Items.Add(hheaRoot);
                     break;
 
                 case HvarTable hvarTable:
+                    var hvarRoot = new TreeViewItem { Header = "hvar" };
+                    ResultView.Items.Add(hvarRoot);
                     break;
 
                 case JstfTable jstfTable:
@@ -923,13 +1136,11 @@ public partial class MainWindow : Window
                                     string.Join(", ", p.GposShrinkageDisable.GsubLookupIndices));
                             }
 
-                            if (p.GposShrinkageEnable is not null)
-                            {
-                                TreeViewItem gposShrinkageEnable =
-                                    prioritiesHeader.FormChild("Gpos Shrinkage Enable", p.GposShrinkageEnable);
-                                gposShrinkageEnable.FormChild("Lookup Indices",
-                                    string.Join(", ", p.GposShrinkageEnable.GsubLookupIndices));
-                            }
+                            if (p.GposShrinkageEnable is null) return;
+                            TreeViewItem gposShrinkageEnable =
+                                prioritiesHeader.FormChild("Gpos Shrinkage Enable", p.GposShrinkageEnable);
+                            gposShrinkageEnable.FormChild("Lookup Indices",
+                                string.Join(", ", p.GposShrinkageEnable.GsubLookupIndices));
                         });
 
                         sr.JstfScript.JstfLangSysRecords.ForEach(ls =>
@@ -979,119 +1190,119 @@ public partial class MainWindow : Window
                     ResultView.Items.Add(mathRoot);
                     TreeViewItem constants = mathRoot.FormChild(nameof(mathTable.Constants));
                     TreeViewItem mathLeading = constants.FormChild(nameof(mathTable.Constants.MathLeading));
-                    mathLeading.Items.Add(BuildMathValueRecord(mathTable.Constants.MathLeading));
+                    mathLeading.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.MathLeading));
                     TreeViewItem axisHeight = constants.FormChild(nameof(mathTable.Constants.AxisHeight));
-                    axisHeight.Items.Add(BuildMathValueRecord(mathTable.Constants.AxisHeight));
+                    axisHeight.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.AxisHeight));
                     TreeViewItem accentBaseHeight = constants.FormChild(nameof(mathTable.Constants.AccentBaseHeight));
-                    accentBaseHeight.Items.Add(BuildMathValueRecord(mathTable.Constants.AccentBaseHeight));
+                    accentBaseHeight.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.AccentBaseHeight));
                     TreeViewItem fractionRuleThickness = constants.FormChild(nameof(mathTable.Constants.FractionRuleThickness));
-                    fractionRuleThickness.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionRuleThickness));
+                    fractionRuleThickness.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.FractionRuleThickness));
                     TreeViewItem overbarExtraAscender = constants.FormChild(nameof(mathTable.Constants.OverbarExtraAscender));
-                    overbarExtraAscender.Items.Add(BuildMathValueRecord(mathTable.Constants.OverbarExtraAscender));
+                    overbarExtraAscender.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.OverbarExtraAscender));
                     TreeViewItem overbarRuleThickness = constants.FormChild(nameof(mathTable.Constants.OverbarRuleThickness));
-                    overbarRuleThickness.Items.Add(BuildMathValueRecord(mathTable.Constants.OverbarRuleThickness));
+                    overbarRuleThickness.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.OverbarRuleThickness));
                     TreeViewItem overbarVerticalGap =
                         constants.FormChild(nameof(mathTable.Constants.OverbarVerticalGap));
-                    overbarVerticalGap.Items.Add(BuildMathValueRecord(mathTable.Constants.OverbarVerticalGap));
+                    overbarVerticalGap.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.OverbarVerticalGap));
                     TreeViewItem radicalExtraAscender =
                         constants.FormChild(nameof(mathTable.Constants.RadicalExtraAscender));
-                    radicalExtraAscender.Items.Add(BuildMathValueRecord(mathTable.Constants.RadicalExtraAscender));
+                    radicalExtraAscender.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.RadicalExtraAscender));
                     TreeViewItem radicalRuleThickness =
                         constants.FormChild(nameof(mathTable.Constants.RadicalRuleThickness));
-                    radicalRuleThickness.Items.Add(BuildMathValueRecord(mathTable.Constants.RadicalRuleThickness));
+                    radicalRuleThickness.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.RadicalRuleThickness));
                     TreeViewItem radicalVerticalGap =
                         constants.FormChild(nameof(mathTable.Constants.RadicalVerticalGap));
-                    radicalVerticalGap.Items.Add(BuildMathValueRecord(mathTable.Constants.RadicalVerticalGap));
+                    radicalVerticalGap.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.RadicalVerticalGap));
                     TreeViewItem flattenedAccentBaseHeight = constants.FormChild(nameof(mathTable.Constants.FlattenedAccentBaseHeight));
-                    flattenedAccentBaseHeight.Items.Add(BuildMathValueRecord(mathTable.Constants.FlattenedAccentBaseHeight));
+                    flattenedAccentBaseHeight.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.FlattenedAccentBaseHeight));
                     TreeViewItem subscriptShiftDown =
                         constants.FormChild(nameof(mathTable.Constants.SubscriptShiftDown));
-                    subscriptShiftDown.Items.Add(BuildMathValueRecord(mathTable.Constants.SubscriptShiftDown));
+                    subscriptShiftDown.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.SubscriptShiftDown));
                     TreeViewItem subscriptTopMax = constants.FormChild(nameof(mathTable.Constants.SubscriptTopMax));
                     subscriptTopMax.FormChild(nameof(mathTable.Constants.SubscriptTopMax));
                     TreeViewItem subscriptBaselineDropMin = constants.FormChild(nameof(mathTable.Constants.SubscriptBaselineDropMin));
-                    subscriptBaselineDropMin.Items.Add(BuildMathValueRecord(mathTable.Constants.SubscriptBaselineDropMin));
+                    subscriptBaselineDropMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.SubscriptBaselineDropMin));
                     TreeViewItem superscriptShiftUp = constants.FormChild(nameof(mathTable.Constants.SuperscriptShiftUp));
-                    superscriptShiftUp.Items.Add(BuildMathValueRecord(mathTable.Constants.SuperscriptShiftUp));
+                    superscriptShiftUp.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.SuperscriptShiftUp));
                     TreeViewItem superscriptShiftUpCramped = constants.FormChild(nameof(mathTable.Constants.SuperscriptShiftUpCramped));
-                    superscriptShiftUpCramped.Items.Add(BuildMathValueRecord(mathTable.Constants.SuperscriptShiftUpCramped));
+                    superscriptShiftUpCramped.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.SuperscriptShiftUpCramped));
                     TreeViewItem superscriptBottomMin = constants.FormChild(nameof(mathTable.Constants.SuperscriptBottomMin));
-                    superscriptBottomMin.Items.Add(BuildMathValueRecord(mathTable.Constants.SuperscriptBottomMin));
+                    superscriptBottomMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.SuperscriptBottomMin));
                     TreeViewItem superscriptBaselineDropMax = constants.FormChild(nameof(mathTable.Constants.SuperscriptBaselineDropMax));
-                    superscriptBaselineDropMax.Items.Add(BuildMathValueRecord(mathTable.Constants.SuperscriptBaselineDropMax));
+                    superscriptBaselineDropMax.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.SuperscriptBaselineDropMax));
                     TreeViewItem subSuperscriptGapMin =
                         constants.FormChild(nameof(mathTable.Constants.SubSuperscriptGapMin));
-                    subSuperscriptGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.SubSuperscriptGapMin));
+                    subSuperscriptGapMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.SubSuperscriptGapMin));
                     TreeViewItem superscriptBottomMaxWithSubscript = constants.FormChild(nameof(mathTable.Constants.SuperscriptBottomMaxWithSubscript));
-                    superscriptBottomMaxWithSubscript.Items.Add(BuildMathValueRecord(mathTable.Constants.SuperscriptBottomMaxWithSubscript));
+                    superscriptBottomMaxWithSubscript.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.SuperscriptBottomMaxWithSubscript));
                     TreeViewItem spaceAfterScript = constants.FormChild(nameof(mathTable.Constants.SpaceAfterScript));
-                    spaceAfterScript.Items.Add(BuildMathValueRecord(mathTable.Constants.SpaceAfterScript));
+                    spaceAfterScript.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.SpaceAfterScript));
                     TreeViewItem upperLimitGapMin = constants.FormChild(nameof(mathTable.Constants.UpperLimitGapMin));
-                    upperLimitGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.UpperLimitGapMin));
+                    upperLimitGapMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.UpperLimitGapMin));
                     TreeViewItem upperLimitBaselineRiseMin = constants.FormChild(nameof(mathTable.Constants.UpperLimitBaselineRiseMin));
-                    upperLimitBaselineRiseMin.Items.Add(BuildMathValueRecord(mathTable.Constants.UpperLimitBaselineRiseMin));
+                    upperLimitBaselineRiseMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.UpperLimitBaselineRiseMin));
                     TreeViewItem lowerLimitGapMin = constants.FormChild(nameof(mathTable.Constants.LowerLimitGapMin));
-                    lowerLimitGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.LowerLimitGapMin));
+                    lowerLimitGapMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.LowerLimitGapMin));
                     TreeViewItem lowerLimitBaselineDropMin = constants.FormChild(nameof(mathTable.Constants.LowerLimitBaselineDropMin));
-                    lowerLimitBaselineDropMin.Items.Add(BuildMathValueRecord(mathTable.Constants.LowerLimitBaselineDropMin));
+                    lowerLimitBaselineDropMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.LowerLimitBaselineDropMin));
                     TreeViewItem stackTopShiftUp = constants.FormChild(nameof(mathTable.Constants.StackTopShiftUp));
-                    stackTopShiftUp.Items.Add(BuildMathValueRecord(mathTable.Constants.StackTopShiftUp));
+                    stackTopShiftUp.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.StackTopShiftUp));
                     TreeViewItem stackTopDisplayStyleShiftUp = constants.FormChild(nameof(mathTable.Constants.StackTopDisplayStyleShiftUp));
-                    stackTopDisplayStyleShiftUp.Items.Add(BuildMathValueRecord(mathTable.Constants.StackTopDisplayStyleShiftUp));
+                    stackTopDisplayStyleShiftUp.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.StackTopDisplayStyleShiftUp));
                     TreeViewItem stackBottomShiftDown = constants.FormChild(nameof(mathTable.Constants.StackBottomShiftDown));
-                    stackBottomShiftDown.Items.Add(BuildMathValueRecord(mathTable.Constants.StackBottomShiftDown));
+                    stackBottomShiftDown.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.StackBottomShiftDown));
                     TreeViewItem stackBottomDisplayStyleShiftDown = constants.FormChild(nameof(mathTable.Constants.StackBottomDisplayStyleShiftDown));
-                    stackBottomDisplayStyleShiftDown.Items.Add(BuildMathValueRecord(mathTable.Constants.StackBottomDisplayStyleShiftDown));
+                    stackBottomDisplayStyleShiftDown.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.StackBottomDisplayStyleShiftDown));
                     TreeViewItem stackGapMin = constants.FormChild(nameof(mathTable.Constants.StackGapMin));
-                    stackGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.StackGapMin));
+                    stackGapMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.StackGapMin));
                     TreeViewItem stackDisplayStyleGapMin = constants.FormChild(nameof(mathTable.Constants.StackDisplayStyleGapMin));
-                    stackDisplayStyleGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.StackDisplayStyleGapMin));
+                    stackDisplayStyleGapMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.StackDisplayStyleGapMin));
                     TreeViewItem stretchStackTopShiftUp = constants.FormChild(nameof(mathTable.Constants.StretchStackTopShiftUp));
-                    stretchStackTopShiftUp.Items.Add(BuildMathValueRecord(mathTable.Constants.StretchStackTopShiftUp));
+                    stretchStackTopShiftUp.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.StretchStackTopShiftUp));
                     TreeViewItem stretchStackBottomShiftDown = constants.FormChild(nameof(mathTable.Constants.StretchStackBottomShiftDown));
-                    stretchStackBottomShiftDown.Items.Add(BuildMathValueRecord(mathTable.Constants.StretchStackBottomShiftDown));
+                    stretchStackBottomShiftDown.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.StretchStackBottomShiftDown));
                     TreeViewItem stretchStackGapAboveMin = constants.FormChild(nameof(mathTable.Constants.StretchStackGapAboveMin));
-                    stretchStackGapAboveMin.Items.Add(BuildMathValueRecord(mathTable.Constants.StretchStackGapAboveMin));
+                    stretchStackGapAboveMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.StretchStackGapAboveMin));
                     TreeViewItem stretchStackGapBelowMin = constants.FormChild(nameof(mathTable.Constants.StretchStackGapBelowMin));
-                    stretchStackGapBelowMin.Items.Add(BuildMathValueRecord(mathTable.Constants.StretchStackGapBelowMin));
+                    stretchStackGapBelowMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.StretchStackGapBelowMin));
                     TreeViewItem fractionNumeratorShiftUp = constants.FormChild(nameof(mathTable.Constants.FractionNumeratorShiftUp));
-                    fractionNumeratorShiftUp.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionNumeratorShiftUp));
+                    fractionNumeratorShiftUp.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.FractionNumeratorShiftUp));
                     TreeViewItem fractionNumeratorDisplayStyleShiftUp = constants.FormChild(nameof(mathTable.Constants.FractionNumeratorDisplayStyleShiftUp));
-                    fractionNumeratorDisplayStyleShiftUp.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionNumeratorDisplayStyleShiftUp));
+                    fractionNumeratorDisplayStyleShiftUp.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.FractionNumeratorDisplayStyleShiftUp));
                     TreeViewItem fractionDenominatorShiftDown = constants.FormChild(nameof(mathTable.Constants.FractionDenominatorShiftDown));
-                    fractionDenominatorShiftDown.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionDenominatorShiftDown));
+                    fractionDenominatorShiftDown.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.FractionDenominatorShiftDown));
                     TreeViewItem fractionDenominatorDisplayStyleShiftDown = constants.FormChild(nameof(mathTable.Constants.FractionDenominatorDisplayStyleShiftDown));
-                    fractionDenominatorDisplayStyleShiftDown.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionDenominatorDisplayStyleShiftDown));
+                    fractionDenominatorDisplayStyleShiftDown.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.FractionDenominatorDisplayStyleShiftDown));
                     TreeViewItem fractionNumeratorGapMin = constants.FormChild(nameof(mathTable.Constants.FractionNumeratorGapMin));
-                    fractionNumeratorGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionNumeratorGapMin));
+                    fractionNumeratorGapMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.FractionNumeratorGapMin));
                     TreeViewItem fractionNumDisplayStyleGapMin =
                         constants.FormChild(nameof(mathTable.Constants.FractionNumDisplayStyleGapMin));
-                    fractionNumDisplayStyleGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionNumDisplayStyleGapMin));
+                    fractionNumDisplayStyleGapMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.FractionNumDisplayStyleGapMin));
                     TreeViewItem fractionDenominatorGapMin = constants.FormChild(nameof(mathTable.Constants.FractionDenominatorGapMin));
-                    fractionDenominatorGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionDenominatorGapMin));
+                    fractionDenominatorGapMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.FractionDenominatorGapMin));
                     TreeViewItem fractionDenomDisplayStyleGapMin = constants.FormChild(nameof(mathTable.Constants.FractionDenomDisplayStyleGapMin));
-                    fractionDenomDisplayStyleGapMin.Items.Add(BuildMathValueRecord(mathTable.Constants.FractionDenomDisplayStyleGapMin));
+                    fractionDenomDisplayStyleGapMin.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.FractionDenomDisplayStyleGapMin));
                     TreeViewItem skewedFractionHorizontalGap = constants.FormChild(nameof(mathTable.Constants.SkewedFractionHorizontalGap));
-                    skewedFractionHorizontalGap.Items.Add(BuildMathValueRecord(mathTable.Constants.SkewedFractionHorizontalGap));
+                    skewedFractionHorizontalGap.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.SkewedFractionHorizontalGap));
                     TreeViewItem skewedFractionVerticalGap = constants.FormChild(nameof(mathTable.Constants.SkewedFractionVerticalGap));
-                    skewedFractionVerticalGap.Items.Add(BuildMathValueRecord(mathTable.Constants.SkewedFractionVerticalGap));
+                    skewedFractionVerticalGap.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.SkewedFractionVerticalGap));
                     TreeViewItem underbarVerticalGap = constants.FormChild(nameof(mathTable.Constants.UnderbarVerticalGap));
-                    underbarVerticalGap.Items.Add(BuildMathValueRecord(mathTable.Constants.UnderbarVerticalGap));
+                    underbarVerticalGap.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.UnderbarVerticalGap));
                     TreeViewItem underbarRuleThickness = constants.FormChild(nameof(mathTable.Constants.UnderbarRuleThickness));
-                    underbarRuleThickness.Items.Add(BuildMathValueRecord(mathTable.Constants.UnderbarRuleThickness));
+                    underbarRuleThickness.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.UnderbarRuleThickness));
                     TreeViewItem underbarExtraDescender = constants.FormChild(nameof(mathTable.Constants.UnderbarExtraDescender));
-                    underbarExtraDescender.Items.Add(BuildMathValueRecord(mathTable.Constants.UnderbarExtraDescender));
+                    underbarExtraDescender.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.UnderbarExtraDescender));
                     TreeViewItem radicalDisplayStyleVerticalGap =
                         constants.FormChild(nameof(mathTable.Constants.RadicalDisplayStyleVerticalGap));
                     radicalDisplayStyleVerticalGap.Items.Add(
-                        BuildMathValueRecord(mathTable.Constants.RadicalDisplayStyleVerticalGap));
+                        Utilities.BuildMathValueRecord(mathTable.Constants.RadicalDisplayStyleVerticalGap));
                     TreeViewItem radicalKernBeforeDegree =
                         constants.FormChild(nameof(mathTable.Constants.RadicalKernBeforeDegree));
                     radicalKernBeforeDegree.Items.Add(
-                        BuildMathValueRecord(mathTable.Constants.RadicalKernBeforeDegree));
+                        Utilities.BuildMathValueRecord(mathTable.Constants.RadicalKernBeforeDegree));
                     TreeViewItem radicalKernAfterDegree =
                         constants.FormChild(nameof(mathTable.Constants.RadicalKernAfterDegree));
-                    radicalKernAfterDegree.Items.Add(BuildMathValueRecord(mathTable.Constants.RadicalKernAfterDegree));
+                    radicalKernAfterDegree.Items.Add(Utilities.BuildMathValueRecord(mathTable.Constants.RadicalKernAfterDegree));
                     constants.FormChild(nameof(mathTable.Constants.ScriptPercentScaleDown), mathTable.Constants.ScriptPercentScaleDown);
                     constants.FormChild(nameof(mathTable.Constants.ScriptPercentScaleUp), mathTable.Constants.ScriptPercentScaleUp);
                     constants.FormChild(nameof(mathTable.Constants.DelimitedSubFormulaMinHeight), mathTable.Constants.DelimitedSubFormulaMinHeight);
@@ -1099,27 +1310,67 @@ public partial class MainWindow : Window
                     constants.FormChild(nameof(mathTable.Constants.RadicalDegreeBottomRaisePercent),
                         mathTable.Constants.RadicalDegreeBottomRaisePercent);
                     TreeViewItem mathGlyphInfoTable = mathRoot.FormChild("Glyph Info");
-                    mathGlyphInfoTable.Items.Add(BuildCommonCoverageItem(mathTable.GlyphInfo.ExtendedShapeCoverage));
+                    mathGlyphInfoTable.Items.Add(Utilities.BuildCommonCoverageItem(mathTable.GlyphInfo.ExtendedShapeCoverage));
                     TreeViewItem mathKernInfoTable = mathGlyphInfoTable.FormChild("Kern Info");
-                    mathKernInfoTable.Items.Add(BuildCommonCoverageItem(mathTable.GlyphInfo.KernInfo.MathKernCoverage));
+                    mathKernInfoTable.Items.Add(Utilities.BuildCommonCoverageItem(mathTable.GlyphInfo.KernInfo.MathKernCoverage));
                     TreeViewItem mathKernInfoRecords = mathKernInfoTable.FormChild("Kern Info Records");
                     mathTable.GlyphInfo.KernInfo.MathKernInfoRecords.ForEach(mki =>
                     {
-                        mathKernInfoRecords.Items.Add(BuildMathKernInfo(mki));
+                        mathKernInfoRecords.Items.Add(Utilities.BuildMathKernInfo(mki));
                     });
                     TreeViewItem mathItalicsCorrectionInfo = mathGlyphInfoTable.FormChild("Italics Correction Info");
-                    mathItalicsCorrectionInfo.Items.Add(BuildCommonCoverageItem(mathTable.GlyphInfo.ItalicsCorrectionInfo.Coverage));
+                    mathItalicsCorrectionInfo.Items.Add(Utilities.BuildCommonCoverageItem(mathTable.GlyphInfo.ItalicsCorrectionInfo.Coverage));
                     TreeViewItem italicsCorrections = mathItalicsCorrectionInfo.FormChild("Italics Corrections");
                     mathTable.GlyphInfo.ItalicsCorrectionInfo.ItalicsCorrections.ForEach(ic =>
                     {
-                        italicsCorrections.Items.Add(BuildMathValueRecord(ic));
+                        italicsCorrections.Items.Add(Utilities.BuildMathValueRecord(ic));
                     });
                     TreeViewItem topAccentAttachment = mathGlyphInfoTable.FormChild("Top Accent Attachment Coverage");
-                    topAccentAttachment.Items.Add(BuildCommonCoverageItem(mathTable.GlyphInfo.TopAccentAttachment.TopAccentCoverage));
+                    topAccentAttachment.Items.Add(Utilities.BuildCommonCoverageItem(mathTable.GlyphInfo.TopAccentAttachment.TopAccentCoverage));
                     TreeViewItem topAccentAttachments = mathGlyphInfoTable.FormChild("Top Accent Attachments");
                     mathTable.GlyphInfo.TopAccentAttachment.TopAccentAttachments.ForEach(a =>
                     {
-                        topAccentAttachments.Items.Add(BuildMathValueRecord(a));
+                        topAccentAttachments.Items.Add(Utilities.BuildMathValueRecord(a));
+                    });
+                    TreeViewItem variantsHeader = mathRoot.FormChild("Variants");
+                    variantsHeader.FormChild(nameof(mathTable.Variants.MinConnectorOverlap),
+                        mathTable.Variants.MinConnectorOverlap);
+                    if (mathTable.Variants.HorizGlyphCoverage is not null)
+                    {
+                        variantsHeader.Items.Add(Utilities.BuildCommonCoverageItem(mathTable.Variants.HorizGlyphCoverage));
+                    }
+
+                    TreeViewItem hgcHeader = variantsHeader.FormChild("Horizontal Glyph Construction");
+                    mathTable.Variants.HorizGlyphConstruction.ForEach(hgc =>
+                    {
+                        if (hgc.GlyphAssembly is not null)
+                        {
+                            hgcHeader.Items.Add(Utilities.BuildMathValueRecord(hgc.GlyphAssembly.ItalicCorrection));
+                        }
+                        TreeViewItem gvrHeader = hgcHeader.FormChild("Glyph Variants");
+                        hgc.GlyphVariantRecords.ForEach(gvr =>
+                        {
+                            gvrHeader.FormChild(
+                                $"Variant glyph: {gvr.VariantGlyph} Advance measurement: {gvr.AdvanceMeasurement}");
+                        });
+                    });
+
+                    if (mathTable.Variants.VertGlyphCoverage is not null)
+                    {
+                        variantsHeader.Items.Add(Utilities.BuildCommonCoverageItem(mathTable.Variants.VertGlyphCoverage));
+                    }
+                    TreeViewItem vgcHeader = variantsHeader.FormChild("Vertical Glyph Construction");
+                    mathTable.Variants.VertGlyphConstruction.ForEach(vgc =>
+                    {
+                        if (vgc.GlyphAssembly is not null)
+                        {
+                            vgcHeader.Items.Add(Utilities.BuildMathValueRecord(vgc.GlyphAssembly.ItalicCorrection));
+                        }
+                        TreeViewItem gvrHeader = vgcHeader.FormChild("Glyph Variants");
+                        vgc.GlyphVariantRecords.ForEach(gvr =>
+                        {
+                            gvrHeader.FormChild($"Variant glyph: {gvr.VariantGlyph} Advance measurement: {gvr.AdvanceMeasurement}");
+                        });
                     });
                     break;
 
@@ -1152,7 +1403,7 @@ public partial class MainWindow : Window
                     mergRoot.Items.Add(classDefinitions);
                     mergTable.ClassDefinitions.ForEach(cd =>
                     {
-                        classDefinitions.Items.Add(BuildCommonClassDefinition(cd));
+                        classDefinitions.Items.Add(Utilities.BuildCommonClassDefinition(cd));
                     });
                     break;
 
@@ -1214,285 +1465,5 @@ public partial class MainWindow : Window
                     break;
             }
         });
-    }
-
-    private static TreeViewItem BuildCommonCoverageItem(ICoverageFormat coverage)
-    {
-        var coverageItem = new TreeViewItem { Header = "Coverage" };
-        switch (coverage)
-        {
-            case CoverageFormat1 cf1:
-                coverageItem.Header = "Coverage Format 1";
-                TreeViewItem glyphArrayHeader = coverageItem.FormChild("Glyph Array");
-                glyphArrayHeader.FormChild(string.Join(", ", cf1.GlyphArray));
-                break;
-            case CoverageFormat2 cf2:
-                coverageItem.Header = "Coverage Format 2";
-                cf2.RangeRecords.ToList().ForEach(rr =>
-                {
-                    TreeViewItem rangeRecordHeader = coverageItem.FormChild("Range Record");
-                    rangeRecordHeader.FormChild(nameof(rr.Start), rr.Start);
-                    rangeRecordHeader.FormChild(nameof(rr.End), rr.End);
-                    rangeRecordHeader.FormChild(nameof(rr.StartCoverageIndex), rr.StartCoverageIndex);
-                });
-                break;
-        }
-
-        return coverageItem;
-    }
-
-    private static TreeViewItem BuildCommonClassDefinition(IClassDefinition classDefinition)
-    {
-        var classDefinitionItem = new TreeViewItem { Header = "Class Definition" };
-        switch (classDefinition)
-        {
-            case ClassDefinitionFormat1 format1:
-                var format1Item = new TreeViewItem { Header = "Format 1" };
-                format1Item.FormChild(nameof(format1.StartGlyph), format1.StartGlyph);
-                format1Item.FormChild(nameof(format1.ClassValues), string.Join(", ", format1.ClassValues));
-                format1.ClassValues.ForEach(cv =>
-                {
-                    var classValue = new TreeViewItem { Header = $"Class Value: {cv}" };
-                    format1Item.Items.Add(classValue);
-                });
-                classDefinitionItem.Items.Add(format1Item);
-                break;
-            case ClassDefinitionFormat2 format2:
-                var format2Item = new TreeViewItem { Header = "Format 2" };
-                var classRangeRecords = new TreeViewItem { Header = "Class Range Records" };
-                format2Item.Items.Add(classRangeRecords);
-                format2.ClassRanges.ForEach(crr =>
-                {
-                    var classRangeRecord = new TreeViewItem { Header = "Class Range Record" };
-                    classRangeRecords.Items.Add(classRangeRecord);
-                    var startClass = new TreeViewItem { Header = $"Start Class: {crr.Class}" };
-                    var beginGlyph = new TreeViewItem { Header = $"Start Glyph: {crr.StartGlyphID}" };
-                    var endGlyph = new TreeViewItem { Header = $"End Glyph: {crr.EndGlyphID}" };
-                    classRangeRecord.Items.Add(startClass);
-                    classRangeRecord.Items.Add(beginGlyph);
-                    classRangeRecord.Items.Add(endGlyph);
-                });
-                classDefinitionItem.Items.Add(format2Item);
-                break;
-        }
-
-        return classDefinitionItem;
-    }
-
-    private static TreeViewItem BuildGdefClassDefinition(IClassDefinition classDefinition)
-    {
-        var classDefinitionItem = new TreeViewItem { Header = "Class Definition" };
-        switch (classDefinition)
-        {
-            case ClassDefinitionFormat1 def1:
-                classDefinitionItem.Header = "Class Definition Format 1";
-                classDefinitionItem.FormChild(nameof(def1.StartGlyph), def1.StartGlyph);
-                classDefinitionItem.FormChild(nameof(def1.ClassValues), string.Join(", ", def1.ClassValues));
-                break;
-            case ClassDefinitionFormat2 def2:
-                classDefinitionItem.Header = "Class Definition Format 2";
-                def2.ClassRanges.ForEach(cr =>
-                {
-                    var classRange = new TreeViewItem { Header = "Class Range" };
-                    classRange.FormChild(nameof(cr.StartGlyphID), cr.StartGlyphID);
-                    classRange.FormChild(nameof(cr.EndGlyphID), cr.EndGlyphID);
-                    classRange.FormChild(nameof(cr.Class), cr.Class);
-                    classDefinitionItem.Items.Add(classRange);
-                });
-                break;
-        }
-
-        return classDefinitionItem;
-    }
-
-    private static TreeViewItem BuildCommonValueRecord(ValueRecord valueRecord, ValueFormat format)
-    {
-        var valueRecordItem = new TreeViewItem { Header = "Value Record" };
-        if (format.HasFlag(ValueFormat.XAdvance))
-            valueRecordItem.FormChild(nameof(valueRecord.XAdvance), valueRecord.XAdvance!.Value);
-        if (format.HasFlag(ValueFormat.YAdvance))
-            valueRecordItem.FormChild(nameof(valueRecord.YAdvance), valueRecord.YAdvance!.Value);
-        if (format.HasFlag(ValueFormat.XPlacement))
-            valueRecordItem.FormChild(nameof(valueRecord.XPlacement), valueRecord.XPlacement!.Value);
-        if (format.HasFlag(ValueFormat.YPlacement))
-            valueRecordItem.FormChild(nameof(valueRecord.YPlacement), valueRecord.YPlacement!.Value);
-        if (format.HasFlag(ValueFormat.XPlacementDevice))
-            valueRecordItem.FormChild(nameof(valueRecord.XPlaDeviceOffset), valueRecord.XPlaDeviceOffset!.Value);
-        if (format.HasFlag(ValueFormat.YPlacementDevice))
-            valueRecordItem.FormChild(nameof(valueRecord.YPlaDeviceLength), valueRecord.YPlaDeviceLength!.Value);
-        if (format.HasFlag(ValueFormat.XAdvanceDevice))
-            valueRecordItem.FormChild(nameof(valueRecord.XAdvDeviceOffset), valueRecord.XAdvDeviceOffset!.Value);
-        if (format.HasFlag(ValueFormat.YAdvanceDevice))
-            valueRecordItem.FormChild(nameof(valueRecord.YAdvDeviceLength), valueRecord.YAdvDeviceLength!.Value);
-        return valueRecordItem;
-    }
-
-    private static TreeViewItem BuildCommonVariationIndex(VariationIndexTable variationIndexTable)
-    {
-        var variationIndexItem = new TreeViewItem { Header = "Variation Index Table" };
-        variationIndexItem.FormChild(nameof(variationIndexTable.DeltaFormat),
-            string.Join(", ", variationIndexTable.DeltaFormat));
-        variationIndexItem.FormChild(nameof(variationIndexTable.DeltaSetInnerIndex),
-            string.Join(", ", variationIndexTable.DeltaSetInnerIndex));
-        variationIndexItem.FormChild(nameof(variationIndexTable.DeltaSetOuterIndex),
-            string.Join(", ", variationIndexTable.DeltaSetOuterIndex));
-        return variationIndexItem;
-    }
-
-    private static TreeViewItem? BuildAxisTable(AxisTable axisTable)
-    {
-        if (axisTable.BaseTagListTable is null && axisTable.BaseScriptListTable is null) return null;
-        var axisItem = new TreeViewItem { Header = "Axis Table" };
-        if (axisTable.BaseTagListTable is not null)
-        {
-            TreeViewItem baseTagListHeader = axisItem.FormChild(nameof(axisTable.BaseTagListTable));
-            axisTable.BaseTagListTable.BaselineTags.ForEach(t =>
-            {
-                baseTagListHeader.Items.Add(t);
-            });
-        }
-        if (axisTable.BaseScriptListTable is not null)
-        {
-            TreeViewItem bscHeader = axisItem.FormChild("Base Script List");
-            axisTable.BaseScriptListTable.BaseScriptRecords.ForEach(bsr =>
-            {
-                bscHeader.FormChild(nameof(bsr.BaseScriptTag), bsr.BaseScriptTag);
-                TreeViewItem bst = bscHeader.FormChild(nameof(bsr.BaseScriptTable));
-                TreeViewItem bvt = bst.FormChild(nameof(bsr.BaseScriptTable.BaseValuesTable));
-                TreeViewItem bcf = bvt.FormChild(nameof(bsr.BaseScriptTable.BaseValuesTable.BaseCoordFormats));
-                bsr.BaseScriptTable.BaseValuesTable.BaseCoordFormats.ForEach(cf =>
-                {
-                    bcf.FormChild(nameof(cf.Coordinate), cf.Coordinate);
-                });
-            });
-        }
-
-        if (axisTable.BaseTagListTable is null) return null;
-        TreeViewItem btlHeader = axisItem.FormChild("Base Tag List");
-        axisTable.BaseTagListTable.BaselineTags.ForEach(bt => { btlHeader.FormChild(bt); });
-        return null;
-    }
-
-    private static TreeViewItem BuildMathValueRecord(MathValueRecord mathValueRecord)
-    {
-        var recordItem = new TreeViewItem { Header = "Math Value Record" };
-        recordItem.FormChild(nameof(mathValueRecord.Value), mathValueRecord.Value);
-        if (mathValueRecord.DeviceTable is null) return recordItem;
-        TreeViewItem deviceTable = recordItem.FormChild(nameof(mathValueRecord.DeviceTable));
-        deviceTable.FormChild(nameof(mathValueRecord.DeviceTable.StartSize), mathValueRecord.DeviceTable.StartSize);
-        deviceTable.FormChild(nameof(mathValueRecord.DeviceTable.EndSize), mathValueRecord.DeviceTable.EndSize);
-        deviceTable.FormChild(nameof(mathValueRecord.DeviceTable.DeltaFormat), mathValueRecord.DeviceTable.DeltaFormat);
-        deviceTable.FormChild(nameof(mathValueRecord.DeviceTable.DeltaValues), string.Join(", ", mathValueRecord.DeviceTable.DeltaValues));
-        return recordItem;
-    }
-
-    private static TreeViewItem BuildDeviceTable(DeviceTable deviceTable)
-    {
-        var toReturn = new TreeViewItem { Header = "Device Table" };
-        toReturn.FormChild(nameof(deviceTable.StartSize), deviceTable.StartSize);
-        toReturn.FormChild(nameof(deviceTable.EndSize), deviceTable.EndSize);
-        toReturn.FormChild(nameof(deviceTable.DeltaFormat), deviceTable.DeltaFormat);
-        toReturn.FormChild(nameof(deviceTable.DeltaValues), string.Join(", ", deviceTable.DeltaValues));
-        return toReturn;
-    }
-
-    private static TreeViewItem BuildAnchorTable(IAnchorTable anchorTable)
-    {
-        switch (anchorTable)
-        {
-            case AnchorTableFormat1 table1:
-                return new TreeViewItem { Header = $"X: {table1.X}, Y: {table1.Y}" };
-            case AnchorTableFormat2 table2:
-                return new TreeViewItem {Header = $"X: {table2.X}, Y: {table2.Y}, AnchorPoint: {table2.AnchorPoint}"};
-            case AnchorTableFormat3 table3:
-                var toReturn = new TreeViewItem();
-                toReturn.FormChild(nameof(table3.X), table3.X);
-                toReturn.FormChild(nameof(table3.Y), table3.Y);
-                if (table3.DeviceX is not null)
-                {
-                    TreeViewItem deviceTableX = BuildDeviceTable(table3.DeviceX);
-                    deviceTableX.Header = "Device X";
-                    toReturn.Items.Add(deviceTableX);
-                }
-                if (table3.DeviceY is null) return toReturn;
-                TreeViewItem deviceTableY = BuildDeviceTable(table3.DeviceY);
-                deviceTableY.Header = "Device Y";
-                toReturn.Items.Add(deviceTableY);
-                return toReturn;
-            default:
-                throw new ArgumentException("Bad anchor table");
-        }
-    }
-
-    private static TreeViewItem BuildMarkArray(MarkArray markArray)
-    {
-        var toReturn = new TreeViewItem { Header = "Mark Array" };
-        markArray.MarkRecords.ToList().ForEach(mr =>
-        {
-            TreeViewItem mrBase = toReturn.FormChild("Mark Record");
-            mrBase.FormChild(nameof(mr.MarkClass), mr.MarkClass);
-            mrBase.Items.Add(BuildAnchorTable(mr.AnchorTable));
-        });
-        return toReturn;
-    }
-
-    private static TreeViewItem BuildMark2Array(Mark2Array markArray)
-    {
-        var toReturn = new TreeViewItem { Header = "Mark 2 Array" };
-        markArray.Mark2Records.ToList().ForEach(mr =>
-        {
-            TreeViewItem mrBase = toReturn.FormChild("Mark Record");
-            TreeViewItem anchorTablesHeader = mrBase.FormChild(nameof(mr.AnchorTables));
-            mr.AnchorTables.ForEach(at =>
-            {
-                anchorTablesHeader.Items.Add(BuildAnchorTable(at));
-            });
-        });
-        return toReturn;
-    }
-
-    private static TreeViewItem BuildMathKernInfo(MathKernInfoRecord mathKernInfoRecord)
-    {
-        var toReturn = new TreeViewItem { Header = "Math Kern Info Record" };
-        if (mathKernInfoRecord.TopRightMathKern is not null)
-        {
-            TreeViewItem topRightMathKern = toReturn.FormChild("Top Right Math Kern");
-            topRightMathKern.Items.Add(BuildMathKernTable(mathKernInfoRecord.TopRightMathKern));
-        }
-
-        if (mathKernInfoRecord.TopLeftMathKern is not null)
-        {
-            TreeViewItem topLeftMathKern = toReturn.FormChild("Top Left Math Kern");
-            topLeftMathKern.Items.Add(BuildMathKernTable(mathKernInfoRecord.TopLeftMathKern));
-        }
-
-        if (mathKernInfoRecord.BottomLeftMathKern is not null)
-        {
-            TreeViewItem bottomLeftMathKern = toReturn.FormChild("Bottom Left Math Kern");
-            bottomLeftMathKern.Items.Add(BuildMathKernTable(mathKernInfoRecord.BottomLeftMathKern));
-        }
-
-        if (mathKernInfoRecord.BottomRightMathKern is null) return toReturn;
-        TreeViewItem bottomRightMathKern = toReturn.FormChild("Bottom Right Math Kern");
-        bottomRightMathKern.Items.Add(BuildMathKernTable(mathKernInfoRecord.BottomRightMathKern));
-
-        return toReturn;
-    }
-
-    private static TreeViewItem BuildMathKernTable(MathKernTable mathKernTable)
-    {
-        var toReturn = new TreeViewItem { Header = "Math Kern Table" };
-        TreeViewItem correctionHeights = toReturn.FormChild("Correction Heights");
-        mathKernTable.CorrectionHeights.ForEach(ch =>
-        {
-            correctionHeights.FormChild(nameof(ch.Value), ch.Value);
-            if (ch.DeviceTable is not null) correctionHeights.Items.Add(BuildDeviceTable(ch.DeviceTable));
-        });
-        TreeViewItem kernValues = toReturn.FormChild("Kern Values");
-        mathKernTable.KernValues.ForEach(kv =>
-        {
-            kernValues.Items.Add(BuildMathValueRecord(kv));
-        });
-        return toReturn;
     }
 }

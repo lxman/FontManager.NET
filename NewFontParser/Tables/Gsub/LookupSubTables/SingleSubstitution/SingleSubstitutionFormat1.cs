@@ -6,8 +6,6 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.SingleSubstitution
 {
     public class SingleSubstitutionFormat1 : ILookupSubTable
     {
-        public ushort Format { get; }
-
         public ICoverageFormat Coverage { get; }
 
         public ushort DeltaGlyphId { get; }
@@ -15,7 +13,7 @@ namespace NewFontParser.Tables.Gsub.LookupSubTables.SingleSubstitution
         public SingleSubstitutionFormat1(BigEndianReader reader)
         {
             long startOfTable = reader.Position;
-            Format = reader.ReadUShort();
+            _ = reader.ReadUShort();
             ushort coverageOffset = reader.ReadUShort();
             DeltaGlyphId = reader.ReadUShort();
             reader.Seek(startOfTable + coverageOffset);

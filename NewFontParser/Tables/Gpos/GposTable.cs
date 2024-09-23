@@ -7,8 +7,6 @@ namespace NewFontParser.Tables.Gpos
     {
         public static string Tag => "GPOS";
 
-        internal GposHeader Header { get; }
-
         public GposLookupList GposLookupList { get; }
 
         public ScriptList ScriptList { get; }
@@ -19,15 +17,15 @@ namespace NewFontParser.Tables.Gpos
         {
             var reader = new BigEndianReader(data);
 
-            Header = new GposHeader(reader);
+            var header = new GposHeader(reader);
 
-            reader.Seek(Header.ScriptListOffset);
+            reader.Seek(header.ScriptListOffset);
             ScriptList = new ScriptList(reader);
 
-            reader.Seek(Header.FeatureListOffset);
+            reader.Seek(header.FeatureListOffset);
             FeatureList = new FeatureList(reader);
 
-            reader.Seek(Header.LookupListOffset);
+            reader.Seek(header.LookupListOffset);
             GposLookupList = new GposLookupList(reader);
         }
     }
