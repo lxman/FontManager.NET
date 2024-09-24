@@ -26,7 +26,7 @@ namespace NewFontParser.Tables.Gsub
             FeatureList = new FeatureList(reader);
             reader.Seek(header.LookupListOffset);
             GsubLookupList = new GsubLookupList(reader);
-            if (header.FeatureVariationsOffset is null) return;
+            if (header.FeatureVariationsOffset is null || header.FeatureVariationsOffset == 0) return;
             reader.Seek(Convert.ToUInt32(header.FeatureVariationsOffset));
             FeatureVariationsTable = new FeatureVariationsTable(reader);
         }

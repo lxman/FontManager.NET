@@ -10,16 +10,14 @@ namespace NewFontParser.Tables.Bitmap.Common.GlyphBitmapData
 
         public byte Pad { get; }
 
-        public ushort ComponentCount { get; }
-
         public List<EbdtComponent> EbdtComponents { get; } = new List<EbdtComponent>();
 
         public GlyphBitmapDataFormat8(BigEndianReader reader)
         {
             SmallGlyphMetrics = new SmallGlyphMetricsRecord(reader);
             Pad = reader.ReadByte();
-            ComponentCount = reader.ReadUShort();
-            for (var i = 0; i < ComponentCount; i++)
+            ushort componentCount = reader.ReadUShort();
+            for (var i = 0; i < componentCount; i++)
             {
                 EbdtComponents.Add(new EbdtComponent(reader));
             }

@@ -9,6 +9,8 @@ using NewFontParser.Tables.Avar;
 using NewFontParser.Tables.Base;
 using NewFontParser.Tables.Bitmap.Cbdt;
 using NewFontParser.Tables.Bitmap.Cblc;
+using NewFontParser.Tables.Bitmap.Common.GlyphBitmapData;
+using NewFontParser.Tables.Bitmap.Common.IndexSubtables;
 using NewFontParser.Tables.Bitmap.Ebdt;
 using NewFontParser.Tables.Bitmap.Eblc;
 using NewFontParser.Tables.Bitmap.Ebsc;
@@ -58,7 +60,12 @@ using NewFontParser.Tables.Name;
 using NewFontParser.Tables.Optional;
 using NewFontParser.Tables.Optional.Dsig;
 using NewFontParser.Tables.Optional.Hdmx;
+using NewFontParser.Tables.Proprietary.Pclt;
+using NewFontParser.Tables.Stat;
+using NewFontParser.Tables.Svg;
 using NewFontParser.Tables.TtTables.Glyf;
+using NewFontParser.Tables.Vdmx;
+using NewFontParser.Tables.Vorg;
 
 namespace FontExplorer;
 
@@ -412,7 +419,7 @@ public partial class MainWindow : Window
                     break;
 
                 case GposTable gposTable:
-                    var gposRoot = new TreeViewItem { Header = "gpos" };
+                    var gposRoot = new TreeViewItem { Header = "GPOS" };
                     ResultView.Items.Add(gposRoot);
                     TreeViewItem frRoot = gposRoot.FormChild("Feature Records");
                     gposTable.FeatureList.FeatureRecords.ForEach(fr =>
@@ -719,7 +726,7 @@ public partial class MainWindow : Window
                     break;
 
                 case GdefTable gdefTable:
-                    var gdefRoot = new TreeViewItem { Header = "gdef" };
+                    var gdefRoot = new TreeViewItem { Header = "GDEF" };
                     ResultView.Items.Add(gdefRoot);
                     if (gdefTable.GlyphClassDef is not null)
                         gdefRoot.Items.Add(Utilities.BuildGdefClassDefinition(gdefTable.GlyphClassDef));
@@ -792,7 +799,7 @@ public partial class MainWindow : Window
                     break;
 
                 case BaseTable baseTable:
-                    var baseRoot = new TreeViewItem { Header = "base" };
+                    var baseRoot = new TreeViewItem { Header = "BASE" };
                     ResultView.Items.Add(baseRoot);
                     if (baseTable.HorizontalAxisTable is not null)
                     {
@@ -818,28 +825,166 @@ public partial class MainWindow : Window
                     break;
 
                 case CbdtTable cbdtTable:
-                    var cbdtRoot = new TreeViewItem { Header = "cbdt" };
+                    var cbdtRoot = new TreeViewItem { Header = "CBDT" };
                     ResultView.Items.Add(cbdtRoot);
                     break;
 
                 case CblcTable cblcTable:
-                    var cblcRoot = new TreeViewItem { Header = "cblc" };
+                    var cblcRoot = new TreeViewItem { Header = "CBLC" };
                     ResultView.Items.Add(cblcRoot);
                     break;
 
                 case EbdtTable ebdtTable:
-                    var ebdtRoot = new TreeViewItem { Header = "ebdt" };
+                    var ebdtRoot = new TreeViewItem { Header = "EBDT" };
                     ResultView.Items.Add(ebdtRoot);
+                    TreeViewItem glHeader = ebdtRoot.FormChild("Bitmap Data");
+                    ebdtTable.BitmapData.ForEach(bd =>
+                    {
+                        TreeViewItem goHeader = glHeader.FormChild("Glyph Object");
+                        goHeader.FormChild(nameof(bd.GlyphId), bd.GlyphId);
+                        switch (bd.BitmapData)
+                        {
+                            case GlyphBitmapDataFormat1 gbdf1:
+                                TreeViewItem gbdf1Header = goHeader.FormChild("Glyph Bitmap Data Format 1");
+                                gbdf1Header.Items.Add(Utilities.BuildSmallGlyphMetrics(gbdf1.SmallGlyphMetrics));
+                                gbdf1Header.FormChild(nameof(gbdf1.BitmapData), string.Join(", ", gbdf1.BitmapData));
+                                break;
+                            case GlyphBitmapDataFormat2 gbdf2:
+                                TreeViewItem gbdf2Header = goHeader.FormChild("Glyph Bitmap Data Format 2");
+                                gbdf2Header.Items.Add(Utilities.BuildSmallGlyphMetrics(gbdf2.SmallGlyphMetrics));
+                                gbdf2Header.FormChild(nameof(gbdf2.BitmapData), string.Join(", ", gbdf2.BitmapData));
+                                break;
+                            case GlyphBitmapDataFormat5 gbdf5:
+                                TreeViewItem gbdf5Header = goHeader.FormChild("Glyph Bitmap Data Format 5");
+                                gbdf5Header.FormChild(nameof(gbdf5.Data), string.Join(", ", gbdf5.Data));
+                                break;
+                            case GlyphBitmapDataFormat6 gbdf6:
+                                TreeViewItem gbdf6Header = goHeader.FormChild("Glyph Bitmap Data Format 6");
+                                gbdf6Header.Items.Add(Utilities.BuildBigGlyphMetrics(gbdf6.BigMetrics));
+                                gbdf6Header.FormChild(nameof(gbdf6.BitmapData), string.Join(", ", gbdf6.BitmapData));
+                                break;
+                            case GlyphBitmapDataFormat7 gbdf7:
+                                TreeViewItem gbdf7Header = goHeader.FormChild("Glyph Bitmap Data Format 7");
+                                gbdf7Header.Items.Add(Utilities.BuildBigGlyphMetrics(gbdf7.BigGlyphMetrics));
+                                gbdf7Header.FormChild(nameof(gbdf7.BitmapData), string.Join(", ", gbdf7.BitmapData));
+                                break;
+                            case GlyphBitmapDataFormat8 gbdf8:
+                                TreeViewItem gbdf8Header = goHeader.FormChild("Glyph Bitmap Data Format 8");
+                                gbdf8Header.FormChild(nameof(gbdf8.Pad), gbdf8.Pad);
+                                gbdf8Header.Items.Add(Utilities.BuildSmallGlyphMetrics(gbdf8.SmallGlyphMetrics));
+                                gbdf8.EbdtComponents.ForEach(ec =>
+                                {
+                                    TreeViewItem compHeader = gbdf8Header.FormChild("Ebdt Component");
+                                    compHeader.FormChild(nameof(ec.GlyphId), ec.GlyphId);
+                                    compHeader.FormChild(nameof(ec.XOffset), ec.XOffset);
+                                    compHeader.FormChild(nameof(ec.YOffset), ec.YOffset);
+                                });
+                                break;
+                            case GlyphBitmapDataFormat9 gbdf9:
+                                TreeViewItem gbdf9Header = goHeader.FormChild("Glyph Bitmap Data Format 9");
+                                gbdf9Header.Items.Add(Utilities.BuildBigGlyphMetrics(gbdf9.BigMetrics));
+                                gbdf9.EbdtComponents.ForEach(ec =>
+                                {
+                                    TreeViewItem compHeader = gbdf9Header.FormChild("Ebdt Component");
+                                    compHeader.FormChild(nameof(ec.GlyphId), ec.GlyphId);
+                                    compHeader.FormChild(nameof(ec.XOffset), ec.XOffset);
+                                    compHeader.FormChild(nameof(ec.YOffset), ec.YOffset);
+                                });
+                                break;
+                        }
+                    });
                     break;
 
                 case EbscTable ebscTable:
-                    var ebscRoot = new TreeViewItem { Header = "ebsc" };
+                    var ebscRoot = new TreeViewItem { Header = "EBSC" };
                     ResultView.Items.Add(ebscRoot);
+                    TreeViewItem strikesHeader = ebscRoot.FormChild("Strikes");
+                    ebscTable.Strikes.ForEach(s =>
+                    {
+                        TreeViewItem bsHeader = strikesHeader.FormChild("Bitmap Scale");
+                        bsHeader.FormChild(nameof(s.PpemX), s.PpemX);
+                        bsHeader.FormChild(nameof(s.PpemY), s.PpemY);
+                        bsHeader.FormChild(nameof(s.SubstitutePpemX), s.SubstitutePpemX);
+                        bsHeader.FormChild(nameof(s.SubstitutePpemY), s.SubstitutePpemY);
+                        TreeViewItem horzHeader = bsHeader.FormChild("Horizontal");
+                        horzHeader.Items.Add(Utilities.BuildSbitLineMetrics(s.HorizontalLineMetrics));
+                        TreeViewItem vertHeader = bsHeader.FormChild("Vertical");
+                        vertHeader.Items.Add(Utilities.BuildSbitLineMetrics(s.VerticalLineMetrics));
+                    });
                     break;
 
                 case EblcTable eblcTable:
-                    var eblcRoot = new TreeViewItem { Header = "eblc" };
+                    var eblcRoot = new TreeViewItem { Header = "EBLC" };
                     ResultView.Items.Add(eblcRoot);
+                    TreeViewItem sizesHeader = eblcRoot.FormChild("Bitmap Sizes");
+                    eblcTable.BitmapSizes.ForEach(bs =>
+                    {
+                        TreeViewItem bsHeader = sizesHeader.FormChild("Bitmap Size");
+                        bsHeader.FormChild(nameof(bs.StartGlyphIndex), bs.StartGlyphIndex);
+                        bsHeader.FormChild(nameof(bs.EndGlyphIndex), bs.EndGlyphIndex);
+                        bsHeader.FormChild(nameof(bs.Flags), bs.Flags);
+                        bsHeader.FormChild(nameof(bs.PpemX), bs.PpemX);
+                        bsHeader.FormChild(nameof(bs.PpemY), bs.PpemY);
+                        bsHeader.FormChild(nameof(bs.BitDepth), bs.BitDepth);
+                        bsHeader.FormChild(nameof(bs.ColorRef), bs.ColorRef);
+                        TreeViewItem horzHeader = bsHeader.FormChild("Horizontal");
+                        horzHeader.Items.Add(Utilities.BuildSbitLineMetrics(bs.HorizontalMetrics));
+                        TreeViewItem vertHeader = bsHeader.FormChild("Vertical");
+                        vertHeader.Items.Add(Utilities.BuildSbitLineMetrics(bs.VerticalMetrics));
+                        TreeViewItem isHeader = bsHeader.FormChild("Index Subtables");
+                        bs.IndexSubtableList.IndexSubtables.ForEach(insub =>
+                        {
+                            TreeViewItem insubHeader = isHeader.FormChild("Index Subtable");
+                            insubHeader.FormChild(nameof(insub.FirstGlyphIndex), insub.FirstGlyphIndex);
+                            insubHeader.FormChild(nameof(insub.LastGlyphIndex), insub.LastGlyphIndex);
+                            switch (insub.Subtable)
+                            {
+                                case IndexSubtableFormat1 isf1:
+                                    TreeViewItem isf1Header = insubHeader.FormChild("Index Subtable Format 1");
+                                    isf1Header.FormChild(nameof(isf1.ImageFormat), isf1.ImageFormat);
+                                    isf1Header.FormChild(nameof(isf1.IndexFormat), isf1.IndexFormat);
+                                    isf1Header.FormChild(nameof(isf1.ImageDataOffset), isf1.ImageDataOffset);
+                                    isf1Header.FormChild(nameof(isf1.BitmapDataOffsets), string.Join(", ", isf1.BitmapDataOffsets));
+                                    break;
+                                case IndexSubtablesFormat2 isf2:
+                                    TreeViewItem isf2Header = insubHeader.FormChild("Index Subtable Format 2");
+                                    isf2Header.FormChild(nameof(isf2.ImageFormat), isf2.ImageFormat);
+                                    isf2Header.FormChild(nameof(isf2.IndexFormat), isf2.IndexFormat);
+                                    isf2Header.FormChild(nameof(isf2.ImageDataOffset), isf2.ImageDataOffset);
+                                    isf2Header.FormChild(nameof(isf2.ImageSize), isf2.ImageSize);
+                                    isf2Header.Items.Add(Utilities.BuildBigGlyphMetrics(isf2.BigMetrics));
+                                    break;
+                                case IndexSubtablesFormat3 isf3:
+                                    TreeViewItem isf3Header = insubHeader.FormChild("Index Subtable Format 3");
+                                    isf3Header.FormChild(nameof(isf3.ImageFormat), isf3.ImageFormat);
+                                    isf3Header.FormChild(nameof(isf3.IndexFormat), isf3.IndexFormat);
+                                    isf3Header.FormChild(nameof(isf3.ImageDataOffset), isf3.ImageDataOffset);
+                                    isf3Header.FormChild(nameof(isf3.BitmapDataOffsets), string.Join(", ", isf3.BitmapDataOffsets));
+                                    break;
+                                case IndexSubtablesFormat4 isf4:
+                                    TreeViewItem isf4Header = insubHeader.FormChild("Index Subtable Format 4");
+                                    isf4Header.FormChild(nameof(isf4.ImageFormat), isf4.ImageFormat);
+                                    isf4Header.FormChild(nameof(isf4.IndexFormat), isf4.IndexFormat);
+                                    isf4Header.FormChild(nameof(isf4.ImageDataOffset), isf4.ImageDataOffset);
+                                    TreeViewItem opHeader = isf4Header.FormChild("Glyph Id Offset Pairs");
+                                    isf4.GlyphIdOffsetPairs.ForEach(op =>
+                                    {
+                                        TreeViewItem offpHeader = opHeader.FormChild("Glyph Id Offset Pair");
+                                        offpHeader.FormChild(nameof(op.GlyphId), op.GlyphId);
+                                        offpHeader.FormChild(nameof(op.Offset), op.Offset);
+                                    });
+                                    break;
+                                case IndexSubtablesFormat5 isf5:
+                                    TreeViewItem isf5Header = insubHeader.FormChild("Index Subtable Format 5");
+                                    isf5Header.Items.Add(Utilities.BuildBigGlyphMetrics(isf5.BigMetrics));
+                                    isf5Header.FormChild(nameof(isf5.ImageFormat), isf5.ImageFormat);
+                                    isf5Header.FormChild(nameof(isf5.IndexFormat), isf5.IndexFormat);
+                                    isf5Header.FormChild(nameof(isf5.ImageDataOffset), isf5.ImageDataOffset);
+                                    isf5Header.FormChild(nameof(isf5.GlyphIds), string.Join(", ", isf5.GlyphIds));
+                                    break;
+                            }
+                        });
+                    });
                     break;
 
                 case Type1Table type1Table:
@@ -848,7 +993,7 @@ public partial class MainWindow : Window
                     break;
 
                 case ColrTable colrTable:
-                    var colrRoot = new TreeViewItem { Header = "Colr" };
+                    var colrRoot = new TreeViewItem { Header = "COLR" };
                     ResultView.Items.Add(colrRoot);
                     break;
 
@@ -876,7 +1021,7 @@ public partial class MainWindow : Window
                     break;
 
                 case GsubTable gsubTable:
-                    var gsubRoot = new TreeViewItem { Header = "gsub" };
+                    var gsubRoot = new TreeViewItem { Header = "GSUB" };
                     ResultView.Items.Add(gsubRoot);
                     TreeViewItem lookupList = gsubRoot.FormChild("Subtables");
                     gsubTable.GsubLookupList.LookupTables.ForEach(lt =>
@@ -1120,12 +1265,12 @@ public partial class MainWindow : Window
                     break;
 
                 case HvarTable hvarTable:
-                    var hvarRoot = new TreeViewItem { Header = "hvar" };
+                    var hvarRoot = new TreeViewItem { Header = "HVAR" };
                     ResultView.Items.Add(hvarRoot);
                     break;
 
                 case JstfTable jstfTable:
-                    var jstfRoot = new TreeViewItem { Header = "jstf" };
+                    var jstfRoot = new TreeViewItem { Header = "JSTF" };
                     ResultView.Items.Add(jstfRoot);
                     jstfTable.ScriptRecords.ForEach(sr =>
                     {
@@ -1220,7 +1365,7 @@ public partial class MainWindow : Window
                     break;
 
                 case MathTable mathTable:
-                    var mathRoot = new TreeViewItem { Header = "math" };
+                    var mathRoot = new TreeViewItem { Header = "MATH" };
                     ResultView.Items.Add(mathRoot);
                     TreeViewItem constants = mathRoot.FormChild(nameof(mathTable.Constants));
                     TreeViewItem mathLeading = constants.FormChild(nameof(mathTable.Constants.MathLeading));
@@ -1429,7 +1574,7 @@ public partial class MainWindow : Window
                     break;
 
                 case MergTable mergTable:
-                    var mergRoot = new TreeViewItem { Header = "merg" };
+                    var mergRoot = new TreeViewItem { Header = "MERG" };
                     ResultView.Items.Add(mergRoot);
                     var version = new TreeViewItem { Header = $"Version: {mergTable.Version}" };
                     mergRoot.Items.Add(version);
@@ -1458,7 +1603,7 @@ public partial class MainWindow : Window
                     break;
 
                 case MvarTable mvarTable:
-                    var mvarRoot = new TreeViewItem { Header = "mvar" };
+                    var mvarRoot = new TreeViewItem { Header = "MVAR" };
                     ResultView.Items.Add(mvarRoot);
                     mvarTable.ValueRecords.ForEach(vr =>
                     {
@@ -1470,7 +1615,7 @@ public partial class MainWindow : Window
                     break;
 
                 case DsigTable dsigTable:
-                    var dsigRoot = new TreeViewItem { Header = "dsig" };
+                    var dsigRoot = new TreeViewItem { Header = "DSIG" };
                     ResultView.Items.Add(dsigRoot);
                     dsigRoot.FormChild(nameof(dsigTable.PermissionFlags), dsigTable.PermissionFlags);
                     dsigTable.SigRecords.ForEach(r =>
@@ -1493,10 +1638,42 @@ public partial class MainWindow : Window
                     break;
 
                 case LtshTable ltshTable:
-                    var ltshRoot = new TreeViewItem { Header = "ltsh" };
+                    var ltshRoot = new TreeViewItem { Header = "LTSH" };
                     ResultView.Items.Add(ltshRoot);
                     ltshRoot.FormChild(nameof(ltshTable.YPels), string.Join(", ", ltshTable.YPels));
                     break;
+                
+                case Os2Table os2Table:
+                    var os2Root = new TreeViewItem { Header = "OS/2" };
+                    ResultView.Items.Add(os2Root);
+                    break;
+                
+                case PcltTable pcltTable:
+                    var pcltRoot = new TreeViewItem { Header = "PCLT" };
+                    ResultView.Items.Add(pcltRoot);
+                    break;
+                
+                case StatTable statTable:
+                    var statRoot = new TreeViewItem { Header = "STAT" };
+                    ResultView.Items.Add(statRoot);
+                    break;
+                
+                case SvgTable svgTable:
+                    var svgRoot = new TreeViewItem { Header = "SVG" };
+                    ResultView.Items.Add(svgRoot);
+                    break;
+                
+                case VdmxTable vdmxTable:
+                    var vdmxRoot = new TreeViewItem { Header = "VDMX" };
+                    ResultView.Items.Add(vdmxRoot);
+                    break;
+                
+                case VorgTable vorgTable:
+                    var vorgRoot = new TreeViewItem { Header = "VORG" };
+                    ResultView.Items.Add(vorgRoot);
+                    break;
+                
+                
             }
         });
         ProcessingMarker.Text = string.Empty;

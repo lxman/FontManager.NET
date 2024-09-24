@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using NewFontParser.Tables.Base;
+using NewFontParser.Tables.Bitmap.Common;
 using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.ClassDefinition;
 using NewFontParser.Tables.Common.CoverageFormat;
@@ -322,6 +323,47 @@ public static class Utilities
                 break;
         }
 
+        return toReturn;
+    }
+
+    public static TreeViewItem BuildSmallGlyphMetrics(SmallGlyphMetricsRecord smallRecord)
+    {
+        var toReturn = new TreeViewItem { Header = "Small Glyph Metrics" };
+        toReturn.FormChild(nameof(smallRecord.Advance), smallRecord.Advance);
+        toReturn.FormChild(nameof(smallRecord.Height), smallRecord.Height);
+        toReturn.FormChild(nameof(smallRecord.Width), smallRecord.Width);
+        toReturn.FormChild(nameof(smallRecord.BearingX), smallRecord.BearingX);
+        toReturn.FormChild(nameof(smallRecord.BearingY), smallRecord.BearingY);
+        return toReturn;
+    }
+
+    public static TreeViewItem BuildBigGlyphMetrics(BigGlyphMetricsRecord bigRecord)
+    {
+        var toReturn = new TreeViewItem { Header = "Big Glyph Metrics" };
+        toReturn.FormChild(nameof(bigRecord.Height), bigRecord.Height);
+        toReturn.FormChild(nameof(bigRecord.Width), bigRecord.Width);
+        toReturn.FormChild(nameof(bigRecord.HorizontalAdvance), bigRecord.HorizontalAdvance);
+        toReturn.FormChild(nameof(bigRecord.VerticalAdvance), bigRecord.VerticalAdvance);
+        toReturn.FormChild(nameof(bigRecord.HorizontalBearingX), bigRecord.HorizontalBearingX);
+        toReturn.FormChild(nameof(bigRecord.HorizontalBearingY), bigRecord.HorizontalBearingY);
+        return toReturn;
+    }
+
+    public static TreeViewItem BuildSbitLineMetrics(SbitLineMetrics metrics)
+    {
+        var toReturn = new TreeViewItem { Header = "Scaler Bitmap Line Metrics" };
+        toReturn.FormChild(nameof(metrics.Ascender), metrics.Ascender);
+        toReturn.FormChild(nameof(metrics.Descender), metrics.Descender);
+        toReturn.FormChild(nameof(metrics.Pad1), metrics.Pad1);
+        toReturn.FormChild(nameof(metrics.Pad2), metrics.Pad2);
+        toReturn.FormChild(nameof(metrics.WidthMax), metrics.WidthMax);
+        toReturn.FormChild(nameof(metrics.CaretOffset), metrics.CaretOffset);
+        toReturn.FormChild(nameof(metrics.CaretSlopeNumerator), metrics.CaretSlopeNumerator);
+        toReturn.FormChild(nameof(metrics.CaretSlopeDenominator), metrics.CaretSlopeDenominator);
+        toReturn.FormChild(nameof(metrics.MaxBeforeBL), metrics.MaxBeforeBL);
+        toReturn.FormChild(nameof(metrics.MinAdvanceSB), metrics.MinAdvanceSB);
+        toReturn.FormChild(nameof(metrics.MinAfterBL), metrics.MinAfterBL);
+        toReturn.FormChild(nameof(metrics.MinOriginSB), metrics.MinOriginSB);
         return toReturn;
     }
 }

@@ -12,7 +12,7 @@ namespace NewFontParserTester
             const string rootDirectory = @"C:\Users\jorda\source\TestFonts";
             fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".ttf") || f.EndsWith(".otf")));
             fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".ttc")).ToList());
-            //fonts = fonts.Where(f => f.EndsWith("AmiriQuran.ttf")).ToList();
+            //fonts = fonts.Where(f => f.EndsWith("bahnschrift.ttf")).ToList();
             //const string rootDirectory = @"C:\Users\jorda\source\Woff2Fonts";
             //fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".woff2")));
             Log.Debug($"Found {fonts.Count} fonts to load.");

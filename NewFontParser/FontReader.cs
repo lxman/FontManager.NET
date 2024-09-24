@@ -40,7 +40,7 @@ namespace NewFontParser
             }
             else
             {
-                FontStructure font = ParseSingle(reader, new FontStructure(file));
+                FontStructure font = ParseSingleParallel(reader, new FontStructure(file));
                 result.Add(font);
             }
 
@@ -96,7 +96,7 @@ namespace NewFontParser
 
                 case FileType.Ttf:
                 case FileType.Otf:
-                    return new List<FontStructure> { ParseSingle(reader, fontStructure) };
+                    return new List<FontStructure> { ParseSingleParallel(reader, fontStructure) };
 
                 case FileType.Ttc:
                     return ParseTtc(reader, file);
@@ -183,7 +183,7 @@ namespace NewFontParser
                 var fontStructure = new FontStructure(file) { FileType = FileType.Ttc };
                 _ = reader.ReadBytes(4);
                 Console.WriteLine($"\tParsing subfont {i + 1}");
-                fontStructures.Add(ParseSingle(reader, fontStructure));
+                fontStructures.Add(ParseSingleParallel(reader, fontStructure));
             }
             return fontStructures;
         }
@@ -194,7 +194,7 @@ namespace NewFontParser
             var woffProcessor = new WoffPreprocessor(reader, 1);
             fontStructure.TableRecords = woffProcessor.TableRecords;
             fontStructure.CollectTableNames();
-            fontStructure.Process();
+            fontStructure.ProcessParallel();
             return fontStructure;
         }
 
@@ -211,11 +211,11 @@ namespace NewFontParser
             var beReader = new BigEndianReader(glyphData);
             var table = new TransformedGlyfTable(beReader);
             fontStructure.CollectTableNames();
-            fontStructure.Process();
+            fontStructure.ProcessParallel();
             return fontStructure;
         }
 
-        private static FontStructure ParseSingle(FileByteReader reader, FontStructure fontStructure)
+        private static FontStructure ParseSingleParallel(FileByteReader reader, FontStructure fontStructure)
         {
             fontStructure.TableCount = reader.ReadUInt16();
             fontStructure.SearchRange = reader.ReadUInt16();
@@ -235,7 +235,7 @@ namespace NewFontParser
                 if (reader.BytesRemaining >= 4) sectionData.AddRange(reader.ReadBytes(4));
                 x.Data = sectionData.ToArray();
             });
-            fontStructure.Process();
+            fontStructure.ProcessParallel();
             return fontStructure;
         }
 
