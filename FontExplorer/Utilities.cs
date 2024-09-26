@@ -4,11 +4,13 @@ using NewFontParser.Tables.Bitmap.Common;
 using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.ClassDefinition;
 using NewFontParser.Tables.Common.CoverageFormat;
+using NewFontParser.Tables.Common.TupleVariationStore;
 using NewFontParser.Tables.Gpos.LookupSubtables.AnchorTable;
 using NewFontParser.Tables.Gpos.LookupSubtables.Common;
 using NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos;
 using NewFontParser.Tables.Math;
 using NewFontParser.Tables.TtTables.Glyf;
+using Tuple = NewFontParser.Tables.Common.TupleVariationStore.Tuple;
 
 namespace FontExplorer;
 
@@ -364,6 +366,28 @@ public static class Utilities
         toReturn.FormChild(nameof(metrics.MinAdvanceSB), metrics.MinAdvanceSB);
         toReturn.FormChild(nameof(metrics.MinAfterBL), metrics.MinAfterBL);
         toReturn.FormChild(nameof(metrics.MinOriginSB), metrics.MinOriginSB);
+        return toReturn;
+    }
+
+    public static TreeViewItem BuildTupleVariationHeader(TupleVariationHeader tvh)
+    {
+        var toReturn = new TreeViewItem { Header = "Tuple Variation" };
+        toReturn.FormChild(nameof(tvh.TupleIndex), tvh.TupleIndex);
+        if (tvh.PeakTuple is not null)
+        {
+            toReturn.FormChild(nameof(tvh.PeakTuple), string.Join(", ", tvh.PeakTuple));
+        }
+
+        if (tvh.IntermediateStartTuple is not null)
+        {
+            toReturn.FormChild(nameof(tvh.IntermediateStartTuple), string.Join(", ", tvh.IntermediateStartTuple));
+        }
+
+        if (tvh.IntermediateEndTuple is not null)
+        {
+            toReturn.FormChild(nameof(tvh.IntermediateEndTuple), string.Join(", ", tvh.IntermediateEndTuple));
+        }
+        toReturn.FormChild(nameof(tvh.SerializedData), string.Join(", ", tvh.SerializedData));
         return toReturn;
     }
 }

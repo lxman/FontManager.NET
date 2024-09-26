@@ -1,5 +1,7 @@
-﻿using NewFontParser.Reader;
+﻿using System;
+using NewFontParser.Reader;
 using NewFontParser.Tables.Common.TupleVariationStore;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace NewFontParser.Tables.Cvar
 {
@@ -7,12 +9,18 @@ namespace NewFontParser.Tables.Cvar
     {
         public static string Tag => "cvar";
 
-        public Header Header { get; }
+        public Header Header { get; private set; }
+        
+        private readonly BigEndianReader _reader;
 
         public CvarTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
-            Header = new Header(reader, 0, true);
+            _reader = new BigEndianReader(data);
+        }
+
+        public void Process(int axisCount)
+        {
+            Header = new Header(_reader, Convert.ToUInt16(axisCount), true);
         }
     }
 }

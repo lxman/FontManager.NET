@@ -4,8 +4,9 @@ namespace NewFontParser.Tables
 {
     public class PanoseValues
     {
+        public byte FamilyType => _values[0];
+        
         private readonly byte[] _values;
-
         private readonly string[] _names = new string[10]
         {
             "FamilyType",

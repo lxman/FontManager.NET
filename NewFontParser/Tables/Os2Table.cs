@@ -67,23 +67,23 @@ namespace NewFontParser.Tables
 
         public short SWinDescent { get; }
 
-        public uint UlCodePageRange1 { get; }
+        public uint? UlCodePageRange1 { get; }
 
-        public uint UlCodePageRange2 { get; }
+        public uint? UlCodePageRange2 { get; }
 
-        public short SxHeight { get; }
+        public short? SxHeight { get; }
 
-        public short SCapHeight { get; }
+        public short? SCapHeight { get; }
 
-        public ushort UsDefaultChar { get; }
+        public ushort? UsDefaultChar { get; }
 
-        public ushort UsBreakChar { get; }
+        public ushort? UsBreakChar { get; }
 
-        public ushort UsMaxContext { get; }
+        public ushort? UsMaxContext { get; }
 
-        public ushort UsLowerOpticalPointSize { get; }
+        public ushort? UsLowerOpticalPointSize { get; }
 
-        public ushort UsUpperOpticalPointSize { get; }
+        public ushort? UsUpperOpticalPointSize { get; }
 
         public Os2Table(byte[] data)
         {

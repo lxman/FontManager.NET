@@ -1003,8 +1003,14 @@ public partial class MainWindow : Window
                     break;
 
                 case CvarTable cvarTable:
-                    var cvarRoot = new TreeViewItem { Header = "Cvar" };
+                    var cvarRoot = new TreeViewItem { Header = "cvar" };
                     ResultView.Items.Add(cvarRoot);
+                    cvarRoot.FormChild(nameof(cvarTable.Header.HasSharedPointNumbers), cvarTable.Header.HasSharedPointNumbers);
+                    TreeViewItem tvhRoot = cvarRoot.FormChild("Tuple Variations");
+                    cvarTable.Header.TupleVariationHeaders.ForEach(tvh =>
+                    {
+                        tvhRoot.Items.Add(Utilities.BuildTupleVariationHeader(tvh));
+                    });
                     break;
 
                 case FftmTable fftmTable:
@@ -1018,6 +1024,25 @@ public partial class MainWindow : Window
                 case FvarTable fvarTable:
                     var fvarRoot = new TreeViewItem { Header = "Fvar" };
                     ResultView.Items.Add(fvarRoot);
+                    TreeViewItem instsHeader = fvarRoot.FormChild("Instances");
+                    fvarTable.Instances.ForEach(inst =>
+                    {
+                        TreeViewItem instHeader = instsHeader.FormChild("Instance");
+                        instHeader.FormChild(nameof(inst.PostScriptNameId), inst.PostScriptNameId);
+                        instHeader.FormChild(nameof(inst.SubfamilyNameId), inst.SubfamilyNameId);
+                        instHeader.FormChild(nameof(inst.Coordinates), string.Join(", ", inst.Coordinates.Coordinates));
+                    });
+                    TreeViewItem axesHeader = fvarRoot.FormChild("Axes");
+                    fvarTable.Axes.ForEach(axis =>
+                    {
+                        TreeViewItem axisHeader = axesHeader.FormChild("Axis");
+                        axisHeader.FormChild(nameof(axis.AxisTag), axis.AxisTag);
+                        axisHeader.FormChild(nameof(axis.Flags), axis.Flags);
+                        axisHeader.FormChild(nameof(axis.AxisNameId), axis.AxisNameId);
+                        axisHeader.FormChild(nameof(axis.MinValue), axis.MinValue);
+                        axisHeader.FormChild(nameof(axis.DefaultValue), axis.DefaultValue);
+                        axisHeader.FormChild(nameof(axis.MaxValue), axis.MaxValue);
+                    });
                     break;
 
                 case GsubTable gsubTable:

@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdFontType", "IdFontType\Id
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontExplorer", "FontExplorer\FontExplorer.csproj", "{331C3E4C-9D5B-4F34-91E6-B630B4B50E18}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewFontParserTests", "NewFontParserTests\NewFontParserTests.csproj", "{4392C04E-5C00-4119-AEA3-398FE7B2470D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{331C3E4C-9D5B-4F34-91E6-B630B4B50E18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{331C3E4C-9D5B-4F34-91E6-B630B4B50E18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{331C3E4C-9D5B-4F34-91E6-B630B4B50E18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4392C04E-5C00-4119-AEA3-398FE7B2470D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4392C04E-5C00-4119-AEA3-398FE7B2470D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4392C04E-5C00-4119-AEA3-398FE7B2470D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4392C04E-5C00-4119-AEA3-398FE7B2470D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

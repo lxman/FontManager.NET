@@ -16,7 +16,7 @@ namespace NewFontParser.Tables.Common.TupleVariationStore
 
         public Header(BigEndianReader reader, ushort axisCount, bool isCvar)
         {
-            long start = reader.Position;
+            long startOfTable = reader.Position;
             if (isCvar)
             {
                 MajorVersion = reader.ReadUShort();
@@ -28,7 +28,7 @@ namespace NewFontParser.Tables.Common.TupleVariationStore
             ushort dataOffset = reader.ReadUShort();
             for (var i = 0; i < actualTupleVariationCount; i++)
             {
-                TupleVariationHeaders.Add(new TupleVariationHeader(reader, axisCount, start + dataOffset));
+                TupleVariationHeaders.Add(new TupleVariationHeader(reader, axisCount, startOfTable + dataOffset));
             }
         }
     }

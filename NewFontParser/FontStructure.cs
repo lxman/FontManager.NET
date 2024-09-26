@@ -8,6 +8,8 @@ using NewFontParser.Models;
 using NewFontParser.Tables;
 using NewFontParser.Tables.Bitmap.Ebdt;
 using NewFontParser.Tables.Bitmap.Eblc;
+using NewFontParser.Tables.Cvar;
+using NewFontParser.Tables.Fvar;
 using NewFontParser.Tables.Head;
 using NewFontParser.Tables.Hhea;
 using NewFontParser.Tables.Hmtx;
@@ -85,6 +87,7 @@ namespace NewFontParser
             (Tables.Find(x => x is HmtxTable) as HmtxTable)?.Process(GetTable<HheaTable>().NumberOfHMetrics, GetTable<MaxPTable>().NumGlyphs);
             (Tables.Find(x => x is LtshTable) as LtshTable)?.Process(GetTable<MaxPTable>().NumGlyphs);
             (Tables.Find(x => x is EbdtTable) as EbdtTable)?.Process(GetTable<EblcTable>());
+            (Tables.Find(x => x is CvarTable) as CvarTable)?.Process(GetTable<FvarTable>().Axes.Count);
             foreach (SucceededStatusRecord? record in _succeeded)
             {
                 TableStatusRecord? tsRecord = _tables.FirstOrDefault(r => r.Name == record.Name);
