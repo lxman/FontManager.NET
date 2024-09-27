@@ -1671,8 +1671,56 @@ public partial class MainWindow : Window
                 case Os2Table os2Table:
                     var os2Root = new TreeViewItem { Header = "OS/2" };
                     ResultView.Items.Add(os2Root);
+                    os2Root.FormChild(nameof(os2Table.XAvgCharWidth), os2Table.XAvgCharWidth);
+                    os2Root.FormChild(nameof(os2Table.UsWeightClass), os2Table.UsWeightClass);
+                    os2Root.FormChild(nameof(os2Table.UsWidthClass), os2Table.UsWidthClass);
+                    os2Root.FormChild(nameof(os2Table.FsType), os2Table.FsType);
+                    os2Root.FormChild(nameof(os2Table.YSubscriptXSize), os2Table.YSubscriptXSize);
+                    os2Root.FormChild(nameof(os2Table.YSubscriptYSize), os2Table.YSubscriptYSize);
+                    os2Root.FormChild(nameof(os2Table.YSubscriptXOffset), os2Table.YSubscriptXOffset);
+                    os2Root.FormChild(nameof(os2Table.YSubscriptYOffset), os2Table.YSubscriptYOffset);
+                    os2Root.FormChild(nameof(os2Table.YSuperscriptXSize), os2Table.YSuperscriptXSize);
+                    os2Root.FormChild(nameof(os2Table.YSuperscriptYSize), os2Table.YSuperscriptYSize);
+                    os2Root.FormChild(nameof(os2Table.YSuperscriptXOffset), os2Table.YSuperscriptXOffset);
+                    os2Root.FormChild(nameof(os2Table.YSuperscriptYOffset), os2Table.YSuperscriptYOffset);
+                    os2Root.FormChild(nameof(os2Table.YStrikeoutSize), os2Table.YStrikeoutSize);
+                    os2Root.FormChild(nameof(os2Table.YStrikeoutPosition), os2Table.YStrikeoutPosition);
+                    os2Root.FormChild(nameof(os2Table.SFamilyClass), os2Table.SFamilyClass);
+                    os2Root.FormChild(nameof(os2Table.UlUnicodeRange1), os2Table.UlUnicodeRange1);
+                    os2Root.FormChild(nameof(os2Table.UlUnicodeRange2), os2Table.UlUnicodeRange2);
+                    os2Root.FormChild(nameof(os2Table.UlUnicodeRange3), os2Table.UlUnicodeRange3);
+                    os2Root.FormChild(nameof(os2Table.UlUnicodeRange4), os2Table.UlUnicodeRange4);
+                    os2Root.FormChild(nameof(os2Table.AchVendId), os2Table.AchVendId);
+                    os2Root.FormChild(nameof(os2Table.FsSelection), os2Table.FsSelection);
+                    os2Root.FormChild(nameof(os2Table.UsFirstCharIndex), os2Table.UsFirstCharIndex);
+                    os2Root.FormChild(nameof(os2Table.UsLastCharIndex), os2Table.UsLastCharIndex);
+                    os2Root.FormChild(nameof(os2Table.STypoAscender), os2Table.STypoAscender);
+                    os2Root.FormChild(nameof(os2Table.STypoDescender), os2Table.STypoDescender);
+                    os2Root.FormChild(nameof(os2Table.STypoLineGap), os2Table.STypoLineGap);
+                    os2Root.FormChild(nameof(os2Table.SWinAscent), os2Table.SWinAscent);
+                    os2Root.FormChild(nameof(os2Table.SWinDescent), os2Table.SWinDescent);
+                    os2Root.FormChild(nameof(os2Table.UlCodePageRange1), os2Table.UlCodePageRange1);
+                    os2Root.FormChild(nameof(os2Table.UlCodePageRange2), os2Table.UlCodePageRange2);
+                    os2Root.FormChild(nameof(os2Table.SxHeight), os2Table.SxHeight);
+                    os2Root.FormChild(nameof(os2Table.SCapHeight), os2Table.SCapHeight);
+                    os2Root.FormChild(nameof(os2Table.UsDefaultChar), os2Table.UsDefaultChar);
+                    os2Root.FormChild(nameof(os2Table.UsBreakChar), os2Table.UsBreakChar);
+                    os2Root.FormChild(nameof(os2Table.UsMaxContext), os2Table.UsMaxContext);
+                    os2Root.FormChild(nameof(os2Table.UsLowerOpticalPointSize), os2Table.UsLowerOpticalPointSize);
+                    os2Root.FormChild(nameof(os2Table.UsUpperOpticalPointSize), os2Table.UsUpperOpticalPointSize);
+                    TreeViewItem panoseRoot = os2Root.FormChild("Panose");
+                    panoseRoot.FormChild(os2Table.Panose.GetValue(0));
+                    panoseRoot.FormChild(os2Table.Panose.GetValue(1));
+                    panoseRoot.FormChild(os2Table.Panose.GetValue(2));
+                    panoseRoot.FormChild(os2Table.Panose.GetValue(3));
+                    panoseRoot.FormChild(os2Table.Panose.GetValue(4));
+                    panoseRoot.FormChild(os2Table.Panose.GetValue(5));
+                    panoseRoot.FormChild(os2Table.Panose.GetValue(6));
+                    panoseRoot.FormChild(os2Table.Panose.GetValue(7));
+                    panoseRoot.FormChild(os2Table.Panose.GetValue(8));
+                    panoseRoot.FormChild(os2Table.Panose.GetValue(9));
                     break;
-                
+               
                 case PcltTable pcltTable:
                     var pcltRoot = new TreeViewItem { Header = "PCLT" };
                     ResultView.Items.Add(pcltRoot);
@@ -1698,7 +1746,25 @@ public partial class MainWindow : Window
                     ResultView.Items.Add(vorgRoot);
                     break;
                 
+                case PostTable postTable:
+                    var postRoot = new TreeViewItem { Header = "post" };
+                    ResultView.Items.Add(postRoot);
+                    postRoot.FormChild(nameof(postTable.UnderlinePosition), postTable.UnderlinePosition);
+                    postRoot.FormChild(nameof(postTable.ItalicAngle), postTable.ItalicAngle);
+                    postRoot.FormChild(nameof(postTable.NumGlyphs), postTable.NumGlyphs);
+                    postRoot.FormChild(nameof(postTable.GlyphNames), string.Join(", ", postTable.GlyphNames));
+                    postRoot.FormChild(nameof(postTable.GlyphNameIndex), string.Join(", ", postTable.GlyphNameIndex));
+                    postRoot.FormChild(nameof(postTable.UnderlineThickness), postTable.UnderlineThickness);
+                    postRoot.FormChild(nameof(postTable.IsFixedPitch), postTable.IsFixedPitch);
+                    postRoot.FormChild(nameof(postTable.MinMemType1), postTable.MinMemType1);
+                    postRoot.FormChild(nameof(postTable.MaxMemType1), postTable.MaxMemType1);
+                    postRoot.FormChild(nameof(postTable.MinMemType42), postTable.MinMemType42);
+                    postRoot.FormChild(nameof(postTable.MaxMemType42), postTable.MaxMemType42);
+                    break;
                 
+                default:
+                    Console.WriteLine($"Unhandled type: {t.GetType().Name}");
+                    break;
             }
         });
         ProcessingMarker.Text = string.Empty;

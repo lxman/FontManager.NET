@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.Proprietary.Panose
 {
-    public class Interpreter
+    public class PanoseInterpreter
     {
         private static readonly Dictionary<int, string> FamilyKindValues = new Dictionary<int, string>
         {
@@ -12,10 +12,10 @@ namespace NewFontParser.Tables.Proprietary.Panose
 
         private static readonly Dictionary<int, List<string>> Descriptions = new Dictionary<int, List<string>>
         {
-            [2] = { "Serif Style", "Weight", "Proportion", "Contrast", "Stroke Variation", "Arm Style", "Letterform", "Midline", "X-Height" },
-            [3] = { "Tool Kind", "Weight", "Spacing", "Aspect Ratio", "Contrast", "Topology", "Form", "Finials", "X-Ascent" },
-            [4] = { "Class", "Weight", "Aspect", "Contrast", "Serif Variant", "Treatment", "Lining", "Topology", "Range of Characters" },
-            [5] = { "Kind", "Weight", "Spacing", "Aspect Ratio and Contrast", "Aspect Ratio of Character 94", "Aspect Ratio of Character 119",
+            [2] = new List<string> { "Serif Style", "Weight", "Proportion", "Contrast", "Stroke Variation", "Arm Style", "Letterform", "Midline", "X-Height" },
+            [3] = new List<string> { "Tool Kind", "Weight", "Spacing", "Aspect Ratio", "Contrast", "Topology", "Form", "Finials", "X-Ascent" },
+            [4] = new List<string> { "Class", "Weight", "Aspect", "Contrast", "Serif Variant", "Treatment", "Lining", "Topology", "Range of Characters" },
+            [5] = new List<string> { "Kind", "Weight", "Spacing", "Aspect Ratio and Contrast", "Aspect Ratio of Character 94", "Aspect Ratio of Character 119",
                 "Aspect Ratio of Character 157", "Aspect Ratio of Character 163", "Aspect Ratio of Character 211" }
         };
 
@@ -36,6 +36,37 @@ namespace NewFontParser.Tables.Proprietary.Panose
         {
             [0] = "Any", [1] = "No Fit", [2] = "Old Style", [3] = "Modern", [4] = "Even Width", [5] = "Extended", [6] = "Condensed",
             [7] = "Very Extended", [8] = "Very Condensed", [9] = "Monospaced"
+        };
+
+        private static readonly Dictionary<int, string> StrokeVariationValues = new Dictionary<int, string>
+        {
+            [0] = "Any", [1] = "No Fit", [2] = "No Variation", [3] = "Gradual/Diagonal", [4] = "Gradual/Transitional",
+            [5] = "Gradual/Vertical", [6] = "Gradual/Horizontal", [7] = "Rapid/Vertical", [8] = "Rapid/Horizontal",
+            [9] = "Instant/Vertical", [10] = "Instant/Horizontal"
+        };
+
+        private static readonly Dictionary<int, string> ArmStyleValues = new Dictionary<int, string>
+        {
+            [0] = "Any", [1] = "No Fit", [2] = "Straight Arms/Horizontal", [3] = "Straight Arms/Wedge",
+            [4] = "Straight Arms/Vertical", [5] = "Straight Arms/Single Serif", [6] = "Straight Arms/Double Serif",
+            [7] = "Non-Straight/Horizontal", [8] = "Non-Straight/Wedge", [9] = "Non-Straight/Vertical",
+            [10] = "Non-Straight/Single Serif", [11] = "Non-Straight/Double Serif",
+        };
+
+        private static readonly Dictionary<int, string> LetterformValues = new Dictionary<int, string>
+        {
+            [0] = "Any", [1] = "No Fit", [2] = "Normal/Contact", [3] = "Normal/Weighted", [4] = "Normal/Boxed",
+            [5] = "Normal/Flattened", [6] = "Normal/Rounded", [7] = "Normal/Off Center", [8] = "Normal/Square",
+            [9] = "Oblique/Contact", [10] = "Oblique/Weighted", [11] = "Oblique/Boxed", [12] = "Oblique/Flattened",
+            [13] = "Oblique/Rounded", [14] = "Oblique/Off Center", [15] = "Oblique/Square"
+        };
+
+        private static readonly Dictionary<int, string> MidlineValues = new Dictionary<int, string>
+        {
+            [0] = "Any", [1] = "No Fit", [2] = "Standard/Trimmed", [3] = "Standard/Pointed", [4] = "Standard/Serifed",
+            [5] = "High/Trimmed", [6] = "High/Pointed", [7] = "High/Serifed", [8] = "Constant/Trimmed",
+            [9] = "Constant/Pointed", [10] = "Constant/Serifed", [11] = "Low/Trimmed", [12] = "Low/Pointed",
+            [13] = "Low/Serifed"
         };
 
         private static readonly Dictionary<int, string> ToolKindValues = new Dictionary<int, string>
@@ -86,7 +117,7 @@ namespace NewFontParser.Tables.Proprietary.Panose
             [12] = "Round / Closed Loops", [13] = "Round / Open Loops"
         };
 
-        private static readonly Dictionary<int, string> XascentValues = new Dictionary<int, string>
+        private static readonly Dictionary<int, string> XAscentValues = new Dictionary<int, string>
         {
             [0] = "Any", [1] = "No Fit", [2] = "Very Low", [3] = "Low", [4] = "Medium", [5] = "High",
             [6] = "Very High"
@@ -139,7 +170,7 @@ namespace NewFontParser.Tables.Proprietary.Panose
             [12] = "Horseshoe E and A", [13] = "Cursive", [14] = "Blackletter", [15] = "Swash Variance"
         };
 
-        private static readonly Dictionary<int, string> RangeofcharactersValues = new Dictionary<int, string>
+        private static readonly Dictionary<int, string> RangeOfCharactersValues = new Dictionary<int, string>
         {
             [0] = "Any", [1] = "No Fit", [2] = "Extended Collection", [3] = "Literals", [4] = "No Lower Case",
             [5] = "Small Caps"
@@ -158,12 +189,10 @@ namespace NewFontParser.Tables.Proprietary.Panose
             [5] = "Very Wide", [6] = "Wide", [7] = "Normal", [8] = "Narrow", [9] = "Very Narrow"
         };
         private static byte[]? _values;
-        
-        public bool SetValues(byte[] values)
+
+        public PanoseInterpreter(byte[] values)
         {
-            if (values.Length > 0 || values[0] > 5) return false;
             _values = values;
-            return true;
         }
 
         public string GetValue(byte value)
@@ -173,7 +202,7 @@ namespace NewFontParser.Tables.Proprietary.Panose
             if (familyKind > 5 || value > 9) return string.Empty;
             if (familyKind < 2) return $"{value} - {_values[value]}";
             if (value == 0) return $"Family Kind - {FamilyKindValues[_values[value]]}";
-            string name = Descriptions[familyKind][value];
+            string name = Descriptions[familyKind][value - 1];
             byte target = _values[value];
             switch (name)
             {
@@ -206,7 +235,7 @@ namespace NewFontParser.Tables.Proprietary.Panose
                 case "Finials":
                     return $"{name} - {FinialsValues[target]}";
                 case "X-Ascent":
-                    return $"{name} - {XascentValues[target]}";
+                    return $"{name} - {XAscentValues[target]}";
                 case "X-Height":
                     return $"{name} - {XHeightValues[target]}";
                 case "Class":
@@ -220,9 +249,17 @@ namespace NewFontParser.Tables.Proprietary.Panose
                 case "Lining":
                     return $"{name} - {LiningValues[target]}";
                 case "Range of Characters":
-                    return $"{name} - {RangeofcharactersValues[target]}";
+                    return $"{name} - {RangeOfCharactersValues[target]}";
                 case "Kind":
                     return $"{name} - {KindValues[target]}";
+                case "Stroke Variation":
+                    return $"{name} - {StrokeVariationValues[target]}";
+                case "Arm Style":
+                    return $"{name} - {ArmStyleValues[target]}";
+                case "Letterform":
+                    return $"{name} - {LetterformValues[target]}";
+                case "Midline":
+                    return $"{name} - {MidlineValues[target]}";
             }
 
             if (name.StartsWith("Aspect Ratio of Character"))

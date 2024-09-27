@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using NewFontParser.Reader;
+using NewFontParser.Tables.Proprietary.Panose;
 
 namespace NewFontParser.Tables
 {
@@ -39,7 +40,7 @@ namespace NewFontParser.Tables
 
         public short SFamilyClass { get; }
 
-        public PanoseValues Panose { get; }
+        public PanoseInterpreter Panose { get; }
 
         public uint UlUnicodeRange1 { get; }
 
@@ -104,7 +105,7 @@ namespace NewFontParser.Tables
             YStrikeoutSize = reader.ReadShort();
             YStrikeoutPosition = reader.ReadShort();
             SFamilyClass = reader.ReadShort();
-            Panose = new PanoseValues(reader.ReadBytes(10));
+            Panose = new PanoseInterpreter(reader.ReadBytes(10));
             UlUnicodeRange1 = reader.ReadUInt32();
             UlUnicodeRange2 = reader.ReadUInt32();
             UlUnicodeRange3 = reader.ReadUInt32();
