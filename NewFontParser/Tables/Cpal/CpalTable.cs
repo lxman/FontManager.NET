@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Cpal
@@ -9,13 +11,13 @@ namespace NewFontParser.Tables.Cpal
 
         public ushort Version { get; }
 
-        public Color[] Colors { get; }
+        public List<Color> Colors { get; } = new List<Color>();
 
-        public PaletteType[]? PaletteTypeArray { get; }
+        public List<PaletteType>? PaletteTypeArray { get; }
 
-        public ushort[]? PaletteLabelArray { get; }
+        public List<ushort>? PaletteLabelArray { get; }
 
-        public ushort[]? PaletteEntryLabelArray { get; }
+        public List<ushort>? PaletteEntryLabelArray { get; }
 
         public CpalTable(byte[] data)
         {
@@ -32,7 +34,6 @@ namespace NewFontParser.Tables.Cpal
                 paletteOffsets[i] = reader.ReadUShort();
             }
 
-            Colors = new Color[numColorRecords];
             reader.Seek(offsetFirstColorRecord);
             for (var i = 0; i < numColorRecords; i++)
             {
@@ -40,7 +41,7 @@ namespace NewFontParser.Tables.Cpal
                 byte green = reader.ReadByte();
                 byte red = reader.ReadByte();
                 byte alpha = reader.ReadByte();
-                Colors[i] = Color.FromArgb(alpha, red, green, blue);
+                Colors.Add(Color.FromArgb(alpha, red, green, blue));
             }
 
             if (Version == 0) return;
@@ -48,26 +49,25 @@ namespace NewFontParser.Tables.Cpal
             uint offsetPaletteLabelArray = reader.ReadUInt32();
             uint offsetPaletteEntryLabelArray = reader.ReadUInt32();
 
-            PaletteTypeArray = new PaletteType[numPalettes];
-            reader.Seek(offsetPaletteTypeArray);
-            for (var i = 0; i < numPalettes; i++)
+            if (numPalettes > 0)
             {
-                PaletteTypeArray[i] = (PaletteType)reader.ReadUInt32();
+                reader.Seek(offsetPaletteTypeArray);
+                PaletteTypeArray = new List<PaletteType>();
+                for (var i = 0; i < numPalettes; i++)
+                {
+                    PaletteTypeArray.Add((PaletteType)reader.ReadUInt32());
+                }
             }
 
-            PaletteLabelArray = new ushort[numPalettes];
-            reader.Seek(offsetPaletteLabelArray);
-            for (var i = 0; i < numPalettes; i++)
+            if (numPalettes > 0)
             {
-                PaletteLabelArray[i] = reader.ReadUShort();
+                reader.Seek(offsetPaletteLabelArray);
+                PaletteLabelArray = reader.ReadUShortArray(numPalettes).ToList();
             }
 
-            PaletteEntryLabelArray = new ushort[numPaletteEntries];
+            if (numPaletteEntries == 0) return;
             reader.Seek(offsetPaletteEntryLabelArray);
-            for (var i = 0; i < numPaletteEntries; i++)
-            {
-                PaletteEntryLabelArray[i] = reader.ReadUShort();
-            }
+            PaletteEntryLabelArray = reader.ReadUShortArray(numPaletteEntries).ToList();
         }
     }
 }

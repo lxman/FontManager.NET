@@ -7,8 +7,6 @@ namespace NewFontParser.Tables.Stat.AxisValue
     {
         public ushort Format { get; }
 
-        public ushort AxisCount { get; }
-
         public AxisValueFlags Flags { get; }
 
         public ushort ValueNameId { get; }
@@ -18,11 +16,11 @@ namespace NewFontParser.Tables.Stat.AxisValue
         public AxisValueFormat4(BigEndianReader reader)
         {
             Format = reader.ReadUShort();
-            AxisCount = reader.ReadUShort();
+            ushort axisCount = reader.ReadUShort();
             Flags = (AxisValueFlags)reader.ReadUShort();
             ValueNameId = reader.ReadUShort();
 
-            for (var i = 0; i < AxisCount; i++)
+            for (var i = 0; i < axisCount; i++)
             {
                 AxisValues.Add(new AxisValueRecord(reader));
             }

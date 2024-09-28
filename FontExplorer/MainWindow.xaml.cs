@@ -62,6 +62,7 @@ using NewFontParser.Tables.Optional.Dsig;
 using NewFontParser.Tables.Optional.Hdmx;
 using NewFontParser.Tables.Proprietary.Pclt;
 using NewFontParser.Tables.Stat;
+using NewFontParser.Tables.Stat.AxisValue;
 using NewFontParser.Tables.Svg;
 using NewFontParser.Tables.TtTables;
 using NewFontParser.Tables.TtTables.Glyf;
@@ -1001,6 +1002,26 @@ public partial class MainWindow : Window
                 case CpalTable cpalTable:
                     var cpalRoot = new TreeViewItem { Header = "CPAL" };
                     ResultView.Items.Add(cpalRoot);
+                    TreeViewItem colorsHeader = cpalRoot.FormChild("Colors");
+                    cpalTable.Colors.ForEach(c => colorsHeader.FormChild(c.ToString()));
+                    if (cpalTable.PaletteLabelArray is not null)
+                    {
+                        cpalRoot.FormChild(nameof(cpalTable.PaletteLabelArray), string.Join(", ", cpalTable.PaletteLabelArray));
+                    }
+
+                    if (cpalTable.PaletteTypeArray is not null)
+                    {
+                        TreeViewItem ptaHeader = cpalRoot.FormChild("Palette Types");
+                        cpalTable.PaletteTypeArray.ForEach(pta =>
+                        {
+                            ptaHeader.FormChild($"Palette Type: {pta}");
+                        });
+                    }
+
+                    if (cpalTable.PaletteEntryLabelArray is not null)
+                    {
+                        cpalRoot.FormChild(nameof(cpalTable.PaletteEntryLabelArray), string.Join(", ", cpalTable.PaletteEntryLabelArray));
+                    }
                     break;
 
                 case CvarTable cvarTable:
@@ -1293,6 +1314,13 @@ public partial class MainWindow : Window
                 case HvarTable hvarTable:
                     var hvarRoot = new TreeViewItem { Header = "HVAR" };
                     ResultView.Items.Add(hvarRoot);
+                    hvarRoot.Items.Add(Utilities.BuildItemVariationStore(hvarTable.ItemVariationStore));
+                    TreeViewItem lsbHeader = hvarRoot.FormChild("LSB Mapping");
+                    lsbHeader.Items.Add(Utilities.BuildCommonDeltaSetIndexMap(hvarTable.LsbMapping));
+                    TreeViewItem rsbHeader = hvarRoot.FormChild("RSB Mapping");
+                    rsbHeader.Items.Add(Utilities.BuildCommonDeltaSetIndexMap(hvarTable.RsbMapping));
+                    TreeViewItem awmHeader = hvarRoot.FormChild("Advanced Width Mapping");
+                    awmHeader.Items.Add(Utilities.BuildCommonDeltaSetIndexMap(hvarTable.AdvancedWidthMapping));
                     break;
 
                 case JstfTable jstfTable:
@@ -1732,11 +1760,67 @@ public partial class MainWindow : Window
                 case StatTable statTable:
                     var statRoot = new TreeViewItem { Header = "STAT" };
                     ResultView.Items.Add(statRoot);
+                    TreeViewItem daaHeader = statRoot.FormChild("Design Axes Array");
+                    statTable.DesignAxesArray.DesignAxes.ForEach(da =>
+                    {
+                        TreeViewItem daHeader = daaHeader.FormChild("Axis Record");
+                        daHeader.FormChild(nameof(da.Tag), da.Tag);
+                        daHeader.FormChild(nameof(da.AxisNameId), da.AxisNameId);
+                        daHeader.FormChild(nameof(da.AxisOrdering), da.AxisOrdering);
+                    });
+                    TreeViewItem avtHeader = daaHeader.FormChild("Axis Value Tables");
+                    statTable.DesignAxesArray.AxisValueTables.ForEach(avt =>
+                    {
+                        TreeViewItem avHeader = avtHeader.FormChild("Axis Value Table");
+                        switch (avt)
+                        {
+                            case AxisValueFormat1 avf1:
+                                avHeader.FormChild(nameof(avf1.Flags), avf1.Flags);
+                                avHeader.FormChild(nameof(avf1.Value), avf1.Value);
+                                avHeader.FormChild(nameof(avf1.AxisIndex), avf1.AxisIndex);
+                                avHeader.FormChild(nameof(avf1.ValueNameId), avf1.ValueNameId);
+                                break;
+                            case AxisValueFormat2 avf2:
+                                avHeader.FormChild(nameof(avf2.Flags), avf2.Flags);
+                                avHeader.FormChild(nameof(avf2.AxisIndex), avf2.AxisIndex);
+                                avHeader.FormChild(nameof(avf2.ValueNameId), avf2.ValueNameId);
+                                avHeader.FormChild(nameof(avf2.NominalValue), avf2.NominalValue);
+                                avHeader.FormChild(nameof(avf2.RangeMinValue), avf2.RangeMinValue);
+                                avHeader.FormChild(nameof(avf2.RangeMaxValue), avf2.RangeMaxValue);
+                                break;
+                            case AxisValueFormat3 avf3:
+                                avHeader.FormChild(nameof(avf3.Flags), avf3.Flags);
+                                avHeader.FormChild(nameof(avf3.AxisIndex), avf3.AxisIndex);
+                                avHeader.FormChild(nameof(avf3.ValueNameId), avf3.ValueNameId);
+                                avHeader.FormChild(nameof(avf3.Value), avf3.Value);
+                                avHeader.FormChild(nameof(avf3.LinkedValue), avf3.LinkedValue);
+                                break;
+                            case AxisValueFormat4 avf4:
+                                avHeader.FormChild(nameof(avf4.Flags), avf4.Flags);
+                                avHeader.FormChild(nameof(avf4.ValueNameId), avf4.ValueNameId);
+                                TreeViewItem avsHeader = avHeader.FormChild("Axis Values");
+                                avf4.AxisValues.ForEach(av =>
+                                {
+                                    TreeViewItem aValueHeader = avsHeader.FormChild("Axis Value");
+                                    aValueHeader.FormChild(nameof(av.AxisIndex), av.AxisIndex);
+                                    aValueHeader.FormChild(nameof(av.Value), av.Value);
+                                });
+                                break;
+                        }
+                    });
                     break;
                 
                 case SvgTable svgTable:
                     var svgRoot = new TreeViewItem { Header = "SVG" };
                     ResultView.Items.Add(svgRoot);
+                    TreeViewItem docsHeader = svgRoot.FormChild("Documents");
+                    svgTable.Documents.Entries.ForEach(di =>
+                    {
+                        TreeViewItem diHeader = docsHeader.FormChild("Document Index Entry");
+                        diHeader.FormChild(nameof(di.StartGlyphId), di.StartGlyphId);
+                        diHeader.FormChild(nameof(di.EndGlyphId), di.EndGlyphId);
+                        diHeader.FormChild(nameof(di.Instructions), di.Instructions);
+                    });
                     break;
                 
                 case VdmxTable vdmxTable:
@@ -1771,6 +1855,14 @@ public partial class MainWindow : Window
                 case VorgTable vorgTable:
                     var vorgRoot = new TreeViewItem { Header = "VORG" };
                     ResultView.Items.Add(vorgRoot);
+                    vorgRoot.FormChild(nameof(vorgTable.DefaultVertOriginY), vorgTable.DefaultVertOriginY);
+                    TreeViewItem vOriginMetricsHeader = vorgRoot.FormChild("Vertical Origin Y Metrics");
+                    vorgTable.VertOriginYMetrics.ForEach(vom =>
+                    {
+                        TreeViewItem mHeader = vOriginMetricsHeader.FormChild("Metric");
+                        mHeader.FormChild(nameof(vom.GlyphIndex), vom.GlyphIndex);
+                        mHeader.FormChild(nameof(vom.VertOriginY), vom.VertOriginY);
+                    });
                     break;
                 
                 case PostTable postTable:

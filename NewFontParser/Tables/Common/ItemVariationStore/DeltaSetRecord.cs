@@ -1,24 +1,23 @@
-﻿using NewFontParser.Reader;
+﻿using System.Collections.Generic;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Common.ItemVariationStore
 {
     public class DeltaSetRecord
     {
-        public int[] DeltaData { get; }
+        public List<int> DeltaData { get; } = new List<int>();
         
         public DeltaSetRecord(BigEndianReader reader, ushort regionIndexCount, bool useLongWords, int wordDeltaCount)
         {
             if (wordDeltaCount > regionIndexCount) return;
-            DeltaData = new int[regionIndexCount];
-            var index = 0;
             for (var i = 0; i < wordDeltaCount; i++)
             {
-                DeltaData[index++] = useLongWords ? reader.ReadInt32() : reader.ReadInt16();
+                DeltaData.Add(useLongWords ? reader.ReadInt32() : reader.ReadInt16());
             }
 
             for (int i = wordDeltaCount; i < regionIndexCount; i++)
             {
-                DeltaData[index++] = useLongWords ? reader.ReadInt16() : reader.ReadSByte();
+                DeltaData.Add(useLongWords ? reader.ReadInt16() : reader.ReadSByte());
             }
         }
     }

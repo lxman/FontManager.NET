@@ -4,6 +4,7 @@ using NewFontParser.Tables.Bitmap.Common;
 using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.ClassDefinition;
 using NewFontParser.Tables.Common.CoverageFormat;
+using NewFontParser.Tables.Common.ItemVariationStore;
 using NewFontParser.Tables.Common.TupleVariationStore;
 using NewFontParser.Tables.Gpos.LookupSubtables.AnchorTable;
 using NewFontParser.Tables.Gpos.LookupSubtables.Common;
@@ -388,6 +389,36 @@ public static class Utilities
             toReturn.FormChild(nameof(tvh.IntermediateEndTuple), string.Join(", ", tvh.IntermediateEndTuple));
         }
         toReturn.FormChild(nameof(tvh.SerializedData), string.Join(", ", tvh.SerializedData));
+        return toReturn;
+    }
+
+    public static TreeViewItem BuildCommonDeltaSetIndexMap(DeltaSetIndexMap map)
+    {
+        var toReturn = new TreeViewItem { Header = "Delta Set Index Map" };
+        map.Maps.ForEach(m =>
+        {
+            TreeViewItem mdHeader = toReturn.FormChild("Map Data");
+            mdHeader.FormChild(nameof(m.InnerIndex), m.InnerIndex);
+            mdHeader.FormChild(nameof(m.OuterIndex), m.OuterIndex);
+            mdHeader.FormChild(nameof(m.OriginalData), m.OriginalData);
+        });
+        return toReturn;
+    }
+
+    public static TreeViewItem BuildItemVariationStore(ItemVariationStore store)
+    {
+        var toReturn = new TreeViewItem { Header = "Item Variation Store" };
+        toReturn.FormChild(nameof(store.VariationRegionListOffset), store.VariationRegionListOffset);
+        TreeViewItem ivdHeader = toReturn.FormChild("Item Variation Data");
+        store.ItemVariationData.ForEach(vd =>
+        {
+            ivdHeader.FormChild(nameof(vd.RegionIndexes), string.Join(", ", vd.RegionIndexes));
+            TreeViewItem dSetsHeader = ivdHeader.FormChild("Delta Sets");
+            vd.DeltaSets.ForEach(ds =>
+            {
+                dSetsHeader.FormChild(nameof(ds.DeltaData), string.Join(", ", ds.DeltaData));
+            });
+        });
         return toReturn;
     }
 }
