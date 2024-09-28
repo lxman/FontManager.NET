@@ -1,4 +1,6 @@
-﻿using NewFontParser.Reader;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Bitmap.Cbdt
 {
@@ -9,6 +11,8 @@ namespace NewFontParser.Tables.Bitmap.Cbdt
         public ushort MajorVersion { get; }
 
         public ushort MinorVersion { get; }
+        
+        public List<byte> Data { get; }
 
         public CbdtTable(byte[] data)
         {
@@ -16,6 +20,7 @@ namespace NewFontParser.Tables.Bitmap.Cbdt
             using var reader = new BigEndianReader(data);
             MajorVersion = reader.ReadUShort();
             MinorVersion = reader.ReadUShort();
+            Data = reader.ReadBytes(reader.BytesRemaining).ToList();
         }
     }
 }

@@ -841,11 +841,81 @@ public partial class MainWindow : Window
                 case CbdtTable cbdtTable:
                     var cbdtRoot = new TreeViewItem { Header = "CBDT" };
                     ResultView.Items.Add(cbdtRoot);
+                    cbdtRoot.FormChild(nameof(cbdtTable.Data), $"{cbdtTable.Data.Count} bytes");
                     break;
 
                 case CblcTable cblcTable:
                     var cblcRoot = new TreeViewItem { Header = "CBLC" };
                     ResultView.Items.Add(cblcRoot);
+                    TreeViewItem bmSizesHeader = cblcRoot.FormChild("Bitmap Sizes");
+                    cblcTable.BitmapSizes.ForEach(bs =>
+                    {
+                        TreeViewItem bmHeader = bmSizesHeader.FormChild("Bitmap Size");
+                        bmHeader.FormChild(nameof(bs.Flags), bs.Flags);
+                        bmHeader.FormChild(nameof(bs.BitDepth), bs.BitDepth);
+                        bmHeader.FormChild(nameof(bs.StartGlyphIndex), bs.StartGlyphIndex);
+                        bmHeader.FormChild(nameof(bs.EndGlyphIndex), bs.EndGlyphIndex);
+                        bmHeader.FormChild(nameof(bs.ColorRef), bs.ColorRef);
+                        bmHeader.FormChild(nameof(bs.PpemX), bs.PpemX);
+                        bmHeader.FormChild(nameof(bs.PpemY), bs.PpemY);
+                        TreeViewItem hMetrics = bmHeader.FormChild("Horizontal Metrics");
+                        hMetrics.Items.Add(Utilities.BuildSbitLineMetrics(bs.HorizontalMetrics));
+                        TreeViewItem vMetrics = bmHeader.FormChild("Vertical Metrics");
+                        vMetrics.Items.Add(Utilities.BuildSbitLineMetrics(bs.VerticalMetrics));
+                        TreeViewItem isHeader = bmHeader.FormChild("Index Subtables");
+                        bs.IndexSubtableList.IndexSubtables.ForEach(ind =>
+                        {
+                            TreeViewItem indHeader = isHeader.FormChild("Index Subtable");
+                            indHeader.FormChild(nameof(ind.FirstGlyphIndex), ind.FirstGlyphIndex);
+                            indHeader.FormChild(nameof(ind.LastGlyphIndex), ind.LastGlyphIndex);
+                            switch (ind.Subtable)
+                            {
+                                case IndexSubtableFormat1 isf1:
+                                    TreeViewItem isf1Header = indHeader.FormChild("Index Subtable Format 1");
+                                    isf1Header.FormChild(nameof(isf1.ImageFormat), isf1.ImageFormat);
+                                    isf1Header.FormChild(nameof(isf1.IndexFormat), isf1.IndexFormat);
+                                    isf1Header.FormChild(nameof(isf1.ImageDataOffset), isf1.ImageDataOffset);
+                                    isf1Header.FormChild(nameof(isf1.BitmapDataOffsets), string.Join(", ", isf1.BitmapDataOffsets));
+                                    break;
+                                case IndexSubtablesFormat2 isf2:
+                                    TreeViewItem isf2Header = indHeader.FormChild("Index Subtable Format 2");
+                                    isf2Header.Items.Add(Utilities.BuildBigGlyphMetrics(isf2.BigMetrics));
+                                    isf2Header.FormChild(nameof(isf2.ImageFormat), isf2.ImageFormat);
+                                    isf2Header.FormChild(nameof(isf2.IndexFormat), isf2.IndexFormat);
+                                    isf2Header.FormChild(nameof(isf2.ImageDataOffset), isf2.ImageDataOffset);
+                                    isf2Header.FormChild(nameof(isf2.ImageSize), isf2.ImageSize);
+                                    break;
+                                case IndexSubtablesFormat3 isf3:
+                                    TreeViewItem isf3Header = indHeader.FormChild("Index Subtable Format 3");
+                                    isf3Header.FormChild(nameof(isf3.ImageFormat), isf3.ImageFormat);
+                                    isf3Header.FormChild(nameof(isf3.IndexFormat), isf3.IndexFormat);
+                                    isf3Header.FormChild(nameof(isf3.ImageDataOffset), isf3.ImageDataOffset);
+                                    isf3Header.FormChild(nameof(isf3.BitmapDataOffsets), string.Join(", ", isf3.BitmapDataOffsets));
+                                    break;
+                                case IndexSubtablesFormat4 isf4:
+                                    TreeViewItem isf4Header = indHeader.FormChild("Index Subtable Format 4");
+                                    isf4Header.FormChild(nameof(isf4.ImageFormat), isf4.ImageFormat);
+                                    isf4Header.FormChild(nameof(isf4.IndexFormat), isf4.IndexFormat);
+                                    isf4Header.FormChild(nameof(isf4.ImageDataOffset), isf4.ImageDataOffset);
+                                    TreeViewItem giopHeader = isf4Header.FormChild("Glyph Id Offset Pairs");
+                                    isf4.GlyphIdOffsetPairs.ForEach(giop =>
+                                    {
+                                        TreeViewItem gpHeader = giopHeader.FormChild("Glyph Id Offset Pair");
+                                        gpHeader.FormChild(nameof(giop.GlyphId), giop.GlyphId);
+                                        gpHeader.FormChild(nameof(giop.Offset), giop.Offset);
+                                    });
+                                    break;
+                                case IndexSubtablesFormat5 isf5:
+                                    TreeViewItem isf5Header = indHeader.FormChild("Index Subtable Format 5");
+                                    isf5Header.Items.Add(Utilities.BuildBigGlyphMetrics(isf5.BigMetrics));
+                                    isf5Header.FormChild(nameof(isf5.ImageFormat), isf5.ImageFormat);
+                                    isf5Header.FormChild(nameof(isf5.IndexFormat), isf5.IndexFormat);
+                                    isf5Header.FormChild(nameof(isf5.ImageDataOffset), isf5.ImageDataOffset);
+                                    isf5Header.FormChild(nameof(isf5.GlyphIds), string.Join(", ", isf5.GlyphIds));
+                                    break;
+                            }
+                        });
+                    });
                     break;
 
                 case EbdtTable ebdtTable:
