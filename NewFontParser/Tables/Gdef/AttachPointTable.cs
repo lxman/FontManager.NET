@@ -11,7 +11,7 @@ namespace NewFontParser.Tables.Gdef
 
         public AttachPointTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             PointCount = reader.ReadUShort();
             for (var i = 0; i < PointCount; i++)

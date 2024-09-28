@@ -13,7 +13,7 @@ namespace NewFontParser.Tables.Meta
 
         public MetaTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             _ = reader.ReadUInt32();
             Flags = reader.ReadUInt32();
             _ = reader.ReadUInt32();

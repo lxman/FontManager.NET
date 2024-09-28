@@ -16,7 +16,7 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public Format2SubHeader(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             FirstCode = reader.ReadUShort();
             EntryCount = reader.ReadUShort();
             IdDelta = reader.ReadShort();

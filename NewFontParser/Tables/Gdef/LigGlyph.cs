@@ -13,7 +13,7 @@ namespace NewFontParser.Tables.Gdef
 
         public LigGlyph(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             CaretCount = reader.ReadUShort();
             CaretValue = new ushort[CaretCount];
             for (var i = 0; i < CaretCount; i++)

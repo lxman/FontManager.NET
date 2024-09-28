@@ -19,7 +19,7 @@ namespace NewFontParser.Tables.Base
 
         public BaseTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             MajorVersion = reader.ReadUShort();
             MinorVersion = reader.ReadUShort();
             ushort horizontalTableOffset = reader.ReadUShort();

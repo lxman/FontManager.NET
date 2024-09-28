@@ -9,38 +9,32 @@ namespace NewFontParser.Tables.Vdmx
 
         public ushort Version { get; }
 
-        public ushort NumRecs { get; }
-
-        public ushort NumRatios { get; }
-
         public List<RatioRange> RatioRanges { get; } = new List<RatioRange>();
-
-        public ushort[] GroupOffsets;
 
         public List<VdmxGroup> Groups { get; } = new List<VdmxGroup>();
 
         public VdmxTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             Version = reader.ReadUShort();
-            NumRecs = reader.ReadUShort();
-            NumRatios = reader.ReadUShort();
+            ushort numRecs = reader.ReadUShort();
+            ushort numRatios = reader.ReadUShort();
 
-            for (var i = 0; i < NumRatios; i++)
+            for (var i = 0; i < numRatios; i++)
             {
                 RatioRanges.Add(new RatioRange(reader));
             }
 
-            GroupOffsets = new ushort[NumRecs];
-            for (var i = 0; i < NumRecs; i++)
+            var groupOffsets = new ushort[numRecs];
+            for (var i = 0; i < numRecs; i++)
             {
-                GroupOffsets[i] = reader.ReadUShort();
+                groupOffsets[i] = reader.ReadUShort();
             }
 
-            for (var i = 0; i < NumRecs; i++)
+            for (var i = 0; i < numRecs; i++)
             {
-                Groups.Add(new VdmxGroup(data[GroupOffsets[i]..]));
+                Groups.Add(new VdmxGroup(data[groupOffsets[i]..]));
             }
         }
     }

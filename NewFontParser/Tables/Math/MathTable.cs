@@ -14,7 +14,7 @@ namespace NewFontParser.Tables.Math
 
         public MathTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             var header = new MathHeader(reader);
 

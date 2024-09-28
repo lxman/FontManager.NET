@@ -17,7 +17,7 @@ namespace NewFontParser.Tables.Todo.Graphite.Feat
 
         public FeatTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Version = reader.ReadUInt32();
             FeatureCount = reader.ReadUShort();
             _ = reader.ReadUShort(); // Reserved

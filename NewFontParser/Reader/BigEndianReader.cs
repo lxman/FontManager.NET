@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -7,7 +8,7 @@ using Serilog;
 
 namespace NewFontParser.Reader
 {
-    public class BigEndianReader
+    public class BigEndianReader : IDisposable
     {
         public long BytesRemaining => _data.Length - Position;
 
@@ -21,7 +22,8 @@ namespace NewFontParser.Reader
 
         public BigEndianReader(byte[] data)
         {
-            _data = data;
+            _data = ArrayPool<byte>.Shared.Rent(data.Length);
+            data.CopyTo(_data, 0);
         }
 
         public void Seek(long position)
@@ -251,6 +253,11 @@ namespace NewFontParser.Reader
             }
 
             return value;
+        }
+
+        public void Dispose()
+        {
+            ArrayPool<byte>.Shared.Return(_data);
         }
     }
 }

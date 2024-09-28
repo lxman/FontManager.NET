@@ -18,7 +18,7 @@ namespace NewFontParser.Tables.TtTables.Glyf
 
         public GlyphHeader(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             NumberOfContours = reader.ReadShort();
             XMin = reader.ReadShort();
             YMin = reader.ReadShort();

@@ -16,7 +16,7 @@ namespace NewFontParser.Tables.Merg
 
         public MergTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             Version = reader.ReadUShort();
             ushort mergeClassCount = reader.ReadUShort();

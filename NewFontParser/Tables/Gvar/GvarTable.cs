@@ -17,7 +17,7 @@ namespace NewFontParser.Tables.Gvar
 
         public GvarTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Header = new Header(reader);
             var glyphVariationDataOffsets = new List<uint>();
             bool readLongOffsets = (Header.Flags & 0x0001) != 0;

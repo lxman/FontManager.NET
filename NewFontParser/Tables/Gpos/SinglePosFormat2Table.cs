@@ -16,7 +16,7 @@ namespace NewFontParser.Tables.Gpos
 
         public SinglePosFormat2Table(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             PosFormat = reader.ReadUShort();
             ushort coverageOffset = reader.ReadUShort();

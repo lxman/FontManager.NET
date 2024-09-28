@@ -10,7 +10,7 @@ namespace NewFontParser.Tables.Common.SequenceContext.Format1
 
         public SequenceLookup(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             SequenceIndex = reader.ReadUShort();
             LookupListIndex = reader.ReadUShort();

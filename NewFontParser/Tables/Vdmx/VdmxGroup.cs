@@ -5,8 +5,6 @@ namespace NewFontParser.Tables.Vdmx
 {
     public class VdmxGroup
     {
-        public ushort RecordCount { get; }
-
         public byte StartSize { get; }
 
         public byte EndSize { get; }
@@ -15,13 +13,13 @@ namespace NewFontParser.Tables.Vdmx
 
         public VdmxGroup(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
-            RecordCount = reader.ReadUShort();
+            ushort recordCount = reader.ReadUShort();
             StartSize = reader.ReadByte();
             EndSize = reader.ReadByte();
 
-            for (var i = 0; i < RecordCount; i++)
+            for (var i = 0; i < recordCount; i++)
             {
                 Records.Add(new VTable(reader));
             }

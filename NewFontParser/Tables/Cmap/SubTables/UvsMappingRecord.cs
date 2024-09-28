@@ -12,7 +12,7 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public UvsMappingRecord(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             UnicodeValue = reader.ReadUInt24();
             GlyphId = reader.ReadUShort();
         }

@@ -10,7 +10,7 @@ namespace NewFontParser.Tables.Optional
 
         public VerticalMetricsEntry(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             AdvanceHeight = reader.ReadUShort();
             TopSideBearing = reader.ReadShort();

@@ -21,7 +21,7 @@ namespace NewFontParser.Tables.Mvar
 
         public MvarTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             MajorVersion = reader.ReadUShort();
             MinorVersion = reader.ReadUShort();

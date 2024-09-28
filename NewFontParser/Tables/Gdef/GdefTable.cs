@@ -24,7 +24,7 @@ namespace NewFontParser.Tables.Gdef
 
         public GdefTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Header = new GdefHeader(reader);
             if (Header.GlyphClassDefOffset.HasValue && Header.GlyphClassDefOffset > 0)
             {

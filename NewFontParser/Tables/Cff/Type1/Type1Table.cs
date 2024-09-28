@@ -77,7 +77,7 @@ namespace NewFontParser.Tables.Cff.Type1
 
         public Type1Table(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             Header = new Header(reader);
 

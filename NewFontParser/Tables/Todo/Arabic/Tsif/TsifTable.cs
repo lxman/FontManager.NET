@@ -8,7 +8,7 @@ namespace NewFontParser.Tables.Todo.Arabic.Tsif
 
         public TsifTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             // TODO: Implement TSIF table parsing
             // This is a proprietary table for Arabic fonts
         }

@@ -26,7 +26,7 @@ namespace NewFontParser.Tables.Colr
 
         public ColrTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Version = reader.ReadUShort();
             ushort baseGlyphRecordCount = reader.ReadUShort();
             uint baseGlyphRecordOffset = reader.ReadUInt32();

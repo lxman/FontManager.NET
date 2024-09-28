@@ -17,7 +17,7 @@ namespace NewFontParser.Tables.Fftm
 
         public FftmTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             var baseTime = new DateTime(1904, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             Version = reader.ReadUInt32();

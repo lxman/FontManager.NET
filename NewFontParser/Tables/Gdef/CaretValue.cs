@@ -12,7 +12,7 @@ namespace NewFontParser.Tables.Gdef
 
         public CaretValue(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Format = reader.ReadUShort();
             switch (Format)
             {

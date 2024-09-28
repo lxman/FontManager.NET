@@ -14,7 +14,7 @@ namespace NewFontParser.Tables.Cmap.SubTables
 
         public SequentialMapGroup(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             StartCharCode = reader.ReadUInt32();
             EndCharCode = reader.ReadUInt32();
             StartGlyphId = reader.ReadUInt32();

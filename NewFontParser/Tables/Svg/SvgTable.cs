@@ -12,7 +12,7 @@ namespace NewFontParser.Tables.Svg
 
         public SvgTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             Version = reader.ReadUShort();
             uint docListOffset = reader.ReadUInt32();

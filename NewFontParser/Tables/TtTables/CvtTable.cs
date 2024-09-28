@@ -7,15 +7,14 @@ namespace NewFontParser.Tables.TtTables
     {
         public static string Tag => "cvt ";
 
-        public int FWordCount { get; }
-
         private readonly ushort[] _data;
+        private readonly int _fWordCount;
 
         public CvtTable(byte[] data)
         {
-            FWordCount = data.Length / 2;
-            _data = new ushort[FWordCount];
-            for (var i = 0; i < FWordCount; i++)
+            _fWordCount = data.Length / 2;
+            _data = new ushort[_fWordCount];
+            for (var i = 0; i < _fWordCount; i++)
             {
                 _data[i] = (ushort)((data[i * 2] << 8) | data[i * 2 + 1]);
             }
@@ -23,7 +22,7 @@ namespace NewFontParser.Tables.TtTables
 
         public List<float>? GetCvtValues(long origin, long count)
         {
-            if (origin < 0 || origin >= FWordCount || count < 0 || origin + count > FWordCount)
+            if (origin < 0 || origin >= _fWordCount || count < 0 || origin + count > _fWordCount)
             {
                 return null;
             }
@@ -38,7 +37,7 @@ namespace NewFontParser.Tables.TtTables
 
         public float? GetCvtValue(int location)
         {
-            if (location < 0 || location >= FWordCount)
+            if (location < 0 || location >= _fWordCount)
             {
                 return null;
             }
@@ -47,7 +46,7 @@ namespace NewFontParser.Tables.TtTables
 
         public void WriteCvtValue(int location, float value)
         {
-            if (location < 0 || location >= FWordCount)
+            if (location < 0 || location >= _fWordCount)
             {
                 return;
             }

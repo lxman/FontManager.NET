@@ -15,7 +15,7 @@ namespace NewFontParser.Tables.Gpos
 
         public GposTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             var header = new GposHeader(reader);
 

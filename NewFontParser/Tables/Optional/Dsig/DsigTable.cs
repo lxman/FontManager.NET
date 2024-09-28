@@ -15,7 +15,7 @@ namespace NewFontParser.Tables.Optional.Dsig
 
         public DsigTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Version = reader.ReadUInt32();
             ushort _numSigs = reader.ReadUShort();
             if (_numSigs == 0) return;

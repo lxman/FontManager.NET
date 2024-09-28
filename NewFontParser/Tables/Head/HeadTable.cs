@@ -49,7 +49,7 @@ namespace NewFontParser.Tables.Head
 
         public HeadTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             MajorVersion = reader.ReadUShort();
             MinorVersion = reader.ReadUShort();
             FontRevision = reader.ReadF16Dot16();

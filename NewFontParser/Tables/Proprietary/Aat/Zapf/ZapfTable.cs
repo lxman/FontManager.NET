@@ -8,7 +8,7 @@ namespace NewFontParser.Tables.Proprietary.Aat.Zapf
 
         public ZapfTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
         }
     }
 }

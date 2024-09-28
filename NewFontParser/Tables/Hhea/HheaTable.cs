@@ -37,7 +37,7 @@ namespace NewFontParser.Tables.Hhea
 
         public HheaTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             _majorVersion = reader.ReadUShort();
             _minorVersion = reader.ReadUShort();
             Ascender = reader.ReadShort();

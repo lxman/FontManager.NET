@@ -20,7 +20,7 @@ namespace NewFontParser.Tables.Cmap
 
         public EncodingRecord(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             PlatformId = (PlatformId)reader.ReadUShort();
             ushort platformEncodingId = reader.ReadUShort();
             switch (PlatformId)

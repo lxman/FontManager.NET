@@ -19,7 +19,7 @@ namespace NewFontParser.Tables.Cpal
 
         public CpalTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             Version = reader.ReadUShort();
             ushort numPaletteEntries = reader.ReadUShort();

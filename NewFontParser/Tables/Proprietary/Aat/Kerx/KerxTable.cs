@@ -16,7 +16,7 @@ namespace NewFontParser.Tables.Proprietary.Aat.Kerx
 
         public KerxTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Version = reader.ReadUShort();
             Padding = reader.ReadUShort();
             uint nTables = reader.ReadUInt32();

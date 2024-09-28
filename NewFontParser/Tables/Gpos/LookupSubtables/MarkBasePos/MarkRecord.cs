@@ -10,7 +10,7 @@ namespace NewFontParser.Tables.Gpos.LookupSubtables.MarkBasePos
 
         public MarkRecord(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             MarkClass = reader.ReadUShort();
             MarkAnchorOffset = reader.ReadUShort();

@@ -36,7 +36,7 @@ namespace NewFontParser.Tables
 
         public PostTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Version1 = reader.ReadUShort();
             Version2 = reader.ReadUShort();
             ItalicAngle = $"{data[2]}.{data[3]}";

@@ -13,7 +13,7 @@ namespace NewFontParser.Tables.TtTables
 
         public GaspTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Version = reader.ReadUShort();
             ushort numRanges = reader.ReadUShort();
 

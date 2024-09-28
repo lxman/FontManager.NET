@@ -13,7 +13,7 @@ namespace NewFontParser.Tables.Bitmap.Cbdt
         public CbdtTable(byte[] data)
         {
             // TODO: Implement
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             MajorVersion = reader.ReadUShort();
             MinorVersion = reader.ReadUShort();
         }

@@ -15,7 +15,7 @@ namespace NewFontParser.Tables.Proprietary.Aat.Feat
 
         public FeatTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Header = new Header(reader);
             for (var i = 0; i < Header.FeatureCount; i++)
             {

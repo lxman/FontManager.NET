@@ -10,7 +10,7 @@ namespace NewFontParser.Tables.Common.CoverageFormat
 
         public RangeRecord(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             Start = reader.ReadUShort();
             End = reader.ReadUShort();

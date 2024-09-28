@@ -14,7 +14,7 @@ namespace NewFontParser.Tables.Gdef
 
         public CaretValueFormatTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             Format = reader.ReadUShort();
             switch (Format)

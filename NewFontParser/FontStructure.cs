@@ -67,8 +67,7 @@ namespace NewFontParser
                 var succeededRecord = new SucceededStatusRecord { Name = tag, Attempted = true };
                 TableRecord? tableRecord = TableRecords.FirstOrDefault(r => r.Tag == tag);
                 if (tableRecord is null) return;
-                var fontTable = Activator.CreateInstance(table, tableRecord.Data) as IFontTable;
-                if (fontTable is null) return;
+                if (!(Activator.CreateInstance(table, tableRecord.Data) is IFontTable fontTable)) return;
                 _fontTables.Add(fontTable);
                 succeededRecord.Succeeded = true;
                 _succeeded.Add(succeededRecord);

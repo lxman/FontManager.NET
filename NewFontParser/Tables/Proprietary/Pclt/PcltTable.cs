@@ -19,7 +19,7 @@ namespace NewFontParser.Tables.Proprietary.Pclt
 
         public PcltTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             MajorVersion = reader.ReadUShort();
             MinorVersion = reader.ReadUShort();

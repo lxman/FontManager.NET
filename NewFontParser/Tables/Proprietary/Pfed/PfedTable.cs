@@ -17,7 +17,7 @@ namespace NewFontParser.Tables.Proprietary.Pfed
             // TODO: Implement PfedTable
             // This is a proprietary table, theoretically only used by FontForge.
             // It appears that the format has changed over time, so it's not clear
-            //var reader = new BigEndianReader(data);
+            //using var reader = new BigEndianReader(data);
             //Version = reader.ReadUInt32();
             //uint count = reader.ReadUInt32();
             //var tocEntries = new List<TocEntry>();

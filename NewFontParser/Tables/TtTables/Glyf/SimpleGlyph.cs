@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -21,11 +22,11 @@ namespace NewFontParser.Tables.TtTables.Glyf
             Instructions = reader.ReadBytes(instructionLength).ToList();
 
             int numberOfPoints = EndPtsOfContours[glyphHeader.NumberOfContours - 1] + 1;
-            var flags = new SimpleGlyphFlags[numberOfPoints];
+            SimpleGlyphFlags[]? flags = ArrayPool<SimpleGlyphFlags>.Shared.Rent(numberOfPoints);
             for (var i = 0; i < numberOfPoints; i++)
             {
                 flags[i] = (SimpleGlyphFlags)reader.ReadByte();
-                if (!flags[i].HasFlag(SimpleGlyphFlags.Repeat)) continue;
+                if (!flags[i].HasRepeat()) continue;
                 byte repeat = reader.ReadByte();
                 for (var j = 0; j < repeat; j++)
                 {
@@ -38,12 +39,12 @@ namespace NewFontParser.Tables.TtTables.Glyf
                 }
             }
 
-            var xCoordinates = new short[numberOfPoints];
+            short[]? xCoordinates = ArrayPool<short>.Shared.Rent(numberOfPoints);
             for (var i = 0; i < numberOfPoints; i++)
             {
-                if (flags[i].HasFlag(SimpleGlyphFlags.XShortVector))
+                if (flags[i].HasXShortVector())
                 {
-                    if (flags[i].HasFlag(SimpleGlyphFlags.XIsSameOrPositiveXShortVector))
+                    if (flags[i].HasXIsSameOrPositiveXShortVector())
                     {
                         xCoordinates[i] = Convert.ToInt16(reader.ReadByte() + (i > 0 ? xCoordinates[i - 1] : 0));
                     }
@@ -52,7 +53,7 @@ namespace NewFontParser.Tables.TtTables.Glyf
                         xCoordinates[i] = Convert.ToInt16(-reader.ReadByte() + (i > 0 ? xCoordinates[i - 1] : 0));
                     }
                 }
-                else if (flags[i].HasFlag(SimpleGlyphFlags.XIsSameOrPositiveXShortVector))
+                else if (flags[i].HasXIsSameOrPositiveXShortVector())
                 {
                     xCoordinates[i] = Convert.ToInt16(i > 0 ? xCoordinates[i - 1] : 0);
                 }
@@ -62,12 +63,12 @@ namespace NewFontParser.Tables.TtTables.Glyf
                 }
             }
 
-            var yCoordinates = new short[numberOfPoints];
+            short[]? yCoordinates = ArrayPool<short>.Shared.Rent(numberOfPoints);
             for (var i = 0; i < numberOfPoints; i++)
             {
-                if (flags[i].HasFlag(SimpleGlyphFlags.YShortVector))
+                if (flags[i].HasYShortVector())
                 {
-                    if (flags[i].HasFlag(SimpleGlyphFlags.YIsSameOrPositiveYShortVector))
+                    if (flags[i].HasYIsSameOrPositiveYShortVector())
                     {
                         yCoordinates[i] = Convert.ToInt16(reader.ReadByte() + (i > 0 ? yCoordinates[i - 1] : 0));
                     }
@@ -76,7 +77,7 @@ namespace NewFontParser.Tables.TtTables.Glyf
                         yCoordinates[i] = Convert.ToInt16(-reader.ReadByte() + (i > 0 ? yCoordinates[i - 1] : 0));
                     }
                 }
-                else if (flags[i].HasFlag(SimpleGlyphFlags.YIsSameOrPositiveYShortVector))
+                else if (flags[i].HasYIsSameOrPositiveYShortVector())
                 {
                     yCoordinates[i] = Convert.ToInt16(i > 0 ? yCoordinates[i - 1] : 0);
                 }
@@ -88,8 +89,11 @@ namespace NewFontParser.Tables.TtTables.Glyf
 
             for (var i = 0; i < numberOfPoints; i++)
             {
-                Coordinates.Add(new SimpleGlyphCoordinate(new Point(xCoordinates[i], yCoordinates[i]), flags[i].HasFlag(SimpleGlyphFlags.OnCurve)));
+                Coordinates.Add(new SimpleGlyphCoordinate(new Point(xCoordinates[i], yCoordinates[i]), flags[i].HasOnCurve()));
             }
+            ArrayPool<short>.Shared.Return(xCoordinates);
+            ArrayPool<short>.Shared.Return(yCoordinates);
+            ArrayPool<SimpleGlyphFlags>.Shared.Return(flags);
         }
     }
 }

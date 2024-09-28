@@ -88,7 +88,7 @@ namespace NewFontParser.Tables
 
         public Os2Table(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Version = reader.ReadUShort();
             XAvgCharWidth = reader.ReadShort();
             UsWeightClass = (UsWeightClass)reader.ReadUShort();

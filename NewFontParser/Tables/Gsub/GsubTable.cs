@@ -18,7 +18,7 @@ namespace NewFontParser.Tables.Gsub
 
         public GsubTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             var header = new GsubHeader(reader);
             reader.Seek(header.ScriptListOffset);
             ScriptList = new ScriptList(reader);

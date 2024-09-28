@@ -26,7 +26,7 @@ namespace NewFontParser.Tables.Name
 
         public NameRecord(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             PlatformId = (PlatformId)reader.ReadUShort();
             switch (PlatformId)
             {

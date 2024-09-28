@@ -15,7 +15,7 @@ namespace NewFontParser.Tables.Name
 
         public NameTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             Format = reader.ReadUShort();
             ushort count = reader.ReadUShort();

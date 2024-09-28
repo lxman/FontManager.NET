@@ -14,7 +14,7 @@ namespace NewFontParser.Tables.Proprietary.Aat.Bdat
 
         public BdatTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Version = reader.ReadUInt32();
         }
     }

@@ -13,7 +13,7 @@ namespace NewFontParser.Tables.Proprietary.Aat.Bloc
 
         public BlocTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
 
             Version = reader.ReadUInt32();
             uint numBitmapSizeTables = reader.ReadUInt32();

@@ -63,6 +63,7 @@ using NewFontParser.Tables.Optional.Hdmx;
 using NewFontParser.Tables.Proprietary.Pclt;
 using NewFontParser.Tables.Stat;
 using NewFontParser.Tables.Svg;
+using NewFontParser.Tables.TtTables;
 using NewFontParser.Tables.TtTables.Glyf;
 using NewFontParser.Tables.Vdmx;
 using NewFontParser.Tables.Vorg;
@@ -1739,6 +1740,30 @@ public partial class MainWindow : Window
                 case VdmxTable vdmxTable:
                     var vdmxRoot = new TreeViewItem { Header = "VDMX" };
                     ResultView.Items.Add(vdmxRoot);
+                    TreeViewItem groupsHeader = vdmxRoot.FormChild("Groups");
+                    vdmxTable.Groups.ForEach(g =>
+                    {
+                        TreeViewItem groupHeader = groupsHeader.FormChild("Group");
+                        groupHeader.FormChild(nameof(g.StartSize), g.StartSize);
+                        groupHeader.FormChild(nameof(g.EndSize), g.EndSize);
+                        TreeViewItem recordsHeader = groupHeader.FormChild("Records");
+                        g.Records.ForEach(r =>
+                        {
+                            TreeViewItem recordHeader = recordsHeader.FormChild("Record");
+                            recordHeader.FormChild(nameof(r.YMin), r.YMin);
+                            recordHeader.FormChild(nameof(r.YMax), r.YMax);
+                            recordHeader.FormChild(nameof(r.YPelHeight), r.YPelHeight);
+                        });
+                    });
+                    TreeViewItem rRangesHeader = vdmxRoot.FormChild("Ratio Ranges");
+                    vdmxTable.RatioRanges.ForEach(rr =>
+                    {
+                        TreeViewItem rrHeader = rRangesHeader.FormChild("Ratio Range");
+                        rrHeader.FormChild(nameof(rr.XRatio), rr.XRatio);
+                        rrHeader.FormChild(nameof(rr.BCharSet), rr.BCharSet);
+                        rrHeader.FormChild(nameof(rr.YStartRatio), rr.YStartRatio);
+                        rrHeader.FormChild(nameof(rr.YEndRatio), rr.YEndRatio);
+                    });
                     break;
                 
                 case VorgTable vorgTable:
@@ -1760,6 +1785,41 @@ public partial class MainWindow : Window
                     postRoot.FormChild(nameof(postTable.MaxMemType1), postTable.MaxMemType1);
                     postRoot.FormChild(nameof(postTable.MinMemType42), postTable.MinMemType42);
                     postRoot.FormChild(nameof(postTable.MaxMemType42), postTable.MaxMemType42);
+                    break;
+                
+                case CvtTable cvtTable:
+                    var cvtRoot = new TreeViewItem { Header = "cvt" };
+                    ResultView.Items.Add(cvtRoot);
+                    break;
+                
+                case FpgmTable fpgmTable:
+                    var fpgmRoot = new TreeViewItem { Header = "fpgm" };
+                    ResultView.Items.Add(fpgmRoot);
+                    fpgmRoot.FormChild($"{fpgmTable.Instructions.Length} bytes");
+                    break;
+                
+                case GaspTable gaspTable:
+                    var gaspRoot = new TreeViewItem { Header = "gasp" };
+                    ResultView.Items.Add(gaspRoot);
+                    TreeViewItem grHeader = gaspRoot.FormChild("Gasp Ranges");
+                    gaspTable.GaspRanges.ForEach(gr =>
+                    {
+                        TreeViewItem rangeHeader = grHeader.FormChild("Gasp Range");
+                        rangeHeader.FormChild(nameof(gr.RangeMaxPPEM), gr.RangeMaxPPEM);
+                        rangeHeader.FormChild(nameof(gr.RangeGaspBehavior), gr.RangeGaspBehavior);
+                    });
+                    break;
+                
+                case LocaTable locaTable:
+                    var locaRoot = new TreeViewItem { Header = "loca" };
+                    ResultView.Items.Add(locaRoot);
+                    locaRoot.FormChild($"Offsets {locaTable.Offsets.Length}");
+                    break;
+                
+                case PrepTable prepTable:
+                    var prepRoot = new TreeViewItem { Header = "prep" };
+                    ResultView.Items.Add(prepRoot);
+                    prepRoot.FormChild($"{prepTable.Instructions.Length} bytes");
                     break;
                 
                 default:

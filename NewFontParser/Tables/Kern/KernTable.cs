@@ -13,7 +13,7 @@ namespace NewFontParser.Tables.Kern
 
         public KernTable(byte[] data)
         {
-            var reader = new BigEndianReader(data);
+            using var reader = new BigEndianReader(data);
             Version = reader.ReadUShort();
             ushort nTables = reader.ReadUShort();
             for (var i = 0; i < nTables; i++)
