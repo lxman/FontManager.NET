@@ -2,7 +2,7 @@
 
 namespace NewFontParser.Tables.TtTables.Glyf
 {
-    public class SimpleGlyphCoordinate
+    public struct SimpleGlyphCoordinate
     {
         public PointF Point { get; private set; }
 

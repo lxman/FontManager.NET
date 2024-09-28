@@ -1646,8 +1646,7 @@ public partial class MainWindow : Window
                     dsigRoot.FormChild(nameof(dsigTable.PermissionFlags), dsigTable.PermissionFlags);
                     dsigTable.SigRecords.ForEach(r =>
                     {
-                        TreeViewItem sigHeader = dsigRoot.FormChild("Signature Record");
-                        sigHeader.FormChild(nameof(r.SignatureBlock), string.Join(" ", r.SignatureBlock.Signature));
+                        TreeViewItem sigHeader = dsigRoot.FormChild($"Signature Record: {r.SignatureBlock.Signature.Length} bytes");
                     });
                     break;
 
@@ -1725,6 +1724,9 @@ public partial class MainWindow : Window
                 case PcltTable pcltTable:
                     var pcltRoot = new TreeViewItem { Header = "PCLT" };
                     ResultView.Items.Add(pcltRoot);
+                    pcltRoot.FormChild(nameof(pcltTable.Filename), pcltTable.Filename);
+                    pcltRoot.FormChild(nameof(pcltTable.Typeface), pcltTable.Typeface);
+                    pcltRoot.FormChild(nameof(pcltTable.CharacterComplement), pcltTable.CharacterComplement);
                     break;
                 
                 case StatTable statTable:
