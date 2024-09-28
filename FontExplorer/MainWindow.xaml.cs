@@ -61,6 +61,7 @@ using NewFontParser.Tables.Optional;
 using NewFontParser.Tables.Optional.Dsig;
 using NewFontParser.Tables.Optional.Hdmx;
 using NewFontParser.Tables.Proprietary.Pclt;
+using NewFontParser.Tables.Proprietary.Webf;
 using NewFontParser.Tables.Stat;
 using NewFontParser.Tables.Stat.AxisValue;
 using NewFontParser.Tables.Svg;
@@ -798,6 +799,17 @@ public partial class MainWindow : Window
                 case AvarTable avarTable:
                     var avarRoot = new TreeViewItem { Header = "avar" };
                     ResultView.Items.Add(avarRoot);
+                    TreeViewItem smHeader = avarRoot.FormChild("Segment Maps");
+                    avarTable.SegmentMaps.ForEach(sm =>
+                    {
+                        TreeViewItem avMapsHeader = smHeader.FormChild("Axis Value Maps");
+                        sm.AxisValueMaps.ForEach(avm =>
+                        {
+                            TreeViewItem avmHeader = avMapsHeader.FormChild("Axis Value Map");
+                            avmHeader.FormChild(nameof(avm.FromCoordinate), avm.FromCoordinate);
+                            avmHeader.FormChild(nameof(avm.ToCoordinate), avm.ToCoordinate);
+                        });
+                    });
                     break;
 
                 case BaseTable baseTable:
@@ -1914,6 +1926,11 @@ public partial class MainWindow : Window
                     var prepRoot = new TreeViewItem { Header = "prep" };
                     ResultView.Items.Add(prepRoot);
                     prepRoot.FormChild($"{prepTable.Instructions.Length} bytes");
+                    break;
+                
+                case WebfTable webfTable:
+                    TreeViewItem webfRoot = new TreeViewItem { Header = "webf" };
+                    ResultView.Items.Add(webfRoot);
                     break;
                 
                 default:
