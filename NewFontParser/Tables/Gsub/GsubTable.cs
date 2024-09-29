@@ -1,6 +1,7 @@
 ﻿using System;
 using NewFontParser.Reader;
 using NewFontParser.Tables.Common;
+using NewFontParser.Tables.Common.FeatureParametersTable;
 
 namespace NewFontParser.Tables.Gsub
 {

@@ -1,7 +1,8 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using NewFontParser.Reader;
 
-namespace NewFontParser.Tables.Common
+namespace NewFontParser.Tables.Common.FeatureParametersTable
 {
     public class FeatureRecord
     {
@@ -15,7 +16,7 @@ namespace NewFontParser.Tables.Common
             ushort offset = reader.ReadUShort();
             long before = reader.Position;
             reader.Seek(startOfTable + offset);
-            FeatureTable = new FeatureTable(reader);
+            FeatureTable = new FeatureTable(reader, FeatureTag);
             reader.Seek(before);
         }
     }

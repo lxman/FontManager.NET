@@ -1,6 +1,8 @@
 ﻿using System.Windows.Controls;
 using NewFontParser.Tables.Base;
 using NewFontParser.Tables.Bitmap.Common;
+using NewFontParser.Tables.Colr;
+using NewFontParser.Tables.Colr.PaintTables;
 using NewFontParser.Tables.Common;
 using NewFontParser.Tables.Common.ClassDefinition;
 using NewFontParser.Tables.Common.CoverageFormat;
@@ -11,6 +13,7 @@ using NewFontParser.Tables.Gpos.LookupSubtables.Common;
 using NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos;
 using NewFontParser.Tables.Math;
 using NewFontParser.Tables.TtTables.Glyf;
+using DeltaSetIndexMap = NewFontParser.Tables.Common.ItemVariationStore.DeltaSetIndexMap;
 using Tuple = NewFontParser.Tables.Common.TupleVariationStore.Tuple;
 
 namespace FontExplorer;
@@ -418,6 +421,252 @@ public static class Utilities
             {
                 dSetsHeader.FormChild(nameof(ds.DeltaData), string.Join(", ", ds.DeltaData));
             });
+        });
+        return toReturn;
+    }
+
+    public static TreeViewItem? BuildIPaintTable(IPaintTable pt)
+    {
+        TreeViewItem? toReturn = null;
+        switch (pt)
+        {
+            case PaintColrLayers pcl:
+                toReturn = new TreeViewItem { Header = "PaintColrLayers" };
+                TreeViewItem paintTablesHeader = toReturn.FormChild("Paint Tables");
+                pcl.PaintTables.ForEach(subTable =>
+                {
+                    paintTablesHeader.Items.Add(Utilities.BuildIPaintTable(subTable));
+                });
+                break;
+            case PaintSolid ps:
+                toReturn = new TreeViewItem { Header = "PaintSolid" };
+                toReturn.FormChild(nameof(ps.PaletteIndex), ps.PaletteIndex);
+                toReturn.FormChild(nameof(ps.Alpha), ps.Alpha);
+                break;
+            case PaintVarSolid pvs:
+                toReturn = new TreeViewItem { Header = "PaintVarSolid" };
+                toReturn.FormChild(nameof(pvs.PaletteIndex), pvs.PaletteIndex);
+                toReturn.FormChild(nameof(pvs.Alpha), pvs.Alpha);
+                toReturn.FormChild(nameof(pvs.VarIndexBase), pvs.VarIndexBase);
+                break;
+            case PaintLinearGradient plg:
+                toReturn = new TreeViewItem { Header = "PaintLinearGradient" };
+                toReturn.FormChild($"X0: {plg.X0}, Y0: {plg.Y0}");
+                toReturn.FormChild($"X1: {plg.X1}, Y1: {plg.Y1}");
+                toReturn.FormChild($"X2: {plg.X2}, Y2: {plg.Y2}");
+                toReturn.Items.Add(BuildColorLine(plg.ColorLine));
+                break;
+            case PaintVarLinearGradient pvlg:
+                toReturn = new TreeViewItem { Header = "PaintVarLinearGradient" };
+                toReturn.FormChild($"X0: {pvlg.X0}, Y0: {pvlg.Y0}");
+                toReturn.FormChild($"X1: {pvlg.X1}, Y1: {pvlg.Y1}");
+                toReturn.FormChild($"X2: {pvlg.X2}, Y2: {pvlg.Y2}");
+                toReturn.FormChild(nameof(pvlg.VarIndexBase), pvlg.VarIndexBase);
+                toReturn.Items.Add(Utilities.BuildColorLine(pvlg.ColorLine));
+                break;
+            case PaintRadialGradient prg:
+                toReturn = new TreeViewItem { Header = "PaintRadialGradient" };
+                toReturn.FormChild($"X0: {prg.X0}, Y0: {prg.Y0}");
+                toReturn.FormChild(nameof(prg.Radius0), prg.Radius0);
+                toReturn.FormChild($"X1: {prg.X1}, Y1: {prg.Y1}");
+                toReturn.FormChild(nameof(prg.Radius1), prg.Radius1);
+                toReturn.Items.Add(BuildColorLine(prg.ColorLine));
+                break;
+            case PaintVarRadialGradient pvrg:
+                toReturn = new TreeViewItem { Header = "PaintVarRadialGradient" };
+                toReturn.FormChild($"X0: {pvrg.X0}, Y0: {pvrg.Y0}");
+                toReturn.FormChild(nameof(pvrg.Radius0), pvrg.Radius0);
+                toReturn.FormChild($"X1: {pvrg.X1}, Y1: {pvrg.Y1}");
+                toReturn.FormChild(nameof(pvrg.Radius1), pvrg.Radius1);
+                toReturn.FormChild(nameof(pvrg.VarIndexBase), pvrg.VarIndexBase);
+                toReturn.Items.Add(BuildVarColorLine(pvrg.ColorLine));
+                break;
+            case PaintSweepGradient psg:
+                toReturn = new TreeViewItem { Header = "PaintSweepGradient" };
+                toReturn.FormChild(nameof(psg.StartAngle), psg.StartAngle);
+                toReturn.FormChild(nameof(psg.EndAngle), psg.EndAngle);
+                toReturn.FormChild($"Center: {psg.CenterX}, {psg.CenterY}");
+                toReturn.Items.Add(BuildColorLine(psg.ColorLine));
+                break;
+            case PaintVarSweepGradient pvsg:
+                toReturn = new TreeViewItem { Header = "PaintVarSweepGradient" };
+                toReturn.FormChild(nameof(pvsg.VarIndexBase), pvsg.VarIndexBase);
+                toReturn.FormChild(nameof(pvsg.StartAngle), pvsg.StartAngle);
+                toReturn.FormChild(nameof(pvsg.EndAngle), pvsg.EndAngle);
+                toReturn.FormChild($"Center: {pvsg.CenterX}, {pvsg.CenterY}");
+                toReturn.Items.Add(BuildVarColorLine(pvsg.ColorLine));
+                break;
+            case PaintGlyph pg:
+                toReturn = new TreeViewItem { Header = "PaintGlyph" };
+                toReturn.FormChild(nameof(pg.GlyphId), pg.GlyphId);
+                toReturn.FormChild(nameof(pg.PaintOffset), pg.PaintOffset);
+                toReturn.Items.Add(BuildIPaintTable(pg.PaintTable));
+                break;
+            case PaintColrGlyph pcg:
+                toReturn = new TreeViewItem { Header = "PaintColrGlyph" };
+                toReturn.FormChild(nameof(pcg.GlyphId), pcg.GlyphId);
+                break;
+            case PaintTransform ptrans:
+                toReturn = new TreeViewItem { Header = "PaintTransform" };
+                toReturn.FormChild(ptrans.Transform.ToString());
+                toReturn.Items.Add(BuildIPaintTable(ptrans.SubTable));
+                break;
+            case PaintVarTransform pvtrans:
+                toReturn = new TreeViewItem { Header = "PaintVarTransform" };
+                toReturn.FormChild(pvtrans.Transform.ToString());
+                toReturn.Items.Add(BuildIPaintTable(pvtrans.SubTable));
+                break;
+            case PaintTranslate pxlate:
+                toReturn = new TreeViewItem { Header = "PaintTranslate" };
+                toReturn.FormChild($"Translate: dX: {pxlate.Dx}, dY: {pxlate.Dy}");
+                toReturn.Items.Add(BuildIPaintTable(pxlate.SubTable));
+                break;
+            case PaintVarTranslate pvt:
+                toReturn = new TreeViewItem { Header = "PaintVarTranslate" };
+                toReturn.FormChild(nameof(pvt.VarIndexBase), pvt.VarIndexBase);
+                toReturn.FormChild($"Translate: dX: {pvt.Dx}, dY: {pvt.Dy}");
+                toReturn.Items.Add(BuildIPaintTable(pvt.SubTable));
+                break;
+            case PaintScale pscale:
+                toReturn = new TreeViewItem { Header = "PaintScale" };
+                toReturn.FormChild($"Scale: {pscale.ScaleX}, {pscale.ScaleY}");
+                toReturn.Items.Add(BuildIPaintTable(pscale.SubTable));
+                break;
+            case PaintVarScale pvscale:
+                toReturn = new TreeViewItem { Header = "PaintVarScale" };
+                toReturn.FormChild(nameof(pvscale.VarIndexBase), pvscale.VarIndexBase);
+                toReturn.FormChild($"Scale: {pvscale.ScaleX}, {pvscale.ScaleY}");
+                toReturn.Items.Add(BuildIPaintTable(pvscale.SubTable));
+                break;
+            case PaintScaleAroundCenter psac:
+                toReturn = new TreeViewItem { Header = "PaintScaleAroundCenter" };
+                toReturn.FormChild($"Center: {psac.CenterX}, {psac.CenterY}");
+                toReturn.FormChild($"Scale: {psac.ScaleX}, {psac.ScaleY}");
+                toReturn.Items.Add(BuildIPaintTable(psac.SubTable));
+                break;
+            case PaintVarScaleAroundCenter pvsac:
+                toReturn = new TreeViewItem { Header = "PaintVarScaleAroundCenter" };
+                toReturn.FormChild(nameof(pvsac.VarIndexBase), pvsac.VarIndexBase);
+                toReturn.FormChild($"Center: {pvsac.CenterX}, {pvsac.CenterY}");
+                toReturn.FormChild($"Scale: {pvsac.ScaleX}, {pvsac.ScaleY}");
+                toReturn.Items.Add(BuildIPaintTable(pvsac.SubTable));
+                break;
+            case PaintScaleUniform psu:
+                toReturn = new TreeViewItem { Header = "PaintScaleUniform" };
+                toReturn.FormChild(nameof(psu.Scale), psu.Scale);
+                toReturn.Items.Add(BuildIPaintTable(psu.SubTable));
+                break;
+            case PaintVarScaleUniform pvsu:
+                toReturn = new TreeViewItem { Header = "PaintVarScaleUniform" };
+                toReturn.FormChild(nameof(pvsu.VarIndexBase), pvsu.VarIndexBase);
+                toReturn.FormChild(nameof(pvsu.Scale), pvsu.Scale);
+                toReturn.Items.Add(BuildIPaintTable(pvsu.SubTable));
+                break;
+            case PaintScaleUniformAroundCenter psuac:
+                toReturn = new TreeViewItem { Header = "PaintScaleUniformAroundCenter" };
+                toReturn.FormChild($"Center: {psuac.CenterX}, {psuac.CenterY}");
+                toReturn.FormChild(nameof(psuac.Scale), psuac.Scale);
+                toReturn.Items.Add(BuildIPaintTable(psuac.SubTable));
+                break;
+            case PaintVarScaleUniformAroundCenter pvsuac:
+                toReturn = new TreeViewItem { Header = "PaintVarScaleUniformAroundCenter" };
+                toReturn.FormChild(nameof(pvsuac.VarIndexBase), pvsuac.VarIndexBase);
+                toReturn.FormChild($"Center: {pvsuac.CenterX}, {pvsuac.CenterY}");
+                toReturn.FormChild(nameof(pvsuac.Scale), pvsuac.Scale);
+                toReturn.Items.Add(BuildIPaintTable(pvsuac.SubTable));
+                break;
+            case PaintRotate pr:
+                toReturn = new TreeViewItem { Header = "PaintRotate" };
+                toReturn.FormChild(nameof(pr.Angle), pr.Angle);
+                toReturn.Items.Add(BuildIPaintTable(pr.SubTable));
+                break;
+            case PaintVarRotate pvr:
+                toReturn = new TreeViewItem { Header = "PaintVarRotate" };
+                toReturn.FormChild(nameof(pvr.VarIndexBase), pvr.VarIndexBase);
+                toReturn.FormChild(nameof(pvr.Angle), pvr.Angle);
+                toReturn.Items.Add(BuildIPaintTable(pvr.SubTable));
+                break;
+            case PaintRotateAroundCenter prac:
+                toReturn = new TreeViewItem { Header = "PaintRotateAroundCenter" };
+                toReturn.FormChild($"Center: {prac.CenterX}, {prac.CenterY}");
+                toReturn.FormChild(nameof(prac.Angle), prac.Angle);
+                toReturn.Items.Add(BuildIPaintTable(prac.SubTable));
+                break;
+            case PaintVarRotateAroundCenter pvrac:
+                toReturn = new TreeViewItem { Header = "PaintVarRotateAroundCenter" };
+                toReturn.FormChild(nameof(pvrac.VarIndexBase), pvrac.VarIndexBase);
+                toReturn.FormChild($"Center: {pvrac.CenterX}, {pvrac.CenterY}");
+                toReturn.FormChild(nameof(pvrac.Angle), pvrac.Angle);
+                toReturn.Items.Add(BuildIPaintTable(pvrac.SubTable));
+                break;
+            case PaintSkew pskew:
+                toReturn = new TreeViewItem { Header = "PaintSkew" };
+                toReturn.FormChild(nameof(pskew.XSkewAngle), pskew.XSkewAngle);
+                toReturn.FormChild(nameof(pskew.YSkewAngle), pskew.YSkewAngle);
+                toReturn.Items.Add(BuildIPaintTable(pskew.SubTable));
+                break;
+            case PaintVarSkew pvSkew:
+                toReturn = new TreeViewItem { Header = "PaintVarSkew" };
+                toReturn.FormChild(nameof(pvSkew.VarIndexBase), pvSkew.VarIndexBase);
+                toReturn.FormChild(nameof(pvSkew.XSkewAngle), pvSkew.XSkewAngle);
+                toReturn.FormChild(nameof(pvSkew.YSkewAngle), pvSkew.YSkewAngle);
+                toReturn.Items.Add(BuildIPaintTable(pvSkew.SubTable));
+                break;
+            case PaintSkewAroundCenter psac:
+                toReturn = new TreeViewItem { Header = "PaintSkewAroundCenter" };
+                toReturn.FormChild($"Center: {psac.CenterX}, {psac.CenterY}");
+                toReturn.FormChild(nameof(psac.XSkewAngle), psac.XSkewAngle);
+                toReturn.FormChild(nameof(psac.YSkewAngle), psac.YSkewAngle);
+                toReturn.Items.Add(BuildIPaintTable(psac.SubTable));
+                break;
+            case PaintVarSkewAroundCenter pvsac:
+                toReturn = new TreeViewItem { Header = "PaintVarSkewAroundCenter" };
+                toReturn.FormChild(nameof(pvsac.VarIndexBase), pvsac.VarIndexBase);
+                toReturn.FormChild($"Center: {pvsac.CenterX}, {pvsac.CenterY}");
+                toReturn.FormChild(nameof(pvsac.XSkewAngle), pvsac.XSkewAngle);
+                toReturn.FormChild(nameof(pvsac.YSkewAngle), pvsac.YSkewAngle);
+                toReturn.Items.Add(BuildIPaintTable(pvsac.SubTable));
+                break;
+            case PaintComposite pc:
+                toReturn = new TreeViewItem { Header = "PaintComposite" };
+                toReturn.FormChild(nameof(pc.CompositeMode), pc.CompositeMode);
+                TreeViewItem bdHeader = toReturn.FormChild("Backdrop");
+                bdHeader.Items.Add(BuildIPaintTable(pc.Backdrop));
+                TreeViewItem sHeader = toReturn.FormChild("Source Table");
+                sHeader.Items.Add(BuildIPaintTable(pc.SourceTable));
+                break;
+        }
+
+        return toReturn;
+    }
+
+    public static TreeViewItem BuildColorLine(ColorLine colorLine)
+    {
+        var toReturn = new TreeViewItem { Header = "ColorLine" };
+        toReturn.FormChild(nameof(colorLine.ExtendMode), colorLine.ExtendMode);
+        TreeViewItem colorStopsHeader = toReturn.FormChild("Color Stops");
+        colorLine.ColorStops.ForEach(cs =>
+        {
+            TreeViewItem csHeader = colorStopsHeader.FormChild("Color Stop");
+            csHeader.FormChild(nameof(cs.PaletteIndex), cs.PaletteIndex);
+            csHeader.FormChild(nameof(cs.StopOffset), cs.StopOffset);
+            csHeader.FormChild(nameof(cs.Alpha), cs.Alpha);
+        });
+        return toReturn;
+    }
+
+    public static TreeViewItem BuildVarColorLine(VarColorLine vcl)
+    {
+        var toReturn = new TreeViewItem { Header = "VarColorLine" };
+        toReturn.FormChild(nameof(vcl.ExtendMode), vcl.ExtendMode);
+        TreeViewItem colorStopsHeader = toReturn.FormChild("Var Color Stops");
+        vcl.ColorStops.ForEach(cs =>
+        {
+            TreeViewItem vcsHeader = colorStopsHeader.FormChild("Var Color Stop");
+            vcsHeader.FormChild(nameof(cs.VarIndexBase), cs.VarIndexBase);
+            vcsHeader.FormChild(nameof(cs.PaletteIndex), cs.PaletteIndex);
+            vcsHeader.FormChild(nameof(cs.StopOffset), cs.StopOffset);
+            vcsHeader.FormChild(nameof(cs.Alpha), cs.Alpha);
         });
         return toReturn;
     }

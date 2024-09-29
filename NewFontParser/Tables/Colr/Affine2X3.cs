@@ -25,5 +25,7 @@ namespace NewFontParser.Tables.Colr
             Dx = reader.ReadF16Dot16();
             Dy = reader.ReadF16Dot16();
         }
+        
+        public new string ToString() => $"Xx: {Xx}, Xy: {Xy}, Yx: {Yx}, Yy: {Yy}, Dx: {Dx}, Dy: {Dy}";
     }
 }

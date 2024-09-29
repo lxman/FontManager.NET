@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NewFontParser.Reader;
 
-namespace NewFontParser.Tables.Common
+namespace NewFontParser.Tables.Common.FeatureParametersTable
 {
     public class FeatureList
     {

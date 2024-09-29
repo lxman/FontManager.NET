@@ -17,6 +17,8 @@
         </Grid.ColumnDefinitions>
         <Button Grid.Column="0" Grid.Row="0" Height="25" Click="OpenFontClick">Open Font</Button>
         <TextBlock Grid.Row="0" Grid.Column="1" Name="ProcessingMarker"></TextBlock>
-        <TreeView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="ResultView" />
+        <TreeView Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="ResultView"
+                  VirtualizingStackPanel.IsVirtualizing="True"
+                  VirtualizingStackPanel.VirtualizationMode="Recycling" />
     </Grid>
 </Window>

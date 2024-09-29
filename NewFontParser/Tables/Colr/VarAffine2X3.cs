@@ -28,5 +28,7 @@ namespace NewFontParser.Tables.Colr
             Dy = reader.ReadF16Dot16();
             VarIndexBase = reader.ReadUInt32();
         }
+
+        public new string ToString() => $"VarIndexBase: {VarIndexBase}, Xx: {Xx}, Xy {Xy}, Yx: {Yx}, Yy {Yy}, Dx: {Dx}, Dy {Dy}";
     }
 }
