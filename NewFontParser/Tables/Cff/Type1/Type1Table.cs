@@ -15,19 +15,9 @@ namespace NewFontParser.Tables.Cff.Type1
 
         public Header Header { get; }
 
-        public Index NameIndex { get; }
-
-        public Index TopDictIndex { get; }
-
-        public Index StringIndex { get; }
-
-        public Index GlobalSubrIndex { get; }
-
         public IEncoding Encoding { get; }
 
         public ICharset CharSet { get; }
-
-        public Index CharStrings { get; }
 
         public List<string> Names { get; } = new List<string>();
 
@@ -81,31 +71,31 @@ namespace NewFontParser.Tables.Cff.Type1
 
             Header = new Header(reader);
 
-            NameIndex = new Index(reader);
+            var nameIndex = new Index(reader);
 
-            foreach (byte[] bytes in NameIndex.Data)
+            foreach (List<byte> bytes in nameIndex.Data)
             {
-                Names.Add(System.Text.Encoding.ASCII.GetString(bytes));
+                Names.Add(System.Text.Encoding.ASCII.GetString(bytes.ToArray()));
             }
 
-            TopDictIndex = new Index(reader);
+            var topDictIndex = new Index(reader);
 
-            foreach (byte[] bytes in TopDictIndex.Data)
+            foreach (List<byte> bytes in topDictIndex.Data)
             {
                 var index = 0;
                 var operands = new List<double>();
-                while (index < bytes.Length)
+                while (index < bytes.Count)
                 {
                     byte b = bytes[index];
                     if (b >= 0x1C)
                     {
                         if (b == 0x1E)
                         {
-                            operands.Add(Calc.Double(bytes, ref index));
+                            operands.Add(Calc.Double(bytes.ToArray(), ref index));
                         }
                         else
                         {
-                            operands.Add(Calc.Integer(bytes, ref index));
+                            operands.Add(Calc.Integer(bytes.ToArray(), ref index));
                         }
                     }
                     else
@@ -161,14 +151,14 @@ namespace NewFontParser.Tables.Cff.Type1
                 }
             }
 
-            StringIndex = new Index(reader);
+            var stringIndex = new Index(reader);
 
-            foreach (byte[] bytes in StringIndex.Data)
+            foreach (List<byte> bytes in stringIndex.Data)
             {
-                Strings.Add(System.Text.Encoding.ASCII.GetString(bytes));
+                Strings.Add(System.Text.Encoding.ASCII.GetString(bytes.ToArray()));
             }
 
-            GlobalSubrIndex = new Index(reader);
+            var globalSubrIndex = new Index(reader);
 
             byte encodingFormat = reader.ReadByte();
             Encoding = encodingFormat switch
@@ -180,7 +170,7 @@ namespace NewFontParser.Tables.Cff.Type1
 
             reader.Seek(Convert.ToInt64(TopDictOperatorEntries.First(e => e.Name == "CharStrings").Operand));
 
-            CharStrings = new Index(reader);
+            var charStrings = new Index(reader);
 
             reader.Seek(Convert.ToInt64(TopDictOperatorEntries.First(e => e.Name == "charset").Operand));
 
@@ -188,11 +178,11 @@ namespace NewFontParser.Tables.Cff.Type1
             CharSet = charsetFormat switch
             {
                 0 => new CharsetsFormat0(reader,
-                    Convert.ToUInt16(CharStrings.Data.Length)),
+                    Convert.ToUInt16(charStrings.Data.Count)),
                 1 => new CharsetsFormat1(reader,
-                    Convert.ToUInt16(CharStrings.Data.Length)),
+                    Convert.ToUInt16(charStrings.Data.Count)),
                 2 => new CharsetsFormat2(reader,
-                    Convert.ToUInt16(CharStrings.Data.Length)),
+                    Convert.ToUInt16(charStrings.Data.Count)),
                 _ => CharSet
             };
         }

@@ -1,4 +1,6 @@
-﻿using NewFontParser.Reader;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NewFontParser.Reader;
 
 namespace NewFontParser.Tables.Cff.Type1
 {
@@ -6,12 +8,12 @@ namespace NewFontParser.Tables.Cff.Type1
     {
         public byte Format => 0;
 
-        public byte[] CodeArray { get; }
+        public List<byte> CodeArray { get; }
 
         public Encoding0(BigEndianReader reader)
         {
             byte nCodes = reader.ReadByte();
-            CodeArray = reader.ReadBytes(nCodes);
+            CodeArray = reader.ReadBytes(nCodes).ToList();
         }
     }
 }

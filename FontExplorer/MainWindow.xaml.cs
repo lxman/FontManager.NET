@@ -15,6 +15,7 @@ using NewFontParser.Tables.Bitmap.Ebdt;
 using NewFontParser.Tables.Bitmap.Eblc;
 using NewFontParser.Tables.Bitmap.Ebsc;
 using NewFontParser.Tables.Cff.Type1;
+using NewFontParser.Tables.Cff.Type1.Charsets;
 using NewFontParser.Tables.Cmap;
 using NewFontParser.Tables.Cmap.SubTables;
 using NewFontParser.Tables.Colr;
@@ -1092,9 +1093,67 @@ public partial class MainWindow : Window
                     });
                     break;
 
-                case Type1Table type1Table:
-                    var type1Root = new TreeViewItem { Header = "CFF" };
-                    ResultView.Items.Add(type1Root);
+                case Type1Table cffTable:
+                    var cffRoot = new TreeViewItem { Header = "CFF" };
+                    ResultView.Items.Add(cffRoot);
+                    TreeViewItem eHeader = cffRoot.FormChild("Encoding");
+                    switch (cffTable.Encoding)
+                    {
+                        case Encoding0 e0:
+                            eHeader.FormChild(nameof(e0.CodeArray), string.Join(", ", e0.CodeArray));
+                            break;
+                        case Encoding1 e1:
+                            TreeViewItem ranges = eHeader.FormChild("Ranges");
+                            e1.Ranges.ForEach(r =>
+                            {
+                                ranges.FormChild($"First: {r.First} Number Left: {r.NumberLeft}");
+                            });
+                            break;
+                    }
+                    TreeViewItem nHeader = cffRoot.FormChild("Names");
+                    cffTable.Names.ForEach(n =>
+                    {
+                        nHeader.FormChild(n);
+                    });
+                    TreeViewItem sHeader = cffRoot.FormChild("Strings");
+                    cffTable.Strings.ForEach(s =>
+                    {
+                        sHeader.FormChild(s);
+                    });
+                    TreeViewItem csHeader = cffRoot.FormChild("Char String List");
+                    cffTable.CharStringList.ForEach(cs =>
+                    {
+                        csHeader.FormChild(cs);
+                    });
+                    TreeViewItem charSetHeader = cffRoot.FormChild("Char Set");
+                    switch (cffTable.CharSet)
+                    {
+                        case CharsetsFormat0 cf0:
+                            charSetHeader.FormChild(nameof(cf0.Glyphs), string.Join(", ", cf0.Glyphs));
+                            break;
+                        case CharsetsFormat1 cf1:
+                            TreeViewItem rgHeader = charSetHeader.FormChild("Ranges");
+                            cf1.Ranges.ForEach(r =>
+                            {
+                                rgHeader.FormChild($"First: {r.First} Number Left: {r.NumberLeft}");
+                            });
+                            break;
+                        case CharsetsFormat2 cf2:
+                            TreeViewItem rngHeader = charSetHeader.FormChild("Ranges");
+                            cf2.Ranges.ForEach(r =>
+                            {
+                                rngHeader.FormChild($"First: {r.First} Number Left: {r.NumberLeft}");
+                            });
+                            break;
+                    }
+                    TreeViewItem tdoeHeader = cffRoot.FormChild("Top Dict Operator Entries");
+                    cffTable.TopDictOperatorEntries.ForEach(tdoe =>
+                    {
+                        TreeViewItem oeHeader = tdoeHeader.FormChild("Top Dict Operator Entry");
+                        oeHeader.FormChild(nameof(tdoe.Name), tdoe.Name);
+                        oeHeader.FormChild(nameof(tdoe.OperandKind), tdoe.OperandKind);
+                        oeHeader.FormChild(nameof(tdoe.Operand), tdoe.Operand);
+                    });
                     break;
 
                 case ColrTable colrTable:
