@@ -4,7 +4,7 @@ A pure C# implementation of a parser to read TTF, OTF, TTC, OTC, WOFF and WOFF2 
 
 This is a ``dotnet standard 2.1`` library to make it useful in as many places as possible.
 
-It is also published inder an ``MIT license``.
+It is also published under an ``MIT license``.
 
 To add this to your project use ``dotnet add package FontParser``
 
