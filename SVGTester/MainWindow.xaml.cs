@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
-using NewFontParser;
-using NewFontParser.Tables.Svg;
+using FontParser;
+using FontParser.Tables.Svg;
 
 namespace SVGTester
 {

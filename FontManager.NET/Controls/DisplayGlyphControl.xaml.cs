@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Controls;
-using NewFontParser.Tables.TtTables.Glyf;
+using FontParser.Tables.TtTables.Glyf;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 

@@ -1,4 +1,4 @@
-﻿using NewFontParser;
+﻿using FontParser;
 
 namespace FontExplorer;
 

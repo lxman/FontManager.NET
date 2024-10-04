@@ -1,20 +1,20 @@
 ﻿using System.Windows.Controls;
-using NewFontParser.Tables.Base;
-using NewFontParser.Tables.Bitmap.Common;
-using NewFontParser.Tables.Colr;
-using NewFontParser.Tables.Colr.PaintTables;
-using NewFontParser.Tables.Common;
-using NewFontParser.Tables.Common.ClassDefinition;
-using NewFontParser.Tables.Common.CoverageFormat;
-using NewFontParser.Tables.Common.ItemVariationStore;
-using NewFontParser.Tables.Common.TupleVariationStore;
-using NewFontParser.Tables.Gpos.LookupSubtables.AnchorTable;
-using NewFontParser.Tables.Gpos.LookupSubtables.Common;
-using NewFontParser.Tables.Gpos.LookupSubtables.MarkMarkPos;
-using NewFontParser.Tables.Math;
-using NewFontParser.Tables.TtTables.Glyf;
-using DeltaSetIndexMap = NewFontParser.Tables.Common.ItemVariationStore.DeltaSetIndexMap;
-using Tuple = NewFontParser.Tables.Common.TupleVariationStore.Tuple;
+using FontParser.Tables.Base;
+using FontParser.Tables.Bitmap.Common;
+using FontParser.Tables.Colr;
+using FontParser.Tables.Colr.PaintTables;
+using FontParser.Tables.Common;
+using FontParser.Tables.Common.ClassDefinition;
+using FontParser.Tables.Common.CoverageFormat;
+using FontParser.Tables.Common.ItemVariationStore;
+using FontParser.Tables.Common.TupleVariationStore;
+using FontParser.Tables.Gpos.LookupSubtables.AnchorTable;
+using FontParser.Tables.Gpos.LookupSubtables.Common;
+using FontParser.Tables.Gpos.LookupSubtables.MarkMarkPos;
+using FontParser.Tables.Math;
+using FontParser.Tables.TtTables.Glyf;
+using DeltaSetIndexMap = FontParser.Tables.Common.ItemVariationStore.DeltaSetIndexMap;
+using Tuple = FontParser.Tables.Common.TupleVariationStore.Tuple;
 
 namespace FontExplorer;
 

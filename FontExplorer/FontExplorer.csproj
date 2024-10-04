@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NewFontParser\NewFontParser.csproj" />
+    <ProjectReference Include="..\FontParser\FontParser.csproj" />
   </ItemGroup>
 
 </Project>

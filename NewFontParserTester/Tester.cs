@@ -1,4 +1,4 @@
-﻿using NewFontParser;
+﻿using FontParser;
 using Serilog;
 
 namespace NewFontParserTester

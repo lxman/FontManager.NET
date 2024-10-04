@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewFontParser", "NewFontParser\NewFontParser.csproj", "{EB5E263A-EE44-4E74-B27E-4737B8069105}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontParser", "FontParser\FontParser.csproj", "{EB5E263A-EE44-4E74-B27E-4737B8069105}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewFontParserTester", "NewFontParserTester\NewFontParserTester.csproj", "{FD14003C-CD20-4AF1-9878-4EB46611C8E1}"
 EndProject
