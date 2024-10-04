@@ -12,4 +12,4 @@ To use it, create a new ``FontReader`` object.
 
 Then execute either the ``ReadFile(string file)`` or the ``ReadFileAsync(string file)`` method.
 
-You will be returned a ``List<FontStructure>`` in which will be a hierarchical structure of the tables in the font.
+You will be returned a ``List<FontStructure>`` in which will be a hierarchical structure of the tables in the font(s).

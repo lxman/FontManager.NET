@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace NewFontParserTester
+namespace FontParserTester
 {
     internal class Program
     {

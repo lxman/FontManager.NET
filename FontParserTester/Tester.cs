@@ -1,7 +1,7 @@
 ﻿using FontParser;
 using Serilog;
 
-namespace NewFontParserTester
+namespace FontParserTester
 {
     public class Tester
     {

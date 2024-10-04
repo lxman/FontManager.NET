@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontParser", "FontParser\FontParser.csproj", "{EB5E263A-EE44-4E74-B27E-4737B8069105}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewFontParserTester", "NewFontParserTester\NewFontParserTester.csproj", "{FD14003C-CD20-4AF1-9878-4EB46611C8E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontParserTester", "FontParserTester\FontParserTester.csproj", "{FD14003C-CD20-4AF1-9878-4EB46611C8E1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SVGTester", "SVGTester\SVGTester.csproj", "{7C42EAFD-6E25-4FBE-B07D-40B88F9BF4A3}"
 EndProject
@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdFontType", "IdFontType\Id
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontExplorer", "FontExplorer\FontExplorer.csproj", "{331C3E4C-9D5B-4F34-91E6-B630B4B50E18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewFontParserTests", "NewFontParserTests\NewFontParserTests.csproj", "{03F69AA7-93C8-43AB-BF5D-B013A427B425}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontParserTests", "FontParserTests\FontParserTests.csproj", "{03F69AA7-93C8-43AB-BF5D-B013A427B425}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
