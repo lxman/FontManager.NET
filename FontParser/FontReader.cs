@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 using FontParser.Extensions;
 using FontParser.Models;
 using FontParser.Reader;
+using FontParser.Tables;
+using FontParser.Tables.Hhea;
 using FontParser.Tables.Hmtx;
 using FontParser.Tables.Name;
-using FontParser.Tables.TtTables;
 using FontParser.Tables.TtTables.Glyf;
 using FontParser.Tables.WOFF2;
 using FontParser.Tables.WOFF2.GlyfReconstruct;
@@ -211,17 +212,44 @@ namespace FontParser
             var fontStructure = new FontStructure(file);
             var woffProcessor = new WoffPreprocessor(reader, 2);
             fontStructure.TableRecords = woffProcessor.TableRecords;
-            byte[]? glyphData = woffProcessor.TableRecords.FirstOrDefault(t => t.Tag == "glyf")?.Data;
-            if (glyphData is null)
-            {
-                throw new InvalidDataException("No glyph data found in WOFF2 file.");
-            }
+            fontStructure.CollectTableNames();
+            fontStructure.ProcessParallel(
+                woffProcessor.GlyfTransform == GlyfTransform.Transform,
+                true,
+                woffProcessor.HmtxTransform == HmtxTransform.Transform);
 
-            var beReader = new BigEndianReader(glyphData);
-            var table = new TransformedGlyfTable(beReader);
-            (GlyphTable, LocaTable, HmtxTable) tables = ReconstructTables(table);
-            //fontStructure.CollectTableNames();
-            //fontStructure.ProcessParallel();
+            if (woffProcessor.GlyfTransform == GlyfTransform.Transform)
+            {
+                byte[]? glyphData = woffProcessor.TableRecords.FirstOrDefault(t => t.Tag == "glyf")?.Data;
+                if (glyphData is null)
+                {
+                    throw new InvalidDataException("No glyph data found in WOFF2 file.");
+                }
+
+                var glyphTableData = new TransformedGlyfTable(new BigEndianReader(glyphData));
+                GlyphTable glyphTable = ReconstructGlyfTable(glyphTableData);
+                fontStructure.Tables.Add(glyphTable);
+            }
+            if (woffProcessor.HmtxTransform == HmtxTransform.Transform)
+            {
+                HheaTable? hheaTable = fontStructure.Tables.OfType<HheaTable>().FirstOrDefault();
+                MaxPTable? maxpTable = fontStructure.Tables.OfType<MaxPTable>().FirstOrDefault();
+                if (hheaTable is null || maxpTable is null)
+                {
+                    throw new InvalidDataException("No hhea or maxp table found in WOFF2 file.");
+                }
+                byte[]? hmtxData = woffProcessor.TableRecords.FirstOrDefault(t => t.Tag == "hmtx")?.Data;
+                if (hmtxData is null)
+                {
+                    throw new InvalidDataException("No hmtx data found in WOFF2 file.");
+                }
+                var hmtxTableData = new TransformedHmtxTable(
+                    new BigEndianReader(hmtxData),
+                    hheaTable.NumberOfHMetrics,
+                    maxpTable.NumGlyphs);
+                HmtxTable hmtxTable = ReconstructHmtxTable(hmtxTableData);
+                fontStructure.Tables.Add(hmtxTable);
+            }
             return fontStructure;
         }
 
@@ -271,7 +299,7 @@ namespace FontParser
             };
         }
 
-        private static (GlyphTable, LocaTable, HmtxTable) ReconstructTables(TransformedGlyfTable table)
+        private static GlyphTable ReconstructGlyfTable(TransformedGlyfTable table)
         {
             var pointTransformer = new PointTransform();
             var locaOffsets = new List<uint>();
@@ -367,6 +395,15 @@ namespace FontParser
                         cgi.InstructionCount = glyphReader.Read255Uint16();
                     }
 
+                    Rectangle? boundingBox = ReadBoundingBox(bboxBitmapReader, bboxDataReader);
+                    if (!(boundingBox is null))
+                    {
+                        cgi.XMin = Convert.ToInt16(boundingBox.Value.X);
+                        cgi.YMin = Convert.ToInt16(boundingBox.Value.Y);
+                        cgi.XMax = Convert.ToInt16(boundingBox.Value.X + boundingBox.Value.Width);
+                        cgi.YMax = Convert.ToInt16(boundingBox.Value.Y + boundingBox.Value.Height);
+                    }
+
                     glyphInfos.Add(cgi);
                 }
                 else
@@ -392,12 +429,31 @@ namespace FontParser
                 });
             });
 
-            //var gData = new GlyphData(0, new GlyphHeader(), new SimpleGlyph());
             var glyphTable = new GlyphTable(Array.Empty<byte>());
-            //glyphTable.Woff2Reconstruct(glyphs);
-            var locaTable = new LocaTable(Array.Empty<byte>());
-            var hmtxTable = new HmtxTable(Array.Empty<byte>());
-            return (glyphTable, locaTable, hmtxTable);
+            glyphTable.Woff2Reconstruct(glyphs);
+            return glyphTable;
+        }
+
+        private static HmtxTable ReconstructHmtxTable(TransformedHmtxTable table)
+        {
+            var toReturn = new HmtxTable(Array.Empty<byte>());
+            var index = 0;
+            foreach (ushort advanceWidth in table.AdvanceWidth)
+            {
+                var longHMetricRecord = new LongHMetricRecord(
+                    new BigEndianReader(Array.Empty<byte>()),
+                    advanceWidth,
+                    !(table.Lsb is null) ? table.Lsb[index] : (short)0);
+                toReturn.LongHMetricRecords.Add(longHMetricRecord);
+                index++;
+            }
+
+            if (table.LeftSideBearing is null) return toReturn;
+            foreach (short lsb in table.LeftSideBearing)
+            {
+                toReturn.LeftSideBearings.Add(lsb);
+            }
+            return toReturn;
         }
 
         private static List<ushort> CalcEndpoints(List<ushort> nPoints)
@@ -426,11 +482,11 @@ namespace FontParser
                 : 1;
             bool readSigned = info.Flags.HasFlag(CompositeGlyphFlags.ArgsAreXyValues);
             info.Arg1 = readSigned
-                ? ConvertByteArrayToShort(compositeReader.Read(bytesToRead))
-                : ConvertByteArrayToUShort(compositeReader.Read(bytesToRead));
+                ? ConvertShortToInt(compositeReader.Read(bytesToRead))
+                : ConvertUShortToInt(compositeReader.Read(bytesToRead));
             info.Arg2 = readSigned
-                ? ConvertByteArrayToShort(compositeReader.Read(bytesToRead))
-                : ConvertByteArrayToUShort(compositeReader.Read(bytesToRead));
+                ? ConvertShortToInt(compositeReader.Read(bytesToRead))
+                : ConvertUShortToInt(compositeReader.Read(bytesToRead));
             int transformCount = info.Flags.HasFlag(CompositeGlyphFlags.WeHaveAScale)
                 ? 1
                 : info.Flags.HasFlag(CompositeGlyphFlags.WeHaveAnXAndYScale)
@@ -466,14 +522,14 @@ namespace FontParser
             return new Rectangle(xMax, yMin, xMax - xMin, yMax - yMin);
         }
 
-        private static int ConvertByteArrayToShort(byte[] bytes)
+        private static int ConvertShortToInt(byte[] bytes)
         {
             return bytes.Length == 1
                 ? (sbyte)bytes[0]
                 : BinaryPrimitives.ReadInt16BigEndian(bytes);
         }
 
-        private static int ConvertByteArrayToUShort(byte[] bytes)
+        private static int ConvertUShortToInt(byte[] bytes)
         {
             return bytes.Length == 1
                 ? bytes[0]

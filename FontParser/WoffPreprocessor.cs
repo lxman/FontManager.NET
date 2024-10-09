@@ -11,6 +11,12 @@ namespace FontParser
 {
     public class WoffPreprocessor
     {
+        public GlyfTransform GlyfTransform { get; private set; }
+
+        public LocaTransform LocaTransform { get; private set; }
+
+        public HmtxTransform HmtxTransform { get; private set; }
+
         public List<TableRecord> TableRecords { get; } = new List<TableRecord>();
 
         private readonly FileByteReader _reader;
@@ -88,9 +94,20 @@ namespace FontParser
                         }
                         else
                         {
-                            if (tag == "glyf")
+                            switch (tag)
                             {
-                                uncompressedWoffData = uncompressedWoff2Data[(int)dataStart..(int)(dataStart + dataLength)];
+                                case "glyf":
+                                    GlyfTransform = (GlyfTransform)entry.Transformation;
+                                    uncompressedWoffData = uncompressedWoff2Data[(int)dataStart..(int)(dataStart + dataLength)];
+                                    break;
+                                case "loca":
+                                    LocaTransform = (LocaTransform)entry.Transformation;
+                                    uncompressedWoffData = uncompressedWoff2Data[(int)dataStart..(int)(dataStart + dataLength)];
+                                    break;
+                                case "hmtx":
+                                    HmtxTransform = (HmtxTransform)entry.Transformation;
+                                    uncompressedWoffData = uncompressedWoff2Data[(int)dataStart..(int)(dataStart + dataLength)];
+                                    break;
                             }
                         }
                         break;

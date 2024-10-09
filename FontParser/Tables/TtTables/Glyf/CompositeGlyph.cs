@@ -1,4 +1,5 @@
 ﻿using FontParser.Reader;
+using FontParser.Tables.WOFF2.GlyfReconstruct;
 
 namespace FontParser.Tables.TtTables.Glyf
 {
@@ -12,8 +13,12 @@ namespace FontParser.Tables.TtTables.Glyf
 
         public int Argument2 { get; }
 
-        public CompositeGlyph(BigEndianReader reader, GlyphHeader glyphHeader)
+        public CompositeGlyph(
+            BigEndianReader reader,
+            GlyphHeader glyphHeader,
+            bool woff2Reconstruct = false)
         {
+            if (woff2Reconstruct) return;
             Flags = (CompositeGlyphFlags)reader.ReadUShort();
             GlyphIndex = reader.ReadUShort();
             if (Flags.HasFlag(CompositeGlyphFlags.ArgsAreXyValues))
@@ -26,6 +31,11 @@ namespace FontParser.Tables.TtTables.Glyf
                 Argument1 = 0;
                 Argument2 = 0;
             }
+        }
+
+        public void Woff2Reconstruct(CompositeGlyphInfo compositeGlyphInfo)
+        {
+            // Transfer information from CompositeGlyphInfo to this instance
         }
     }
 }
