@@ -48,6 +48,11 @@ namespace FontParser.Tables.TtTables.Glyf
             Glyphs = Glyphs.OrderBy(g => g.Index).ToList();
         }
 
+        public void Woff2Reconstruct(List<GlyphData> glyphs)
+        {
+            Glyphs = glyphs;
+        }
+
         public GlyphData? GetGlyphData(int index)
         {
             return Glyphs.FirstOrDefault(g => g.Index == index);

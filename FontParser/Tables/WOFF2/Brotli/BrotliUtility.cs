@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
 
-namespace FontParser.Tables.Woff.Brotli
+namespace FontParser.Tables.WOFF2.Brotli
 {
     public static class BrotliUtility
     {

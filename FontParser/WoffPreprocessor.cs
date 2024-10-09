@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using FontParser.Models;
 using FontParser.Reader;
 using FontParser.Tables.Woff;
-using FontParser.Tables.Woff.Brotli;
 using FontParser.Tables.Woff.Zlib;
+using FontParser.Tables.WOFF2;
+using FontParser.Tables.WOFF2.Brotli;
 
 namespace FontParser
 {

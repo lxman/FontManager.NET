@@ -9,12 +9,13 @@ namespace FontParserTester
         {
             List<string> errors = [];
             List<string> fonts = [];
-            const string rootDirectory = @"C:\Users\jorda\source\TestFonts";
-            fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".ttf") || f.EndsWith(".otf")));
-            fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".ttc")).ToList());
+            //const string rootDirectory = @"C:\Users\jorda\source\TestFonts";
+            // fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".ttf") || f.EndsWith(".otf")));
+            // fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".ttc")).ToList());
             //fonts = fonts.Where(f => f.EndsWith("NotoSerifLao-Bold.ttf")).ToList();
-            //const string rootDirectory = @"C:\Users\jorda\source\Woff2Fonts";
-            //fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".woff2")));
+            const string rootDirectory = @"C:\Users\jorda\source\Woff2Fonts";
+            fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".woff2")));
+            //fonts = fonts.Where(f => f.EndsWith("JetBrainsMono-Bold.woff2")).ToList();
             Log.Debug($"Found {fonts.Count} fonts to load.");
             fonts.ForEach(f =>
             {

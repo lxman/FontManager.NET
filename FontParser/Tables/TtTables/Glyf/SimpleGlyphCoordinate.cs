@@ -14,7 +14,7 @@ namespace FontParser.Tables.TtTables.Glyf
             OnCurve = onCurve;
         }
 
-        public void ChangePoint(PointF newPoint, bool onCurve)
+        public void SetPoint(PointF newPoint, bool onCurve)
         {
             Point = newPoint;
             OnCurve = onCurve;

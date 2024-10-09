@@ -1,10 +1,11 @@
 ﻿using System;
 using FontParser.Reader;
+using FontParser.Tables.Woff;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 #pragma warning disable CS8601 // Possible null reference assignment.
 
-namespace FontParser.Tables.Woff
+namespace FontParser.Tables.WOFF2
 {
     public class Woff2TableDirectoryEntry : IDirectoryEntry
     {

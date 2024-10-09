@@ -1,6 +1,6 @@
 ﻿// ReSharper disable StringLiteralTypo
 
-namespace FontParser.Tables.Woff
+namespace FontParser.Tables.WOFF2
 {
     public static class Woff2KnownTableTags
     {

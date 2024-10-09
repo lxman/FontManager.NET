@@ -210,7 +210,7 @@ namespace FontParser.Reader
             uint accumulator = 0;
             for (var i = 0; i < 5; i++)
             {
-                byte b = ReadBytes(1)[0];
+                byte b = ReadByte();
                 if (i == 0 && b == 0x80)
                 {
                     throw new Exception("Invalid base 128 value");
@@ -233,18 +233,18 @@ namespace FontParser.Reader
         {
             ushort value;
 
-            byte code = ReadBytes(1)[0];
+            byte code = ReadByte();
             switch (code)
             {
                 case 253:
                     value = ReadUShort();
                     break;
                 case 254:
-                    value = ReadBytes(1)[0];
+                    value = ReadByte();
                     value += 253 * 2;
                     break;
                 case 255:
-                    value = ReadBytes(1)[0];
+                    value = ReadByte();
                     value += 253;
                     break;
                 default:

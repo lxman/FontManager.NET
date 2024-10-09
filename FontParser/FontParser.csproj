@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <Folder Include="Tables\Cff\Type2\" />
-    <None Include="docs\README.md" Pack="true" PackagePath="\"/>
+    <None Include="docs\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
