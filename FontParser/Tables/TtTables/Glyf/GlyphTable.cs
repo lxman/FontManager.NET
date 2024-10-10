@@ -53,6 +53,7 @@ namespace FontParser.Tables.TtTables.Glyf
         // TODO: figure out how to reconstruct the indexes
         public void Woff2Reconstruct(List<List<IGlyphInfo>> glyphs)
         {
+            var index = 0;
             glyphs.ForEach(g =>
             {
                 g.ForEach(gi =>
@@ -87,7 +88,7 @@ namespace FontParser.Tables.TtTables.Glyf
                             throw new ArgumentOutOfRangeException(nameof(gi));
                     }
 
-                    Glyphs.Add(new GlyphData(0, header, spec));
+                    Glyphs.Add(new GlyphData(index++, header, spec));
                 });
             });
         }

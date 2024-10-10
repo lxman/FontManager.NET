@@ -10,8 +10,6 @@ using FontParser;
 using FontParser.Tables.TtTables.Glyf;
 using Ookii.Dialogs.Wpf;
 using Xceed.Wpf.Toolkit;
-using FontFamily = System.Windows.Media.FontFamily;
-using Typeface = System.Windows.Media.Typeface;
 
 namespace FontManager.NET
 {
@@ -88,13 +86,13 @@ namespace FontManager.NET
             if (e.Direction == SpinDirection.Increase)
             {
                 value += 0.1;
-                value = Math.Round(value, 1);
             }
             else
             {
                 value -= 0.1;
-                value = Math.Round(value, 1);
             }
+
+            value = Math.Round(value, 1);
 
             pointSize.Text = value.ToString(new CultureInfo("en-us"));
         }
@@ -122,6 +120,9 @@ namespace FontManager.NET
                         .Where(f =>
                             f.EndsWith(".ttf")
                             || f.EndsWith(".otf")
+                            || f.EndsWith(".ttc")
+                            || f.EndsWith(".woff")
+                            || f.EndsWith(".woff2")
                         ).ToList();
                 fonts.ForEach(f =>
                 {
@@ -161,10 +162,10 @@ namespace FontManager.NET
         private void DisplayGlyphTabMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             FontReader reader = new();
-            List<FontStructure> fontStructures = reader.ReadFile(@"C:\Users\jorda\source\TestFonts\arial.ttf");
+            List<FontStructure> fontStructures = reader.ReadFile(@"C:\Users\jorda\source\Woff2Fonts\Cornish_Pasty_Stylistic_One-Regular.woff2");
             FontStructure structure = fontStructures[0];
             GlyphTable? glyphTable = structure.GetGlyphTable();
-            GlyphData? glyphData = glyphTable?.GetGlyphData(67);
+            GlyphData? glyphData = glyphTable?.GetGlyphData(1);
             if (glyphData is null) return;
             DisplayGlyphControl.AssignGlyph(glyphData);
         }

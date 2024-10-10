@@ -143,7 +143,7 @@ namespace FontParser
             return toReturn;
         }
 
-        private static List<(string, List<IFontTable>)>? CompileTableDictionary(List<FontStructure> fontStructures)
+        private static List<(string, List<IFontTable>)> CompileTableDictionary(List<FontStructure> fontStructures)
         {
             var toReturn = new List<(string, List<IFontTable>)>();
             fontStructures.ForEach(fs =>

@@ -8,6 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <skia:SKElement Name="DisplayGlyph" PaintSurface="DisplayGlyphPaintSurface" />
+        <skia:SKElement Name="DisplayGlyph" PaintSurface="DisplayGlyphPaintSurface" SizeChanged="DisplayGlyphOnSizeChanged" />
     </Grid>
 </UserControl>
