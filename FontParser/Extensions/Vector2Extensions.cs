@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Numerics;
 
 namespace FontParser.Extensions
@@ -27,6 +28,11 @@ namespace FontParser.Extensions
         public static double ScalarProjection(this Vector2 v, Vector2 other)
         {
             return Vector2.Dot(v, other) / v.Length();
+        }
+
+        public static PointF ToPointF(this Vector2 v)
+        {
+            return new PointF(v.X, v.Y);
         }
     }
 }

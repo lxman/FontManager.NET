@@ -122,32 +122,32 @@ namespace FontParser.RenderFont.Interpreter
                     case 0x06:
                         int point1 = _stack.Pop();
                         int point2 = _stack.Pop();
-                        PointF p1 = GetPoint(point1, GraphicsState.ZonePointers[2]);
-                        PointF p2 = GetPoint(point2, GraphicsState.ZonePointers[2]);
+                        PointF p1 = GetCurrentPoint(point1, GraphicsState.ZonePointers[2]);
+                        PointF p2 = GetCurrentPoint(point2, GraphicsState.ZonePointers[2]);
                         GraphicsState.ProjectionVector = ToUnit(p1, p2);
                         break;
                     // SPVTL[1]
                     case 0x07:
                         point1 = _stack.Pop();
                         point2 = _stack.Pop();
-                        p1 = GetPoint(point1, GraphicsState.ZonePointers[2]);
-                        p2 = GetPoint(point2, GraphicsState.ZonePointers[2]);
+                        p1 = GetCurrentPoint(point1, GraphicsState.ZonePointers[2]);
+                        p2 = GetCurrentPoint(point2, GraphicsState.ZonePointers[2]);
                         GraphicsState.ProjectionVector = ToUnit(p1, p2).Rotate(-90);
                         break;
                     // SFVTL[0]
                     case 0x08:
                         point1 = _stack.Pop();
                         point2 = _stack.Pop();
-                        p1 = GetPoint(point1, GraphicsState.ZonePointers[2]);
-                        p2 = GetPoint(point2, GraphicsState.ZonePointers[2]);
+                        p1 = GetCurrentPoint(point1, GraphicsState.ZonePointers[2]);
+                        p2 = GetCurrentPoint(point2, GraphicsState.ZonePointers[2]);
                         GraphicsState.FreedomVector = ToUnit(p1, p2);
                         break;
                     // SFVTL[1]
                     case 0x09:
                         point1 = _stack.Pop();
                         point2 = _stack.Pop();
-                        p1 = GetPoint(point1, GraphicsState.ZonePointers[2]);
-                        p2 = GetPoint(point2, GraphicsState.ZonePointers[2]);
+                        p1 = GetCurrentPoint(point1, GraphicsState.ZonePointers[2]);
+                        p2 = GetCurrentPoint(point2, GraphicsState.ZonePointers[2]);
                         GraphicsState.FreedomVector = ToUnit(p1, p2).Rotate(-90);
                         break;
                     // SPVFS
@@ -192,10 +192,10 @@ namespace FontParser.RenderFont.Interpreter
                         int a1 = _stack.Pop();
                         int a0 = _stack.Pop();
                         int pointIndex = _stack.Pop();
-                        PointF pointA0 = GetPoint(a0, GraphicsState.ZonePointers[1]);
-                        PointF pointA1 = GetPoint(a1, GraphicsState.ZonePointers[1]);
-                        PointF pointB0 = GetPoint(b0, GraphicsState.ZonePointers[0]);
-                        PointF pointB1 = GetPoint(b1, GraphicsState.ZonePointers[0]);
+                        PointF pointA0 = GetCurrentPoint(a0, GraphicsState.ZonePointers[1]);
+                        PointF pointA1 = GetCurrentPoint(a1, GraphicsState.ZonePointers[1]);
+                        PointF pointB0 = GetCurrentPoint(b0, GraphicsState.ZonePointers[0]);
+                        PointF pointB1 = GetCurrentPoint(b1, GraphicsState.ZonePointers[0]);
                         PointF solution = Intersection(pointA0, pointA1, pointB0, pointB1);
                         switch (GraphicsState.ZonePointers[2])
                         {
@@ -318,22 +318,44 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // ALIGNPTS[]
                     case 0x27:
+                        // As yet UNTESTED!!!!!!!!!!
                         int pr1 = _stack.Pop();
                         int pr2 = _stack.Pop();
-                        PointF pnt1 = GetPoint(pr1, GraphicsState.ZonePointers[1]);
-                        var d1 = Math.Sqrt(Math.Pow(pnt1.X, 2) + Math.Pow(pnt1.Y, 2));
-                        PointF pnt2 = GetPoint(pr2, GraphicsState.ZonePointers[0]);
-                        Vector2 pv = GraphicsState.ProjectionVector;
-
-                        Vector2 fv = GraphicsState.FreedomVector;
-                        // TODO: Implement ALIGNPTS[]
+                        PointF pnt1 = GetCurrentPoint(pr1, GraphicsState.ZonePointers[1]);
+                        PointF pnt2 = GetCurrentPoint(pr2, GraphicsState.ZonePointers[0]);
+                        double scalarProjectionDiff = Vector2.Dot(pnt2.ToVector2() - pnt1.ToVector2(), GraphicsState.ProjectionVector) / 2;
+                        if (GraphicsState.ZonePointers[1])
+                        {
+                            _twilightZone.MovePoint2(GraphicsState, pr1, Convert.ToSingle(scalarProjectionDiff));
+                        }
+                        else
+                        {
+                            _glyphZone.MovePoint2(GraphicsState, pr1, Convert.ToSingle(scalarProjectionDiff));
+                        }
+                        if (GraphicsState.ZonePointers[0])
+                        {
+                            _twilightZone.MovePoint2(GraphicsState, pr2, -Convert.ToSingle(scalarProjectionDiff));
+                        }
+                        else
+                        {
+                            _glyphZone.MovePoint2(GraphicsState, pr2, -Convert.ToSingle(scalarProjectionDiff));
+                        }
                         break;
                     // Deprecated
                     case 0x28:
                         throw new ArgumentException("Instruction 0x28 is deprecated.");
                     // UTP[]
                     case 0x29:
-                        // TODO: Implement UTP[]
+                        // As yet UNTESTED!!!!!!!!!!
+                        pr1 = _stack.Pop();
+                        if (GraphicsState.ZonePointers[0])
+                        {
+                            _twilightZone.UnTouchPoint(GraphicsState, pr1);
+                        }
+                        else
+                        {
+                            _glyphZone.UnTouchPoint(GraphicsState, pr1);
+                        }
                         break;
                     // LOOPCALL[]
                     case 0x2A:
@@ -1009,7 +1031,7 @@ namespace FontParser.RenderFont.Interpreter
             }
         }
 
-        private PointF GetPoint(int index, bool isTwilight)
+        private PointF GetCurrentPoint(int index, bool isTwilight)
         {
             return isTwilight
                 ? _twilightZone.Current[index].PointF

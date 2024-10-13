@@ -1,10 +1,45 @@
 ﻿using System.Collections;
 using System.Numerics;
+// ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
 namespace FontParser.RenderFont.Interpreter
 {
     public class GraphicsState
     {
+        public TouchState FreedomTouchState
+        {
+            get
+            {
+                var ts = TouchState.None;
+                if (FreedomVector.X != 0)
+                {
+                    ts |= TouchState.X;
+                }
+                if (FreedomVector.Y != 0)
+                {
+                    ts |= TouchState.Y;
+                }
+                return ts;
+            }
+        }
+
+        public TouchState ProjectionTouchState
+        {
+            get
+            {
+                var ts = TouchState.None;
+                if (ProjectionVector.X != 0)
+                {
+                    ts |= TouchState.X;
+                }
+                if (ProjectionVector.Y != 0)
+                {
+                    ts |= TouchState.Y;
+                }
+                return ts;
+            }
+        }
+
         public Vector2 FreedomVector
         {
             get => _freedomVector;
@@ -47,6 +82,9 @@ namespace FontParser.RenderFont.Interpreter
 
         public int DeltaShift { get; set; } = 3;
 
+        /// <summary>
+        /// True if the zone pointer is set to the twilight zone.
+        /// </summary>
         public BitArray ZonePointers { get; set; } = new BitArray(3, true);
 
         public int Loop { get; set; } = 1;

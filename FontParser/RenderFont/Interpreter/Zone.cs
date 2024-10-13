@@ -1,6 +1,9 @@
 ﻿using System.Drawing;
 using System.Linq;
+using System.Numerics;
+using FontParser.Extensions;
 using FontParser.Tables.TtTables.Glyf;
+// ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -55,6 +58,20 @@ namespace FontParser.RenderFont.Interpreter
         public void MovePoint(int index, PointF newPoint)
         {
             Current[index].MovePoint(newPoint);
+        }
+
+        public void MovePoint2(GraphicsState gs, int index, float distance)
+        {
+            Vector2 point = Current[index].ToVector2() + distance * gs.FreedomVector / gs.VectorsDotProduct;
+            TouchState touchState = gs.FreedomTouchState;
+            Current[index] = new InterpreterPointF(point.ToPointF(), touchState);
+        }
+
+        public void UnTouchPoint(GraphicsState gs, int index)
+        {
+            TouchState fvTs = ~gs.FreedomTouchState;
+            TouchState ptTs = Current[index].TouchState;
+            Current[index].SetTouchState(ptTs &= fvTs);
         }
     }
 }

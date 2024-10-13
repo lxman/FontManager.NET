@@ -32,7 +32,7 @@ namespace FontParser.RenderFont.Interpreter
         public InterpreterPointF(PointF pointF, TouchState touchState)
         {
             PointF = pointF;
-            TouchState = touchState;
+            TouchState |= touchState;
         }
 
         public void MovePoint(PointF newPoint)
