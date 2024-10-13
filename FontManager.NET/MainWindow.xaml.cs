@@ -18,6 +18,12 @@ namespace FontManager.NET
     /// </summary>
     public partial class MainWindow : Window
     {
+        public List<string> SelectableFonts { get; set; } = [];
+
+        public string ChosenFont { get; set; } = string.Empty;
+
+        private const string FontDirectory = @"C:\Users\jorda\source\Woff2Fonts";
+
         #region Spinner TextBox DP
 
         public string TextBoxContent
@@ -75,7 +81,7 @@ namespace FontManager.NET
             DisplayArea.Children.Cast<FontFamilyControl>().ToList().ForEach(c => c.TextBlockFont = new DisplayFontDefinition(c.TextBlockFont.Typeface, value));
         }
 
-        private void SpinnerChange(object? sender, SpinEventArgs e)
+        private void SizeChange(object? sender, SpinEventArgs e)
         {
             e.Handled = true;
             var spinner = (ButtonSpinner)sender!;
@@ -159,15 +165,58 @@ namespace FontManager.NET
             var f = item.Tag.ToString()!;
         }
 
-        private void DisplayGlyphTabMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private static List<string> GetFonts(string directory) =>
+            Directory
+                .GetFiles(directory)
+                .Where(f =>
+                    f.ToLower().EndsWith(".ttf")
+                    || f.ToLower().EndsWith(".otf")
+                    || f.ToLower().EndsWith(".ttc")
+                    || f.ToLower().EndsWith(".woff")
+                    || f.ToLower().EndsWith(".woff2")
+                ).ToList();
+
+        private void DisplayGlyphTabGotFocus(object sender, RoutedEventArgs e)
         {
+            List<string> fonts = GetFonts(FontDirectory);
+            List<string> names = fonts.Select(f => f.Split("\\").Last()).ToList();
+            if (names.Contains(ChosenFont))
+            {
+                return;
+            }
+            SelectableFonts.Clear();
+            SelectableFonts.AddRange(names);
+            ChosenFont = names.First();
+        }
+
+        private void ChooseFontSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            e.Handled = true;
+            var chosenFont = $"{FontDirectory}\\{ChosenFont}";
             FontReader reader = new();
-            List<FontStructure> fontStructures = reader.ReadFile(@"C:\Users\jorda\source\Woff2Fonts\Cornish_Pasty_Stylistic_One-Regular.woff2");
+            List<FontStructure> fontStructures = reader.ReadFile(chosenFont);
             FontStructure structure = fontStructures[0];
-            GlyphTable? glyphTable = structure.GetGlyphTable();
-            GlyphData? glyphData = glyphTable?.GetGlyphData(1);
-            if (glyphData is null) return;
-            DisplayGlyphControl.AssignGlyph(glyphData);
+            var glyfTable = structure.Tables.First(t => t is GlyphTable) as GlyphTable;
+            GlyphDisplayGrid.Children.Clear();
+            glyfTable?.Glyphs.ForEach(g =>
+            {
+                switch (g.GlyphSpec)
+                {
+                    case CompositeGlyph compositeGlyph:
+                        break;
+                    case SimpleGlyph simpleGlyph:
+                        var dgControl = new DisplayGlyphControl
+                        {
+                            Height = 200,
+                            Width = 150
+                        };
+                        dgControl.AssignGlyph(g);
+                        GlyphDisplayGrid.Children.Add(dgControl);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            });
         }
     }
 }

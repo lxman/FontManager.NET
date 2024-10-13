@@ -13,5 +13,20 @@ namespace FontParser.Extensions
                 (float)(v.X * Math.Sin(radians) + v.Y * Math.Cos(radians))
             );
         }
+
+        public static double Angle(this Vector2 v)
+        {
+            return Math.Atan2(v.Y, v.X);
+        }
+
+        public static double RelativeAngle(this Vector2 v, Vector2 other)
+        {
+            return Math.Atan2(other.Y - v.Y, other.X - v.X);
+        }
+
+        public static double ScalarProjection(this Vector2 v, Vector2 other)
+        {
+            return Vector2.Dot(v, other) / v.Length();
+        }
     }
 }

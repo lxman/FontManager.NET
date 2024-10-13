@@ -5,9 +5,31 @@ namespace FontParser.RenderFont.Interpreter
 {
     public class GraphicsState
     {
-        public Vector2 FreedomVector { get; set; } = Vector2.UnitX;
+        public Vector2 FreedomVector
+        {
+            get => _freedomVector;
+            set
+            {
+                _freedomVector = value;
+                _vectorsDotP = Vector2.Dot(FreedomVector, ProjectionVector);
+            }
+        }
 
-        public Vector2 ProjectionVector { get; set; } = Vector2.UnitX;
+        private Vector2 _freedomVector = Vector2.UnitX;
+
+        public Vector2 ProjectionVector
+        {
+            get => _projectionVector;
+            set
+            {
+                _projectionVector = value;
+                _vectorsDotP = Vector2.Dot(FreedomVector, ProjectionVector);
+            }
+        }
+
+        private Vector2 _projectionVector = Vector2.UnitX;
+
+        public float VectorsDotProduct => _vectorsDotP;
 
         public Vector2 DualProjectionVectors { get; set; }
 
@@ -38,5 +60,7 @@ namespace FontParser.RenderFont.Interpreter
         public float SingleWidthValue { get; set; } = 0;
 
         public uint[] ReferencePoints { get; set; } = new uint[3];
+
+        private float _vectorsDotP;
     }
 }

@@ -27,7 +27,7 @@
                     </Grid.ColumnDefinitions>
                     <ComboBox Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Name="FontList" SelectionChanged="ItemSelected" />
                     <TextBlock Grid.Column="0" Grid.Row="1" Text="Size" />
-                    <xctk:ButtonSpinner Grid.Row="1" Grid.Column="1" Name="PointSize" Spin="SpinnerChange">
+                    <xctk:ButtonSpinner Grid.Row="1" Grid.Column="1" Name="PointSize" Spin="SizeChange">
                         <TextBox Text="{Binding Path=TextBoxContent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, Delay=1000}" />
                     </xctk:ButtonSpinner>
                     <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
@@ -58,11 +58,29 @@
                 </TabItem.Header>
                 <controls:FontEditControl />
             </TabItem>
-            <TabItem MouseLeftButtonDown="DisplayGlyphTabMouseLeftButtonDown">
+            <TabItem GotFocus="DisplayGlyphTabGotFocus">
                 <TabItem.Header>
                     <TextBlock Text="Display Glyph" />
                 </TabItem.Header>
-                <controls:DisplayGlyphControl x:Name="DisplayGlyphControl" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="10*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox Grid.Row="0" Grid.Column="0" Name="ChooseFont"
+                              IsSynchronizedWithCurrentItem="True"
+                              ItemsSource="{Binding SelectableFonts}"
+                              SelectedItem="{Binding ChosenFont, Mode=TwoWay}"
+                              SelectionChanged="ChooseFontSelectionChanged" />
+                    <xctk:ButtonSpinner Grid.Row="0" Grid.Column="1" Name="GlyphSize" />
+                    <ScrollViewer Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+                        <WrapPanel Name="GlyphDisplayGrid" />
+                    </ScrollViewer>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>

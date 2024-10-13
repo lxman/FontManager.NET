@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="FontManager.NET.Controls.DoubleSpinnerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:FontManager.NET.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="25" d:DesignWidth="400"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Grid>
+        <xctk:ButtonSpinner Name="Spinner" Spin="SpinnerSpin">
+            <TextBox Name="ValueDisplay" Text="{Binding Path=TextBoxContent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, Delay=1000}" />
+        </xctk:ButtonSpinner>
+    </Grid>
+</UserControl>

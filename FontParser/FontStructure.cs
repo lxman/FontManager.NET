@@ -121,16 +121,6 @@ namespace FontParser
                 if (record.Succeeded) _tables.Remove(tsRecord);
                 tsRecord.Attempted = true;
             }
-            //if (!(Tables.Find(x => x is CmapTable) is CmapTable cmapTable)) return;
-            //if (!(Tables.Find(x => x is GlyphTable) is GlyphTable glyphTable)) return;
-            //Console.Write("Glyph Ids: ");
-            //for (ushort i = 0; i < 0x7F; i++)
-            //{
-            //    ushort glyphId = cmapTable.GetGlyphId(i);
-            //    Console.Write($"{glyphId}, ");
-            //    GlyphData? data = glyphTable.GetGlyphData(glyphId);
-            //}
-            //Console.WriteLine();
 
             // For testing the interpreter
             //ushort demoId = cmapTable.GetGlyphId(0x41);

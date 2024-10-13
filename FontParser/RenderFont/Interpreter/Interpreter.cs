@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Numerics;
 using FontParser.Extensions;
 using FontParser.Tables;
+using FontParser.Tables.Hmtx;
 using FontParser.Tables.TtTables;
 using FontParser.Tables.TtTables.Glyf;
 
@@ -22,9 +23,10 @@ namespace FontParser.RenderFont.Interpreter
         private readonly CvtTable _cvtTable;
         private readonly GlyphTable _glyphTable;
         private readonly MaxPTable _maxPTable;
+        private readonly HmtxTable _hmtxTable;
         private readonly Stack<int> _stack;
-        private readonly Zone TwilightZone = new Zone();
-        private readonly Zone GlyphZone = new Zone();
+        private readonly Zone _twilightZone;
+        private readonly Zone _glyphZone = new Zone();
         private readonly SimpleGlyph _glyphData;
 
         public Interpreter(
@@ -41,13 +43,14 @@ namespace FontParser.RenderFont.Interpreter
             _stack = new Stack<int>();
             _storageArea = new StorageArea(maxPTable.MaxStorage);
             _maxPTable = maxPTable;
-            TwilightZone = new Zone(true, new PointF[maxPTable.MaxTwilightPoints]);
+            _twilightZone = new Zone(true, new PointF[maxPTable.MaxTwilightPoints]);
         }
 
         public Interpreter(
             GlyphTable glyphTable,
             GlyphData glyphData,
             CvtTable cvtTable,
+            HmtxTable hmtxTable,
             MaxPTable maxPTable,
             GraphicsState graphicsState,
             Dictionary<int, byte[]> functions,
@@ -61,6 +64,7 @@ namespace FontParser.RenderFont.Interpreter
             GraphicsState = graphicsState;
             _stack = new Stack<int>();
             _maxPTable = maxPTable;
+            _hmtxTable = hmtxTable;
             for (var i = 0; i < maxPTable.MaxFunctionDefs; i++)
             {
                 Functions.Add(i, Array.Empty<byte>());
@@ -69,14 +73,16 @@ namespace FontParser.RenderFont.Interpreter
             {
                 Functions[keyValuePair.Key] = keyValuePair.Value;
             }
-            TwilightZone = new Zone(true, new PointF[maxPTable.MaxTwilightPoints]);
+            _twilightZone = new Zone(true, new PointF[maxPTable.MaxTwilightPoints]);
+            short lsb = hmtxTable.LongHMetricRecords[glyphData.Index].LeftSideBearing;
+            ushort advanceWidth = hmtxTable.LongHMetricRecords[glyphData.Index].AdvanceWidth;
             _glyphData = (SimpleGlyph)glyphData.GlyphSpec;
             List<SimpleGlyphCoordinate> coords = _glyphData.Coordinates;
-            coords.Add(new SimpleGlyphCoordinate(new PointF(0, 0), false));
-            coords.Add(new SimpleGlyphCoordinate(new PointF(0, 0), false));
-            coords.Add(new SimpleGlyphCoordinate(new PointF(0, 0), false));
-            coords.Add(new SimpleGlyphCoordinate(new PointF(0, 0), false));
-            GlyphZone = new Zone(false, coords.ToArray());
+            coords.Add(new SimpleGlyphCoordinate(new PointF(lsb, 0), false)); // Phantom point 0
+            coords.Add(new SimpleGlyphCoordinate(new PointF(advanceWidth, 0), false)); // Phantom point 1
+            coords.Add(new SimpleGlyphCoordinate(new PointF(0, 0), false)); // Phantom point 2
+            coords.Add(new SimpleGlyphCoordinate(new PointF(0, 0), false)); // Phantom point 3
+            _glyphZone = new Zone(false, coords.ToArray());
         }
 
         public void Execute()
@@ -194,10 +200,10 @@ namespace FontParser.RenderFont.Interpreter
                         switch (GraphicsState.ZonePointers[2])
                         {
                             case true:
-                                TwilightZone.MovePoint(pointIndex, solution);
+                                _twilightZone.MovePoint(pointIndex, solution);
                                 break;
                             case false:
-                                GlyphZone.MovePoint(pointIndex, solution);
+                                _glyphZone.MovePoint(pointIndex, solution);
                                 break;
                         }
                         break;
@@ -312,12 +318,19 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // ALIGNPTS[]
                     case 0x27:
+                        int pr1 = _stack.Pop();
+                        int pr2 = _stack.Pop();
+                        PointF pnt1 = GetPoint(pr1, GraphicsState.ZonePointers[1]);
+                        var d1 = Math.Sqrt(Math.Pow(pnt1.X, 2) + Math.Pow(pnt1.Y, 2));
+                        PointF pnt2 = GetPoint(pr2, GraphicsState.ZonePointers[0]);
+                        Vector2 pv = GraphicsState.ProjectionVector;
+
+                        Vector2 fv = GraphicsState.FreedomVector;
                         // TODO: Implement ALIGNPTS[]
                         break;
                     // Deprecated
                     case 0x28:
                         throw new ArgumentException("Instruction 0x28 is deprecated.");
-                        break;
                     // UTP[]
                     case 0x29:
                         // TODO: Implement UTP[]
@@ -999,8 +1012,8 @@ namespace FontParser.RenderFont.Interpreter
         private PointF GetPoint(int index, bool isTwilight)
         {
             return isTwilight
-                ? TwilightZone.Current[index].PointF
-                : GlyphZone.Current[index].PointF;
+                ? _twilightZone.Current[index].PointF
+                : _glyphZone.Current[index].PointF;
         }
 
         private static Vector2 ToUnit(PointF a, PointF b)
