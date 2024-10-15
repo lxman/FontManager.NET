@@ -181,6 +181,16 @@ namespace FontParser.Reader
             };
         }
 
+        public uint[] ReadOffsets(int offSize, uint count)
+        {
+            var result = new uint[count];
+            for (var i = 0; i < count; i++)
+            {
+                result[i] = ReadOffset(offSize);
+            }
+            return result;
+        }
+
         public string ReadNullTerminatedString(bool isUnicode)
         {
             var data = new List<byte>();

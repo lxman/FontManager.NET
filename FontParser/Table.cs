@@ -9,6 +9,7 @@ using FontParser.Tables.Bitmap.Ebdt;
 using FontParser.Tables.Bitmap.Eblc;
 using FontParser.Tables.Bitmap.Ebsc;
 using FontParser.Tables.Cff.Type1;
+using FontParser.Tables.Cff.Type2;
 using FontParser.Tables.Cmap;
 using FontParser.Tables.Colr;
 using FontParser.Tables.Cpal;
@@ -93,6 +94,7 @@ namespace FontParser
             typeof(GposTable),
             typeof(GsubTable),
             typeof(Type1Table),
+            typeof(Type2Table),
             typeof(MathTable),
             typeof(FftmTable),
             typeof(SvgTable),

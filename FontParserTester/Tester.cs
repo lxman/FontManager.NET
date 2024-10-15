@@ -10,8 +10,10 @@ namespace FontParserTester
             List<string> errors = [];
             List<string> fonts = [];
             const string rootDirectory = @"C:\Users\jorda\source\TestFonts";
+            const string cff2Directory = @"C:\Users\jorda\source\Cff2Fonts";
             fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.ToLower().EndsWith(".ttf") || f.ToLower().EndsWith(".otf")));
             fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.ToLower().EndsWith(".ttc")).ToList());
+            fonts.AddRange(Directory.GetFiles(cff2Directory).Where(f => f.ToLower().EndsWith(".ttf") || f.ToLower().EndsWith(".otf")));
             const string woffDirectory = @"C:\Users\jorda\source\WoffFonts";
             const string woff2Directory = @"C:\Users\jorda\source\Woff2Fonts";
             fonts.AddRange(Directory.GetFiles(woffDirectory).Where(f => f.ToLower().EndsWith(".woff")));

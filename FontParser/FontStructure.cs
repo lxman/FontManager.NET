@@ -5,9 +5,11 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using FontParser.Models;
+using FontParser.RenderFont.Interpreter;
 using FontParser.Tables;
 using FontParser.Tables.Bitmap.Ebdt;
 using FontParser.Tables.Bitmap.Eblc;
+using FontParser.Tables.Cmap;
 using FontParser.Tables.Cvar;
 using FontParser.Tables.Fvar;
 using FontParser.Tables.Head;
@@ -41,6 +43,7 @@ namespace FontParser
         private readonly string _currentFile;
         private readonly ConcurrentBag<IFontTable> _fontTables = new ConcurrentBag<IFontTable>();
         private readonly ConcurrentBag<SucceededStatusRecord> _succeeded = new ConcurrentBag<SucceededStatusRecord>();
+        private const bool InterpreterTest = false;
 
         public FontStructure(string path)
         {
@@ -123,37 +126,44 @@ namespace FontParser
             }
 
             // For testing the interpreter
-            //ushort demoId = cmapTable.GetGlyphId(0x41);
-            //GlyphData? demoData = glyphTable.GetGlyphData(demoId);
-            //if (!(demoData?.GlyphSpec is SimpleGlyph glyphData)) return;
-            //byte[] instructions = glyphData.Instructions;
-            //var cvtTable = GetTable<CvtTable>();
-            //GraphicsState? graphicsState = null;
-            //Dictionary<int, byte[]>? functions = null;
-            //var maxpTable = GetTable<MaxPTable>();
-            //if (Tables.Find(x => x is FpgmTable) is FpgmTable fpgmTable)
-            //{
-            //    var interpreter = new Interpreter(
-            //        glyphTable,
-            //        cvtTable,
-            //        fpgmTable.Instructions,
-            //        maxpTable);
-            //    interpreter.Execute();
-            //    graphicsState = interpreter.GraphicsState;
-            //    functions = interpreter.Functions;
-            //}
-            //if (!(graphicsState is null))
-            //{
-            //    var interpreter = new Interpreter(
-            //        glyphTable,
-            //        demoData,
-            //        cvtTable,
-            //        maxpTable,
-            //        graphicsState,
-            //        functions,
-            //        instructions);
-            //    interpreter.Execute();
-            //}
+            if (InterpreterTest)
+            {
+                var cmapTable = GetTable<CmapTable>();
+                var glyphTable = GetTable<GlyphTable>();
+                var hmtxTable = GetTable<HmtxTable>();
+                ushort demoId = cmapTable.GetGlyphId(0x41);
+                GlyphData? demoData = glyphTable.GetGlyphData(demoId);
+                if (!(demoData?.GlyphSpec is SimpleGlyph glyphData)) return;
+                List<byte> instructions = glyphData.Instructions;
+                var cvtTable = GetTable<CvtTable>();
+                GraphicsState? graphicsState = null;
+                Dictionary<int, byte[]>? functions = null;
+                var maxpTable = GetTable<MaxPTable>();
+                if (Tables.Find(x => x is FpgmTable) is FpgmTable fpgmTable)
+                {
+                    var interpreter = new Interpreter(
+                        glyphTable,
+                        cvtTable,
+                        fpgmTable.Instructions,
+                        maxpTable);
+                    interpreter.Execute();
+                    graphicsState = interpreter.GraphicsState;
+                    functions = interpreter.Functions;
+                }
+                if (!(graphicsState is null))
+                {
+                    var interpreter = new Interpreter(
+                        glyphTable,
+                        demoData,
+                        cvtTable,
+                        hmtxTable,
+                        maxpTable,
+                        graphicsState,
+                        functions,
+                        instructions);
+                    interpreter.Execute();
+                }
+            }
 
             if (!_tables.Any()) return;
             if (_tables.Any(t => !t.Attempted))

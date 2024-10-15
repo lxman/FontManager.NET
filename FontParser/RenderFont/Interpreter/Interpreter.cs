@@ -54,10 +54,10 @@ namespace FontParser.RenderFont.Interpreter
             MaxPTable maxPTable,
             GraphicsState graphicsState,
             Dictionary<int, byte[]> functions,
-            byte[] instructions
+            List<byte> instructions
         )
         {
-            _reader = new InstructionStream(instructions);
+            _reader = new InstructionStream(instructions.ToArray());
             _storageArea = new StorageArea(maxPTable.MaxStorage);
             _cvtTable = cvtTable;
             _glyphTable = glyphTable;
@@ -85,10 +85,13 @@ namespace FontParser.RenderFont.Interpreter
             _glyphZone = new Zone(false, coords.ToArray());
         }
 
+        private int count;
+
         public void Execute()
         {
             while (!_reader.EndOfProgram)
             {
+                count++;
                 byte instruction = _reader.ReadByte();
                 switch (instruction)
                 {
@@ -253,10 +256,12 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // ELSE
                     case 0x1B:
+                        throw new NotImplementedException();
                         // TODO: Implement ELSE
                         break;
                     // JMPR
                     case 0x1C:
+                        throw new NotImplementedException();
                         // TODO: Implement JMPR
                         break;
                     // SCVTCI
@@ -359,11 +364,13 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // LOOPCALL[]
                     case 0x2A:
+                        throw new NotImplementedException();
                         // TODO: Implement LOOPCALL[]
                         break;
                     // CALL[]
                     case 0x2B:
                         int funcId = _stack.Pop();
+                        throw new NotImplementedException();
                         // TODO: Implement CALL[]
                         break;
                     // FDEF[]
@@ -385,70 +392,87 @@ namespace FontParser.RenderFont.Interpreter
                     case 0x2E:
                     case 0x2F:
                         bool round = !Convert.ToBoolean(instruction - 0x2E);
+                        throw new NotImplementedException();
                         // TODO: Implement MDAP[1]
                         break;
                     // IUP[0]
                     case 0x30:
+                        throw new NotImplementedException();
                         // TODO: Implement IUP[0]
                         break;
                     // IUP[1]
                     case 0x31:
+                        throw new NotImplementedException();
                         // TODO: Implement IUP[1]
                         break;
                     // SHP[0]
                     case 0x32:
+                        throw new NotImplementedException();
                         // TODO: Implement SHP[0]
                         break;
                     // SHP[1]
                     case 0x33:
+                        throw new NotImplementedException();
                         // TODO: Implement SHP[1]
                         break;
                     // SHC[0]
                     case 0x34:
+                        throw new NotImplementedException();
                         // TODO: Implement SHC[0]
                         break;
                     // SHC[1]
                     case 0x35:
+                        throw new NotImplementedException();
                         // TODO: Implement SHC[1]
                         break;
                     // SHZ[0]
                     case 0x36:
+                        throw new NotImplementedException();
                         // TODO: Implement SHZ[0]
                         break;
                     // SHZ[1]
                     case 0x37:
+                        throw new NotImplementedException();
                         // TODO: Implement SHZ[1]
                         break;
                     // SHPIX
                     case 0x38:
+                        throw new NotImplementedException();
                         // TODO: Implement SHPIX
                         break;
                     // IP
                     case 0x39:
+                        throw new NotImplementedException();
                         // TODO: Implement IP
                         break;
                     // MSIRP[0]
                     case 0x3A:
+                        throw new NotImplementedException();
                         // TODO: Implement MSIRP[0]
                         break;
                     // MSIRP[1]
                     case 0x3B:
+                        throw new NotImplementedException();
                         // TODO: Implement MSIRP[1]
                         break;
                     // AlignRP
                     case 0x3C:
+                        throw new NotImplementedException();
                         // TODO: Implement AlignRP
                         break;
                     // RTDG
                     case 0x3D:
+                        throw new NotImplementedException();
                         // TODO: Implement RTDG
                         break;
                     // MIAP[0]
                     case 0x3E:
+                        throw new NotImplementedException();
                         // TODO: Implement MIAP[0]
                         break;
                     // MIAP[1]
                     case 0x3F:
+                        throw new NotImplementedException();
                         // TODO: Implement MIAP[1]
                         int cvtEntryNumber = _stack.Pop();
                         int pointNumber = _stack.Pop();
@@ -515,11 +539,13 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // MPPEM
                     case 0x4B:
+                        throw new NotImplementedException();
                         // TODO: Implement MPPEM
                         _stack.Push(0);
                         break;
                     // MPS
                     case 0x4C:
+                        throw new NotImplementedException();
                         // TODO: Implement MPS
                         _stack.Push(0);
                         break;
@@ -569,10 +595,12 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // IF
                     case 0x58:
+                        throw new NotImplementedException();
                         // TODO: Implement IF
                         break;
                     // EIF
                     case 0x59:
+                        throw new NotImplementedException();
                         // TODO: Implement EIF
                         break;
                     // AND
@@ -633,34 +661,42 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // ROUND[0]
                     case 0x68:
+                        throw new NotImplementedException();
                         // TODO: Implement ROUND[0]
                         break;
                     // ROUND[1]
                     case 0x69:
+                        throw new NotImplementedException();
                         // TODO: Implement ROUND[1]
                         break;
                     // ROUND[2]
                     case 0x6A:
+                        throw new NotImplementedException();
                         // TODO: Implement ROUND[2]
                         break;
                     // ROUND[3]
                     case 0x6B:
+                        throw new NotImplementedException();
                         // TODO: Implement ROUND[3]
                         break;
                     // NROUND[0]
                     case 0x6C:
+                        throw new NotImplementedException();
                         // TODO: Implement NROUND[0]
                         break;
                     // NROUND[1]
                     case 0x6D:
+                        throw new NotImplementedException();
                         // TODO: Implement NROUND[1]
                         break;
                     // NROUND[2]
                     case 0x6E:
+                        throw new NotImplementedException();
                         // TODO: Implement NROUND[2]
                         break;
                     // NROUND[3]
                     case 0x6F:
+                        throw new NotImplementedException();
                         // TODO: Implement NROUND[3]
                         break;
                     // WCVTF
@@ -670,6 +706,7 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // DELTAC1
                     case 0x73:
+                        throw new NotImplementedException();
                         // TODO: Implement DELTAC1
                         break;
                     // SROUND
@@ -678,46 +715,57 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // S45ROUND
                     case 0x77:
+                        throw new NotImplementedException();
                         // TODO: Implement S45ROUND
                         break;
                     // JROT
                     case 0x78:
+                        throw new NotImplementedException();
                         // TODO: Implement JROT
                         break;
                     // JROF
                     case 0x79:
+                        throw new NotImplementedException();
                         // TODO: Implement JROF
                         break;
                     // ROFF
                     case 0x7A:
+                        throw new NotImplementedException();
                         // TODO: Implement ROFF
                         break;
                     // RUTG
                     case 0x7C:
+                        throw new NotImplementedException();
                         // TODO: Implement RUTG
                         break;
                     // RDTG
                     case 0x7D:
+                        throw new NotImplementedException();
                         // TODO: Implement RDTG
                         break;
                     // SANGW
                     case 0x7E:
+                        throw new NotImplementedException();
                         // TODO: Implement SANGW
                         break;
                     // AA
                     case 0x7F:
+                        throw new NotImplementedException();
                         // TODO: Implement AA
                         break;
                     // FLIPPT
                     case 0x80:
+                        throw new NotImplementedException();
                         // TODO: Implement FLIPPT
                         break;
                     // FLIPRGON
                     case 0x81:
+                        throw new NotImplementedException();
                         // TODO: Implement FLIPRGON
                         break;
                     // FLIPRGOFF
                     case 0x82:
+                        throw new NotImplementedException();
                         // TODO: Implement FLIPRGOFF
                         break;
                     // SCANCTRL
@@ -726,18 +774,22 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // SDPVTL[0]
                     case 0x86:
+                        throw new NotImplementedException();
                         // TODO: Implement SDPVTL[0]
                         break;
                     // SDPVTL[1]
                     case 0x87:
+                        throw new NotImplementedException();
                         // TODO: Implement SDPVTL[1]
                         break;
                     // GETINFO
                     case 0x88:
+                        throw new NotImplementedException();
                         // TODO: Implement GETINFO
                         break;
                     // IDEF
                     case 0x89:
+                        throw new NotImplementedException();
                         // TODO: Implement IDEF
                         break;
                     // ROLL
@@ -765,266 +817,332 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // SCANTYPE
                     case 0x8D:
+                        throw new NotImplementedException();
                         // TODO: Implement SCANTYPE
                         break;
                     // INSTCTRL
                     case 0x8E:
+                        throw new NotImplementedException();
                         // TODO: Implement INSTCTRL
                         break;
                     // MDRP[00000]
                     case 0xC0:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[00000]
                         break;
                     // MDRP[00001]
                     case 0xC1:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[00001]
                         break;
                     // MDRP[00010]
                     case 0xC2:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[00010]
                         break;
                     // MDRP[00011]
                     case 0xC3:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[00011]
                         break;
                     // MDRP[00100]
                     case 0xC4:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[00100]
                         break;
                     // MDRP[00101]
                     case 0xC5:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[00101]
                         break;
                     // MDRP[00110]
                     case 0xC6:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[00110]
                         break;
                     // MDRP[00111]
                     case 0xC7:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[00111]
                         break;
                     // MDRP[01000]
                     case 0xC8:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[01000]
                         break;
                     // MDRP[01001]
                     case 0xC9:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[01001]
                         break;
                     // MDRP[01010]
                     case 0xCA:
+                        throw new NotImplementedException();
                         //  TODO: Implement MDRP[01010]
                         break;
                     // MDRP[01011]
                     case 0xCB:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[01011]
                         break;
                     // MDRP[01100]
                     case 0xCC:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[01100]
                         break;
                     // MDRP[01101]
                     case 0xCD:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[01101]
                         break;
                     // MDRP[01110]
                     case 0xCE:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[01110]
                         break;
                     // MDRP[01111]
                     case 0xCF:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[01111]
                         break;
                     // MDRP[10000]
                     case 0xD0:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[10000]
                         break;
                     // MDRP[10001]
                     case 0xD1:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[10001]
                         break;
                     // MDRP[10010]
                     case 0xD2:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[10010]
                         break;
                     // MDRP[10011]
                     case 0xD3:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[10011]
                         break;
                     // MDRP[10100]
                     case 0xD4:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[10100]
                         break;
                     // MDRP[10101]
                     case 0xD5:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[10101]
                         break;
                     // MDRP[10110]
                     case 0xD6:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[10110]
                         break;
                     // MDRP[10111]
                     case 0xD7:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[10111]
                         break;
                     // MDRP[11000]
                     case 0xD8:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[11000]
                         break;
                     // MDRP[11001]
                     case 0xD9:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[11001]
                         break;
                     // MDRP[11010]
                     case 0xDA:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[11010]
                         break;
                     // MDRP[11011]
                     case 0xDB:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[11011]
                         break;
                     // MDRP[11100]
                     case 0xDC:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[11100]
                         break;
                     // MDRP[11101]
                     case 0xDD:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[11101]
                         break;
                     // MDRP[11110]
                     case 0xDE:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[11110]
                         break;
                     // MDRP[11111]
                     case 0xDF:
+                        throw new NotImplementedException();
                         // TODO: Implement MDRP[11111]
                         break;
                     // MIRP[00000]
                     case 0xE0:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[00000]
                         break;
                     // MIRP[00001]
                     case 0xE1:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[00001]
                         break;
                     // MIRP[00010]
                     case 0xE2:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[00010]
                         break;
                     // MIRP[00011]
                     case 0xE3:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[00011]
                         break;
                     // MIRP[00100]
                     case 0xE4:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[00100]
                         break;
                     // MIRP[00101]
                     case 0xE5:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[00101]
                         break;
                     // MIRP[00110]
                     case 0xE6:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[00110]
                         break;
                     // MIRP[00111]
                     case 0xE7:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[00111]
                         break;
                     // MIRP[01000]
                     case 0xE8:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[01000]
                         break;
                     // MIRP[01001]
                     case 0xE9:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[01001]
                         break;
                     // MIRP[01010]
                     case 0xEA:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[01010]
                         break;
                     // MIRP[01011]
                     case 0xEB:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[01011]
                         break;
                     // MIRP[01100]
                     case 0xEC:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[01100]
                         break;
                     // MIRP[01101]
                     case 0xED:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[01101]
                         break;
                     // MIRP[01110]
                     case 0xEE:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[01110]
                         break;
                     // MIRP[01111]
                     case 0xEF:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[01111]
                         break;
                     // MIRP[10000]
                     case 0xF0:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[10000]
                         break;
                     // MIRP[10001]
                     case 0xF1:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[10001]
                         break;
                     // MIRP[10010]
                     case 0xF2:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[10010]
                         break;
                     // MIRP[10011]
                     case 0xF3:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[10011]
                         break;
                     // MIRP[10100]
                     case 0xF4:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[10100]
                         break;
                     // MIRP[10101]
                     case 0xF5:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[10101]
                         break;
                     // MIRP[10110]
                     case 0xF6:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[10110]
                         break;
                     // MIRP[10111]
                     case 0xF7:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[10111]
                         break;
                     // MIRP[11000]
                     case 0xF8:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[11000]
                         break;
                     // MIRP[11001]
                     case 0xF9:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[11001]
                         break;
                     // MIRP[11010]
                     case 0xFA:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[11010]
                         break;
                     // MIRP[11011]
                     case 0xFB:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[11011]
                         break;
                     // MIRP[11100]
                     case 0xFC:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[11100]
                         break;
                     // MIRP[11101]
                     case 0xFD:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[11101]
                         break;
                     // MIRP[11110]
                     case 0xFE:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[11110]
                         break;
                     // MIRP[11111]
                     case 0xFF:
+                        throw new NotImplementedException();
                         // TODO: Implement MIRP[11111]
                         break;
                 }
