@@ -147,11 +147,12 @@ namespace FontParser.Tables.Cff.Type1
                     Convert.ToUInt16(charStrings.Data.Count)),
                 _ => CharSet
             };
-            var privateDictInfo = (List<double>)TopDictOperatorEntries.First(e => e.Name == "Private").Operand;
+            var privateDictInfo = (List<double>?)TopDictOperatorEntries.FirstOrDefault(e => e.Name == "Private")?.Operand;
+            if (privateDictInfo is null) return;
             reader.Seek(Convert.ToInt64(privateDictInfo[1]));
             double privateDictSize = privateDictInfo[0];
             ReadPrivateDictEntries(reader, privateDictSize);
-            CffDictEntry? subrEntry = PrivateDictOperatorEntries.First(e => e.Name == "Subrs");
+            CffDictEntry? subrEntry = PrivateDictOperatorEntries.FirstOrDefault(e => e.Name == "Subrs");
             if (subrEntry is null) return;
             reader.Seek(Convert.ToInt64(privateDictInfo[1]) + Convert.ToInt64(subrEntry.Operand));
             ushort localSubrCount = reader.ReadUShort();
