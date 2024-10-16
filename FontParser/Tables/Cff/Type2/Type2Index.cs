@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using FontParser.Reader;
 
-namespace FontParser.Tables.Cff.Type1
+namespace FontParser.Tables.Cff.Type2
 {
-    public class Index
+    public class Type2Index
     {
         public List<List<byte>> Data { get; } = new List<List<byte>>();
 
-        public Index(BigEndianReader reader)
+        public Type2Index(BigEndianReader reader)
         {
-            ushort count = reader.ReadUShort();
+            uint count = reader.ReadUInt32();
             if (count == 0) return;
 
             byte offSize = reader.ReadByte();

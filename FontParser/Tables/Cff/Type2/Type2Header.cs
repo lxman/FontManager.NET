@@ -1,8 +1,8 @@
 ﻿using FontParser.Reader;
 
-namespace FontParser.Tables.Cff.Type1
+namespace FontParser.Tables.Cff.Type2
 {
-    public class Header
+    public class Type2Header : ICffHeader
     {
         public byte MajorVersion { get; }
 
@@ -10,14 +10,14 @@ namespace FontParser.Tables.Cff.Type1
 
         public byte HeaderSize { get; }
 
-        public byte OffSize { get; }
+        public ushort TopDictSize { get; }
 
-        public Header(BigEndianReader reader)
+        public Type2Header(BigEndianReader reader)
         {
             MajorVersion = reader.ReadByte();
             MinorVersion = reader.ReadByte();
             HeaderSize = reader.ReadByte();
-            OffSize = reader.ReadByte();
+            TopDictSize = reader.ReadUShort();
         }
     }
 }
