@@ -42,7 +42,7 @@ namespace FontParser.Tables.Base
 
             if (!(itemVariationStoreOffset > 0)) return;
             reader.Seek(itemVariationStoreOffset.Value);
-            ItemVariationStore = new ItemVariationStore(reader, false);
+            ItemVariationStore = new ItemVariationStore(reader);
         }
     }
 }

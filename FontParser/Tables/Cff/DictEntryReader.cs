@@ -10,7 +10,8 @@ namespace FontParser.Tables.Cff
         public static void Read(
             List<byte> bytes,
             ReadOnlyDictionary<ushort, CffDictEntry?> src,
-            List<CffDictEntry> dest)
+            List<CffDictEntry> dest,
+            List<ushort>? activeVariationRegionData = null)
         {
             var index = 0;
             var operands = new List<double>();
@@ -36,6 +37,46 @@ namespace FontParser.Tables.Cff
                         : firstByte;
                     CffDictEntry? entry = src[lookup];
                     if (entry is null) continue;
+                    if (entry.Name == "vsindex" || entry.Name == "blend")
+                    {
+                        if (activeVariationRegionData is null || activeVariationRegionData.Count == 0)
+                        {
+                            throw new ArgumentException("Variation region data was not provided");
+                        }
+                        var n = Convert.ToInt32(operands[^1]);
+                        var defaults = new double[n];
+                        var deltas = new double[n * activeVariationRegionData.Count];
+                        var i = 0;
+                        while (i < n)
+                        {
+                            defaults[i] = operands[0];
+                            operands.RemoveAt(0);
+                            i++;
+                        }
+
+                        i = 0;
+                        while (i < n * activeVariationRegionData.Count)
+                        {
+                            deltas[i] = operands[0];
+                            operands.RemoveAt(0);
+                            i++;
+                        }
+                        operands.RemoveAt(0);
+                        i = 0;
+                        while (i < n)
+                        {
+                            for (var j = 0; j < activeVariationRegionData.Count; j++)
+                            {
+                                defaults[i] += deltas[i * activeVariationRegionData.Count + j] * activeVariationRegionData[j % activeVariationRegionData.Count];
+                            }
+                            i++;
+                        }
+                        for (var copyVar = 0; copyVar < n; copyVar++)
+                        {
+                            operands.Add(defaults[copyVar]);
+                        }
+                        continue;
+                    }
                     switch (entry.OperandKind)
                     {
                         case OperandKind.StringId:
@@ -59,7 +100,7 @@ namespace FontParser.Tables.Cff
                             {
                                 entry.Operand = new List<double>(operands);
                             }
-                            else
+                            else if (operands.Count == 1)
                             {
                                 entry.Operand = operands[0];
                             }

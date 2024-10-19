@@ -18,7 +18,7 @@ namespace FontParserTester
             const string woff2Directory = @"C:\Users\jorda\source\Woff2Fonts";
             fonts.AddRange(Directory.GetFiles(woffDirectory).Where(f => f.ToLower().EndsWith(".woff")));
             fonts.AddRange(Directory.GetFiles(woff2Directory).Where(f => f.ToLower().EndsWith(".woff2")));
-            //fonts = fonts.Where(f => f.EndsWith("NotoSerifLao-Bold.ttf")).ToList();
+            //fonts = fonts.Where(f => f.EndsWith("SourceSerif4Variable-Italic.otf")).ToList();
             //const string rootDirectory = @"C:\Users\jorda\source\Woff2Fonts";
             //fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".woff2")));
             //fonts = fonts.Where(f => f.EndsWith("JetBrainsMono-Bold.woff2")).ToList();

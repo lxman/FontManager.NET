@@ -9,6 +9,7 @@ using FontParser.RenderFont.Interpreter;
 using FontParser.Tables;
 using FontParser.Tables.Bitmap.Ebdt;
 using FontParser.Tables.Bitmap.Eblc;
+using FontParser.Tables.Cff.Type2;
 using FontParser.Tables.Cmap;
 using FontParser.Tables.Cvar;
 using FontParser.Tables.Fvar;
@@ -102,6 +103,7 @@ namespace FontParser
             (Tables.Find(x => x is LtshTable) as LtshTable)?.Process(GetTable<MaxPTable>().NumGlyphs);
             (Tables.Find(x => x is EbdtTable) as EbdtTable)?.Process(GetTable<EblcTable>());
             (Tables.Find(x => x is CvarTable) as CvarTable)?.Process(GetTable<FvarTable>().Axes.Count);
+            (Tables.Find(x => x is Type2Table) as Type2Table)?.Process(GetTable<MaxPTable>().NumGlyphs);
             if (!deferLocaWoff2)
             {
                 (Tables.Find(x => x is LocaTable) as LocaTable)?.Process(GetTable<MaxPTable>().NumGlyphs, GetTable<HeadTable>().IndexToLocFormat == IndexToLocFormat.Offset16);

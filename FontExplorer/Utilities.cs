@@ -14,7 +14,6 @@ using FontParser.Tables.Gpos.LookupSubtables.MarkMarkPos;
 using FontParser.Tables.Math;
 using FontParser.Tables.TtTables.Glyf;
 using DeltaSetIndexMap = FontParser.Tables.Common.ItemVariationStore.DeltaSetIndexMap;
-using Tuple = FontParser.Tables.Common.TupleVariationStore.Tuple;
 
 namespace FontExplorer;
 
@@ -207,7 +206,7 @@ public static class Utilities
             case AnchorTableFormat1 table1:
                 return new TreeViewItem { Header = $"X: {table1.X}, Y: {table1.Y}" };
             case AnchorTableFormat2 table2:
-                return new TreeViewItem {Header = $"X: {table2.X}, Y: {table2.Y}, AnchorPoint: {table2.AnchorPoint}"};
+                return new TreeViewItem { Header = $"X: {table2.X}, Y: {table2.Y}, AnchorPoint: {table2.AnchorPoint}" };
             case AnchorTableFormat3 table3:
                 var toReturn = new TreeViewItem();
                 toReturn.FormChild(nameof(table3.X), table3.X);
@@ -411,7 +410,6 @@ public static class Utilities
     public static TreeViewItem BuildItemVariationStore(ItemVariationStore store)
     {
         var toReturn = new TreeViewItem { Header = "Item Variation Store" };
-        toReturn.FormChild(nameof(store.VariationRegionListOffset), store.VariationRegionListOffset);
         TreeViewItem ivdHeader = toReturn.FormChild("Item Variation Data");
         store.ItemVariationData.ForEach(vd =>
         {

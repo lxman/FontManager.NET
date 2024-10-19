@@ -33,8 +33,8 @@ namespace FontParser.Tables.Cff.Type1
 
         private readonly Type1TopDictOperatorEntries _type1TopDictOperatorEntries =
             new Type1TopDictOperatorEntries(new Dictionary<ushort, CffDictEntry?>());
-        private readonly Type1PrivateDictOperatorEntries _type1PrivateDictOperatorEntries =
-            new Type1PrivateDictOperatorEntries(new Dictionary<ushort, CffDictEntry?>());
+        private readonly PrivateDictOperatorEntries _privateDictOperatorEntries =
+            new PrivateDictOperatorEntries(new Dictionary<ushort, CffDictEntry?>());
 
         public Type1Table(byte[] data)
         {
@@ -121,7 +121,7 @@ namespace FontParser.Tables.Cff.Type1
         private void ReadPrivateDictEntries(BigEndianReader reader, double size)
         {
             List<byte> bytes = reader.ReadBytes(Convert.ToInt32(size)).ToList();
-            DictEntryReader.Read(bytes, _type1PrivateDictOperatorEntries, PrivateDictOperatorEntries);
+            DictEntryReader.Read(bytes, _privateDictOperatorEntries, PrivateDictOperatorEntries);
         }
 
         private void ResolveDictSids(List<CffDictEntry> entries)

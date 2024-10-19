@@ -7,10 +7,10 @@ namespace FontParser.Tables.Common.ItemVariationStore
     public class ItemVariationData
     {
         public List<ushort> RegionIndexes { get; }
-        
+
         public List<DeltaSetRecord> DeltaSets { get; } = new List<DeltaSetRecord>();
 
-        public ItemVariationData(BigEndianReader reader, bool useLongWords)
+        public ItemVariationData(BigEndianReader reader)
         {
             ushort itemCount = reader.ReadUShort();
             ushort wordDeltaCount = reader.ReadUShort();
@@ -23,7 +23,7 @@ namespace FontParser.Tables.Common.ItemVariationStore
                 DeltaSets.Add(new DeltaSetRecord(
                     reader,
                     regionIndexCount,
-                    useLongWords && longWords,
+                    longWords,
                     deltaCount));
             }
         }
