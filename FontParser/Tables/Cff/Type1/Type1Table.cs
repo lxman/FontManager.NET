@@ -21,7 +21,7 @@ namespace FontParser.Tables.Cff.Type1
 
         public List<string> Strings { get; } = new List<string>();
 
-        public List<string> CharStringList { get; } = new List<string>();
+        public List<List<string>> CharStringList { get; } = new List<List<string>>();
 
         public List<CffDictEntry> TopDictOperatorEntries { get; } = new List<CffDictEntry>();
 
@@ -107,6 +107,24 @@ namespace FontParser.Tables.Cff.Type1
             {
                 LocalSubroutines.Add(new List<byte>(reader.ReadBytes(localSubrOffsets[subrIndex + 1] - localSubrOffsets[subrIndex])));
                 subrIndex++;
+            }
+
+            foreach (
+                CharStringParser parser in
+                charStrings
+                    .Data
+                    .Select(bytes =>
+                            new CharStringParser(
+                                48,
+                                bytes,
+                                GlobalSubroutines,
+                                LocalSubroutines,
+                                Convert.ToInt32(PrivateDictOperatorEntries.FirstOrDefault(e => e.Name == "nominalWidthX")?.Operand ?? 0)
+                                )
+                    )
+                )
+            {
+                CharStringList.Add(parser.Parse());
             }
         }
 
