@@ -111,26 +111,26 @@ public partial class MainWindow : Window
                     {
                         var platformId = new TreeViewItem { Header = er.PlatformId.ToString() };
                         encodingRecords.Items.Add(platformId);
-                        if (er.EncodingId0 is not null)
+                        if (er.UnicodeEncoding is not null)
                         {
-                            var encodingId0 = new TreeViewItem { Header = er.EncodingId0.ToString() };
+                            var encodingId0 = new TreeViewItem { Header = er.UnicodeEncoding.ToString() };
                             platformId.Items.Add(encodingId0);
                         }
 
-                        if (er.EncodingId1 is not null)
+                        if (er.MacintoshEncoding is not null)
                         {
-                            var encodingId1 = new TreeViewItem { Header = er.EncodingId1.ToString() };
+                            var encodingId1 = new TreeViewItem { Header = er.MacintoshEncoding.ToString() };
                             platformId.Items.Add(encodingId1);
                         }
 
-                        if (er.EncodingId2 is not null)
+                        if (er.IsoEncoding is not null)
                         {
-                            var encodingId2 = new TreeViewItem { Header = er.EncodingId2.ToString() };
+                            var encodingId2 = new TreeViewItem { Header = er.IsoEncoding.ToString() };
                             platformId.Items.Add(encodingId2);
                         }
 
-                        if (er.EncodingId3 is null) return;
-                        var encodingId3 = new TreeViewItem { Header = er.EncodingId3.ToString() };
+                        if (er.WindowsEncoding is null) return;
+                        var encodingId3 = new TreeViewItem { Header = er.WindowsEncoding.ToString() };
                         platformId.Items.Add(encodingId3);
                     });
                     var subtableItem = new TreeViewItem { Header = "Subtables" };

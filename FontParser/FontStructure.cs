@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using FontParser.Models;
+using FontParser.RenderFont;
 using FontParser.RenderFont.Interpreter;
 using FontParser.Tables;
 using FontParser.Tables.Bitmap.Ebdt;
@@ -49,6 +50,11 @@ namespace FontParser
         public FontStructure(string path)
         {
             _currentFile = path.Split("\\", StringSplitOptions.RemoveEmptyEntries)[^1];
+        }
+
+        public CharacterMapper GetCharacterMapper()
+        {
+            return new CharacterMapper(GetTable<CmapTable>());
         }
 
         public GlyphTable? GetGlyphTable()

@@ -13,6 +13,8 @@ namespace FontParser.Tables.Cmap
 
         public ushort Version { get; }
 
+        public List<CmapEncoding> Encodings { get; } = new List<CmapEncoding>();
+
         public List<EncodingRecord> EncodingRecords { get; } = new List<EncodingRecord>();
 
         public List<ICmapSubtable> SubTables { get; } = new List<ICmapSubtable>();
@@ -34,46 +36,47 @@ namespace FontParser.Tables.Cmap
                 reader.Seek(encodingRecord.Offset);
                 data = reader.PeekBytes(2);
                 ushort format = BinaryPrimitives.ReadUInt16BigEndian(data);
+                ICmapSubtable? subTable = null;
                 switch (format)
                 {
                     case 0:
-                        SubTables.Add(new CmapSubtableFormat0(reader));
+                        subTable = new CmapSubtableFormat0(reader);
                         break;
 
                     case 2:
-                        SubTables.Add(new CmapSubtablesFormat2(reader));
+                        subTable = new CmapSubtablesFormat2(reader);
                         break;
 
                     case 4:
-                        SubTables.Add(new CmapSubtablesFormat4(reader));
+                        subTable = new CmapSubtablesFormat4(reader);
                         break;
 
                     case 6:
-                        SubTables.Add(new CmapSubtablesFormat6(reader));
+                        subTable = new CmapSubtablesFormat6(reader);
                         break;
 
                     case 8:
-                        SubTables.Add(new CmapSubtablesFormat8(reader));
+                        subTable = new CmapSubtablesFormat8(reader);
                         break;
 
                     case 10:
-                        SubTables.Add(new CmapSubtablesFormat10(reader));
+                        subTable = new CmapSubtablesFormat10(reader);
                         break;
 
                     case 12:
-                        SubTables.Add(new CmapSubtablesFormat12(reader));
+                        subTable = new CmapSubtablesFormat12(reader);
                         break;
 
                     case 13:
-                        SubTables.Add(new CmapSubtablesFormat13(reader));
+                        subTable = new CmapSubtablesFormat13(reader);
                         break;
 
                     case 14:
-                        if (encodingRecord is { PlatformId: 0, EncodingId0: { } } && (int)encodingRecord.EncodingId0.Value == 5)
+                        if (encodingRecord is { PlatformId: 0, UnicodeEncoding: { } } && (int)encodingRecord.UnicodeEncoding.Value == 5)
                         {
                             try
                             {
-                                SubTables.Add(new CmapSubtablesFormat14(reader));
+                                subTable = new CmapSubtablesFormat14(reader);
                             }
                             catch (Exception e)
                             {
@@ -81,6 +84,11 @@ namespace FontParser.Tables.Cmap
                             }
                         }
                         break;
+                }
+
+                if (!(subTable is null))
+                {
+                    Encodings.Add(new CmapEncoding(encodingRecord, subTable));
                 }
             }
         }

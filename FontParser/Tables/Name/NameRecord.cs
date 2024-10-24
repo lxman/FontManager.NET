@@ -31,7 +31,7 @@ namespace FontParser.Tables.Name
             switch (PlatformId)
             {
                 case PlatformId.Unicode:
-                    EncodingId = (Platform0EncodingId)reader.ReadUShort();
+                    EncodingId = (UnicodeEncodingId)reader.ReadUShort();
                     break;
 
                 case PlatformId.Macintosh:
@@ -39,11 +39,11 @@ namespace FontParser.Tables.Name
                     break;
 
                 case PlatformId.Iso:
-                    EncodingId = (Platform2EncodingId)reader.ReadUShort();
+                    EncodingId = (IsoEncodingId)reader.ReadUShort();
                     break;
 
                 case PlatformId.Windows:
-                    EncodingId = (Platform3EncodingId)reader.ReadUShort();
+                    EncodingId = (WindowsEncodingId)reader.ReadUShort();
                     break;
 
                 case PlatformId.Custom:

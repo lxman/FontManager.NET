@@ -1,4 +1,5 @@
 ﻿using FontParser;
+using FontParser.RenderFont;
 using Serilog;
 
 namespace FontParserTester
@@ -19,9 +20,6 @@ namespace FontParserTester
             fonts.AddRange(Directory.GetFiles(woffDirectory).Where(f => f.ToLower().EndsWith(".woff")));
             fonts.AddRange(Directory.GetFiles(woff2Directory).Where(f => f.ToLower().EndsWith(".woff2")));
             //fonts = fonts.Where(f => f.EndsWith("SourceSerif4Variable-Italic.otf")).ToList();
-            //const string rootDirectory = @"C:\Users\jorda\source\Woff2Fonts";
-            //fonts.AddRange(Directory.GetFiles(rootDirectory).Where(f => f.EndsWith(".woff2")));
-            //fonts = fonts.Where(f => f.EndsWith("JetBrainsMono-Bold.woff2")).ToList();
             Log.Debug($"Found {fonts.Count} fonts to load.");
             fonts.ForEach(f =>
             {
@@ -30,6 +28,17 @@ namespace FontParserTester
                 {
                     var fontReader = new FontReader();
                     List<FontStructure> fontStructure = fontReader.ReadFile(f);
+                    //if (fontStructure.Count > 1)
+                    //{
+                    //    Console.WriteLine("Multiple fonts found in file.");
+                    //}
+                    CharacterMapper mapper = fontStructure[0].GetCharacterMapper();
+                    //for (ushort x = 0; x < 0x100; x++)
+                    //{
+                    //    ushort glyphId = mapper.GetGlyphId(x);
+                    //    Console.Write($"Codepoint: {x:X4} GlyphId: {glyphId:X4} | ");
+                    //}
+                    //Console.WriteLine();
                 }
                 catch (Exception e)
                 {

@@ -90,11 +90,8 @@ namespace FontParser.Tables.Cmap.SubTables
             {
                 return (ushort)((codePoint + IdDeltas[segmentIndex]) % 65536);
             }
-            else
-            {
-                int offset = IdRangeOffsets[segmentIndex] / 2 + (codePoint - StartCodes[segmentIndex]) - (segCount - segmentIndex);
-                return GlyphIdArray[offset];
-            }
+            int offset = IdRangeOffsets[segmentIndex] / 2 + (codePoint - StartCodes[segmentIndex]) - (segCount - segmentIndex);
+            return GlyphIdArray[offset];
         }
     }
 }
