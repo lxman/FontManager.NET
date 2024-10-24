@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="JetBrains.Annotations" Version="2024.2.0" />
-      <PackageReference Include="TUnit" Version="0.1.842" />
+      <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
+      <PackageReference Include="TUnit" Version="0.1.1099" />
     </ItemGroup>
 
     <ItemGroup>
