@@ -94,14 +94,17 @@ namespace FontParser.Reader
                 case 253:
                     value = ReadUInt16();
                     break;
+
                 case 254:
                     value = ReadBytes(1)[0];
                     value += 253 * 2;
                     break;
+
                 case 255:
                     value = ReadBytes(1)[0];
                     value += 253;
                     break;
+
                 default:
                     value = code;
                     break;

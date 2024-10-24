@@ -1,5 +1,4 @@
-﻿using System;
-using FontParser.Reader;
+﻿using FontParser.Reader;
 using FontParser.Tables.Gpos.LookupSubtables.AnchorTable;
 
 namespace FontParser.Tables.Gpos.LookupSubtables.CursivePos
@@ -7,7 +6,7 @@ namespace FontParser.Tables.Gpos.LookupSubtables.CursivePos
     public class EntryExitRecord
     {
         public IAnchorTable? EntryAnchorTable { get; }
-        
+
         public IAnchorTable? ExitAnchorTable { get; }
 
         public EntryExitRecord(BigEndianReader reader, long startOfTable)

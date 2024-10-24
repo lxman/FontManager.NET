@@ -28,6 +28,7 @@ namespace FontParser.RenderFont.Interpreter
         private readonly Zone _twilightZone;
         private readonly Zone _glyphZone = new Zone();
         private readonly SimpleGlyph _glyphData;
+        private IReadOnlyList<ushort> _contours = Array.Empty<ushort>();
 
         public Interpreter(
             GlyphTable glyphTable,
@@ -205,6 +206,7 @@ namespace FontParser.RenderFont.Interpreter
                             case true:
                                 _twilightZone.MovePoint(pointIndex, solution);
                                 break;
+
                             case false:
                                 _glyphZone.MovePoint(pointIndex, solution);
                                 break;
@@ -1195,6 +1197,7 @@ namespace FontParser.RenderFont.Interpreter
                     int address = _stack.Pop();
                     _storageArea[address] = value;
                     break;
+
                 case 0x43:
                     address = _stack.Pop();
                     _stack.Push(_storageArea[address]);

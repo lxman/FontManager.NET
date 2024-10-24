@@ -57,6 +57,7 @@ namespace FontParser.Tables.Cff
                     case true when b < 0xF7:
                         _stack.Push(b - 0x8B);
                         break;
+
                     case true when b < 0xFB:
                         {
                             byte b0 = _bytes[stackIndex++];
@@ -82,15 +83,8 @@ namespace FontParser.Tables.Cff
                         }
                     case false:
                         // Parse operator
-                        //CharStringCodeDefinition? code =
-                        //    CharStringOperators.Definitions.FirstOrDefault(d => d.Code == b);
-                        //if (code is null)
-                        //{
-                        //    throw new ArgumentNullException();
-                        //}
-
                         bool phase;
-                        var index = 0;
+                        int index;
                         PointF c1;
                         PointF c2;
 
@@ -102,6 +96,7 @@ namespace FontParser.Tables.Cff
                             case 0x17:
                                 StemCalculation();
                                 break;
+
                             case 0x04:
                                 if (_stack.Count > 1) WidthCalculation();
                                 _y += _stack.PopBottom();
@@ -110,6 +105,7 @@ namespace FontParser.Tables.Cff
                                 _drawing = true;
                                 _stack.Clear();
                                 break;
+
                             case 0x05:
                                 while (_stack.Count >= 2)
                                 {
@@ -119,6 +115,7 @@ namespace FontParser.Tables.Cff
                                 }
                                 _stack.Clear();
                                 break;
+
                             case 0x06:
                             case 0x07:
                                 phase = b == 0x06;
@@ -137,6 +134,7 @@ namespace FontParser.Tables.Cff
                                 }
                                 _stack.Clear();
                                 break;
+
                             case 0x08:
                                 while (_stack.Count > 0)
                                 {
@@ -144,21 +142,27 @@ namespace FontParser.Tables.Cff
                                 }
                                 _stack.Clear();
                                 break;
+
                             case 0x0A:
-                                SubroutineNester.Push(stackIndex, _bytes);
                                 index = Convert.ToInt32(_stack.Pop()) + _localOffset;
-                                _bytes = _localSubroutines[index];
-                                if (_bytes.Count > 0)
+                                if (index < _localSubroutines.Count)
                                 {
-                                    output.AppendLine(string.Join(Environment.NewLine, Parse()));
+                                    SubroutineNester.Push(stackIndex, _bytes);
+                                    _bytes = _localSubroutines[index];
+                                    if (_bytes.Count > 0)
+                                    {
+                                        output.AppendLine(string.Join(Environment.NewLine, Parse()));
+                                    }
+                                    (int index, List<byte> bytes) lState = SubroutineNester.Pop();
+                                    stackIndex = lState.index;
+                                    _bytes = lState.bytes;
                                 }
-                                (int index, List<byte> bytes) lState = SubroutineNester.Pop();
-                                stackIndex = lState.index;
-                                _bytes = lState.bytes;
                                 break;
+
                             case 0x0B:
                                 // TODO: Implement return
                                 break;
+
                             case 0x0E:
                                 // TODO: Implement CFF2
                                 if (_stack.Count > 0)
@@ -169,11 +173,13 @@ namespace FontParser.Tables.Cff
                                 output.Append("ClosePath");
                                 endChar = true;
                                 break;
+
                             case 0x13:
                             case 0x14:
                                 StemCalculation();
                                 stackIndex += (_nStems + 7) >> 3;
                                 break;
+
                             case 0x15:
                                 if (_stack.Count > 2)
                                 {
@@ -187,6 +193,7 @@ namespace FontParser.Tables.Cff
                                 _drawing = true;
                                 _stack.Clear();
                                 break;
+
                             case 0x16:
                                 if (_stack.Count > 1)
                                 {
@@ -198,6 +205,7 @@ namespace FontParser.Tables.Cff
                                 _drawing = true;
                                 _stack.Clear();
                                 break;
+
                             case 0x18:
                                 while (_stack.Count >= 8)
                                 {
@@ -207,6 +215,7 @@ namespace FontParser.Tables.Cff
                                 _y += _stack.PopBottom();
                                 output.AppendLine($"LineTo x: {_x} y: {_y}");
                                 break;
+
                             case 0x19:
                                 while (_stack.Count >= 8)
                                 {
@@ -221,6 +230,7 @@ namespace FontParser.Tables.Cff
                                 output.AppendLine($"CubicBezierTo p1: {c1} p2: {c2} p3: {_x}, {_y}");
                                 _stack.Clear();
                                 break;
+
                             case 0x1A:
                                 if (_stack.Count % 2 != 0)
                                 {
@@ -237,6 +247,7 @@ namespace FontParser.Tables.Cff
                                 }
                                 _stack.Clear();
                                 break;
+
                             case 0x1B:
                                 if (_stack.Count % 2 != 0)
                                 {
@@ -253,12 +264,14 @@ namespace FontParser.Tables.Cff
                                 }
                                 _stack.Clear();
                                 break;
+
                             case 0x1C:
                                 var data = new byte[2];
                                 data[0] = _bytes[stackIndex++];
                                 data[1] = _bytes[stackIndex++];
                                 _stack.Push(BinaryPrimitives.ReadInt16BigEndian(data));
                                 break;
+
                             case 0x1D:
                                 SubroutineNester.Push(stackIndex, _bytes);
                                 index = Convert.ToInt32(_stack.Pop()) + _globalOffset;
@@ -272,6 +285,7 @@ namespace FontParser.Tables.Cff
                                 stackIndex = gState.index;
                                 _bytes = gState.bytes;
                                 break;
+
                             case 0x1E:
                             case 0x1F:
                                 phase = b == 0x1F;
@@ -296,6 +310,7 @@ namespace FontParser.Tables.Cff
                                 }
                                 _stack.Clear();
                                 break;
+
                             case 0x0C:
                                 bool aValue;
                                 bool bValue;
@@ -312,46 +327,58 @@ namespace FontParser.Tables.Cff
                                         bValue = _stack.Pop() != 0;
                                         _stack.Push(aValue && bValue ? 1 : 0);
                                         break;
+
                                     case 0x04:
                                         aValue = _stack.Pop() != 0;
                                         bValue = _stack.Pop() != 0;
                                         _stack.Push(aValue || bValue ? 1 : 0);
                                         break;
+
                                     case 0x05:
                                         aValue = _stack.Pop() != 0;
                                         _stack.Push(aValue ? 1 : 0);
                                         break;
+
                                     case 0x09:
                                         _stack.Push(System.Math.Abs(_stack.Pop()));
                                         break;
+
                                     case 0x0A:
                                         _stack.Push(_stack.Pop() + _stack.Pop());
                                         break;
+
                                     case 0x0B:
                                         _stack.Push(_stack.Pop() - _stack.Pop());
                                         break;
+
                                     case 0x0C:
                                         _stack.Push(_stack.Pop() / _stack.Pop());
                                         break;
+
                                     case 0x0E:
                                         _stack.Push(-_stack.Pop());
                                         break;
+
                                     case 0x0F:
                                         _stack.Push(System.Math.Abs(_stack.Pop() - _stack.Pop()) < float.MinValue ? 1 : 0);
                                         break;
+
                                     case 0x12:
                                         _stack.Pop();
                                         break;
+
                                     case 0x14:
                                         float val = _stack.Pop();
                                         var idx = Convert.ToInt32(_stack.Pop());
                                         _transients[idx] = val;
                                         break;
+
                                     case 0x15:
                                         idx = Convert.ToInt32(_stack.Pop());
                                         _stack.Push(_transients[idx]);
                                         _transients.Remove(idx);
                                         break;
+
                                     case 0x16:
                                         float comp1 = _stack.Pop();
                                         float comp2 = _stack.Pop();
@@ -359,36 +386,44 @@ namespace FontParser.Tables.Cff
                                         float val2 = _stack.Pop();
                                         _stack.Push(val1 <= val2 ? comp1 : comp2);
                                         break;
+
                                     case 0x17:
                                         _stack.Push(Convert.ToSingle(random.NextDouble()));
                                         break;
+
                                     case 0x18:
                                         _stack.Push(_stack.Pop() * _stack.Pop());
                                         break;
+
                                     case 0x1A:
                                         _stack.Push(Convert.ToSingle(System.Math.Sqrt(_stack.Pop())));
                                         break;
+
                                     case 0x1B:
                                         comp1 = _stack.Pop();
                                         _stack.Push(comp1);
                                         _stack.Push(comp1);
                                         break;
+
                                     case 0x1C:
                                         comp1 = _stack.Pop();
                                         comp2 = _stack.Pop();
                                         _stack.Push(comp1);
                                         _stack.Push(comp2);
                                         break;
+
                                     case 0x1D:
                                         idx = Convert.ToInt32(_stack.Pop());
                                         idx = idx < 0 ? 0 : idx > _stack.Count - 1 ? _stack.Count - 1 : idx;
                                         _stack.Push(_stack.ElementAt(idx));
                                         break;
+
                                     case 0x1E:
                                         var n = Convert.ToInt32(_stack.Pop());
                                         float j = _stack.Pop();
                                         _stack.Roll(Convert.ToInt32(j), n);
                                         break;
+
                                     case 0x22:
                                         c1 = new PointF(_x + _stack.PopBottom(), _y);
                                         c2 = new PointF(c1.X + _stack.PopBottom(), c1.Y + _stack.PopBottom());
@@ -401,11 +436,13 @@ namespace FontParser.Tables.Cff
                                         output.AppendLine($"CubicBezierTo p1: {c1} p2: {c2} p3: {c3}");
                                         output.AppendLine($"CubicBezierTo p1: {c4} p2: {c5} p3: {c6}");
                                         break;
+
                                     case 0x23:
                                         output.AppendLine($"CubicBezierTo p1: {_stack.PopBottom()}, {_stack.PopBottom()} p2: {_stack.PopBottom()}, {_stack.PopBottom()} p3: {_stack.PopBottom()}, {_stack.PopBottom()}");
                                         output.AppendLine($"CubicBezierTo p1: {_stack.PopBottom()}, {_stack.PopBottom()} p2: {_stack.PopBottom()}, {_stack.PopBottom()} p3: {_stack.PopBottom()}, {_stack.PopBottom()}");
                                         _stack.Clear();
                                         break;
+
                                     case 0x24:
                                         c1 = new PointF(_x + _stack.PopBottom(), _y + _stack.PopBottom());
                                         c2 = new PointF(c1.X + _stack.PopBottom(), c1.Y + _stack.PopBottom());
@@ -419,12 +456,14 @@ namespace FontParser.Tables.Cff
                                         output.AppendLine($"CubicBezierTo p1: {c4} p2: {c5} p3: {c6}");
                                         _stack.Clear();
                                         break;
+
                                     case 0x25:
                                         break;
                                 }
                                 break;
                         }
                         break;
+
                     default:
                         break;
                 }
@@ -450,13 +489,11 @@ namespace FontParser.Tables.Cff
 
         private static int ComputeOffset(int count)
         {
-            return count == 0
-                ? 0
-                : count < 1240
-                    ? 107
-                    : count < 33900
-                        ? 1131
-                        : 32768;
+            return count < 1240
+                ? 107
+                : count < 33900
+                    ? 1131
+                    : 32768;
         }
 
         private void StemCalculation()

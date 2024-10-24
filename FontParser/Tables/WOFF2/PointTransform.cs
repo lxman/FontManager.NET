@@ -39,22 +39,27 @@ namespace FontParser.Tables.WOFF2
                 case 0:
                     x = 0;
                     return new Point(x, data.ParseBits(0, record.YBits));
+
                 case 4:
                     x = data.ParseBits(4, 4);
                     y = data.ParseBits(0, 4);
                     return new Point(x, y);
+
                 case 8:
                     x = data.ParseBits(0, record.XBits);
                     y = record.YBits == 8 ? data.ParseBits(record.XBits, record.YBits) : 0;
                     return new Point(x, y);
+
                 case 12:
                     int xTranslated = (data[0] << 4) | (data[1] >> 4);
                     int yTranslated = ((data[1] & 0x0F) << 8) | data[2];
                     return new Point(xTranslated, yTranslated);
+
                 case 16:
                     xTranslated = (data[0] << 8) | data[1];
                     yTranslated = (data[2] << 8) | data[3];
                     return new Point(xTranslated, yTranslated);
+
                 default:
                     throw new FormatException($"Unhandled {record.XBits}");
             }

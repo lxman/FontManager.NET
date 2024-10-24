@@ -11,7 +11,7 @@ namespace FontParser.Tables.Common.SequenceContext.Format3
     public class SequenceContextFormat3 : ILookupSubTable, ISequenceContext
     {
         public List<SequenceLookup> SequenceLookups { get; } = new List<SequenceLookup>();
-        
+
         public List<ICoverageFormat> CoverageFormats { get; } = new List<ICoverageFormat>();
 
         public SequenceContextFormat3(BigEndianReader reader)

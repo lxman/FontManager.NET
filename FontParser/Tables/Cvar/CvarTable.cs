@@ -11,7 +11,7 @@ namespace FontParser.Tables.Cvar
         public static string Tag => "cvar";
 
         public Header Header { get; private set; }
-        
+
         private readonly BigEndianReader _reader;
 
         public CvarTable(byte[] data)

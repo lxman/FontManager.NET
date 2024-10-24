@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using FontParser.Reader;
 
 namespace FontParser.Tables.Common.FeatureParametersTable

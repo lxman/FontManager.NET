@@ -5,9 +5,9 @@ namespace FontParser.Tables.Gpos.LookupSubtables.AnchorTable
     public class AnchorTableFormat2 : IAnchorTable
     {
         public short X { get; }
-        
+
         public short Y { get; }
-        
+
         public ushort AnchorPoint { get; }
 
         public AnchorTableFormat2(BigEndianReader reader)

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FontParser.Reader;
 using FontParser.Tables.Common;
 using FontParser.Tables.Common.CoverageFormat;

@@ -10,7 +10,7 @@ namespace FontParser.Tables.Gpos.LookupSubtables.MarkMarkPos
     public class Mark2Record
     {
         public List<IAnchorTable> AnchorTables { get; } = new List<IAnchorTable>();
-        
+
         public Mark2Record(BigEndianReader reader, ushort markClassCount, long startOfTable)
         {
             List<ushort> mark2AnchorOffsets = reader.ReadUShortArray(markClassCount).ToList();

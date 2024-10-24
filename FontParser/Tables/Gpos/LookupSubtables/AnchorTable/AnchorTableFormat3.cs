@@ -6,11 +6,11 @@ namespace FontParser.Tables.Gpos.LookupSubtables.AnchorTable
     public class AnchorTableFormat3 : IAnchorTable
     {
         public short X { get; }
-        
+
         public short Y { get; }
-        
+
         public DeviceTable? DeviceX { get; }
-        
+
         public DeviceTable? DeviceY { get; }
 
         public AnchorTableFormat3(BigEndianReader reader)

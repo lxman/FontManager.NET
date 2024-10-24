@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Numerics;
+
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
 namespace FontParser.RenderFont.Interpreter

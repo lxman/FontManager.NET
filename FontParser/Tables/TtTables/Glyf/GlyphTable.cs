@@ -73,6 +73,7 @@ namespace FontParser.Tables.TtTables.Glyf
                             compositeGlyph.Woff2Reconstruct(compositeGlyphInfo);
                             spec = compositeGlyph;
                             break;
+
                         case SimpleGlyphInfo simpleGlyphInfo:
                             header.Woff2Reconstruct(
                                 Convert.ToInt16(simpleGlyphInfo.EndPointsOfContours.Count),
@@ -84,6 +85,7 @@ namespace FontParser.Tables.TtTables.Glyf
                             simpleGlyph.Woff2Reconstruct(simpleGlyphInfo);
                             spec = simpleGlyph;
                             break;
+
                         default:
                             throw new ArgumentOutOfRangeException(nameof(gi));
                     }

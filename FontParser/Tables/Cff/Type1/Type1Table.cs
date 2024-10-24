@@ -23,18 +23,15 @@ namespace FontParser.Tables.Cff.Type1
 
         public List<List<string>> CharStringList { get; } = new List<List<string>>();
 
-        public List<CffDictEntry> TopDictOperatorEntries { get; } = new List<CffDictEntry>();
-
-        public List<CffDictEntry> PrivateDictOperatorEntries { get; } = new List<CffDictEntry>();
-
-        public List<List<byte>> GlobalSubroutines { get; }
-
-        public List<List<byte>> LocalSubroutines { get; } = new List<List<byte>>();
-
         private readonly Type1TopDictOperatorEntries _type1TopDictOperatorEntries =
             new Type1TopDictOperatorEntries(new Dictionary<ushort, CffDictEntry?>());
+
         private readonly PrivateDictOperatorEntries _privateDictOperatorEntries =
             new PrivateDictOperatorEntries(new Dictionary<ushort, CffDictEntry?>());
+
+        private readonly List<CffDictEntry> _topDictOperatorEntries = new List<CffDictEntry>();
+        private readonly List<CffDictEntry> _type1PrivateDictOperatorEntries = new List<CffDictEntry>();
+        private readonly List<List<byte>> _localSubroutines = new List<List<byte>>();
 
         public Type1Table(byte[] data)
         {
@@ -60,10 +57,10 @@ namespace FontParser.Tables.Cff.Type1
                 Strings.Add(System.Text.Encoding.ASCII.GetString(bytes.ToArray()));
             }
 
-            ResolveDictSids(TopDictOperatorEntries);
+            ResolveDictSids(_topDictOperatorEntries);
 
             var globalSubrIndex = new Type1Index(reader);
-            GlobalSubroutines = globalSubrIndex.Data;
+            List<List<byte>> globalSubroutines = globalSubrIndex.Data;
 
             byte encodingFormat = reader.ReadByte();
             Encoding = encodingFormat switch
@@ -73,11 +70,11 @@ namespace FontParser.Tables.Cff.Type1
                 _ => Encoding
             };
 
-            reader.Seek(Convert.ToInt64(TopDictOperatorEntries.First(e => e.Name == "CharStrings").Operand));
+            reader.Seek(Convert.ToInt64(_topDictOperatorEntries.First(e => e.Name == "CharStrings").Operand));
 
             var charStrings = new Type1Index(reader);
 
-            reader.Seek(Convert.ToInt64(TopDictOperatorEntries.First(e => e.Name == "charset").Operand));
+            reader.Seek(Convert.ToInt64(_topDictOperatorEntries.First(e => e.Name == "charset").Operand));
 
             byte charsetFormat = reader.ReadByte();
             CharSet = charsetFormat switch
@@ -90,12 +87,12 @@ namespace FontParser.Tables.Cff.Type1
                     Convert.ToUInt16(charStrings.Data.Count)),
                 _ => CharSet
             };
-            var privateDictInfo = (List<double>?)TopDictOperatorEntries.FirstOrDefault(e => e.Name == "Private")?.Operand;
+            var privateDictInfo = (List<double>?)_topDictOperatorEntries.FirstOrDefault(e => e.Name == "Private")?.Operand;
             if (privateDictInfo is null) return;
             reader.Seek(Convert.ToInt64(privateDictInfo[1]));
             double privateDictSize = privateDictInfo[0];
             ReadPrivateDictEntries(reader, privateDictSize);
-            CffDictEntry? subrEntry = PrivateDictOperatorEntries.FirstOrDefault(e => e.Name == "Subrs");
+            CffDictEntry? subrEntry = _type1PrivateDictOperatorEntries.FirstOrDefault(e => e.Name == "Subrs");
             if (subrEntry is null) return;
             reader.Seek(Convert.ToInt64(privateDictInfo[1]) + Convert.ToInt64(subrEntry.Operand));
             ushort localSubrCount = reader.ReadUShort();
@@ -105,7 +102,7 @@ namespace FontParser.Tables.Cff.Type1
             var subrIndex = 0;
             while (subrIndex < localSubrOffsets.Count - 1)
             {
-                LocalSubroutines.Add(new List<byte>(reader.ReadBytes(localSubrOffsets[subrIndex + 1] - localSubrOffsets[subrIndex])));
+                _localSubroutines.Add(new List<byte>(reader.ReadBytes(localSubrOffsets[subrIndex + 1] - localSubrOffsets[subrIndex])));
                 subrIndex++;
             }
 
@@ -117,9 +114,9 @@ namespace FontParser.Tables.Cff.Type1
                             new CharStringParser(
                                 48,
                                 bytes,
-                                GlobalSubroutines,
-                                LocalSubroutines,
-                                Convert.ToInt32(PrivateDictOperatorEntries.FirstOrDefault(e => e.Name == "nominalWidthX")?.Operand ?? 0)
+                                globalSubroutines,
+                                _localSubroutines,
+                                Convert.ToInt32(_type1PrivateDictOperatorEntries.FirstOrDefault(e => e.Name == "nominalWidthX")?.Operand ?? 0)
                                 )
                     )
                 )
@@ -132,14 +129,14 @@ namespace FontParser.Tables.Cff.Type1
         {
             foreach (List<byte> bytes in data)
             {
-                DictEntryReader.Read(bytes, _type1TopDictOperatorEntries, TopDictOperatorEntries);
+                DictEntryReader.Read(bytes, _type1TopDictOperatorEntries, _topDictOperatorEntries);
             }
         }
 
         private void ReadPrivateDictEntries(BigEndianReader reader, double size)
         {
             List<byte> bytes = reader.ReadBytes(Convert.ToInt32(size)).ToList();
-            DictEntryReader.Read(bytes, _privateDictOperatorEntries, PrivateDictOperatorEntries);
+            DictEntryReader.Read(bytes, _privateDictOperatorEntries, _type1PrivateDictOperatorEntries);
         }
 
         private void ResolveDictSids(List<CffDictEntry> entries)

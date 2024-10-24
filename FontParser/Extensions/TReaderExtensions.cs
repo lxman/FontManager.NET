@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers.Binary;
 using FontParser.Reader;
+
 // ReSharper disable InconsistentNaming
 
 namespace FontParser.Extensions
@@ -17,14 +18,17 @@ namespace FontParser.Extensions
                 case 253:
                     value = BinaryPrimitives.ReadUInt16BigEndian(data.Read(2));
                     break;
+
                 case 254:
                     value = data.Read();
                     value += 253 * 2;
                     break;
+
                 case 255:
                     value = data.Read();
                     value += 253;
                     break;
+
                 default:
                     value = code;
                     break;

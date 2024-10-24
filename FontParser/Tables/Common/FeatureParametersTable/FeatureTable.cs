@@ -26,7 +26,7 @@ namespace FontParser.Tables.Common.FeatureParametersTable
                     _ => FeatureParametersTable
                 };
             }
-            
+
             reader.Seek(before);
         }
     }

@@ -26,6 +26,7 @@ namespace FontParser.Tables.Woff
 #if DEBUG
 
         public new string ToString() => $"{Tag} Offset={Offset} Compressed Length={CompressedLength} OriginalLength={OriginalLength}";
+
 #endif
     }
 }

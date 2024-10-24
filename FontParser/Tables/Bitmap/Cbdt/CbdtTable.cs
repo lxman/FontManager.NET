@@ -11,7 +11,7 @@ namespace FontParser.Tables.Bitmap.Cbdt
         public ushort MajorVersion { get; }
 
         public ushort MinorVersion { get; }
-        
+
         public List<byte> Data { get; }
 
         public CbdtTable(byte[] data)

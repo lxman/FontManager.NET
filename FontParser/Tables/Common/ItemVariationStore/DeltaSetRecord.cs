@@ -6,7 +6,7 @@ namespace FontParser.Tables.Common.ItemVariationStore
     public class DeltaSetRecord
     {
         public List<int> DeltaData { get; } = new List<int>();
-        
+
         public DeltaSetRecord(BigEndianReader reader, ushort regionIndexCount, bool useLongWords, int wordDeltaCount)
         {
             if (wordDeltaCount > regionIndexCount) return;

@@ -19,12 +19,15 @@ namespace FontParser.Tables.Woff.Zlib
                     case CompressionLevel.NoCompression:
                         memStream.WriteByte(0x01);
                         break;
+
                     case CompressionLevel.Fastest:
                         memStream.WriteByte(0x5E);
                         break;
+
                     case CompressionLevel.Optimal:
                         memStream.WriteByte(0xDA);
                         break;
+
                     default:
                         memStream.WriteByte(0x9C);
                         break;

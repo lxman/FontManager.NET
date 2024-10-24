@@ -9,7 +9,7 @@ namespace FontParser.Tables.Gpos.LookupSubtables.Common
     public class MarkRecord
     {
         public ushort MarkClass { get; }
-        
+
         public IAnchorTable AnchorTable { get; }
 
         public MarkRecord(BigEndianReader reader, long startOfTable)

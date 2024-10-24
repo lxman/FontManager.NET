@@ -2,7 +2,6 @@
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
 using FontParser;
 using FontParser.Tables;
 using FontParser.Tables.Avar;
@@ -71,6 +70,7 @@ using FontParser.Tables.TtTables;
 using FontParser.Tables.TtTables.Glyf;
 using FontParser.Tables.Vdmx;
 using FontParser.Tables.Vorg;
+using Microsoft.Win32;
 
 namespace FontExplorer;
 
@@ -81,7 +81,7 @@ public partial class MainWindow : Window
 {
     private readonly BackgroundWorker _worker = new();
     private List<(string, List<IFontTable>)>? _tableDictionary;
-    
+
     public MainWindow()
     {
         InitializeComponent();
@@ -148,7 +148,7 @@ public partial class MainWindow : Window
                                 glyphIdArray = new TreeViewItem { Header = "Glyph Index Array" };
                                 format0Item.Items.Add(glyphIdArray);
                                 var glyphIdArrayData = new TreeViewItem
-                                    { Header = string.Join(", ", format0.GlyphIndexArray) };
+                                { Header = string.Join(", ", format0.GlyphIndexArray) };
                                 glyphIdArray.Items.Add(glyphIdArrayData);
                                 subtableItem.Items.Add(format0Item);
                                 break;
@@ -161,12 +161,12 @@ public partial class MainWindow : Window
                                 glyphIdArray = new TreeViewItem { Header = "Glyph Index Array" };
                                 format2Item.Items.Add(glyphIdArray);
                                 glyphIdArrayData = new TreeViewItem
-                                    { Header = string.Join(", ", format2.GlyphIndexArray) };
+                                { Header = string.Join(", ", format2.GlyphIndexArray) };
                                 glyphIdArray.Items.Add(glyphIdArrayData);
                                 var subHeaderKeys = new TreeViewItem { Header = "Sub Header Keys" };
                                 format2Item.Items.Add(subHeaderKeys);
                                 var subHeaderKeysData = new TreeViewItem
-                                    { Header = string.Join(", ", format2.SubHeaderKeys) };
+                                { Header = string.Join(", ", format2.SubHeaderKeys) };
                                 subHeaderKeys.Items.Add(subHeaderKeysData);
                                 format2.SubHeaders.ForEach(sh =>
                                 {
@@ -176,7 +176,7 @@ public partial class MainWindow : Window
                                     var entryCount = new TreeViewItem { Header = $"Entry Count: {sh.EntryCount}" };
                                     var idDelta = new TreeViewItem { Header = $"Id Delta: {sh.IdDelta}" };
                                     var idRangeOffset = new TreeViewItem
-                                        { Header = $"Id Range Offset: {sh.IdRangeOffset}" };
+                                    { Header = $"Id Range Offset: {sh.IdRangeOffset}" };
                                     subHeader.Items.Add(firstCode);
                                     subHeader.Items.Add(entryCount);
                                     subHeader.Items.Add(idDelta);
@@ -190,15 +190,15 @@ public partial class MainWindow : Window
                                 languageItem = new TreeViewItem { Header = $"Language: {format4.Language}" };
                                 format4Item.Items.Add(languageItem);
                                 var entrySelectorItem = new TreeViewItem
-                                    { Header = $"Entry Selector: {format4.EntrySelector}" };
+                                { Header = $"Entry Selector: {format4.EntrySelector}" };
                                 format4Item.Items.Add(entrySelectorItem);
                                 var rangeShiftItem = new TreeViewItem { Header = $"Range Shift: {format4.RangeShift}" };
                                 format4Item.Items.Add(rangeShiftItem);
                                 var searchRangeItem = new TreeViewItem
-                                    { Header = $"Search Range: {format4.SearchRange}" };
+                                { Header = $"Search Range: {format4.SearchRange}" };
                                 format4Item.Items.Add(searchRangeItem);
                                 var segCountX2Item = new TreeViewItem
-                                    { Header = $"Seg Count X2: {format4.SegCountX2}" };
+                                { Header = $"Seg Count X2: {format4.SegCountX2}" };
                                 format4Item.Items.Add(segCountX2Item);
                                 if (format4.GlyphIdArray.Count > 0)
                                 {
@@ -206,7 +206,7 @@ public partial class MainWindow : Window
                                     glyphIdArray = new TreeViewItem { Header = "Glyph Index Array" };
                                     format4Item.Items.Add(glyphIdArray);
                                     glyphIdArrayData = new TreeViewItem
-                                        { Header = string.Join(", ", format4.GlyphIdArray) };
+                                    { Header = string.Join(", ", format4.GlyphIdArray) };
                                     glyphIdArray.Items.Add(glyphIdArrayData);
                                 }
 
@@ -216,11 +216,11 @@ public partial class MainWindow : Window
                                     var rangeItem = new TreeViewItem { Header = "Range" };
                                     rangesItem.Items.Add(rangeItem);
                                     var startCode = new TreeViewItem
-                                        { Header = $"Start Code: {format4.StartCodes[i]}" };
+                                    { Header = $"Start Code: {format4.StartCodes[i]}" };
                                     var endCode = new TreeViewItem { Header = $"End Code: {format4.EndCodes[i]}" };
                                     var idDelta = new TreeViewItem { Header = $"Id Delta: {format4.IdDeltas[i]}" };
                                     var idRangeOffset = new TreeViewItem
-                                        { Header = $"Id Range Offset: {format4.IdRangeOffsets[i]}" };
+                                    { Header = $"Id Range Offset: {format4.IdRangeOffsets[i]}" };
                                     rangeItem.Items.Add(startCode);
                                     rangeItem.Items.Add(endCode);
                                     rangeItem.Items.Add(idDelta);
@@ -241,7 +241,7 @@ public partial class MainWindow : Window
                                 glyphIdArray = new TreeViewItem { Header = "Glyph Index Array" };
                                 format6Item.Items.Add(glyphIdArray);
                                 var glyphIndexArrayData = new TreeViewItem
-                                    { Header = string.Join(", ", format6.GlyphIndexArray) };
+                                { Header = string.Join(", ", format6.GlyphIndexArray) };
                                 glyphIdArray.Items.Add(glyphIndexArrayData);
                                 subtableItem.Items.Add(format6Item);
                                 break;
@@ -260,7 +260,7 @@ public partial class MainWindow : Window
                                     format8Item.Items.Add(sequentialMapGroup);
                                     var glyphId = new TreeViewItem { Header = $"Start Glyph Id: {g.StartGlyphId}" };
                                     var startCharCode = new TreeViewItem
-                                        { Header = $"Start Char Code: {g.StartCharCode}" };
+                                    { Header = $"Start Char Code: {g.StartCharCode}" };
                                     var endCharCode = new TreeViewItem { Header = $"End Char Code: {g.EndCharCode}" };
                                     sequentialMapGroup.Items.Add(glyphId);
                                     sequentialMapGroup.Items.Add(startCharCode);
@@ -279,7 +279,7 @@ public partial class MainWindow : Window
                                 glyphIdArray = new TreeViewItem { Header = "Glyph Index Array" };
                                 format10Item.Items.Add(glyphIdArray);
                                 glyphIndexArrayData = new TreeViewItem
-                                    { Header = string.Join(", ", format10.GlyphIndexArray) };
+                                { Header = string.Join(", ", format10.GlyphIndexArray) };
                                 glyphIdArray.Items.Add(glyphIndexArrayData);
                                 subtableItem.Items.Add(format10Item);
                                 break;
@@ -293,11 +293,11 @@ public partial class MainWindow : Window
                                     var sequentialMapGroup = new TreeViewItem { Header = "Sequential Map Group" };
                                     format12Item.Items.Add(sequentialMapGroup);
                                     var glyphId = new TreeViewItem
-                                        { Header = $"Start Glyph Id: {g.StartGlyphId}" };
+                                    { Header = $"Start Glyph Id: {g.StartGlyphId}" };
                                     var startCharCode = new TreeViewItem
-                                        { Header = $"Start Char Code: {g.StartCharCode}" };
+                                    { Header = $"Start Char Code: {g.StartCharCode}" };
                                     var endCharCode = new TreeViewItem
-                                        { Header = $"End Char Code: {g.EndCharCode}" };
+                                    { Header = $"End Char Code: {g.EndCharCode}" };
                                     sequentialMapGroup.Items.Add(glyphId);
                                     sequentialMapGroup.Items.Add(startCharCode);
                                     sequentialMapGroup.Items.Add(endCharCode);
@@ -315,7 +315,7 @@ public partial class MainWindow : Window
                                     format13Item.Items.Add(constantMapGroup);
                                     var glyphId = new TreeViewItem { Header = $"Glyph Id: {g.GlyphId}" };
                                     var startCharCode = new TreeViewItem
-                                        { Header = $"Start Char Code: {g.StartCharCode}" };
+                                    { Header = $"Start Char Code: {g.StartCharCode}" };
                                     var endCharCode = new TreeViewItem { Header = $"End Char Code: {g.EndCharCode}" };
                                     constantMapGroup.Items.Add(glyphId);
                                     constantMapGroup.Items.Add(startCharCode);
@@ -338,18 +338,18 @@ public partial class MainWindow : Window
                                         if (r.DefaultUvsTableHeader is not null)
                                         {
                                             var defaultUvsTableHeader = new TreeViewItem
-                                                { Header = "Default UVS Table Header" };
+                                            { Header = "Default UVS Table Header" };
                                             var unicodeRangeRecords = new TreeViewItem
-                                                { Header = "Unicode Range Records" };
+                                            { Header = "Unicode Range Records" };
                                             defaultUvsTableHeader.Items.Add(unicodeRangeRecords);
                                             r.DefaultUvsTableHeader.UnicodeRangeRecords.ForEach(u =>
                                             {
                                                 var unicodeRangeRecord = new TreeViewItem
-                                                    { Header = "Unicode Range Record" };
+                                                { Header = "Unicode Range Record" };
                                                 var startUnicodeValue = new TreeViewItem
-                                                    { Header = $"Start Unicode Value: {u.StartUnicodeValue}" };
+                                                { Header = $"Start Unicode Value: {u.StartUnicodeValue}" };
                                                 var additionalCount = new TreeViewItem
-                                                    { Header = $"Additional Count: {u.AdditionalCount}" };
+                                                { Header = $"Additional Count: {u.AdditionalCount}" };
                                                 unicodeRangeRecord.Items.Add(startUnicodeValue);
                                                 unicodeRangeRecord.Items.Add(additionalCount);
                                                 unicodeRangeRecords.Items.Add(unicodeRangeRecord);
@@ -359,14 +359,14 @@ public partial class MainWindow : Window
 
                                         if (r.NonDefaultUvsTableHeader is null) return;
                                         var nonDefaultUvsTableHeader = new TreeViewItem
-                                            { Header = "Non Default UVS Table Header" };
+                                        { Header = "Non Default UVS Table Header" };
                                         var uvsMappings = new TreeViewItem { Header = "UVS Mappings" };
                                         nonDefaultUvsTableHeader.Items.Add(uvsMappings);
                                         r.NonDefaultUvsTableHeader.UvsMappings.ForEach(u =>
                                         {
                                             var uvsMapping = new TreeViewItem { Header = "UVS Mapping" };
                                             var unicodeValue = new TreeViewItem
-                                                { Header = $"Unicode Value: {u.UnicodeValue}" };
+                                            { Header = $"Unicode Value: {u.UnicodeValue}" };
                                             var glyphId = new TreeViewItem { Header = $"Glyph Id: {u.GlyphId}" };
                                             uvsMapping.Items.Add(unicodeValue);
                                             uvsMapping.Items.Add(glyphId);
@@ -432,7 +432,7 @@ public partial class MainWindow : Window
                         var lookupListIndexes = new TreeViewItem { Header = "Lookup List Indexes" };
                         featureRecord.Items.Add(lookupListIndexes);
                         var lookupListIndexesData = new TreeViewItem
-                            { Header = string.Join(", ", fr.FeatureTable.LookupListIndexes) };
+                        { Header = string.Join(", ", fr.FeatureTable.LookupListIndexes) };
                         lookupListIndexes.Items.Add(lookupListIndexesData);
                         if (fr.FeatureTable.FeatureParametersTable is null) return;
                         var featureParametersTable = new TreeViewItem { Header = "Feature Parameters Table" };
@@ -1120,11 +1120,6 @@ public partial class MainWindow : Window
                     {
                         sHeader.FormChild(s);
                     });
-                    TreeViewItem csHeader = cffRoot.FormChild("Char String List");
-                    cffTable.CharStringList.ForEach(cs =>
-                    {
-                        csHeader.FormChild(cs);
-                    });
                     TreeViewItem charSetHeader = cffRoot.FormChild("Char Set");
                     switch (cffTable.CharSet)
                     {
@@ -1146,14 +1141,6 @@ public partial class MainWindow : Window
                             });
                             break;
                     }
-                    TreeViewItem tdoeHeader = cffRoot.FormChild("Top Dict Operator Entries");
-                    cffTable.TopDictOperatorEntries.ForEach(tdoe =>
-                    {
-                        TreeViewItem oeHeader = tdoeHeader.FormChild("Top Dict Operator Entry");
-                        oeHeader.FormChild(nameof(tdoe.Name), tdoe.Name);
-                        oeHeader.FormChild(nameof(tdoe.OperandKind), tdoe.OperandKind);
-                        oeHeader.FormChild(nameof(tdoe.Operand), tdoe.Operand);
-                    });
                     break;
 
                 case ColrTable colrTable:
@@ -1221,7 +1208,7 @@ public partial class MainWindow : Window
                         bgHeader.FormChild(nameof(bgr.FirstLayerIndex), bgr.FirstLayerIndex);
                         bgHeader.FormChild(nameof(bgr.NumLayers), bgr.NumLayers);
                     });
-                    
+
                     TreeViewItem lRecsHeader = colrRoot.FormChild("Layer Records");
                     colrTable.LayerRecords.ForEach(lr =>
                     {
@@ -1927,7 +1914,7 @@ public partial class MainWindow : Window
                     ResultView.Items.Add(ltshRoot);
                     ltshRoot.FormChild(nameof(ltshTable.YPels), string.Join(", ", ltshTable.YPels));
                     break;
-                
+
                 case Os2Table os2Table:
                     var os2Root = new TreeViewItem { Header = "OS/2" };
                     ResultView.Items.Add(os2Root);
@@ -1980,7 +1967,7 @@ public partial class MainWindow : Window
                     panoseRoot.FormChild(os2Table.Panose.GetValue(8));
                     panoseRoot.FormChild(os2Table.Panose.GetValue(9));
                     break;
-               
+
                 case PcltTable pcltTable:
                     var pcltRoot = new TreeViewItem { Header = "PCLT" };
                     ResultView.Items.Add(pcltRoot);
@@ -1988,7 +1975,7 @@ public partial class MainWindow : Window
                     pcltRoot.FormChild(nameof(pcltTable.Typeface), pcltTable.Typeface);
                     pcltRoot.FormChild(nameof(pcltTable.CharacterComplement), pcltTable.CharacterComplement);
                     break;
-                
+
                 case StatTable statTable:
                     var statRoot = new TreeViewItem { Header = "STAT" };
                     ResultView.Items.Add(statRoot);
@@ -2041,7 +2028,7 @@ public partial class MainWindow : Window
                         }
                     });
                     break;
-                
+
                 case SvgTable svgTable:
                     var svgRoot = new TreeViewItem { Header = "SVG" };
                     ResultView.Items.Add(svgRoot);
@@ -2054,7 +2041,7 @@ public partial class MainWindow : Window
                         diHeader.FormChild(nameof(di.Instructions), di.Instructions);
                     });
                     break;
-                
+
                 case VdmxTable vdmxTable:
                     var vdmxRoot = new TreeViewItem { Header = "VDMX" };
                     ResultView.Items.Add(vdmxRoot);
@@ -2083,7 +2070,7 @@ public partial class MainWindow : Window
                         rrHeader.FormChild(nameof(rr.YEndRatio), rr.YEndRatio);
                     });
                     break;
-                
+
                 case VorgTable vorgTable:
                     var vorgRoot = new TreeViewItem { Header = "VORG" };
                     ResultView.Items.Add(vorgRoot);
@@ -2096,7 +2083,7 @@ public partial class MainWindow : Window
                         mHeader.FormChild(nameof(vom.VertOriginY), vom.VertOriginY);
                     });
                     break;
-                
+
                 case PostTable postTable:
                     var postRoot = new TreeViewItem { Header = "post" };
                     ResultView.Items.Add(postRoot);
@@ -2112,18 +2099,18 @@ public partial class MainWindow : Window
                     postRoot.FormChild(nameof(postTable.MinMemType42), postTable.MinMemType42);
                     postRoot.FormChild(nameof(postTable.MaxMemType42), postTable.MaxMemType42);
                     break;
-                
+
                 case CvtTable cvtTable:
                     var cvtRoot = new TreeViewItem { Header = "cvt" };
                     ResultView.Items.Add(cvtRoot);
                     break;
-                
+
                 case FpgmTable fpgmTable:
                     var fpgmRoot = new TreeViewItem { Header = "fpgm" };
                     ResultView.Items.Add(fpgmRoot);
                     fpgmRoot.FormChild($"{fpgmTable.Instructions.Length} bytes");
                     break;
-                
+
                 case GaspTable gaspTable:
                     var gaspRoot = new TreeViewItem { Header = "gasp" };
                     ResultView.Items.Add(gaspRoot);
@@ -2135,24 +2122,24 @@ public partial class MainWindow : Window
                         rangeHeader.FormChild(nameof(gr.RangeGaspBehavior), gr.RangeGaspBehavior);
                     });
                     break;
-                
+
                 case LocaTable locaTable:
                     var locaRoot = new TreeViewItem { Header = "loca" };
                     ResultView.Items.Add(locaRoot);
                     locaRoot.FormChild($"Offsets {locaTable.Offsets.Length}");
                     break;
-                
+
                 case PrepTable prepTable:
                     var prepRoot = new TreeViewItem { Header = "prep" };
                     ResultView.Items.Add(prepRoot);
                     prepRoot.FormChild($"{prepTable.Instructions.Length} bytes");
                     break;
-                
+
                 case WebfTable webfTable:
                     TreeViewItem webfRoot = new TreeViewItem { Header = "webf" };
                     ResultView.Items.Add(webfRoot);
                     break;
-                
+
                 default:
                     Console.WriteLine($"Unhandled type: {t.GetType().Name}");
                     break;

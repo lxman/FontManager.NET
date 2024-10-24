@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FontParser.Reader;
 
 namespace FontParser.Tables.Common.FeatureParametersTable
@@ -24,15 +23,15 @@ namespace FontParser.Tables.Common.FeatureParametersTable
         {
             Format = reader.ReadUShort();
             FeatureUILabelNameId = reader.ReadUShort();
-                FeatureUITooltipTextNameId = reader.ReadUShort();
-                SampleTextNameId = reader.ReadUShort();
-                NumNamedParameters = reader.ReadUShort();
-                FirstParamUILabelNameId = reader.ReadUShort();
-                ushort charCount = reader.ReadUShort();
-                for (var i = 0; i < charCount; i++)
-                {
-                    UnicodeScalarValues.Add(reader.ReadUInt24());
-                }
+            FeatureUITooltipTextNameId = reader.ReadUShort();
+            SampleTextNameId = reader.ReadUShort();
+            NumNamedParameters = reader.ReadUShort();
+            FirstParamUILabelNameId = reader.ReadUShort();
+            ushort charCount = reader.ReadUShort();
+            for (var i = 0; i < charCount; i++)
+            {
+                UnicodeScalarValues.Add(reader.ReadUInt24());
+            }
         }
     }
 }

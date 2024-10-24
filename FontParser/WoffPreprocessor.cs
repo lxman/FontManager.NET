@@ -45,6 +45,7 @@ namespace FontParser
                     case 1:
                         directoryEntries.Add(new WoffTableDirectoryEntry(reader));
                         break;
+
                     case 2:
                         directoryEntries.Add(new Woff2TableDirectoryEntry(reader));
                         break;
@@ -78,6 +79,7 @@ namespace FontParser
                             : compressedData;
                         tag = entry.Tag;
                         break;
+
                     case Woff2TableDirectoryEntry entry:
                         tag = entry.Tag;
                         long dataStart = woff2OffsetTracker;
@@ -100,10 +102,12 @@ namespace FontParser
                                     GlyfTransform = (GlyfTransform)entry.Transformation;
                                     uncompressedWoffData = uncompressedWoff2Data[(int)dataStart..(int)(dataStart + dataLength)];
                                     break;
+
                                 case "loca":
                                     LocaTransform = (LocaTransform)entry.Transformation;
                                     uncompressedWoffData = uncompressedWoff2Data[(int)dataStart..(int)(dataStart + dataLength)];
                                     break;
+
                                 case "hmtx":
                                     HmtxTransform = (HmtxTransform)entry.Transformation;
                                     uncompressedWoffData = uncompressedWoff2Data[(int)dataStart..(int)(dataStart + dataLength)];

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using FontParser.Reader;
+﻿using FontParser.Reader;
 using FontParser.Tables.Common;
 
 namespace FontParser.Tables.Math

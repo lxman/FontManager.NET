@@ -115,9 +115,11 @@ namespace FontParser
 
                 case FileType.Woff:
                     return new List<FontStructure> { ParseWoff(reader, file) };
+
                 case FileType.Woff2:
                     return new List<FontStructure> { ParseWoff2(reader, file) };
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }

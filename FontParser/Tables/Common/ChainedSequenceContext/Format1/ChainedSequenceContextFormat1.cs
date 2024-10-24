@@ -7,7 +7,7 @@ namespace FontParser.Tables.Common.ChainedSequenceContext.Format1
     public class ChainedSequenceContextFormat1 : ILookupSubTable, IChainedSequenceContext
     {
         public ICoverageFormat CoverageFormat { get; }
-        
+
         public List<ChainedSequenceRuleSet> ChainedSequenceRuleSets { get; } = new List<ChainedSequenceRuleSet>();
 
         public ChainedSequenceContextFormat1(BigEndianReader reader)

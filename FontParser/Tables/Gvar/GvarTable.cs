@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using FontParser.Reader;
 using Common_TupleVariationStore_Tuple = FontParser.Tables.Common.TupleVariationStore.Tuple;
-using Tuple = FontParser.Tables.Common.TupleVariationStore.Tuple;
-using TupleVariationStore_Tuple = FontParser.Tables.Common.TupleVariationStore.Tuple;
 
 namespace FontParser.Tables.Gvar
 {

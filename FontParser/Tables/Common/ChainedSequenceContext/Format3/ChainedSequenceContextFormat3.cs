@@ -12,8 +12,8 @@ namespace FontParser.Tables.Common.ChainedSequenceContext.Format3
 
         public List<ICoverageFormat> InputCoverages { get; } = new List<ICoverageFormat>();
 
-        public List<ICoverageFormat> LookaheadCoverages { get; } = new List<ICoverageFormat>(); 
-        
+        public List<ICoverageFormat> LookaheadCoverages { get; } = new List<ICoverageFormat>();
+
         public List<SequenceLookup> SequenceLookups { get; } = new List<SequenceLookup>();
 
         public ChainedSequenceContextFormat3(BigEndianReader reader)

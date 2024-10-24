@@ -32,7 +32,6 @@ namespace FontParser.Tables.Kern
 
         public void Process()
         {
-
         }
     }
 }

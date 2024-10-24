@@ -14,6 +14,8 @@ namespace FontParser.Tables.Cff.Type2
     {
         public static string Tag => "CFF2";
 
+        public List<List<string>> CharStringList { get; } = new List<List<string>>();
+
         public Type2Header Header { get; private set; }
 
         public List<List<byte>> GlobalSubroutines { get; private set; }
@@ -24,9 +26,12 @@ namespace FontParser.Tables.Cff.Type2
 
         private readonly Type2TopDictOperatorEntries _type2TopDictOperatorEntries =
             new Type2TopDictOperatorEntries(new Dictionary<ushort, CffDictEntry?>());
+
         private readonly Type2FontDictEntries _type2FontDictEntries =
             new Type2FontDictEntries(new Dictionary<ushort, CffDictEntry?>());
+
         private readonly BigEndianReader _reader;
+
         private readonly PrivateDictOperatorEntries _privateDictOperatorEntries =
             new PrivateDictOperatorEntries(new Dictionary<ushort, CffDictEntry?>());
 
@@ -87,6 +92,7 @@ namespace FontParser.Tables.Cff.Type2
                 fontDicts.AddRange(dict);
             });
             var privateDicts = new List<List<CffDictEntry>>();
+            var charStringData = new List<CharStringData>();
             fontDicts.ForEach(cffDictEntry =>
             {
                 if (!(cffDictEntry.Operand is List<double> data)) return;
@@ -94,9 +100,35 @@ namespace FontParser.Tables.Cff.Type2
                 double offset = data[1];
                 _reader.Seek(Convert.ToInt64(offset));
                 var dict = new List<CffDictEntry>();
-                ReadPrivateDictEntries(_reader, size, dict, itemVariationStore?.ItemVariationData[0].RegionIndexes ?? new List<ushort>());
+                ReadPrivateDictEntries(
+                    _reader,
+                    size,
+                    dict,
+                    itemVariationStore?.ItemVariationData[0].RegionIndexes ?? new List<ushort>(),
+                    charStringData);
                 privateDicts.Add(dict);
             });
+
+            // TODO: Come back when CFF2 is more stable
+            //var csdIndex = 0;
+            //csIndex.Data.ForEach(d =>
+            //{
+            //    CharStringData csData = SelectCharStringData(charStringData, csdIndex++);
+            //    var charStringParser = new CharStringParser(
+            //        48,
+            //        d,
+            //        GlobalSubroutines,
+            //        csData.Subroutines ?? new List<List<byte>>(),
+            //        csData.NominalWidthX ?? 0
+            //    );
+            //    CharStringList.Add(charStringParser.Parse());
+            //});
+        }
+
+        private CharStringData SelectCharStringData(List<CharStringData> data, int index)
+        {
+            if (data.Count == 1) return data[0];
+            throw new NotImplementedException("Multiple private dictionaries not implemented yet.");
         }
 
         private void ReadTopDictEntries(BigEndianReader reader, ushort size)
@@ -109,10 +141,34 @@ namespace FontParser.Tables.Cff.Type2
             BigEndianReader reader,
             double size,
             List<CffDictEntry> entries,
-            List<ushort> activeVariationRegionData)
+            List<ushort> activeVariationRegionData,
+            List<CharStringData> csData)
         {
+            long pdStart = reader.Position;
             List<byte> bytes = reader.ReadBytes(Convert.ToInt32(size)).ToList();
             DictEntryReader.Read(bytes, _privateDictOperatorEntries, entries, activeVariationRegionData);
+            List<List<byte>>? localSubroutines = ReadLocalSubroutines(entries, pdStart);
+            int? nominalWidthX = Convert.ToInt32(entries.FirstOrDefault(e => e.Name == "nominalWidthX")?.Operand ?? 0);
+            csData.Add(new CharStringData(localSubroutines, nominalWidthX));
+        }
+
+        private List<List<byte>>? ReadLocalSubroutines(List<CffDictEntry> privateDict, long offset)
+        {
+            var localSubroutines = new List<List<byte>>();
+            CffDictEntry? subrEntry = privateDict.FirstOrDefault(e => e.Name == "Subrs");
+            if (subrEntry is null) return null;
+            _reader.Seek(offset + Convert.ToInt64(subrEntry.Operand));
+            ushort localSubrCount = _reader.ReadUShort();
+            if (localSubrCount == 0) return null;
+            byte offSize = _reader.ReadByte();
+            List<uint> localSubrOffsets = _reader.ReadOffsets(offSize, localSubrCount + 1u).ToList();
+            var subrIndex = 0;
+            while (subrIndex < localSubrOffsets.Count - 1)
+            {
+                localSubroutines.Add(new List<byte>(_reader.ReadBytes(localSubrOffsets[subrIndex + 1] - localSubrOffsets[subrIndex])));
+                subrIndex++;
+            }
+            return localSubroutines;
         }
     }
 }
