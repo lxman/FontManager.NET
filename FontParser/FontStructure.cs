@@ -10,6 +10,7 @@ using FontParser.RenderFont.Interpreter;
 using FontParser.Tables;
 using FontParser.Tables.Bitmap.Ebdt;
 using FontParser.Tables.Bitmap.Eblc;
+using FontParser.Tables.Cff.Type1;
 using FontParser.Tables.Cff.Type2;
 using FontParser.Tables.Cmap;
 using FontParser.Tables.Cvar;
@@ -22,6 +23,7 @@ using FontParser.Tables.Optional.Hdmx;
 using FontParser.Tables.Svg;
 using FontParser.Tables.TtTables;
 using FontParser.Tables.TtTables.Glyf;
+using FontParser.Tables.WOFF2.GlyfReconstruct;
 
 namespace FontParser
 {
@@ -55,6 +57,41 @@ namespace FontParser
         public CharacterMapper GetCharacterMapper()
         {
             return new CharacterMapper(GetTable<CmapTable>());
+        }
+
+        public List<string> GetGlyph(ushort glyphId)
+        {
+            var toReturn = new List<string>();
+            GlyphTable? glyphTable = GetGlyphTable();
+            if (glyphTable is null)
+            {
+                if (!(Tables.Find(x => x is Type1Table) is Type1Table cffTable)) return toReturn;
+                toReturn.AddRange(cffTable.CharStringList[glyphId]);
+            }
+
+            if (glyphTable is null) return toReturn;
+            GlyphData? glyphData = glyphTable.GetGlyphData(glyphId);
+            if (glyphData is null) return toReturn;
+            switch (glyphData.GlyphSpec)
+            {
+                case CompositeGlyph compositeGlyph:
+                    break;
+                case SimpleGlyph simpleGlyph:
+                    toReturn.Add($"EndPtsOfContours: {string.Join(", ", simpleGlyph.EndPtsOfContours)}");
+                    simpleGlyph.Coordinates.ForEach(c =>
+                    {
+                        toReturn.Add($"Point: {c.Point} OnCurve: {c.OnCurve}");
+                    });
+                    break;
+                case Composite composite:
+                    break;
+                case Simple simple:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return toReturn;
         }
 
         public GlyphTable? GetGlyphTable()

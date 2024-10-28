@@ -19,7 +19,7 @@ namespace FontParserTester
             const string woff2Directory = @"C:\Users\jorda\source\Woff2Fonts";
             fonts.AddRange(Directory.GetFiles(woffDirectory).Where(f => f.ToLower().EndsWith(".woff")));
             fonts.AddRange(Directory.GetFiles(woff2Directory).Where(f => f.ToLower().EndsWith(".woff2")));
-            //fonts = fonts.Where(f => f.EndsWith("SourceSerif4Variable-Italic.otf")).ToList();
+            //fonts = fonts.Where(f => f.EndsWith("FDArrayTest257.otf")).ToList();
             Log.Debug($"Found {fonts.Count} fonts to load.");
             fonts.ForEach(f =>
             {
@@ -33,11 +33,11 @@ namespace FontParserTester
                     //    Console.WriteLine("Multiple fonts found in file.");
                     //}
                     CharacterMapper mapper = fontStructure[0].GetCharacterMapper();
-                    //for (ushort x = 0; x < 0x100; x++)
-                    //{
-                    //    ushort glyphId = mapper.GetGlyphId(x);
-                    //    Console.Write($"Codepoint: {x:X4} GlyphId: {glyphId:X4} | ");
-                    //}
+                    for (ushort x = 0; x < 0x100; x++)
+                    {
+                        ushort glyphId = mapper.GetGlyphId(x);
+                        List<string> commands = fontStructure[0].GetGlyph(glyphId);
+                    }
                     //Console.WriteLine();
                 }
                 catch (Exception e)

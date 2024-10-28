@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using FontParser.Extensions;
 using FontParser.Tables.Cff.Type1;
 
 namespace FontParser.Tables.Cff
@@ -35,7 +36,7 @@ namespace FontParser.Tables.Cff
                     ushort lookup = firstByte == 0x0C
                         ? Convert.ToUInt16(firstByte << 8 | bytes[index++])
                         : firstByte;
-                    CffDictEntry? entry = src[lookup];
+                    CffDictEntry? entry = src[lookup]?.Clone();
                     if (entry is null) continue;
                     if (entry.Name == "vsindex" || entry.Name == "blend")
                     {
@@ -107,6 +108,7 @@ namespace FontParser.Tables.Cff
                             break;
 
                         case OperandKind.SidSidNumber:
+                            entry.Operand = new List<double>(operands);
                             break;
 
                         case OperandKind.NumberNumber:
