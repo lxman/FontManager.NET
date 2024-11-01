@@ -134,7 +134,9 @@ public enum RoundState : byte
     DoubleGrid = 2,
     DownToGrid = 3,
     UpToGrid = 4,
-    Off = 5
+    Off = 5,
+    Super = 6,
+    Super45 = 7
 }
 
 public enum GlyphClassType : byte
@@ -275,6 +277,13 @@ public enum TouchState : ushort
     X = 1,
     Y = 2,
     Both = X | Y
+}
+
+public enum DistanceType : int
+{
+    Grey = 0,
+    Black = 1,
+    White = 2
 }
 
 #region Encoding

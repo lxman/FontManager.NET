@@ -23,7 +23,6 @@ using FontParser.Tables.Optional.Hdmx;
 using FontParser.Tables.Svg;
 using FontParser.Tables.TtTables;
 using FontParser.Tables.TtTables.Glyf;
-using FontParser.Tables.WOFF2.GlyfReconstruct;
 
 namespace FontParser
 {
@@ -47,7 +46,7 @@ namespace FontParser
         private readonly string _currentFile;
         private readonly ConcurrentBag<IFontTable> _fontTables = new ConcurrentBag<IFontTable>();
         private readonly ConcurrentBag<SucceededStatusRecord> _succeeded = new ConcurrentBag<SucceededStatusRecord>();
-        private const bool InterpreterTest = false;
+        private const bool InterpreterTest = true;
 
         public FontStructure(string path)
         {
@@ -82,10 +81,6 @@ namespace FontParser
                     {
                         toReturn.Add($"Point: {c.Point} OnCurve: {c.OnCurve}");
                     });
-                    break;
-                case Composite composite:
-                    break;
-                case Simple simple:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -4,9 +4,9 @@ namespace FontParser.RenderFont.Interpreter
 {
     public class InstructionStream
     {
-        private readonly byte[] _pgm;
+        public int Position { get; private set; }
 
-        private int _position;
+        private readonly byte[] _pgm;
 
         public InstructionStream(byte[] pgm)
         {
@@ -15,23 +15,23 @@ namespace FontParser.RenderFont.Interpreter
 
         public byte ReadByte()
         {
-            return _pgm[_position++];
+            return _pgm[Position++];
         }
 
-        public bool EndOfProgram => _position >= _pgm.Length;
+        public bool EndOfProgram => Position >= _pgm.Length;
 
         public byte[] ReadBytes(int count)
         {
             var bytes = new byte[count];
-            Array.Copy(_pgm, _position, bytes, 0, count);
-            _position += count;
+            Array.Copy(_pgm, Position, bytes, 0, count);
+            Position += count;
             return bytes;
         }
 
         public short ReadWord()
         {
-            var value = (short)(_pgm[_position] << 8 | _pgm[_position + 1]);
-            _position += 2;
+            var value = (short)(_pgm[Position] << 8 | _pgm[Position + 1]);
+            Position += 2;
             return value;
         }
 
@@ -47,7 +47,7 @@ namespace FontParser.RenderFont.Interpreter
 
         public void Seek(int position)
         {
-            _position = position;
+            Position = position;
         }
     }
 }

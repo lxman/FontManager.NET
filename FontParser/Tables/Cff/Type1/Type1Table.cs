@@ -315,34 +315,5 @@ namespace FontParser.Tables.Cff.Type1
                 subrIndex++;
             }
         }
-
-        private class SidSidSid
-        {
-            public string Sid1 { get; set; }
-
-            public string Sid2 { get; set; }
-
-            public string Sid3 { get; set; }
-        }
-
-        private class CidFontDictEntry
-        {
-            public List<CffDictEntry> Entries { get; } = new List<CffDictEntry>();
-        }
-
-        private class NameDictEntry
-        {
-            public string Name { get; }
-
-            public List<CffDictEntry> Private { get; }
-
-            public List<List<byte>> LocalSubroutines { get; } = new List<List<byte>>();
-
-            public NameDictEntry(string name, List<CffDictEntry> privateDict)
-            {
-                Name = name;
-                Private = privateDict;
-            }
-        }
     }
 }

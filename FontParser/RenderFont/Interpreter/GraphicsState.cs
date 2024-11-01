@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Numerics;
+using FontParser.Extensions;
 
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
 
@@ -47,7 +49,7 @@ namespace FontParser.RenderFont.Interpreter
             set
             {
                 _freedomVector = value;
-                _vectorsDotP = Vector2.Dot(FreedomVector, ProjectionVector);
+                VectorsDotProduct = Vector2.Dot(FreedomVector, ProjectionVector);
             }
         }
 
@@ -59,13 +61,13 @@ namespace FontParser.RenderFont.Interpreter
             set
             {
                 _projectionVector = value;
-                _vectorsDotP = Vector2.Dot(FreedomVector, ProjectionVector);
+                VectorsDotProduct = Vector2.Dot(FreedomVector, ProjectionVector);
             }
         }
 
         private Vector2 _projectionVector = Vector2.UnitX;
 
-        public float VectorsDotProduct => _vectorsDotP;
+        public float VectorsDotProduct { get; private set; } = 1;
 
         public Vector2 DualProjectionVectors { get; set; }
 
@@ -98,8 +100,84 @@ namespace FontParser.RenderFont.Interpreter
 
         public float SingleWidthValue { get; set; } = 0;
 
+        public int Ppem { get; set; }
+
+        public float Project(InterpreterPointF p)
+        {
+            var v = p.ToVector2();
+            return Vector2.Dot(v, _projectionVector);
+        }
+
+        public float Round(float value)
+        {
+            switch (RoundState)
+            {
+                case RoundState.Grid:
+                    return value >= 0 ? (float)Math.Round(value) : -(float)Math.Round(-value);
+                case RoundState.HalfGrid:
+                    return value >= 0 ? (float)Math.Floor(value) + 0.5f : -((float)Math.Floor(-value) + 0.5f);
+                case RoundState.DoubleGrid:
+                    return value >= 0 ? (float)(Math.Round(value * 2, MidpointRounding.AwayFromZero) / 2) : -(float)(Math.Round(-value * 2, MidpointRounding.AwayFromZero) / 2);
+                case RoundState.DownToGrid:
+                    return value >= 0 ? (float)Math.Floor(value) : -(float)Math.Floor(-value);
+                case RoundState.UpToGrid:
+                    return value >= 0 ? (float)Math.Ceiling(value) : -(float)Math.Ceiling(-value);
+                case RoundState.Off:
+                    return value;
+                case RoundState.Super:
+                case RoundState.Super45:
+                    float result;
+                    if (value >= 0)
+                    {
+                        result = value - _roundPhase + _roundThreshold;
+                        result = (float)Math.Truncate(result / _roundPeriod) * _roundPeriod;
+                        result += _roundPhase;
+                        if (result < 0)
+                            result = _roundPhase;
+                    }
+                    else
+                    {
+                        result = -value - _roundPhase + _roundThreshold;
+                        result = -(float)Math.Truncate(result / _roundPeriod) * _roundPeriod;
+                        result -= _roundPhase;
+                        if (result > 0)
+                            result = -_roundPhase;
+                    }
+                    return result;
+                default:
+                    return value;
+            }
+        }
+
+        public void SetSuperRound(float period, int mode)
+        {
+            _roundPeriod = (mode & 0xC0) switch
+            {
+                0 => period / 2,
+                0x40 => period,
+                0x80 => period * 2,
+                _ => throw new ArgumentException("Invalid rounding period multiplier.")
+            };
+
+            _roundPhase = (mode & 0x30) switch
+            {
+                0 => 0,
+                0x10 => _roundPeriod / 4,
+                0x20 => _roundPeriod / 2,
+                0x30 => _roundPeriod * 3 / 4,
+                _ => _roundPhase
+            };
+
+            if ((mode & 0xF) == 0)
+                _roundThreshold = _roundPeriod - 1;
+            else
+                _roundThreshold = ((mode & 0xF) - 4) * _roundPeriod / 8;
+        }
+
         public uint[] ReferencePoints { get; set; } = new uint[3];
 
-        private float _vectorsDotP;
+        private float _roundPhase;
+        private float _roundThreshold;
+        private float _roundPeriod;
     }
 }

@@ -19,7 +19,7 @@ namespace FontParserTester
             const string woff2Directory = @"C:\Users\jorda\source\Woff2Fonts";
             fonts.AddRange(Directory.GetFiles(woffDirectory).Where(f => f.ToLower().EndsWith(".woff")));
             fonts.AddRange(Directory.GetFiles(woff2Directory).Where(f => f.ToLower().EndsWith(".woff2")));
-            //fonts = fonts.Where(f => f.EndsWith("FDArrayTest257.otf")).ToList();
+            fonts = fonts.Where(f => f.EndsWith("911Fonts.com_TahomaBold__-_911fonts.com_fonts_cebp.ttf")).ToList();
             Log.Debug($"Found {fonts.Count} fonts to load.");
             fonts.ForEach(f =>
             {

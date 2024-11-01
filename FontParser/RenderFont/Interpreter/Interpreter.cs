@@ -90,10 +90,12 @@ namespace FontParser.RenderFont.Interpreter
 
         public void Execute()
         {
+            Console.WriteLine("Execute");
             while (!_reader.EndOfProgram)
             {
                 count++;
                 byte instruction = _reader.ReadByte();
+                Console.WriteLine($"\tCount: {count}, Instruction: {instruction}, Position: {_reader.Position}");
                 switch (instruction)
                 {
                     // SVTCA[0]
@@ -379,13 +381,13 @@ namespace FontParser.RenderFont.Interpreter
                     case 0x2C:
                         var function = new List<byte>();
                         int funcIndex = _stack.Pop();
-                        var currInstruction = 0;
+                        byte currInstruction = 0;
                         while (currInstruction != 0x2D)
                         {
                             currInstruction = _reader.ReadByte();
                             if (currInstruction != 0x2D)
                             {
-                                function.Add(_reader.ReadByte());
+                                function.Add(currInstruction);
                             }
                         }
                         Functions[funcIndex] = function.ToArray();
@@ -393,9 +395,20 @@ namespace FontParser.RenderFont.Interpreter
                     // MDAP
                     case 0x2E:
                     case 0x2F:
-                        bool round = !Convert.ToBoolean(instruction - 0x2E);
-                        throw new NotImplementedException();
-                        // TODO: Implement MDAP[1]
+                        // As yet UNTESTED!!!!!!!!!!
+                        var round = Convert.ToBoolean(instruction - 0x2E);
+                        int pNumber = _stack.Pop();
+                        Zone zone = GraphicsState.ZonePointers[0] ? _twilightZone : _glyphZone;
+                        InterpreterPointF p = zone.Current[pNumber];
+                        var distance = 0.0f;
+                        if (round)
+                        {
+                            distance = GraphicsState.Project(p);
+                            distance = GraphicsState.Round(distance) - distance;
+                        }
+                        zone.MovePoint2(GraphicsState, pNumber, distance);
+                        GraphicsState.ReferencePoints[0] = Convert.ToUInt32(pNumber);
+                        GraphicsState.ReferencePoints[1] = Convert.ToUInt32(pNumber);
                         break;
                     // IUP[0]
                     case 0x30:
@@ -618,8 +631,32 @@ namespace FontParser.RenderFont.Interpreter
                         _stack.Push(~_stack.Pop());
                         break;
                     // DELTAP1
+                    // DELTAP2
+                    // DELTAP3
                     case 0x5D:
-                        _stack.Push(_stack.Pop());
+                    case 0x71:
+                    case 0x72:
+                        // As yet UNTESTED!!!!!!!!!!
+                        int nPoints = _stack.Pop();
+                        for (var i = 0; i < nPoints; i++)
+                        {
+                            int pn = _stack.Pop();
+                            int arg = _stack.Pop();
+                            int relPpem = (arg & 0xF0) >> 4;
+                            int magnitude = arg & 0x0F;
+                            int numSteps = magnitude > 7 ? magnitude - 7 : magnitude - 8;
+                            relPpem += GraphicsState.DeltaBase;
+                            if (instruction != 0x5D)
+                            {
+                                relPpem += (instruction - 0x71 + 1) * 16;
+                            }
+
+                            if (relPpem != GraphicsState.Ppem) continue;
+                            if (numSteps >= 0) numSteps++;
+                            numSteps *= 1 << (6 - GraphicsState.DeltaShift);
+                            Zone z = GraphicsState.ZonePointers[0] ? _twilightZone : _glyphZone;
+                            z.MovePoint2(GraphicsState, pn, numSteps.ToFixed());
+                        }
                         break;
                     // SDB
                     case 0x5E:
@@ -827,165 +864,40 @@ namespace FontParser.RenderFont.Interpreter
                         throw new NotImplementedException();
                         // TODO: Implement INSTCTRL
                         break;
-                    // MDRP[00000]
+                    // MDRP
                     case 0xC0:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[00000]
-                        break;
-                    // MDRP[00001]
                     case 0xC1:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[00001]
-                        break;
-                    // MDRP[00010]
                     case 0xC2:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[00010]
-                        break;
-                    // MDRP[00011]
                     case 0xC3:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[00011]
-                        break;
-                    // MDRP[00100]
                     case 0xC4:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[00100]
-                        break;
-                    // MDRP[00101]
                     case 0xC5:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[00101]
-                        break;
-                    // MDRP[00110]
                     case 0xC6:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[00110]
-                        break;
-                    // MDRP[00111]
                     case 0xC7:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[00111]
-                        break;
-                    // MDRP[01000]
                     case 0xC8:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[01000]
-                        break;
-                    // MDRP[01001]
                     case 0xC9:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[01001]
-                        break;
-                    // MDRP[01010]
                     case 0xCA:
-                        throw new NotImplementedException();
-                        //  TODO: Implement MDRP[01010]
-                        break;
-                    // MDRP[01011]
                     case 0xCB:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[01011]
-                        break;
-                    // MDRP[01100]
                     case 0xCC:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[01100]
-                        break;
-                    // MDRP[01101]
                     case 0xCD:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[01101]
-                        break;
-                    // MDRP[01110]
                     case 0xCE:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[01110]
-                        break;
-                    // MDRP[01111]
                     case 0xCF:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[01111]
-                        break;
-                    // MDRP[10000]
                     case 0xD0:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[10000]
-                        break;
-                    // MDRP[10001]
                     case 0xD1:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[10001]
-                        break;
-                    // MDRP[10010]
                     case 0xD2:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[10010]
-                        break;
-                    // MDRP[10011]
                     case 0xD3:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[10011]
-                        break;
-                    // MDRP[10100]
                     case 0xD4:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[10100]
-                        break;
-                    // MDRP[10101]
                     case 0xD5:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[10101]
-                        break;
-                    // MDRP[10110]
                     case 0xD6:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[10110]
-                        break;
-                    // MDRP[10111]
                     case 0xD7:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[10111]
-                        break;
-                    // MDRP[11000]
                     case 0xD8:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[11000]
-                        break;
-                    // MDRP[11001]
                     case 0xD9:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[11001]
-                        break;
-                    // MDRP[11010]
                     case 0xDA:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[11010]
-                        break;
-                    // MDRP[11011]
                     case 0xDB:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[11011]
-                        break;
-                    // MDRP[11100]
                     case 0xDC:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[11100]
-                        break;
-                    // MDRP[11101]
                     case 0xDD:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[11101]
-                        break;
-                    // MDRP[11110]
                     case 0xDE:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[11110]
-                        break;
-                    // MDRP[11111]
                     case 0xDF:
-                        throw new NotImplementedException();
-                        // TODO: Implement MDRP[11111]
+                        MoveDirectRelativePoint(instruction - 0xC0);
                         break;
                     // MIRP[00000]
                     case 0xE0:
@@ -1148,6 +1060,48 @@ namespace FontParser.RenderFont.Interpreter
                         // TODO: Implement MIRP[11111]
                         break;
                 }
+            }
+        }
+
+        private void MoveDirectRelativePoint(int flags)
+        {
+            int pointNumber = _stack.Pop();
+            bool setRp0ToP = (flags & 0x10) == 0x10;
+            bool keepDistance = (flags & 0x08) == 0x08;
+            bool round = (flags & 0x04) == 0x04;
+            var dType = (DistanceType)(flags & 0x03);
+            Vector2 p1 = GraphicsState.ZonePointers[0] ? _twilightZone.Current[GraphicsState.ReferencePoints[0]].ToVector2() : _glyphZone.Current[GraphicsState.ReferencePoints[0]].ToVector2();
+            Vector2 p2 = GraphicsState.ZonePointers[1] ? _twilightZone.Current[pointNumber].ToVector2() : _glyphZone.Current[pointNumber].ToVector2();
+            float origDist = Vector2.Dot(p2 - p1, GraphicsState.DualProjectionVectors);
+
+            if (Math.Abs(origDist - GraphicsState.SingleWidthValue) < GraphicsState.SingleWidthCutIn)
+            {
+                origDist = origDist >= 0 ? GraphicsState.SingleWidthValue : -GraphicsState.SingleWidthValue;
+            }
+
+            float distance = origDist;
+            distance = round ? GraphicsState.Round(distance) : distance;
+            if (keepDistance)
+            {
+                distance = origDist >= 0
+                    ? Math.Max(distance, GraphicsState.MinimumDistance)
+                    : Math.Min(distance, -GraphicsState.MinimumDistance);
+            }
+
+            Vector2 zP1 = GraphicsState.ZonePointers[1]
+                ? _twilightZone.Current[pointNumber].ToVector2()
+                : _glyphZone.Current[pointNumber].ToVector2();
+            Vector2 zP2 = GraphicsState.ZonePointers[0]
+                ? _twilightZone.Current[GraphicsState.ReferencePoints[0]].ToVector2()
+                : _glyphZone.Current[GraphicsState.ReferencePoints[0]].ToVector2();
+            origDist = Vector2.Dot(zP1 - zP2, GraphicsState.ProjectionVector);
+            Zone zone = GraphicsState.ZonePointers[1] ? _twilightZone : _glyphZone;
+            zone.MovePoint2(GraphicsState, pointNumber, distance - origDist);
+            GraphicsState.ReferencePoints[1] = GraphicsState.ReferencePoints[0];
+            GraphicsState.ReferencePoints[2] = Convert.ToUInt32(pointNumber);
+            if (setRp0ToP)
+            {
+                GraphicsState.ReferencePoints[0] = Convert.ToUInt32(pointNumber);
             }
         }
 
