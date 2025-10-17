@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using FontParser.Extensions;
@@ -26,34 +27,50 @@ namespace FontParser.RenderFont.Interpreter
         {
             IsTwilight = isTwilight;
             Current = original.Select(c => new InterpreterPointF(c)).ToArray();
+            if (!isTwilight)
+            {
+                Original = original.Select(c => new InterpreterPointF(c)).ToArray();
+            }
         }
 
         public Zone(bool isTwilight, PointF[] original)
         {
             IsTwilight = isTwilight;
-            Original = original.Select(o => new InterpreterPointF(o)).ToArray();
             Current = original.Select(o => new InterpreterPointF(o)).ToArray();
+            if (!isTwilight)
+            {
+                Original = original.Select(o => new InterpreterPointF(o)).ToArray();
+            }
         }
 
         public Zone(bool isTwilight, InterpreterPointF[] original)
         {
             IsTwilight = isTwilight;
-            Original = original;
             Current = original;
+            if (!isTwilight)
+            {
+                Original = original;
+            }
         }
 
         public void Initialize(bool isTwilight, PointF[] original)
         {
             IsTwilight = isTwilight;
-            Original = original.Select(o => new InterpreterPointF(o)).ToArray();
             Current = original.Select(o => new InterpreterPointF(o)).ToArray();
+            if (!isTwilight)
+            {
+                Original = original.Select(o => new InterpreterPointF(o)).ToArray();
+            }
         }
 
         public void Initialize(bool isTwilight, InterpreterPointF[] original)
         {
             IsTwilight = isTwilight;
-            Original = original;
             Current = original;
+            if (!isTwilight)
+            {
+                Original = original;
+            }
         }
 
         public void MovePoint(int index, PointF newPoint)
@@ -63,6 +80,10 @@ namespace FontParser.RenderFont.Interpreter
 
         public void MovePoint2(GraphicsState gs, int index, float distance)
         {
+            if (gs.VectorsDotProduct == 0)
+            {
+                throw new InvalidOperationException("VectorsDotProduct is 0");
+            }
             Vector2 point = Current[index].ToVector2() + distance * gs.FreedomVector / gs.VectorsDotProduct;
             TouchState touchState = gs.FreedomTouchState;
             Current[index] = new InterpreterPointF(point.ToPointF(), touchState);
@@ -70,9 +91,7 @@ namespace FontParser.RenderFont.Interpreter
 
         public void UnTouchPoint(GraphicsState gs, int index)
         {
-            TouchState fvTs = ~gs.FreedomTouchState;
-            TouchState ptTs = Current[index].TouchState;
-            Current[index].SetTouchState(ptTs &= fvTs);
+            Current[index].SetTouchState(TouchState.None);
         }
     }
 }

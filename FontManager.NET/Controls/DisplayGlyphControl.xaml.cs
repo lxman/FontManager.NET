@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
+using FontManager.NET.Extensions;
 using FontParser.Tables.TtTables.Glyf;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
@@ -82,10 +83,10 @@ namespace FontManager.NET.Controls
                     endPoints.ForEach(ep =>
                     {
                         var path = new SKPath();
-                        path.MoveTo(points[pointIndex++].ToSKPoint());
+                        path.MoveTo(points[pointIndex++].ToSkPoint());
                         while (pointIndex <= ep)
                         {
-                            path.LineTo(points[pointIndex++].ToSKPoint());
+                            path.LineTo(points[pointIndex++].ToSkPoint());
                         }
                         path.Close();
                         path.Transform(_scaleMatrix);
