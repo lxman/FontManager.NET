@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
@@ -28,7 +28,11 @@ namespace FontParser.RenderFont.Interpreter
         private readonly Zone _twilightZone;
         private readonly Zone _glyphZone = new Zone();
         private readonly SimpleGlyph _glyphData;
-        private IReadOnlyList<ushort> _contours = Array.Empty<ushort>();
+        private readonly IReadOnlyList<ushort> _contours = Array.Empty<ushort>();
+        
+        // Control flow fields
+        private int _callStackSize = 0;
+        private const int MaxCallStack = 128;
 
         public Interpreter(
             GlyphTable glyphTable,
@@ -89,14 +93,28 @@ namespace FontParser.RenderFont.Interpreter
 
         private int count;
 
+        /// <summary>
+        /// Public entry point for execution. Executes the main instruction stream.
+        /// </summary>
         public void Execute()
         {
             Console.WriteLine("Execute");
-            while (!_reader.EndOfProgram)
+            Execute(_reader);
+        }
+
+        /// <summary>
+        /// Recursive execution method. Executes instructions from the given stream.
+        /// This method is called recursively for CALL and LOOPCALL instructions.
+        /// </summary>
+        /// <param name="reader">The instruction stream to execute</param>
+        private void Execute(InstructionStream reader)
+        {
+            while (!reader.EndOfProgram)
             {
                 count++;
-                byte instruction = _reader.ReadByte();
-                Console.WriteLine($"\tCount: {count}, Instruction: {instruction}, Position: {_reader.Position}");
+                byte instruction = reader.ReadByte();
+                Console.WriteLine($"\tCount: {count}, Instruction: {instruction:X2}, Position: {reader.Position}");
+                
                 switch (instruction)
                 {
                     // SVTCA[0]
@@ -252,14 +270,33 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // ELSE
                     case 0x1B:
-                        throw new NotImplementedException();
-                        // TODO: Implement ELSE
-                        break;
+                    {
+                        // We hit the true block of an IF statement, so skip to the matching EIF
+                        int indent = 1;
+                        while (indent > 0)
+                        {
+                            byte nextOpcode = SkipNextInstruction(reader);
+                            switch (nextOpcode)
+                            {
+                                case 0x58:  // IF
+                                    indent++;
+                                    break;
+                                case 0x59:  // EIF
+                                    indent--;
+                                    break;
+                            }
+                        }
+                    }
+                    break;
+                    
                     // JMPR
                     case 0x1C:
-                        throw new NotImplementedException();
-                        // TODO: Implement JMPR
-                        break;
+                    {
+                        int offset = _stack.Pop();
+                        Jump(reader, offset - 1);
+                    }
+                    break;
+                    
                     // SCVTCI
                     case 0x1D:
                         GraphicsState.ControlValueCutIn = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
@@ -337,17 +374,83 @@ namespace FontParser.RenderFont.Interpreter
                         pr1 = _stack.Pop();
                         GetZone(GraphicsState.ZonePointers[0]).UnTouchPoint(GraphicsState, pr1);
                         break;
-                    // LOOPCALL[]
+                    // LOOPCALL
                     case 0x2A:
-                        throw new NotImplementedException();
-                        // TODO: Implement LOOPCALL[]
-                        break;
-                    // CALL[]
-                    case 0x2B:
+                    {
                         int funcId = _stack.Pop();
-                        throw new NotImplementedException();
-                        // TODO: Implement CALL[]
-                        break;
+                        int loopCount = _stack.Pop();
+                        
+                        // Check for stack overflow
+                        _callStackSize++;
+                        if (_callStackSize > MaxCallStack)
+                        {
+                            throw new InvalidOperationException("Stack overflow; infinite recursion?");
+                        }
+                        
+                        try
+                        {
+                            // Get the function bytecode
+                            if (!Functions.TryGetValue(funcId, out byte[] functionCode))
+                            {
+                                throw new InvalidOperationException($"Function {funcId} is not defined");
+                            }
+                            
+                            if (functionCode == null || functionCode.Length == 0)
+                            {
+                                throw new InvalidOperationException($"Function {funcId} has no bytecode");
+                            }
+                            
+                            // Call the function 'loopCount' times
+                            for (int i = 0; i < loopCount; i++)
+                            {
+                                var functionStream = new InstructionStream(functionCode);
+                                Execute(functionStream);  // RECURSIVE CALL
+                            }
+                        }
+                        finally
+                        {
+                            _callStackSize--;
+                        }
+                    }
+                    break;
+                    
+                    // CALL
+                    case 0x2B:
+                    {
+                        int funcId = _stack.Pop();
+                        
+                        // Check for stack overflow
+                        _callStackSize++;
+                        if (_callStackSize > MaxCallStack)
+                        {
+                            throw new InvalidOperationException("Stack overflow; infinite recursion?");
+                        }
+                        
+                        try
+                        {
+                            // Get the function bytecode
+                            if (!Functions.TryGetValue(funcId, out byte[] functionCode))
+                            {
+                                throw new InvalidOperationException($"Function {funcId} is not defined");
+                            }
+                            
+                            if (functionCode == null || functionCode.Length == 0)
+                            {
+                                throw new InvalidOperationException($"Function {funcId} has no bytecode");
+                            }
+                            
+                            // Execute the function with a new instruction stream
+                            // The stack is automatically shared because we're in the same Interpreter instance
+                            var functionStream = new InstructionStream(functionCode);
+                            Execute(functionStream);  // RECURSIVE CALL
+                        }
+                        finally
+                        {
+                            _callStackSize--;
+                        }
+                    }
+                    break;
+                    
                     // FDEF
                     case 0x2C:
                         var function = new List<byte>();
@@ -355,7 +458,7 @@ namespace FontParser.RenderFont.Interpreter
                         byte currInstruction = 0;
                         while (currInstruction != 0x2D)
                         {
-                            currInstruction = _reader.ReadByte();
+                            currInstruction = reader.ReadByte();
                             if (currInstruction != 0x2D)
                             {
                                 function.Add(currInstruction);
@@ -381,18 +484,95 @@ namespace FontParser.RenderFont.Interpreter
                         GraphicsState.ReferencePoints[0] = Convert.ToUInt32(pNumber);
                         GraphicsState.ReferencePoints[1] = Convert.ToUInt32(pNumber);
                         break;
-                    // IUP
+                    // IUP[0] and IUP[1] - Interpolate Untouched Points
                     case 0x30:
                     case 0x31:
+                    {
                         if (_contours.Count == 0)
                         {
                             break;
                         }
-                        bool horizontal = instruction == 0x31;
 
-                        throw new NotImplementedException();
-                        // TODO: Implement IUP
+                        // IUP[0] = Y direction (vertical), IUP[1] = X direction (horizontal)
+                        bool isXDirection = instruction == 0x31;
+                        TouchState touchMask = isXDirection ? TouchState.X : TouchState.Y;
+
+                        var iupPointIndex = 0;
+                        foreach (ushort endPoint in _contours)
+                        {
+                            int firstPoint = iupPointIndex;
+                            int firstTouched = -1;
+                            int lastTouched = -1;
+
+                            // Find all touched points in this contour
+                            for (; iupPointIndex <= endPoint; iupPointIndex++)
+                            {
+                                if ((_glyphZone.Current[iupPointIndex].TouchState & touchMask) == 0) continue;
+                                if (firstTouched < 0)
+                                {
+                                    firstTouched = iupPointIndex;
+                                    lastTouched = iupPointIndex;
+                                    continue;
+                                }
+
+                                // Interpolate untouched points between lastTouched and current point
+                                InterpolateUntouchedPoints(
+                                    isXDirection,
+                                    lastTouched + 1,
+                                    iupPointIndex - 1,
+                                    lastTouched,
+                                    iupPointIndex);
+
+                                lastTouched = iupPointIndex;
+                            }
+
+                            // Handle different cases after scanning the contour
+                            if (firstTouched < 0) continue;
+                            // Case 1: Only one touched point in the contour
+                            // Shift all other points by the same delta
+                            if (lastTouched == firstTouched)
+                            {
+                                float delta = isXDirection
+                                    ? _glyphZone.Current[lastTouched].PointF.X - _glyphZone.Original[lastTouched].PointF.X
+                                    : _glyphZone.Current[lastTouched].PointF.Y - _glyphZone.Original[lastTouched].PointF.Y;
+
+                                if (!(Math.Abs(delta) > float.Epsilon)) continue;
+                                for (int i = firstPoint; i < lastTouched; i++)
+                                {
+                                    ShiftPoint(i, delta, isXDirection);
+                                }
+
+                                for (int i = lastTouched + 1; i <= endPoint; i++)
+                                {
+                                    ShiftPoint(i, delta, isXDirection);
+                                }
+                            }
+                            // Case 2: Multiple touched points
+                            // Interpolate from last to first (wrap around), and handle any gap at the start
+                            else
+                            {
+                                // Interpolate from lastTouched to end of contour, wrapping to firstTouched
+                                InterpolateUntouchedPoints(
+                                    isXDirection,
+                                    lastTouched + 1,
+                                    endPoint,
+                                    lastTouched,
+                                    firstTouched);
+
+                                // Interpolate from start of contour to firstTouched
+                                if (firstTouched > firstPoint)
+                                {
+                                    InterpolateUntouchedPoints(
+                                        isXDirection,
+                                        firstPoint,
+                                        firstTouched - 1,
+                                        lastTouched,
+                                        firstTouched);
+                                }
+                            }
+                        }
                         break;
+                    }
                     // SHP[0]
                     case 0x32:
                         throw new NotImplementedException();
@@ -505,26 +685,74 @@ namespace FontParser.RenderFont.Interpreter
                     case 0x45:
                         _stack.Push(Convert.ToInt32(_cvtTable.GetCvtValues(_stack.Pop(), 1)![0].FromF26Dot6()));
                         break;
-                    // GC[0]
+                    // GC[0] - Get Coordinate (current position projected onto projection vector)
                     case 0x46:
-                        GraphicsState.ControlValueCutIn = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
+                    {
+                        int gcPointNum = _stack.Pop();
+                        Zone gcZone = GetZone(GraphicsState.ZonePointers[2]);
+                        InterpreterPointF gcPoint = gcZone.Current[gcPointNum];
+                        float gcCoord = GraphicsState.Project(gcPoint);
+                        _stack.Push((int)(gcCoord * 64)); // Convert to F26.6
                         break;
-                    // GC[1]
+                    }
+                    // GC[1] - Get Coordinate (original position projected onto dual projection vector)
                     case 0x47:
-                        GraphicsState.SingleWidthValue = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
+                    {
+                        int gcPointNum = _stack.Pop();
+                        Zone gcZone = GetZone(GraphicsState.ZonePointers[2]);
+                        InterpreterPointF gcOriginal = gcZone.Original[gcPointNum];
+                        // Project onto dual projection vector (use original outline positions)
+                        float gcCoord = Vector2.Dot(gcOriginal.ToVector2(), GraphicsState.DualProjectionVectors);
+                        _stack.Push((int)(gcCoord * 64)); // Convert to F26.6
                         break;
-                    // SCFS
+                    }
+                    // SCFS - Set Coordinate From Stack
                     case 0x48:
-                        GraphicsState.SingleWidthCutIn = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
+                    {
+                        float scfsValue = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
+                        int scfsPointNum = _stack.Pop();
+                        Zone scfsZone = GetZone(GraphicsState.ZonePointers[2]);
+                        InterpreterPointF scfsPoint = scfsZone.Current[scfsPointNum];
+                        float scfsCurrentCoord = GraphicsState.Project(scfsPoint);
+                        scfsZone.MovePoint2(GraphicsState, scfsPointNum, scfsValue - scfsCurrentCoord);
+                        
+                        // Moving twilight points moves their "original" value also
+                        if (scfsZone.IsTwilight)
+                        {
+                            scfsZone.Original[scfsPointNum] = scfsZone.Current[scfsPointNum];
+                        }
                         break;
-                    // MD[0]
+                    }
+                    // MD[0] - Measure Distance (original outline)
                     case 0x49:
-                        GraphicsState.MinimumDistance = Convert.ToUInt32(_stack.Pop()).ToF26Dot6();
+                    {
+                        int mdPoint2Num = _stack.Pop();
+                        int mdPoint1Num = _stack.Pop();
+                        Zone mdZone0 = GetZone(GraphicsState.ZonePointers[0]);
+                        Zone mdZone1 = GetZone(GraphicsState.ZonePointers[1]);
+                        InterpreterPointF mdP1 = mdZone1.Original[mdPoint2Num];
+                        InterpreterPointF mdP2 = mdZone0.Original[mdPoint1Num];
+                        // Measure distance using dual projection vector
+                        Vector2 mdDiff = mdP1.ToVector2() - mdP2.ToVector2();
+                        float mdDistance = Vector2.Dot(mdDiff, GraphicsState.DualProjectionVectors);
+                        _stack.Push((int)(mdDistance * 64)); // Convert to F26.6
                         break;
-                    // MD[1]
+                    }
+                    // MD[1] - Measure Distance (current/grid-fitted position)
                     case 0x4A:
-                        GraphicsState.DeltaBase = _stack.Pop();
+                    {
+                        int mdPoint2Num = _stack.Pop();
+                        int mdPoint1Num = _stack.Pop();
+                        Zone mdZone0 = GetZone(GraphicsState.ZonePointers[0]);
+                        Zone mdZone1 = GetZone(GraphicsState.ZonePointers[1]);
+                        InterpreterPointF mdP1 = mdZone1.Current[mdPoint2Num];
+                        InterpreterPointF mdP2 = mdZone0.Current[mdPoint1Num];
+                        // Measure distance using projection vector
+                        Vector2 mdDiff = mdP1.ToVector2() - mdP2.ToVector2();
+                        float mdDistance = Vector2.Dot(mdDiff, GraphicsState.ProjectionVector);
+                        _stack.Push((int)(mdDistance * 64)); // Convert to F26.6
                         break;
+                    }
                     // MPPEM
                     case 0x4B:
                         throw new NotImplementedException();
@@ -583,14 +811,46 @@ namespace FontParser.RenderFont.Interpreter
                         break;
                     // IF
                     case 0x58:
-                        throw new NotImplementedException();
-                        // TODO: Implement IF
-                        break;
+                    {
+                        // Pop the condition from the stack
+                        bool condition = _stack.Pop() != 0;
+                        
+                        if (!condition)
+                        {
+                            // Condition is false; jump to the next ELSE block or EIF marker
+                            int indent = 1;
+                            while (indent > 0)
+                            {
+                                byte nextOpcode = SkipNextInstruction(reader);
+                                switch (nextOpcode)
+                                {
+                                    case 0x58:  // IF - nested IF statement
+                                        indent++;
+                                        break;
+                                    case 0x59:  // EIF - end of IF statement
+                                        indent--;
+                                        break;
+                                    case 0x1B:  // ELSE
+                                        if (indent == 1)
+                                        {
+                                            // Found the matching ELSE for our IF
+                                            indent = 0;
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                        // If condition is true, we don't need to do anything - just continue executing
+                    }
+                    break;
+                    
                     // EIF
                     case 0x59:
-                        throw new NotImplementedException();
-                        // TODO: Implement EIF
-                        break;
+                    {
+                        // Nothing to do - this is just a marker
+                    }
+                    break;
+                    
                     // AND
                     case 0x5A:
                         _stack.Push(_stack.Pop() & _stack.Pop());
@@ -703,16 +963,32 @@ namespace FontParser.RenderFont.Interpreter
                         throw new NotImplementedException();
                         // TODO: Implement S45ROUND
                         break;
-                    // JROT
+                    // JROT - Jump Relative On True
                     case 0x78:
-                        throw new NotImplementedException();
-                        // TODO: Implement JROT
-                        break;
-                    // JROF
+                    {
+                        bool condition = _stack.Pop() != 0;
+                        int offset = _stack.Pop();
+                        
+                        if (condition)
+                        {
+                            Jump(reader, offset - 1);
+                        }
+                    }
+                    break;
+                    
+                    // JROF - Jump Relative On False
                     case 0x79:
-                        throw new NotImplementedException();
-                        // TODO: Implement JROF
-                        break;
+                    {
+                        bool condition = _stack.Pop() != 0;
+                        int offset = _stack.Pop();
+                        
+                        if (!condition)
+                        {
+                            Jump(reader, offset - 1);
+                        }
+                    }
+                    break;
+                    
                     // ROFF
                     case 0x7A:
                         throw new NotImplementedException();
@@ -885,6 +1161,74 @@ namespace FontParser.RenderFont.Interpreter
                 }
             }
         }
+        
+        /// <summary>
+        /// Skips forward in the instruction stream and returns the opcode found.
+        /// Used for control flow to find matching IF/ELSE/EIF markers.
+        /// </summary>
+        private byte SkipNextInstruction(InstructionStream reader)
+        {
+            if (reader.EndOfProgram)
+            {
+                throw new InvalidOperationException("Unexpected end of program while skipping instructions");
+            }
+
+            byte opcode = reader.ReadByte();
+
+            switch (opcode)
+            {
+                // Handle instructions that have inline data
+                // NPUSHB - push n bytes
+                case 0x40:
+                {
+                    int n = reader.ReadByte();
+                    reader.ReadBytes(n);
+                    break;
+                }
+                // NPUSHW - push n words
+                case 0x41:
+                {
+                    int n = reader.ReadByte();
+                    reader.ReadWords(n);
+                    break;
+                }
+                default:
+                {
+                    if (opcode >= 0xB0 && opcode <= 0xB7)  // PUSHB[abc] - push 1-8 bytes
+                    {
+                        int skipCount = (opcode - 0xB0) + 1;
+                        reader.ReadBytes(skipCount);
+                    }
+                    else if (opcode >= 0xB8 && opcode <= 0xBF)  // PUSHW[abc] - push 1-8 words
+                    {
+                        int skipCount = (opcode - 0xB8) + 1;
+                        reader.ReadWords(skipCount);
+                    }
+
+                    break;
+                }
+            }
+    
+            return opcode;
+        }
+
+        /// <summary>
+        /// Jumps to a relative offset in the instruction stream.
+        /// The offset is relative to the current position.
+        /// </summary>
+        private void Jump(InstructionStream reader, int offset)
+        {
+            // Calculate target position
+            int targetPosition = reader.Position + offset;
+    
+            // Sanity check to prevent jumping out of bounds
+            if (targetPosition < 0)
+            {
+                throw new InvalidOperationException($"Invalid jump target: {targetPosition} (negative)");
+            }
+    
+            reader.Seek(targetPosition);
+        }
 
         private void MoveDirectRelativePoint(int flags)
         {
@@ -1022,6 +1366,116 @@ namespace FontParser.RenderFont.Interpreter
             {
                 _stack.Push(_reader.ReadWord());
             }
+        }
+        
+        /// <summary>
+        /// Interpolates untouched points between two reference points for IUP instruction.
+        /// </summary>
+        private void InterpolateUntouchedPoints(bool isXDirection, int startIdx, int endIdx, int ref1Idx, int ref2Idx)
+        {
+            if (startIdx > endIdx)
+            {
+                return;
+            }
+
+            // Get the coordinate values we're working with (X or Y)
+            float ref1Original = isXDirection 
+                ? _glyphZone.Original[ref1Idx].PointF.X 
+                : _glyphZone.Original[ref1Idx].PointF.Y;
+            float ref2Original = isXDirection 
+                ? _glyphZone.Original[ref2Idx].PointF.X 
+                : _glyphZone.Original[ref2Idx].PointF.Y;
+
+            float ref1Current = isXDirection 
+                ? _glyphZone.Current[ref1Idx].PointF.X 
+                : _glyphZone.Current[ref1Idx].PointF.Y;
+            float ref2Current = isXDirection 
+                ? _glyphZone.Current[ref2Idx].PointF.X 
+                : _glyphZone.Current[ref2Idx].PointF.Y;
+
+            // Determine ordering and calculate deltas
+            float lowerOriginal, upperOriginal, lowerCurrent, upperCurrent;
+            float delta1, delta2;
+
+            if (ref1Original > ref2Original)
+            {
+                upperOriginal = ref1Original;
+                lowerOriginal = ref2Original;
+                delta1 = ref1Current - upperOriginal;
+                delta2 = ref2Current - lowerOriginal;
+                lowerCurrent = delta2 + lowerOriginal;
+                upperCurrent = delta1 + upperOriginal;
+            }
+            else
+            {
+                lowerOriginal = ref1Original;
+                upperOriginal = ref2Original;
+                delta1 = ref1Current - lowerOriginal;
+                delta2 = ref2Current - upperOriginal;
+                lowerCurrent = delta1 + lowerOriginal;
+                upperCurrent = delta2 + upperOriginal;
+            }
+
+            float scale = (Math.Abs(upperOriginal - lowerOriginal) > 0.001) 
+                ? (upperCurrent - lowerCurrent) / (upperOriginal - lowerOriginal) 
+                : 0f;
+
+            // Interpolate or shift each untouched point
+            for (int i = startIdx; i <= endIdx; i++)
+            {
+                float originalPos = isXDirection 
+                    ? _glyphZone.Original[i].PointF.X 
+                    : _glyphZone.Original[i].PointF.Y;
+                
+                float newPos;
+
+                // Three cases:
+                // 1. Point is below lower reference - shift by delta1
+                // 2. Point is above upper reference - shift by delta2
+                // 3. Point is between references - interpolate
+                if (originalPos <= lowerOriginal)
+                {
+                    newPos = originalPos + delta1;
+                }
+                else if (originalPos >= upperOriginal)
+                {
+                    newPos = originalPos + delta2;
+                }
+                else
+                {
+                    newPos = lowerCurrent + ((originalPos - lowerOriginal) * scale);
+                }
+
+                // Update the point
+                PointF currentPoint = _glyphZone.Current[i].PointF;
+                if (isXDirection)
+                {
+                    _glyphZone.Current[i] = new InterpreterPointF(
+                        new PointF(newPos, currentPoint.Y), 
+                        _glyphZone.Current[i].TouchState);
+                }
+                else
+                {
+                    _glyphZone.Current[i] = new InterpreterPointF(
+                        new PointF(currentPoint.X, newPos), 
+                        _glyphZone.Current[i].TouchState);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Shifts a point by a delta amount in the specified direction for IUP instruction.
+        /// </summary>
+        private void ShiftPoint(int index, float delta, bool isXDirection)
+        {
+            PointF currentPoint = _glyphZone.Current[index].PointF;
+            PointF newPoint = isXDirection
+                ? new PointF(currentPoint.X + delta, currentPoint.Y)
+                : new PointF(currentPoint.X, currentPoint.Y + delta);
+
+            _glyphZone.Current[index] = new InterpreterPointF(
+                newPoint, 
+                _glyphZone.Current[index].TouchState);
         }
     }
 }

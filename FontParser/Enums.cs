@@ -271,6 +271,7 @@ public enum BitmapSizeFlag : byte
     Vertical = 2
 }
 
+[Flags]
 public enum TouchState : ushort
 {
     None = 0,
