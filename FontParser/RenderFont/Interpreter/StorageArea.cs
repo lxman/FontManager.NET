@@ -19,7 +19,7 @@ namespace FontParser.RenderFont.Interpreter
         {
             get
             {
-                if (index < 0 || index > _data.Length || !_data[index].Written)
+                if (index < 0 || index >= _data.Length || !_data[index].Written)
                 {
                     throw new IndexOutOfRangeException();
                 }

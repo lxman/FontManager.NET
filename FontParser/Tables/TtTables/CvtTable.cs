@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using FontParser.Extensions;
 
 namespace FontParser.Tables.TtTables
@@ -27,7 +27,8 @@ namespace FontParser.Tables.TtTables
                 return null;
             }
             var cvtValues = new List<float>();
-            for (long i = origin; i < count; i++)
+            for (long i = origin; i < origin + count; i++)
+
             {
                 cvtValues.Add(_data[i].ToF26Dot6());
             }

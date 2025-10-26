@@ -27,50 +27,35 @@ namespace FontParser.RenderFont.Interpreter
         {
             IsTwilight = isTwilight;
             Current = original.Select(c => new InterpreterPointF(c)).ToArray();
-            if (!isTwilight)
-            {
-                Original = original.Select(c => new InterpreterPointF(c)).ToArray();
-            }
+            Original = original.Select(c => new InterpreterPointF(c)).ToArray();
         }
 
         public Zone(bool isTwilight, PointF[] original)
         {
             IsTwilight = isTwilight;
             Current = original.Select(o => new InterpreterPointF(o)).ToArray();
-            if (!isTwilight)
-            {
-                Original = original.Select(o => new InterpreterPointF(o)).ToArray();
-            }
+            Original = original.Select(o => new InterpreterPointF(o)).ToArray();
         }
 
         public Zone(bool isTwilight, InterpreterPointF[] original)
         {
             IsTwilight = isTwilight;
             Current = original;
-            if (!isTwilight)
-            {
-                Original = original;
-            }
+            Original = original;
         }
 
         public void Initialize(bool isTwilight, PointF[] original)
         {
             IsTwilight = isTwilight;
             Current = original.Select(o => new InterpreterPointF(o)).ToArray();
-            if (!isTwilight)
-            {
-                Original = original.Select(o => new InterpreterPointF(o)).ToArray();
-            }
+            Original = original.Select(o => new InterpreterPointF(o)).ToArray();
         }
 
         public void Initialize(bool isTwilight, InterpreterPointF[] original)
         {
             IsTwilight = isTwilight;
             Current = original;
-            if (!isTwilight)
-            {
-                Original = original;
-            }
+            Original = original;
         }
 
         public void MovePoint(int index, PointF newPoint)

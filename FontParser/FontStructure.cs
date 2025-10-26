@@ -190,6 +190,25 @@ namespace FontParser
                     graphicsState = interpreter.GraphicsState;
                     functions = interpreter.Functions;
                 }
+                
+                if (!(graphicsState is null) && Tables.Find(x => x is PrepTable) is PrepTable prepTable)
+                {
+                    var interpreter = new Interpreter(
+                        glyphTable,
+                        cvtTable,
+                        prepTable.Instructions,
+                        maxpTable);
+                    
+                    // Copy graphics state and functions from fpgm
+                    interpreter.GraphicsState = graphicsState;
+                    interpreter.Functions = functions;
+                    
+                    interpreter.Execute();
+                    
+                    // Update state after prep
+                    graphicsState = interpreter.GraphicsState;
+                }
+                
                 if (!(graphicsState is null))
                 {
                     var interpreter = new Interpreter(
